@@ -1,0 +1,130 @@
+/* East Village Buyers — global category ticker */
+.evb-ticker {
+  overflow: hidden;
+  background: linear-gradient(180deg, #f8f5f0 0%, #fff 100%);
+  border-top: 2px solid #f97316;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+  font-family: "Montserrat", system-ui, sans-serif;
+}
+
+.evb-ticker::before,
+.evb-ticker::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.evb-ticker::before {
+  left: 0;
+  background: linear-gradient(to right, #f8f5f0 15%, transparent);
+}
+
+.evb-ticker::after {
+  right: 0;
+  background: linear-gradient(to left, #fff 15%, transparent);
+}
+
+.evb-ticker-inner {
+  padding: 12px 0;
+  overflow: hidden;
+}
+
+.evb-ticker-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: evbTickerScroll 44s linear infinite;
+  will-change: transform;
+}
+
+.evb-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes evbTickerScroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.evb-ticker-set {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-right: 2.5rem;
+}
+
+.evb-t-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  white-space: nowrap;
+}
+
+.evb-t-label {
+  color: #f97316;
+  font-weight: 800;
+}
+
+.evb-t-cat {
+  font-weight: 700;
+}
+
+.evb-t-gold {
+  color: #8b6914;
+}
+
+.evb-t-ink {
+  color: #1a1a1a;
+}
+
+.evb-t-sep {
+  margin: 0 1rem;
+  color: rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  letter-spacing: 0;
+  font-size: 10px;
+}
+
+@media (max-width: 640px) {
+  .evb-ticker-track {
+    font-size: 10px;
+    letter-spacing: 0.07em;
+  }
+
+  .evb-t-sep {
+    margin: 0 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evb-ticker-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    gap: 0.45rem 0.85rem;
+    padding: 2px 12px;
+  }
+
+  .evb-ticker-set {
+    padding-right: 0;
+  }
+
+  .evb-ticker-set + .evb-ticker-set {
+    display: none;
+  }
+
+  .evb-ticker::before,
+  .evb-ticker::after {
+    display: none;
+  }
+}

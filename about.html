@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | East Village Buyers — 39 Avenue A, NYC</title>
+  <meta name="description" content="East Village Buyers is a neighborhood buy-and-sell shop at 39 Avenue A in Manhattan. Our storefront sits inside First Houses — a protected New York City landmark and the nation's first public housing project.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.eastvillagebuyers.com/about.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="East Village Buyers">
+  <meta property="og:title" content="About East Village Buyers | Avenue A, East Village">
+  <meta property="og:description" content="A real counter on Avenue A — and a storefront inside one of New York's most important landmark buildings.">
+  <meta property="og:url" content="https://www.eastvillagebuyers.com/about.html">
+  <meta property="og:image" content="https://www.eastvillagebuyers.com/evbstorefront.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About East Village Buyers">
+  <meta name="twitter:description" content="Our shop and the story of the First Houses landmark at 39 Avenue A.">
+  <meta name="twitter:image" content="https://www.eastvillagebuyers.com/evbstorefront.webp">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="appletouchicon.png">
+  <meta name="theme-color" content="#f97316">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site-nav.css">
+  <link rel="stylesheet" href="site-mobile.css">
+  <link rel="stylesheet" href="site-footer.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f8f5f0;
+      color: #2a2622;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.75;
+    }
+    img { max-width: 100%; display: block; }
+
+    :root {
+      --about-orange: #f97316;
+      --about-orange-soft: rgba(249, 115, 22, 0.12);
+      --about-orange-line: rgba(249, 115, 22, 0.22);
+    }
+
+    .about-page {
+      padding: 2.5rem 0 4rem;
+      position: relative;
+    }
+
+    .about-page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--about-orange) 20%, #fb923c 50%, var(--about-orange) 80%, transparent 100%);
+      opacity: 0.55;
+    }
+
+    .about-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+    }
+
+    .about-kicker {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #ea580c;
+      margin-bottom: 0.75rem;
+    }
+
+    .about-kicker::before {
+      content: '';
+      flex-shrink: 0;
+      width: 28px;
+      height: 2px;
+      background: var(--about-orange);
+      border-radius: 2px;
+      opacity: 0.85;
+    }
+
+    .about-wrap h1 {
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #141210;
+      margin-bottom: 1.25rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .about-wrap h1::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 48px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--about-orange), rgba(249, 115, 22, 0.25));
+      border-radius: 2px;
+    }
+
+    .about-wrap h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #141210;
+      margin: 0 0 0.85rem;
+      letter-spacing: -0.01em;
+      padding-left: 0.85rem;
+      border-left: 3px solid var(--about-orange-line);
+    }
+
+    .about-wrap p {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #4a4540;
+      margin-bottom: 1.15rem;
+    }
+
+    .about-wrap p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-wrap a {
+      color: #ea580c;
+      text-decoration: underline;
+      text-decoration-color: rgba(249, 115, 22, 0.35);
+      text-underline-offset: 3px;
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+    .about-wrap a:hover {
+      color: #c2410c;
+      text-decoration-color: rgba(194, 65, 12, 0.5);
+    }
+
+    .about-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+      padding: 2.75rem 0;
+      border-bottom: 1px solid var(--about-orange-line);
+    }
+
+    .about-row:first-child {
+      padding-top: 0.5rem;
+    }
+
+    .about-row-text {
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .about-row-text::before {
+        content: '';
+        position: absolute;
+        left: -1.25rem;
+        top: 0.15rem;
+        bottom: 0.15rem;
+        width: 2px;
+        border-radius: 2px;
+        background: linear-gradient(180deg, var(--about-orange) 0%, rgba(249, 115, 22, 0.08) 100%);
+        opacity: 0.45;
+      }
+
+      .about-row--reverse .about-row-text::before {
+        left: auto;
+        right: -1.25rem;
+      }
+    }
+
+    .about-row-media {
+      margin: 0;
+      position: relative;
+    }
+
+    .about-row-media::after {
+      content: '';
+      position: absolute;
+      inset: 8px -8px -8px 8px;
+      border: 1px solid var(--about-orange-line);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .about-row-media img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(249, 115, 22, 0.1), 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    .about-row-media figcaption {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #7a7268;
+      margin-top: 0.75rem;
+      line-height: 1.5;
+      padding-left: 0.1rem;
+    }
+
+    .about-row-media figcaption::before {
+      content: '';
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      margin-top: 0.45rem;
+      border-radius: 50%;
+      background: var(--about-orange);
+      opacity: 0.5;
+    }
+
+    .about-row-text > *:first-child {
+      margin-top: 0;
+    }
+
+    .about-visit {
+      max-width: 640px;
+      margin-top: 0.5rem;
+      padding: 1.75rem 1.5rem 1.5rem;
+      background: linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+      border: 1px solid var(--about-orange-line);
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.06);
+    }
+
+    .about-visit h2 {
+      border-left-color: var(--about-orange);
+      opacity: 1;
+    }
+
+    @media (min-width: 768px) {
+      .about-page {
+        padding: 3.5rem 0 4.5rem;
+      }
+
+      .about-wrap {
+        padding: 0 2rem;
+      }
+
+      .about-row {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 3rem;
+        padding: 3.25rem 0;
+      }
+
+      .about-row--reverse {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      }
+
+      .about-row--reverse .about-row-text {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .about-row--reverse .about-row-media {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .about-row-media img {
+        aspect-ratio: 3 / 4;
+        max-height: 520px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-topbar"></div>
+  <header class="site-nav" id="evbNav">
+    <div class="site-nav-inner">
+      <a href="index.html" class="site-nav-logo">
+        <img src="evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='evblogo.webp';">
+      </a>
+      <nav class="site-nav-links" aria-label="Main navigation">
+        <a href="index.html" class="site-nav-link">Home</a>
+        <a href="about.html" class="site-nav-link is-active">About</a>
+        <a href="bloghome.html" class="site-nav-link">Blog</a>
+      </nav>
+      <div class="site-nav-right">
+        <div class="site-nav-phone">
+          <span class="site-nav-phone-label">Call or Text</span>
+          <span class="site-nav-phone-num">917-608-8939</span>
+        </div>
+        <a href="sms:9176088939" class="site-btn site-btn-sms">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Send a Text</span><span class="site-btn-sub">Get a Quote Fast</span></div>
+        </a>
+        <a href="tel:9176088939" class="site-btn site-btn-call">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Call Us Now</span><span class="site-btn-sub">917-608-8939</span></div>
+        </a>
+        <button class="site-ham" id="evbHam" onclick="toggleEvbNav()" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="site-mob-overlay" id="evbOverlay" onclick="toggleEvbNav()"></div>
+  <div class="site-mob-drawer" id="evbDrawer">
+    <div class="site-mob-head">
+      <img src="evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='evblogo.webp';">
+      <button class="site-mob-x" onclick="toggleEvbNav()" aria-label="Close">&times;</button>
+    </div>
+    <nav class="site-mob-links" aria-label="Mobile navigation">
+      <a href="index.html" class="site-mob-link" onclick="toggleEvbNav()">Home</a>
+      <a href="about.html" class="site-mob-link" onclick="toggleEvbNav()">About</a>
+      <a href="bloghome.html" class="site-mob-link" onclick="toggleEvbNav()">Blog</a>
+    </nav>
+    <div class="site-mob-footer">
+      <a href="tel:9176088939" class="site-mob-btn site-mob-btn-call">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call 917-608-8939
+      </a>
+      <a href="sms:9176088939" class="site-mob-btn site-mob-btn-sms">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Text for a Quote
+      </a>
+    </div>
+  </div>
+  <script src="site-nav.js"></script>
+
+  <main class="about-page">
+    <article class="about-wrap">
+
+      <section class="about-row">
+        <div class="about-row-text">
+          <p class="about-kicker">39 Avenue A · East Village</p>
+          <h1>About East Village Buyers</h1>
+          <p>East Village Buyers is a small shop on Avenue A where people come to buy, sell, and trade things they actually use — gold and jewelry, designer bags, streetwear and sneakers, watches, electronics, and more. We're not a big chain or an online-only operation. We're a real storefront with a counter, real people behind it, and the same address we've had for years.</p>
+          <p>When you walk in, we'll look at what you brought, tell you what we see, and give you an honest number. If you like it, you get paid the same day. If you don't, no hard feelings — you take your stuff and go. That's how we've always run it.</p>
+        </div>
+        <figure class="about-row-media">
+          <img src="evbstorefront.webp" alt="East Village Buyers storefront on Avenue A" loading="lazy" decoding="async">
+          <figcaption>Our storefront at 39 Avenue A, East Village.</figcaption>
+        </figure>
+      </section>
+
+      <section class="about-row about-row--reverse">
+        <div class="about-row-text">
+          <h2>What we do</h2>
+          <p>Most days, someone walks in with a gold chain they don't wear anymore, or a handbag sitting in a closet, or a pair of sneakers still in the box. Someone else walks in looking to buy. We sit in the middle of that — checking authenticity, talking through condition, and agreeing on a fair price both sides can live with.</p>
+          <p>We buy and sell across a few categories: precious metals and jewelry, designer and luxury goods, streetwear and sneakers, watches, electronics, and accessories. If you're not sure whether we take something, text us a photo at <a href="sms:9176088939">917-608-8939</a>. We'd rather tell you before you make the trip.</p>
+        </div>
+        <figure class="about-row-media">
+          <img src="evbplaceholder.webp" alt="Inside East Village Buyers on Avenue A" loading="lazy">
+          <figcaption>The counter at 39 Avenue A — where we inspect everything in front of you.</figcaption>
+        </figure>
+      </section>
+
+      <section class="about-row">
+        <div class="about-row-text">
+          <h2>The building we're in</h2>
+          <p>Our shop at 39 Avenue A is part of a group of brick buildings known as <strong>First Houses</strong>. If you've walked past us, you've probably noticed they don't look like the tall tenements on most Manhattan blocks. There's a reason for that — and it's a piece of New York history.</p>
+          <p>In the middle of the Great Depression, the city tore down overcrowded tenements on this block and built something new: low-rise apartment buildings wrapped around a shared courtyard, with light and air built into the plan from the start. It opened in 1935 and 1936 under Mayor LaGuardia, with architect Frederick L. Ackerman leading the design. It was the first project of the New York City Housing Authority — and the first public housing built by a city in the United States.</p>
+          <p>The idea was straightforward: give working families a decent place to live at a rent they could afford, using New Deal work programs to get it done. Bricks from the old demolished buildings were reused in the new ones. The result is human-scaled — four and five stories, red brick, quiet compared to the rest of the neighborhood.</p>
+          <p>The Landmarks Preservation Commission designated First Houses in 1974. The complex is also listed on the National Register of Historic Places. That means the buildings are protected — their character and history are recognized as worth keeping, not just for the people who live here but for the city as a whole.</p>
+          <p>We think about that when we open the door in the morning. This block has been through a lot — tenements, demolition, rebuilding, nearly a century of New Yorkers living their lives in these walls. We're one small shop in a long story. We try to run it in a way that fits the neighborhood: straight talk, fair dealing, and respect for the people who walk through the door.</p>
+        </div>
+        <figure class="about-row-media">
+          <img src="evbplaceholder.webp" alt="First Houses brick buildings on Avenue A, East Village" loading="lazy">
+          <figcaption>First Houses on Avenue A — a New York City landmark since 1974.</figcaption>
+        </figure>
+      </section>
+
+      <section class="about-visit">
+        <h2>Visit us</h2>
+        <p>We're at <a href="https://maps.app.goo.gl/X5ov5HtS6mGtD7rH6" target="_blank" rel="noopener noreferrer">39 Avenue A, New York, NY 10009</a>, between East 2nd and East 3rd Streets. Walk-ins are welcome — no appointment needed.</p>
+        <p>We're open Sunday through Thursday, 12:30 to 6:30 PM, and Friday until 6:00 PM. We're closed on Saturdays. If you want to talk before coming in, call or text <a href="tel:9176088939">917-608-8939</a>.</p>
+        <p>East Village Buyers is operated by Vintage USA Inc, licensed by the NYC Department of Consumer and Worker Protection (DCA #2070477).</p>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="evb-footer">
+
+    <div class="evb-footer-topbar"></div>
+
+    <div class="evb-footer-main">
+
+      <div class="evb-footer-brand">
+        <div class="evb-footer-logo-row">
+          <img src="evblogo.webp" class="evb-footer-logo-img" alt="East Village Buyers Logo">
+          <div class="evb-footer-logo-text">
+            <div class="evb-footer-logo-name">East Village Buyers</div>
+            <div class="evb-footer-logo-sub">New York City</div>
+          </div>
+        </div>
+        <div class="evb-footer-divider"></div>
+        <p class="evb-footer-tagline">NYC's trusted destination for authenticated luxury goods, fine jewelry, sneakers, watches, gold, silver, and designer fashion. Walk in for an on-the-spot offer.</p>
+        <div class="evb-footer-social">
+          <a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="evb-footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="index.html#location">Our Location</a></li>
+          <li><a href="sms:9176088939">Get a Quote</a></li>
+          <li><a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href="tel:9176088939">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="evb-footer-col">
+        <h5>What We Buy</h5>
+        <ul>
+          <li><a href="we-buy-jewelry-nyc.html">Jewelry</a></li>
+          <li><a href="we-buy-designer-nyc.html">Designer</a></li>
+          <li><a href="we-buy-accessories-nyc.html">Accessories</a></li>
+          <li><a href="we-buy-streetwear-nyc.html">Streetwear</a></li>
+          <li><a href="we-buy-sneakers-nyc.html">Sneakers</a></li>
+          <li><a href="we-buy-watches-nyc.html">Watches</a></li>
+          <li><a href="we-buy-electronics-nyc.html">Electronics</a></li>
+        </ul>
+      </div>
+
+      <div class="evb-footer-col">
+        <h5>Visit Us</h5>
+        <div class="evb-footer-contact-list">
+
+          <a href="tel:9176088939" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label">Phone</div>
+              917-608-8939
+            </div>
+          </a>
+
+          <a href="https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z" target="_blank" rel="noopener noreferrer" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label">Address</div>
+              39 Avenue A, New York, NY 10009
+            </div>
+          </a>
+
+          <div class="evb-footer-contact-item" style="cursor:default;">
+            <div class="evb-footer-contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label evb-footer-contact-label--spaced">Hours</div>
+              <div class="evb-hours-grid">
+                <div class="evb-hours-row"><span>Sun – Thu</span><span>12:30 – 6:30 PM</span></div>
+                <div class="evb-hours-row"><span>Friday</span><span>12:30 – 6:00 PM</span></div>
+                <div class="evb-hours-row"><span>Saturday</span><span class="evb-hours-closed">Closed</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="evb-footer-bottom">
+      <p class="evb-footer-copy">© 2026 East Village Buyers. All rights reserved.</p>
+      <p class="evb-footer-legal">Vintage USA Inc<span>·</span>DBA East Village Buyers<span>·</span>DCA Lic. #2070477</p>
+    </div>
+
+  </footer>
+
+</body>
+</html>
