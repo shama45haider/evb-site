@@ -347,13 +347,35 @@
     }
 
     /* ── Category filter strip ── */
-    .blog-cats { background: #fff; border-bottom: 1px solid #e8e4de; position: sticky; top: 62px; z-index: 40; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .blog-cats::-webkit-scrollbar { display: none; }
-    .blog-cats-inner { display: flex; align-items: center; gap: 0; max-width: 1100px; margin: 0 auto; padding: 0 24px; min-width: max-content; }
-    .blog-cat-btn { display: flex; align-items: center; gap: 7px; padding: 16px 18px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #7a7268; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: color 0.15s, border-color 0.15s; margin-bottom: -1px; }
-    .blog-cat-btn:hover { color: #e8690a; }
-    .blog-cat-btn.is-active { color: #e8690a; border-bottom-color: #e8690a; }
-    .blog-cat-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .blog-search { background: #fff; border-bottom: 1px solid #e8e4de; position: sticky; top: 62px; z-index: 40; }
+    .blog-search-inner { max-width: 1100px; margin: 0 auto; padding: 12px 24px; }
+    .blog-search-wrap { position: relative; max-width: 400px; }
+    .blog-search-wrap input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      color: #111;
+      background: #f8f5f0;
+      border: 1.5px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .blog-search-wrap input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.08); }
+    .blog-search-wrap input::placeholder { color: #bbb; }
+    .blog-search-ico {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: #bbb; pointer-events: none; transition: color 0.2s;
+    }
+    .blog-search-wrap input:focus ~ .blog-search-ico { color: #f97316; }
+    .blog-search-ico svg { width: 18px; height: 18px; }
+    .blog-no-results {
+      display: none; text-align: center; padding: 48px 20px;
+      font-family: 'Poppins', sans-serif; font-size: 14px; color: #999;
+      grid-column: 1 / -1;
+    }
 
     /* ── Main layout ── */
     .blog-section-h2 {
@@ -769,14 +791,12 @@
   </section>
 
   <!-- Category filter -->
-  <div class="blog-cats">
-    <div class="blog-cats-inner">
-      <button class="blog-cat-btn is-active" data-cat="all">All Posts</button>
-      <button class="blog-cat-btn" data-cat="watches"><span class="blog-cat-dot" style="background:#1a1a2e;"></span>Watches</button>
-      <button class="blog-cat-btn" data-cat="jewelry"><span class="blog-cat-dot" style="background:#d4a017;"></span>Jewelry</button>
-      <button class="blog-cat-btn" data-cat="streetwear"><span class="blog-cat-dot" style="background:#cc1111;"></span>Streetwear</button>
-      <button class="blog-cat-btn" data-cat="designer"><span class="blog-cat-dot" style="background:#f97316;"></span>Designer</button>
-      <button class="blog-cat-btn" data-cat="guides"><span class="blog-cat-dot" style="background:#0284c7;"></span>Guides</button>
+  <div class="blog-search">
+    <div class="blog-search-inner">
+      <div class="blog-search-wrap">
+        <input type="text" id="blogSearch" placeholder="Search articles..." autocomplete="off">
+        <span class="blog-search-ico"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      </div>
     </div>
   </div>
 
@@ -890,6 +910,7 @@
           </div>
         </a>
 
+        <div class="blog-no-results" id="blogNoResults">No articles found. Try a different search.</div>
       </div>
 
     </div>
@@ -1167,17 +1188,30 @@
     overlay.addEventListener('click', toggleNav);
     closeBtn.addEventListener('click', toggleNav);
 
-    const catBtns = document.querySelectorAll('.blog-cat-btn');
+    const searchInput = document.getElementById('blogSearch');
     const cards = document.querySelectorAll('#blogGrid .blog-card');
     const featured = document.querySelector('.blog-featured');
-    catBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        catBtns.forEach(b => b.classList.remove('is-active'));
-        btn.classList.add('is-active');
-        const cat = btn.dataset.cat;
-        featured.style.display = (cat === 'all' || featured.dataset.cat === cat) ? '' : 'none';
-        cards.forEach(card => { card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none'; });
+    const noResults = document.getElementById('blogNoResults');
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      let visible = 0;
+      const featuredText = (featured.textContent || '').toLowerCase();
+      if (!q || featuredText.indexOf(q) !== -1) {
+        featured.style.display = '';
+        visible++;
+      } else {
+        featured.style.display = 'none';
+      }
+      cards.forEach(function(card) {
+        const text = (card.textContent || '').toLowerCase();
+        if (!q || text.indexOf(q) !== -1) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
       });
+      noResults.style.display = visible === 0 ? 'block' : 'none';
     });
 
     function closeCookieBanner() {
