@@ -129,24 +129,9 @@
   .jw-c-detail-inner { padding:14px 18px 18px; border-top:1px solid rgba(0,0,0,0.05); display:grid; grid-template-columns:1fr; gap:12px; }
 
   @media(min-width:860px) {
-    .jw-c { position:relative; }
-    .jw-c--open { overflow:visible; z-index:11; }
-    .jw-c-detail {
-      position:absolute;
-      top:100%;
-      left:0; right:0;
-      z-index:10;
-      background:#fff;
-      border-radius:0 0 14px 14px;
-      box-shadow:0 12px 32px rgba(0,0,0,0.12);
-      border:1px solid rgba(249,115,22,0.15);
-      border-top:none;
-      max-height:0;
-      opacity:0;
-      overflow:hidden;
-      transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-    }
-    .jw-c--open .jw-c-detail { max-height:400px; opacity:1; }
+    .jw-c-photo { height:200px; }
+    .jw-c-body { padding:18px 20px; }
+    .jw-c-name { font-size:16px; }
   }
   .jw-c-dl { font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; color:#f97316; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; }
   .jw-c-dt { font-family:'Poppins',sans-serif; font-size:12px; color:#555; line-height:1.55; margin:0; font-weight:400; }
