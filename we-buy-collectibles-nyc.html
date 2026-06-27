@@ -140,8 +140,12 @@
       box-shadow:0 12px 32px rgba(0,0,0,0.12);
       border:1px solid rgba(249,115,22,0.15);
       border-top:none;
+      max-height:0;
+      opacity:0;
+      overflow:hidden;
+      transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
     }
-    .jw-c--open .jw-c-detail { max-height:400px; }
+    .jw-c--open .jw-c-detail { max-height:400px; opacity:1; overflow:visible; }
     .jw-c--open { z-index:11; }
   }
   .jw-c-dl { font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; color:#f97316; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; }
