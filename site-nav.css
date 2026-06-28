@@ -146,15 +146,15 @@
 
 .site-mob-drawer {
   position: fixed;
-  top: 0; left: 0; bottom: 0;
+  top: 0; right: 0; bottom: 0;
   width: 260px;
   background: #fff;
   z-index: 998;
   display: flex;
   flex-direction: column;
-  transform: translateX(-100%);
+  transform: translateX(100%);
   transition: transform 0.26s ease;
-  border-right: 4px solid #e8690a;
+  border-left: 4px solid #e8690a;
 }
 .site-mob-drawer.open { transform: translateX(0); }
 

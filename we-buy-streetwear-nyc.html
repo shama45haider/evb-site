@@ -423,5 +423,68 @@
   <script src="we-buy-category.js"></script>
   <script src="evb-knowledge.js"></script>
   <script src="evb-assistant.js" defer data-evb-assistant></script>
+
+<!-- Cookie Consent -->
+<style>
+  #evbCk{--evb-ck-mb:0px;position:fixed;z-index:100000;font-family:'Montserrat',sans-serif;bottom:24px;right:24px;left:auto;width:min(400px,calc(100vw - 48px));opacity:0;transform:translateY(16px) scale(0.98);transition:opacity 0.4s cubic-bezier(0.22,1,0.36,1),transform 0.45s cubic-bezier(0.22,1,0.36,1);pointer-events:none}
+  #evbCk.evb-show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  .evb-ck-panel{position:relative;border-radius:16px;overflow:hidden;background:rgba(14,13,12,0.94);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(249,115,22,0.12),0 24px 60px rgba(0,0,0,0.45),0 8px 20px rgba(0,0,0,0.25);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+  .evb-ck-accent{height:3px;background:linear-gradient(90deg,transparent 0%,#f97316 25%,#ff9a4d 50%,#f97316 75%,transparent 100%)}
+  .evb-ck-body{padding:18px 20px 20px}
+  .evb-ck-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .evb-ck-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .evb-ck-icon{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(249,115,22,0.14);border:1px solid rgba(249,115,22,0.28);color:#f97316}
+  .evb-ck-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  .evb-ck-titles{display:flex;flex-direction:column;gap:2px}
+  .evb-ck-title{font-size:11px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:#f97316;line-height:1.2}
+  .evb-ck-sub{font-size:13px;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:0.02em;line-height:1.25}
+  .evb-ck-x{flex-shrink:0;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.2s,color 0.2s,border-color 0.2s}
+  .evb-ck-x:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.18)}
+  .evb-ck-desc{font-size:12.5px;font-weight:500;color:rgba(255,255,255,0.58);line-height:1.65;margin:0 0 16px}
+  .evb-ck-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:10px}
+  .evb-ck-btn{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;border-radius:10px;padding:14px 16px;min-height:44px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,background 0.15s,border-color 0.15s;text-align:center;border:none}
+  .evb-ck-btn:active{transform:scale(0.98)}
+  #evbCkNo{background:transparent;color:rgba(255,255,255,0.72);border:1px solid rgba(255,255,255,0.16)}
+  #evbCkNo:hover{background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.28)}
+  #evbCkYes{background:linear-gradient(135deg,#f97316 0%,#ea580c 100%);color:#fff;box-shadow:0 4px 18px rgba(249,115,22,0.4)}
+  #evbCkYes:hover{box-shadow:0 6px 24px rgba(249,115,22,0.5);filter:brightness(1.05)}
+  @media(max-width:768px){#evbCk{left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:auto}body.evb-ck-visible{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}.evb-ck-body{padding:14px 16px 16px}.evb-ck-head{margin-bottom:10px}.evb-ck-icon{width:36px;height:36px;border-radius:10px}.evb-ck-icon svg{width:18px;height:18px}.evb-ck-sub{font-size:12px}.evb-ck-desc{font-size:11.5px;margin-bottom:14px}.evb-ck-actions{grid-template-columns:1fr 1.2fr;gap:8px}.evb-ck-btn{padding:11px 12px;font-size:9.5px;border-radius:9px}}
+  @media(max-width:380px){.evb-ck-brand{gap:10px}.evb-ck-sub{display:none}.evb-ck-actions{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){#evbCk{transition:opacity 0.2s ease;transform:none}#evbCk.evb-show{transform:none}.evb-ck-btn:active{transform:none}}
+</style>
+<div id="evbCk" role="dialog" aria-label="Cookie consent" aria-live="polite">
+  <div class="evb-ck-panel">
+    <div class="evb-ck-accent" aria-hidden="true"></div>
+    <div class="evb-ck-body">
+      <div class="evb-ck-head">
+        <div class="evb-ck-brand">
+          <span class="evb-ck-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01M15.5 8.5v.01M12 12v.01M8.5 15.5v.01M15.5 15.5v.01"/></svg>
+          </span>
+          <div class="evb-ck-titles">
+            <span class="evb-ck-title">Privacy</span>
+            <span class="evb-ck-sub">East Village Buyers</span>
+          </div>
+        </div>
+        <button type="button" class="evb-ck-x" onclick="evbCk('dismissed')" aria-label="Dismiss cookie notice">&times;</button>
+      </div>
+      <p class="evb-ck-desc">We use essential cookies and may use analytics &amp; advertising cookies (Google, Meta) to improve your experience. <a href="cookie-policy.html" style="color:#f97316;text-decoration:underline;text-underline-offset:2px;font-weight:600;">Cookie Policy</a></p>
+      <div class="evb-ck-actions">
+        <button type="button" id="evbCkNo" class="evb-ck-btn" onclick="evbCk('rejected')">Essential only</button>
+        <button type="button" id="evbCkYes" class="evb-ck-btn" onclick="evbCk('accepted')">Accept all</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='evb_ck6';var el=document.getElementById('evbCk');
+  if(!el||localStorage.getItem(KEY))return;
+  var show=function(){el.classList.add('evb-show');document.body.classList.add('evb-ck-visible');};
+  var hide=function(){el.classList.remove('evb-show');document.body.classList.remove('evb-ck-visible');setTimeout(function(){if(el.parentNode)el.remove();},420);};
+  setTimeout(show,1400);
+  window.evbCk=function(v){localStorage.setItem(KEY,v);hide();};
+})();
+</script>
 </body>
 </html>
