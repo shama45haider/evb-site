@@ -1,0 +1,37 @@
+<!-- Knicks Championship Promo Popup — knicks1 backup -->
+<div id="knicksCta" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;">
+  <div style="position:relative;max-width:420px;width:100%;background:#111;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.5);animation:knicksPop .4s cubic-bezier(.22,1,.36,1);">
+    <button onclick="closeKnicks()" aria-label="Close" style="position:absolute;top:12px;right:14px;z-index:2;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:22px;width:34px;height:34px;border-radius:50%;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center;">&#10005;</button>
+    <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" style="width:100%;aspect-ratio:1/1;object-fit:cover;" width="600" height="600">
+    <div style="padding:22px 24px 26px;text-align:center;">
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#f97316;margin-bottom:6px;">🏀 Let's Go Knicks 🏆</div>
+      <h2 style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:#fff;margin:0 0 8px;line-height:1.2;">NYC Champions Gear<br><span style="color:#f97316;">Now In Store</span></h2>
+      <p style="font-family:'Poppins',sans-serif;font-size:13px;color:#aaa;margin:0 0 18px;line-height:1.6;">The Knicks brought it home — celebrate with Eric Emanuel shorts, hats, tees &amp; more. Limited stock, walk in today.</p>
+      <a href="tel:9176088939" style="display:inline-flex;align-items:center;gap:8px;background:#f97316;color:#fff;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;padding:12px 28px;border-radius:50px;text-decoration:none;letter-spacing:.02em;transition:background .2s;">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call 917-608-8939
+      </a>
+      <div style="margin-top:10px;">
+        <a href="sms:9176088939" style="font-family:'Poppins',sans-serif;font-size:12px;color:#999;text-decoration:underline;text-underline-offset:2px;">or text us for availability</a>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  @keyframes knicksPop{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  #knicksCta a[href^="tel"]:hover{background:#ea580c!important}
+</style>
+<script>
+(function(){
+  var KEY='evb_knicks_25';
+  if(sessionStorage.getItem(KEY))return;
+  var el=document.getElementById('knicksCta');
+  if(!el)return;
+  setTimeout(function(){el.style.display='flex';},800);
+  window.closeKnicks=function(){
+    el.style.display='none';
+    sessionStorage.setItem(KEY,'1');
+  };
+  el.addEventListener('click',function(e){if(e.target===el)closeKnicks();});
+})();
+</script>
