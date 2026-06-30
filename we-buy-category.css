@@ -742,7 +742,7 @@
 
 /* ── CTA Band ── */
 .evb-cta-band {
-  background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #fef7f0 0%, #fff5eb 100%);
   text-align: center;
   padding: 64px 20px;
   position: relative;
@@ -759,12 +759,12 @@
 .evb-cta-band h2 {
   font-size: clamp(20px, 4vw, 28px);
   font-weight: 900;
-  color: #fff;
+  color: #111;
   margin: 0 0 8px;
 }
 .evb-cta-band p {
   font-size: 13px;
-  color: rgba(255,255,255,0.45);
+  color: #888;
   margin: 0 0 24px;
 }
 
@@ -805,8 +805,8 @@
 
 .evb-cta-ghost {
   background: transparent;
-  color: rgba(255,255,255,0.8);
-  border: 1.5px solid rgba(255,255,255,0.15);
+  color: #333;
+  border: 1.5px solid #ddd;
 }
 .evb-cta-ghost:hover { border-color: #f97316; color: #f97316; background: rgba(249,115,22,0.05); }
 
