@@ -3686,9 +3686,16 @@
 
       <!-- Slide 1: We Buy Gold -->
       <div class="wn-slide">
-        <div class="nk-img" style="background:#1a1a1a;">
-          <img src="wn-gold-jewelry.webp" alt="Gold jewelry and watches at East Village Buyers" width="600" height="600" id="wnSlide1Img">
+        <div class="nk-img">
+          <img src="wn-gold-jewelry.webp" alt="Gold jewelry at East Village Buyers" width="600" height="400">
           <div class="wn-slide-badge">WHAT'S NEW</div>
+          <!-- Dots on image -->
+          <div class="wn-dots">
+            <span class="wn-dot wn-dot-active" onclick="wnGoTo(0)"></span>
+            <span class="wn-dot" onclick="wnGoTo(1)"></span>
+          </div>
+          <button class="wn-arrow wn-prev" onclick="wnGo(-1)" aria-label="Previous">&#8249;</button>
+          <button class="wn-arrow wn-next" onclick="wnGo(1)" aria-label="Next">&#8250;</button>
         </div>
         <div class="nk-body">
           <img src="evblogo.webp" alt="" class="nk-watermark">
@@ -3700,15 +3707,21 @@
               <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               Get a Quick Quote</a>
           </div>
-          <p class="nk-addr">39 Avenue A, East Village, NYC</p>
+          <div class="nk-addr">📍 39 Avenue A, East Village, NYC</div>
         </div>
       </div>
 
       <!-- Slide 2: Knicks -->
       <div class="wn-slide">
         <div class="nk-img">
-          <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="600">
+          <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400">
           <div class="wn-slide-badge" style="background:#006BB6;">LET'S GO KNICKS</div>
+          <div class="wn-dots">
+            <span class="wn-dot" onclick="wnGoTo(0)"></span>
+            <span class="wn-dot wn-dot-active" onclick="wnGoTo(1)"></span>
+          </div>
+          <button class="wn-arrow wn-prev" onclick="wnGo(-1)" aria-label="Previous">&#8249;</button>
+          <button class="wn-arrow wn-next" onclick="wnGo(1)" aria-label="Next">&#8250;</button>
         </div>
         <div class="nk-body">
           <img src="evblogo.webp" alt="" class="nk-watermark">
@@ -3721,51 +3734,42 @@
               Call Now</a>
             <a href="sms:9176088939" class="nk-btn nk-btn-ghost">Text Us</a>
           </div>
-          <p class="nk-addr">39 Avenue A, East Village, NYC</p>
+          <div class="nk-addr">📍 39 Avenue A, East Village, NYC</div>
         </div>
       </div>
 
     </div><!-- /wn-track -->
-
-    <!-- Nav arrows -->
-    <button class="wn-arrow wn-prev" onclick="wnGo(-1)" aria-label="Previous">&#8249;</button>
-    <button class="wn-arrow wn-next" onclick="wnGo(1)" aria-label="Next">&#8250;</button>
-
-    <!-- Dots -->
-    <div class="wn-dots">
-      <span class="wn-dot wn-dot-active" onclick="wnGoTo(0)"></span>
-      <span class="wn-dot" onclick="wnGoTo(1)"></span>
-    </div>
   </div>
 </div>
 <style>
   .nk-card{position:relative;max-width:580px;width:100%;background:#fff;border-radius:18px;overflow:hidden;display:flex;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:nkSlide .5s cubic-bezier(.22,1,.36,1)}
-  .nk-x{position:absolute;top:10px;right:12px;z-index:5;background:rgba(255,255,255,.9);border:none;color:#333;font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .2s}
+  .nk-x{position:absolute;top:10px;right:12px;z-index:10;background:rgba(255,255,255,.9);border:none;color:#333;font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .2s}
   .nk-x:hover{transform:scale(1.1)}
   .wn-track{display:flex;width:100%;transition:transform .4s cubic-bezier(.22,1,.36,1);will-change:transform}
   .wn-slide{display:flex;min-width:100%;width:100%}
   .nk-img{position:relative;flex:0 0 44%;min-height:260px;overflow:hidden}
   .nk-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-  .wn-slide-badge{position:absolute;top:14px;left:14px;background:#f97316;color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 10px;border-radius:6px;z-index:1}
+  .wn-slide-badge{position:absolute;top:14px;left:14px;background:#f97316;color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 10px;border-radius:6px;z-index:2}
+  /* Dots + arrows live on the image panel */
+  .wn-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+  .wn-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;border:none}
+  .wn-dot-active{background:#fff;transform:scale(1.3)}
+  .wn-arrow{position:absolute;bottom:8px;z-index:2;background:rgba(0,0,0,.35);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+  .wn-arrow:hover{background:rgba(0,0,0,.6)}
+  .wn-prev{left:8px}
+  .wn-next{left:44px}
   .nk-body{flex:1;padding:28px 24px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
   .nk-watermark{position:absolute;bottom:-10px;right:-10px;width:120px;opacity:.06;pointer-events:none}
   .nk-tag{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:.15em;color:#f97316;margin-bottom:8px}
   .nk-title{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:900;color:#111;margin:0 0 8px;line-height:1.2;letter-spacing:-.01em}
-  .nk-desc{font-family:'Poppins',sans-serif;font-size:13px;color:#666;margin:0 0 20px;line-height:1.6}
-  .nk-btns{display:flex;gap:8px;flex-wrap:wrap}
-  .nk-addr{font-family:'Poppins',sans-serif;font-size:11px;color:#999;margin:14px 0 0;letter-spacing:.01em}
+  .nk-desc{font-family:'Poppins',sans-serif;font-size:13px;color:#666;margin:0 0 16px;line-height:1.6}
+  .nk-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .nk-btn{display:inline-flex;align-items:center;gap:6px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;padding:10px 20px;border-radius:50px;text-decoration:none;transition:all .2s;letter-spacing:.02em}
   .nk-btn-primary{background:#f97316;color:#fff;box-shadow:0 4px 14px rgba(249,115,22,.3);animation:nkPulse 2s ease-in-out infinite}
-  .nk-btn-primary:hover{background:#ea580c;box-shadow:0 6px 20px rgba(249,115,22,.4);transform:translateY(-1px);animation:none}
-  .nk-btn-ghost{background:transparent;color:#111;border:1.5px solid #ddd}
+  .nk-btn-primary:hover{background:#ea580c;animation:none;transform:translateY(-1px)}
+  .nk-btn-ghost{background:transparent;color:#333;border:1.5px solid #ddd}
   .nk-btn-ghost:hover{border-color:#f97316;color:#f97316}
-  .wn-arrow{position:absolute;bottom:18px;z-index:4;background:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);color:#333;transition:all .2s}
-  .wn-arrow:hover{background:#f97316;color:#fff}
-  .wn-prev{right:60px}
-  .wn-next{right:24px}
-  .wn-dots{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:4}
-  .wn-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:background .2s,transform .2s}
-  .wn-dot-active{background:#f97316;transform:scale(1.2)}
+  .nk-addr{font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;color:#888;border-top:1px solid #f0f0f0;padding-top:12px}
   @keyframes nkSlide{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
   @keyframes nkPulse{0%,100%{box-shadow:0 4px 14px rgba(249,115,22,.3)}50%{box-shadow:0 4px 24px rgba(249,115,22,.6),0 0 0 6px rgba(249,115,22,.12)}}
   @media(max-width:520px){
@@ -3774,7 +3778,6 @@
     .nk-img{flex:none;height:200px;min-height:auto}
     .nk-body{padding:20px 18px}
     .nk-title{font-size:17px}
-    .wn-prev{right:56px}
   }
 </style>
 <script>
@@ -3798,6 +3801,11 @@
     updateDots();
   };
   window.wnGo=function(dir){wnGoTo(cur+dir);};
+  // Auto-slide every 3.5s, loops back to start
+  var autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},3500);
+  // Pause on manual interaction, resume after 6s
+  function resetTimer(){clearInterval(autoTimer);autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},3500);}
+  document.querySelectorAll('.wn-arrow,.wn-dot').forEach(function(el){el.addEventListener('click',resetTimer);});
 })();
 </script>
 
