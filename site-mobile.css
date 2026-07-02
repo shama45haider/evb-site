@@ -1,5 +1,27 @@
 /* East Village Buyers — site-wide mobile & responsive media */
 
+/* ── Nav buttons: compact on tablet (768–1023px) ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .site-nav-right { gap: 6px !important; }
+  .site-btn-sms,
+  .site-btn-call { padding: 6px 10px !important; gap: 6px !important; min-height: 40px !important; }
+  .site-btn-sub { display: none !important; }
+  .site-btn-label { font-size: 10px !important; letter-spacing: 0.03em !important; }
+  .site-btn-icon { width: 24px !important; height: 24px !important; }
+  .site-btn-icon svg { width: 12px !important; height: 12px !important; }
+}
+
+/* ── Nav buttons: hidden on mobile, show only hamburger ── */
+@media (max-width: 767px) {
+  .site-btn-sms,
+  .site-btn-call { display: none !important; }
+  .site-nav-right { gap: 0 !important; }
+}
+
+/* ── General button overflow protection ── */
+.site-btn-copy { min-width: 0; overflow: hidden; }
+.site-btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 /* ── Foundation ── */
 *, *::before, *::after { box-sizing: border-box; }
 
