@@ -3802,9 +3802,9 @@
   };
   window.wnGo=function(dir){wnGoTo(cur+dir);};
   // Auto-slide every 3.5s, loops back to start
-  var autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},3500);
-  // Pause on manual interaction, resume after 6s
-  function resetTimer(){clearInterval(autoTimer);autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},3500);}
+  var autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},5000);
+  // Pause on manual interaction, resume after 5s
+  function resetTimer(){clearInterval(autoTimer);autoTimer=setInterval(function(){wnGoTo((cur+1)%total);},5000);}
   document.querySelectorAll('.wn-arrow,.wn-dot').forEach(function(el){el.addEventListener('click',resetTimer);});
 })();
 </script>
