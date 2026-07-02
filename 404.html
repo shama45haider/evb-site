@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google Tag Manager -->
@@ -14,113 +14,66 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="robots" content="noindex">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f8f5f0;
-      color: #111;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 40px 20px;
-      text-align: center;
-    }
-    .err-code {
-      font-size: clamp(72px, 20vw, 140px);
-      font-weight: 900;
-      color: #f97316;
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-    .err-msg {
-      font-size: clamp(16px, 3vw, 20px);
-      font-weight: 600;
-      color: #444;
-      margin: 16px 0 32px;
-      max-width: 400px;
-      line-height: 1.5;
-    }
-    .err-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      background: #f97316;
-      color: #fff;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border-radius: 10px;
-      box-shadow: 0 4px 0 #c2410c, 0 8px 20px rgba(249,115,22,0.3);
-      transition: transform 0.18s, box-shadow 0.18s;
-    }
-    .err-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #c2410c, 0 12px 28px rgba(249,115,22,0.4); }
-    .err-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #c2410c; }
-    .err-links {
-      margin-top: 24px;
-      display: flex;
-      gap: 20px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    .err-links a {
-      color: #f97316;
-      text-decoration: none;
-    }
-    .err-links a:hover { text-decoration: underline; }
-    .err-contact {
-      margin-top: 36px;
-      background: #fff;
-      border: 1.5px solid rgba(249,115,22,0.25);
-      border-radius: 14px;
-      padding: 24px 28px;
-      max-width: 420px;
-      width: 100%;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    }
-    .err-contact-label {
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #f97316;
-      margin-bottom: 6px;
-    }
-    .err-contact-msg {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      line-height: 1.5;
-      margin-bottom: 18px;
-    }
-    .err-contact-details {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .err-contact-divider { display: none; }
-    .err-contact-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #111;
-      text-decoration: none;
-      background: #f8f5f0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .err-contact-item:hover { background: rgba(249,115,22,0.08); color: #f97316; }
-    .err-contact-item svg { width: 16px; height: 16px; color: #f97316; flex-shrink: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Montserrat', sans-serif; background: #f8f5f0; color: #111; -webkit-font-smoothing: antialiased; }
+
+    /* ── NAV ── */
+    .p404-nav { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 24px; height: 62px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 50; }
+    .p404-nav-logo { font-size: 15px; font-weight: 900; color: #111; text-decoration: none; letter-spacing: -0.02em; }
+    .p404-nav-btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; background: #e8690a; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; border-radius: 8px; box-shadow: 0 3px 0 #b84f06; transition: transform 0.15s, box-shadow 0.15s; }
+    .p404-nav-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #b84f06; }
+    .p404-nav-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #b84f06; }
+
+    /* ── HERO SPLIT ── */
+    .p404-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 420px; }
+    @media (max-width: 768px) { .p404-hero { grid-template-columns: 1fr; } }
+    .p404-hero-img { position: relative; overflow: hidden; min-height: 280px; }
+    .p404-hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+    .p404-hero-img-overlay { position: absolute; inset: 0; background: linear-gradient(to right, transparent 60%, #f8f5f0); }
+    @media (max-width: 768px) { .p404-hero-img-overlay { background: linear-gradient(to bottom, transparent 50%, #f8f5f0); } }
+    .p404-hero-content { display: flex; flex-direction: column; justify-content: center; padding: 52px 48px; }
+    @media (max-width: 768px) { .p404-hero-content { padding: 36px 24px 48px; } }
+    .p404-code { font-size: clamp(72px, 14vw, 120px); font-weight: 900; color: #f97316; line-height: 1; letter-spacing: -0.05em; margin-bottom: 8px; }
+    .p404-headline { font-size: clamp(20px, 3vw, 28px); font-weight: 900; color: #0c0b0a; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px; text-transform: uppercase; }
+    .p404-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #5a5550; line-height: 1.65; margin-bottom: 32px; max-width: 400px; }
+    .p404-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .p404-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; background: #e8690a; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 9px; box-shadow: 0 4px 0 #b84f06; transition: transform 0.15s, box-shadow 0.15s; }
+    .p404-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #b84f06; }
+    .p404-btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 #b84f06; }
+    .p404-btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; background: #fff; color: #333; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 9px; border: 1.5px solid #e0dbd4; transition: border-color 0.15s, color 0.15s; }
+    .p404-btn-ghost:hover { border-color: #e8690a; color: #e8690a; }
+
+    /* ── WHAT WE BUY STRIP ── */
+    .p404-strip { background: #fff; border-top: 1px solid #e8e4de; border-bottom: 1px solid #e8e4de; padding: 40px 24px; }
+    .p404-strip-inner { max-width: 1000px; margin: 0 auto; }
+    .p404-strip-label { font-size: 9px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #e8690a; text-align: center; margin-bottom: 6px; }
+    .p404-strip-title { font-size: clamp(18px, 3vw, 24px); font-weight: 900; color: #0c0b0a; text-align: center; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 28px; }
+    .p404-cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 600px) { .p404-cats { grid-template-columns: repeat(2, 1fr); } }
+    .p404-cat { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #f8f5f0; border: 1px solid #e8e4de; border-radius: 10px; text-decoration: none; color: inherit; transition: border-color 0.15s, background 0.15s; }
+    .p404-cat:hover { border-color: #e8690a; background: #fff8f3; }
+    .p404-cat-icon { font-size: 22px; flex-shrink: 0; }
+    .p404-cat-name { font-size: 12px; font-weight: 800; color: #0c0b0a; text-transform: uppercase; letter-spacing: 0.04em; }
+    .p404-cat-sub { font-family: 'Inter', sans-serif; font-size: 11px; color: #9a9490; margin-top: 1px; }
+
+    /* ── INFO ROW ── */
+    .p404-info { max-width: 1000px; margin: 0 auto; padding: 40px 24px 60px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .p404-info { grid-template-columns: 1fr; gap: 16px; } }
+    .p404-info-card { background: #fff; border: 1px solid #e8e4de; border-radius: 12px; padding: 22px 20px; }
+    .p404-info-icon { width: 36px; height: 36px; border-radius: 9px; background: rgba(232,105,10,0.1); display: flex; align-items: center; justify-content: center; color: #e8690a; margin-bottom: 12px; }
+    .p404-info-icon svg { width: 18px; height: 18px; }
+    .p404-info-label { font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #e8690a; margin-bottom: 6px; }
+    .p404-info-value { font-size: 15px; font-weight: 800; color: #0c0b0a; margin-bottom: 4px; }
+    .p404-info-detail { font-family: 'Inter', sans-serif; font-size: 12.5px; color: #6b6560; line-height: 1.6; }
+    .p404-info-card a { color: inherit; text-decoration: none; }
+    .p404-info-card a:hover .p404-info-value { color: #e8690a; }
+
+    /* ── FOOTER ── */
+    .p404-footer { background: #0c0b0a; color: #fff; text-align: center; padding: 24px; font-family: 'Inter', sans-serif; font-size: 12px; color: #888; }
+    .p404-footer a { color: #ccc; text-decoration: none; margin: 0 8px; }
+    .p404-footer a:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -128,30 +81,106 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-  <div class="err-code">404</div>
-  <p class="err-msg">This page doesn't exist. Let's get you back to buying and selling.</p>
-  <a href="/" class="err-btn">Back to Home</a>
 
-  <div class="err-contact">
-    <p class="err-contact-label">For additional information</p>
-    <p class="err-contact-msg">Visit us in store or call us today — we're here to help.</p>
-    <div class="err-contact-details">
-      <a href="tel:9176088939" class="err-contact-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-        917-608-8939
-      </a>
-      <span class="err-contact-divider"></span>
-      <a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener" class="err-contact-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
-        39 Avenue A, New York, NY 10009
-      </a>
+  <!-- Nav -->
+  <nav class="p404-nav">
+    <a href="/" class="p404-nav-logo">East Village Buyers</a>
+    <a href="/" class="p404-nav-btn">Back to Home</a>
+  </nav>
+
+  <!-- Hero split: storefront photo + 404 message -->
+  <div class="p404-hero">
+    <div class="p404-hero-img">
+      <img src="evbstorefront.webp" alt="East Village Buyers storefront at 39 Avenue A NYC">
+      <div class="p404-hero-img-overlay"></div>
+    </div>
+    <div class="p404-hero-content">
+      <div class="p404-code">404</div>
+      <h1 class="p404-headline">Page Not Found</h1>
+      <p class="p404-sub">This page doesn't exist — but we do. East Village Buyers is NYC's go-to spot for buying and selling luxury goods, jewelry, sneakers, and designer pieces. Walk in anytime.</p>
+      <div class="p404-btns">
+        <a href="/" class="p404-btn-primary">Go to Homepage</a>
+        <a href="/blog/" class="p404-btn-ghost">Read Our Blog</a>
+      </div>
     </div>
   </div>
 
-  <div class="err-links">
-    <a href="/about/">About</a>
-    <a href="/blog/">Blog</a>
-    <a href="tel:9176088939">Call Us</a>
+  <!-- What we buy -->
+  <div class="p404-strip">
+    <div class="p404-strip-inner">
+      <p class="p404-strip-label">While you're here</p>
+      <h2 class="p404-strip-title">We Buy &amp; Sell All of This</h2>
+      <div class="p404-cats">
+        <a href="/we-buy-jewelry-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">💍</div>
+          <div><div class="p404-cat-name">Jewelry</div><div class="p404-cat-sub">Gold, diamonds, silver, estate</div></div>
+        </a>
+        <a href="/we-buy-watches-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">⌚</div>
+          <div><div class="p404-cat-name">Watches</div><div class="p404-cat-sub">Rolex, Omega, Cartier &amp; more</div></div>
+        </a>
+        <a href="/we-buy-designer-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">👜</div>
+          <div><div class="p404-cat-name">Designer</div><div class="p404-cat-sub">LV, Chanel, Gucci, Hermès</div></div>
+        </a>
+        <a href="/we-buy-sneakers-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">👟</div>
+          <div><div class="p404-cat-name">Sneakers</div><div class="p404-cat-sub">Jordan, Nike, Yeezy &amp; more</div></div>
+        </a>
+        <a href="/we-buy-streetwear-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">🧥</div>
+          <div><div class="p404-cat-name">Streetwear</div><div class="p404-cat-sub">Supreme, Chrome Hearts, BAPE</div></div>
+        </a>
+        <a href="/we-buy-electronics-nyc/" class="p404-cat">
+          <div class="p404-cat-icon">📱</div>
+          <div><div class="p404-cat-name">Electronics</div><div class="p404-cat-sub">Phones, cameras, gaming</div></div>
+        </a>
+      </div>
+    </div>
   </div>
+
+  <!-- Contact info cards -->
+  <div class="p404-info">
+    <div class="p404-info-card">
+      <a href="tel:9176088939">
+        <div class="p404-info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        </div>
+        <div class="p404-info-label">Call or Text</div>
+        <div class="p404-info-value">917-608-8939</div>
+        <div class="p404-info-detail">Call or text photos of your item for a quick estimate.</div>
+      </a>
+    </div>
+    <div class="p404-info-card">
+      <a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">
+        <div class="p404-info-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <div class="p404-info-label">Visit Us</div>
+        <div class="p404-info-value">39 Avenue A</div>
+        <div class="p404-info-detail">New York, NY 10009 · East Village · Walk-ins welcome.</div>
+      </a>
+    </div>
+    <div class="p404-info-card">
+      <div class="p404-info-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="p404-info-label">Store Hours</div>
+      <div class="p404-info-value">Open Today</div>
+      <div class="p404-info-detail">Sun – Thu: 12:30 – 6:30 PM<br>Friday: 12:30 – 6:00 PM<br>Saturday: Closed</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="p404-footer">
+    <p>&copy; 2026 East Village Buyers &nbsp;&middot;&nbsp; Vintage USA Inc &nbsp;&middot;&nbsp; DCA Lic. #2070477</p>
+    <p style="margin-top:8px;">
+      <a href="/">Home</a>
+      <a href="/about/">About</a>
+      <a href="/blog/">Blog</a>
+      <a href="/cookie-policy/">Cookie Policy</a>
+    </p>
+  </div>
+
 </body>
 </html>
