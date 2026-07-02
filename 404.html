@@ -68,12 +68,75 @@
       text-decoration: none;
     }
     .err-links a:hover { text-decoration: underline; }
+    .err-contact {
+      margin-top: 36px;
+      background: #fff;
+      border: 1.5px solid rgba(249,115,22,0.25);
+      border-radius: 14px;
+      padding: 24px 28px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+    .err-contact-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #f97316;
+      margin-bottom: 6px;
+    }
+    .err-contact-msg {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .err-contact-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .err-contact-divider { display: none; }
+    .err-contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #111;
+      text-decoration: none;
+      background: #f8f5f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .err-contact-item:hover { background: rgba(249,115,22,0.08); color: #f97316; }
+    .err-contact-item svg { width: 16px; height: 16px; color: #f97316; flex-shrink: 0; }
   </style>
 </head>
 <body>
   <div class="err-code">404</div>
   <p class="err-msg">This page doesn't exist. Let's get you back to buying and selling.</p>
   <a href="/" class="err-btn">Back to Home</a>
+
+  <div class="err-contact">
+    <p class="err-contact-label">For additional information</p>
+    <p class="err-contact-msg">Visit us in store or call us today — we're here to help.</p>
+    <div class="err-contact-details">
+      <a href="tel:9176088939" class="err-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        917-608-8939
+      </a>
+      <span class="err-contact-divider"></span>
+      <a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener" class="err-contact-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+        39 Avenue A, New York, NY 10009
+      </a>
+    </div>
+  </div>
+
   <div class="err-links">
     <a href="/about/">About</a>
     <a href="/blog/">Blog</a>
