@@ -1,22 +1,22 @@
 .site-topbar {
   background: #e8690a;
   width: 100%;
+  overflow: hidden;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
-  min-height: 32px;
-  padding: 0 20px;
+  padding: 0 16px;
 }
 .site-topbar-inner {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 .site-topbar-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 5px;
   font-family: 'Montserrat', sans-serif;
@@ -25,10 +25,12 @@
   color: #fff;
   white-space: nowrap;
   text-decoration: none;
+  flex-shrink: 0;
 }
 .site-topbar-item svg { width: 11px; height: 11px; flex-shrink: 0; opacity: 0.85; }
-.site-topbar-sep { color: rgba(255,255,255,0.4); font-size: 11px; user-select: none; }
-@media (max-width: 540px) { .site-topbar-item--hours { display: none; } }
+.site-topbar-sep { color: rgba(255,255,255,0.45); font-size: 13px; flex-shrink: 0; user-select: none; line-height: 1; }
+@media (max-width: 640px) { .site-topbar-item--hours { display: none; } }
+@media (max-width: 400px) { .site-topbar-item { font-size: 10px; } }
 
 .site-nav {
   background: #fff;
