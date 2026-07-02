@@ -1,80 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Core pages -->
   <url>
     <loc>https://www.eastvillagebuyers.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-jewelry-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-designer-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-streetwear-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-watches-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-electronics-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/about.html</loc>
+    <loc>https://www.eastvillagebuyers.com/about/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-accessories-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/blog/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-sneakers-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/we-buy-collectibles-nyc.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/cookie-policy.html</loc>
+    <loc>https://www.eastvillagebuyers.com/cookie-policy/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
+
+  <!-- We Buy pages -->
   <url>
-    <loc>https://www.eastvillagebuyers.com/bloghome.html</loc>
+    <loc>https://www.eastvillagebuyers.com/we-buy-jewelry-nyc/</loc>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-designer-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-streetwear-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-watches-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-electronics-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-accessories-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-sneakers-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/we-buy-collectibles-nyc/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Blog posts -->
   <url>
     <loc>https://www.eastvillagebuyers.com/sell-gold-for-cash-nyc-neighborhood-guide/</loc>
-  </url>
-  <url>
-    <loc>https://www.eastvillagebuyers.com/blog-why-gold-prices-fluctuate-nyc.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-how-to-sell-diamonds-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/why-gold-prices-fluctuate-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-is-silver-jewelry-worth-selling.html</loc>
+    <loc>https://www.eastvillagebuyers.com/how-to-sell-diamonds-nyc/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/is-silver-jewelry-worth-selling/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -84,33 +92,34 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-estate-jewelry-appraisal-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/estate-jewelry-appraisal-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-supreme-box-logo-guide-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/supreme-box-logo-guide-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-sell-jordans-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/sell-jordans-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-travis-scott-sneakers-resale-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/travis-scott-sneakers-resale-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-vintage-streetwear-worth-selling-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/vintage-streetwear-worth-selling-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.eastvillagebuyers.com/blog-authenticate-chrome-hearts-nyc.html</loc>
+    <loc>https://www.eastvillagebuyers.com/authenticate-chrome-hearts-nyc/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
 </urlset>
