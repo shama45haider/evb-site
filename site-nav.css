@@ -72,6 +72,7 @@
 @media (min-width: 1160px) { .site-nav-phone { display: flex; } }
 .site-nav-phone-label { font-size: 8px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; }
 .site-nav-phone-num { font-size: 15px; font-weight: 900; color: #1a1a1a; letter-spacing: -0.01em; }
+.site-nav-phone-addr { font-size: 8px; font-weight: 600; color: #e8690a; letter-spacing: 0.04em; }
 
 .site-btn {
   display: inline-flex;
@@ -186,6 +187,19 @@
 }
 .site-mob-link::before { content: ''; display: block; width: 3px; height: 3px; border-radius: 50%; background: #e8690a; flex-shrink: 0; }
 .site-mob-link:hover { color: #e8690a; background: #fff8f4; }
+
+.site-mob-addr {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0 4px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  border-top: 1px solid #f0f0f0;
+}
+.site-mob-addr svg { width: 12px; height: 12px; color: #e8690a; flex-shrink: 0; }
 
 .site-mob-footer { padding: 14px 18px 28px; display: flex; flex-direction: column; gap: 8px; }
 .site-mob-btn {
