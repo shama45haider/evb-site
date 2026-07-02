@@ -33,12 +33,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .p404-hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
     .p404-hero-img-overlay { position: absolute; inset: 0; background: linear-gradient(to right, transparent 60%, #f8f5f0); }
     @media (max-width: 768px) { .p404-hero-img-overlay { background: linear-gradient(to bottom, transparent 50%, #f8f5f0); } }
-    .p404-hero-content { display: flex; flex-direction: column; justify-content: center; padding: 52px 48px; }
+    .p404-hero-content { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 52px 48px; }
     @media (max-width: 768px) { .p404-hero-content { padding: 36px 24px 48px; } }
+    /* logo above 404 */
+    .p404-logo { display: block; width: 72px; margin-bottom: 20px; }
     .p404-code { font-size: clamp(72px, 14vw, 120px); font-weight: 900; color: #f97316; line-height: 1; letter-spacing: -0.05em; margin-bottom: 8px; }
     .p404-headline { font-size: clamp(20px, 3vw, 28px); font-weight: 900; color: #0c0b0a; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px; text-transform: uppercase; }
     .p404-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #5a5550; line-height: 1.65; margin-bottom: 32px; max-width: 400px; }
     .p404-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    /* background deco accents */
+    .p404-deco { position: absolute; pointer-events: none; z-index: 0; opacity: 0.055; filter: grayscale(30%) saturate(0.7); }
+    .p404-deco-1 { width: 300px; bottom: -40px; right: -30px; transform: rotate(-14deg); }
+    .p404-deco-2 { width: 260px; top: -20px; right: 30px; transform: rotate(12deg); }
+    .p404-hero-content > *:not(.p404-deco) { position: relative; z-index: 1; }
+    /* strip deco */
+    .p404-strip { position: relative; overflow: hidden; background: #fff; border-top: 1px solid #e8e4de; border-bottom: 1px solid #e8e4de; padding: 40px 24px; }
+    .p404-strip-deco { position: absolute; pointer-events: none; opacity: 0.05; filter: grayscale(30%) saturate(0.6); }
+    .p404-strip-deco-1 { width: 220px; top: 50%; left: -30px; transform: translateY(-50%) rotate(8deg); }
+    .p404-strip-deco-2 { width: 200px; top: 50%; right: -20px; transform: translateY(-50%) rotate(-10deg); }
     .p404-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; background: #e8690a; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border-radius: 9px; box-shadow: 0 4px 0 #b84f06; transition: transform 0.15s, box-shadow 0.15s; }
     .p404-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #b84f06; }
     .p404-btn-primary:active { transform: translateY(3px); box-shadow: 0 1px 0 #b84f06; }
@@ -46,8 +58,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .p404-btn-ghost:hover { border-color: #e8690a; color: #e8690a; }
 
     /* ── WHAT WE BUY STRIP ── */
-    .p404-strip { background: #fff; border-top: 1px solid #e8e4de; border-bottom: 1px solid #e8e4de; padding: 40px 24px; }
-    .p404-strip-inner { max-width: 1000px; margin: 0 auto; }
+    .p404-strip-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
     .p404-strip-label { font-size: 9px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #e8690a; text-align: center; margin-bottom: 6px; }
     .p404-strip-title { font-size: clamp(18px, 3vw, 24px); font-weight: 900; color: #0c0b0a; text-align: center; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 28px; }
     .p404-cats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -95,6 +106,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="p404-hero-img-overlay"></div>
     </div>
     <div class="p404-hero-content">
+      <img src="evblogo.webp" alt="East Village Buyers" class="p404-logo">
+      <img src="indeximageshoe.webp" alt="" class="p404-deco p404-deco-1" aria-hidden="true">
+      <img src="indeximagewatch.webp" alt="" class="p404-deco p404-deco-2" aria-hidden="true">
       <div class="p404-code">404</div>
       <h1 class="p404-headline">Page Not Found</h1>
       <p class="p404-sub">This page doesn't exist — but we do. East Village Buyers is NYC's go-to spot for buying and selling luxury goods, jewelry, sneakers, and designer pieces. Walk in anytime.</p>
@@ -107,32 +121,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- What we buy -->
   <div class="p404-strip">
+    <img src="indeximagehandbag.webp" alt="" class="p404-strip-deco p404-strip-deco-1" aria-hidden="true">
+    <img src="indeximageduffle.webp" alt="" class="p404-strip-deco p404-strip-deco-2" aria-hidden="true">
     <div class="p404-strip-inner">
       <p class="p404-strip-label">While you're here</p>
       <h2 class="p404-strip-title">We Buy &amp; Sell All of This</h2>
       <div class="p404-cats">
         <a href="/we-buy-jewelry-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">💍</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
           <div><div class="p404-cat-name">Jewelry</div><div class="p404-cat-sub">Gold, diamonds, silver, estate</div></div>
         </a>
         <a href="/we-buy-watches-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">⌚</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 01-2 1.82H9.83a2 2 0 01-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 019.83 1h4.35a2 2 0 012 1.82l.35 3.83"/></svg></div>
           <div><div class="p404-cat-name">Watches</div><div class="p404-cat-sub">Rolex, Omega, Cartier &amp; more</div></div>
         </a>
         <a href="/we-buy-designer-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">👜</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
           <div><div class="p404-cat-name">Designer</div><div class="p404-cat-sub">LV, Chanel, Gucci, Hermès</div></div>
         </a>
         <a href="/we-buy-sneakers-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">👟</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12l4-4 4 2 4-4 4 2v6H2v-2z"/><path d="M2 18h20"/></svg></div>
           <div><div class="p404-cat-name">Sneakers</div><div class="p404-cat-sub">Jordan, Nike, Yeezy &amp; more</div></div>
         </a>
         <a href="/we-buy-streetwear-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">🧥</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg></div>
           <div><div class="p404-cat-name">Streetwear</div><div class="p404-cat-sub">Supreme, Chrome Hearts, BAPE</div></div>
         </a>
         <a href="/we-buy-electronics-nyc/" class="p404-cat">
-          <div class="p404-cat-icon">📱</div>
+          <div class="p404-cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
           <div><div class="p404-cat-name">Electronics</div><div class="p404-cat-sub">Phones, cameras, gaming</div></div>
         </a>
       </div>
@@ -149,6 +165,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="p404-info-label">Call or Text</div>
         <div class="p404-info-value">917-608-8939</div>
         <div class="p404-info-detail">Call or text photos of your item for a quick estimate.</div>
+      </a>
+      <a href="tel:9176088939" style="display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:10px 18px;background:#e8690a;color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border-radius:8px;box-shadow:0 3px 0 #b84f06;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call Now
       </a>
     </div>
     <div class="p404-info-card">
