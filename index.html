@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3745,7 +3745,7 @@
   .nk-card{position:relative;max-width:580px;width:100%;background:#fff;border-radius:18px;overflow:hidden;display:flex;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:nkSlide .5s cubic-bezier(.22,1,.36,1)}
   .nk-x{position:absolute;top:10px;right:12px;z-index:10;background:rgba(255,255,255,.9);border:none;color:#333;font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .2s}
   .nk-x:hover{transform:scale(1.1)}
-  .wn-track{display:flex;width:100%;transition:transform .4s cubic-bezier(.22,1,.36,1);will-change:transform}
+  .wn-track{display:flex;width:100%;transition:transform .65s cubic-bezier(.4,0,.2,1);will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
   .wn-slide{display:flex;min-width:100%;width:100%}
   .nk-img{position:relative;flex:0 0 44%;min-height:260px;overflow:hidden}
   .nk-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
@@ -3817,13 +3817,13 @@
 
   <header class="site-nav" id="evbNav">
     <div class="site-nav-inner">
-      <a href="index.html" class="site-nav-logo">
+      <a href="" class="site-nav-logo">
         <img src="evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='evblogo.webp';">
       </a>
       <nav class="site-nav-links" aria-label="Main navigation">
-        <a href="index.html" class="site-nav-link is-active">Home</a>
-        <a href="about.html" class="site-nav-link">About</a>
-        <a href="bloghome.html" class="site-nav-link">Blog</a>
+        <a href="" class="site-nav-link is-active">Home</a>
+        <a href="about/" class="site-nav-link">About</a>
+        <a href="blog/" class="site-nav-link">Blog</a>
       </nav>
       <div class="site-nav-right">
         <div class="site-nav-phone">
@@ -3862,9 +3862,9 @@
       <button class="site-mob-x" onclick="toggleEvbNav()" aria-label="Close">&times;</button>
     </div>
     <nav class="site-mob-links" aria-label="Mobile navigation">
-      <a href="index.html" class="site-mob-link" onclick="toggleEvbNav()">Home</a>
-      <a href="about.html" class="site-mob-link" onclick="toggleEvbNav()">About</a>
-      <a href="bloghome.html" class="site-mob-link" onclick="toggleEvbNav()">Blog</a>
+      <a href="" class="site-mob-link" onclick="toggleEvbNav()">Home</a>
+      <a href="about/" class="site-mob-link" onclick="toggleEvbNav()">About</a>
+      <a href="blog/" class="site-mob-link" onclick="toggleEvbNav()">Blog</a>
     </nav>
     <div class="site-mob-footer">
       <a href="tel:9176088939" class="site-mob-btn site-mob-btn-call">
@@ -4114,7 +4114,7 @@
       <div class="evb-carousel" id="evbCarousel">
 
         <!-- Jewelry -->
-        <a href="we-buy-jewelry-nyc.html" class="evb-cc evb-cc--jwl">
+        <a href="we-buy-jewelry-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="jewelrybanner.webp" alt="Fine Jewelry & Gold" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="object-position:center 70%;">
             <img src="jewelry-hover.webp" alt="Gold jewelry collection" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-hover" style="object-position:center 50%;">
@@ -4128,7 +4128,7 @@
         </a>
 
         <!-- Sneakers -->
-        <a href="we-buy-sneakers-nyc.html" class="evb-cc evb-cc--jwl">
+        <a href="we-buy-sneakers-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="sneakers-main.webp" alt="Sneakers" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main">
             <img src="tiffanyshoe.webp" alt="Sneaker collection" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-hover">
@@ -4142,7 +4142,7 @@
         </a>
 
         <!-- Streetwear -->
-        <a href="we-buy-streetwear-nyc.html" class="evb-cc evb-cc--jwl">
+        <a href="we-buy-streetwear-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="streetwear-main.webp" alt="Streetwear" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="object-position:center 30%;">
             <img src="evb8.webp" alt="Streetwear collection" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-hover" style="object-position:center 15%;">
@@ -4156,7 +4156,7 @@
         </a>
 
         <!-- Watches -->
-        <a href="we-buy-accessories-nyc.html" class="evb-cc evb-cc--jwl">
+        <a href="we-buy-accessories-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="watches-main.webp" alt="Luxury Watches" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="transform:scale(1);object-position:center 40%;">
             <img src="watches-hover.webp" alt="Luxury watch collection" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-hover" style="transform:scale(1.15) translateX(0);object-position:center 40%;">
@@ -4170,7 +4170,7 @@
         </a>
 
         <!-- Designer Bags -->
-        <a href="we-buy-accessories-nyc.html" class="evb-cc evb-cc--jwl">
+        <a href="we-buy-accessories-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="bagbanner.webp" alt="Designer Bags" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main">
             <img src="lvhandbag.webp" alt="Designer handbag collection" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-hover">
@@ -4184,7 +4184,7 @@
         </a>
 
         <!-- Electronics -->
-        <a href="we-buy-electronics-nyc.html" class="evb-cc">
+        <a href="we-buy-electronics-nyc/" class="evb-cc">
           <div class="evb-cc-img">
             <img src="electronicsbanner.webp" alt="Electronics" width="290" height="195" loading="lazy" decoding="async">
           </div>
@@ -4197,7 +4197,7 @@
         </a>
 
         <!-- Collectibles -->
-        <a href="we-buy-collectibles-nyc.html" class="evb-cc">
+        <a href="we-buy-collectibles-nyc/" class="evb-cc">
           <div class="evb-cc-img">
             <img src="kaws-the-promise.webp" alt="Collectibles & Hype" width="290" height="195" loading="lazy" decoding="async">
           </div>
@@ -4915,8 +4915,8 @@
       <div class="evb-footer-col">
         <p class="footer-heading" role="heading" aria-level="2">Company</p>
         <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="index.html#location">Our Location</a></li>
+          <li><a href="about/">About Us</a></li>
+          <li><a href="#location">Our Location</a></li>
           <li><a href="sms:9176088939">Get a Quote</a></li>
           <li><a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer">Instagram</a></li>
           <li><a href="tel:9176088939">Contact</a></li>
@@ -4926,13 +4926,13 @@
       <div class="evb-footer-col">
         <p class="footer-heading" role="heading" aria-level="2">What We Buy</p>
         <ul>
-          <li><a href="we-buy-jewelry-nyc.html">Jewelry</a></li>
-          <li><a href="we-buy-designer-nyc.html">Designer</a></li>
-          <li><a href="we-buy-accessories-nyc.html">Accessories</a></li>
-          <li><a href="we-buy-streetwear-nyc.html">Streetwear</a></li>
-          <li><a href="we-buy-sneakers-nyc.html">Sneakers</a></li>
-          <li><a href="we-buy-watches-nyc.html">Watches</a></li>
-          <li><a href="we-buy-electronics-nyc.html">Electronics</a></li>
+          <li><a href="we-buy-jewelry-nyc/">Jewelry</a></li>
+          <li><a href="we-buy-designer-nyc/">Designer</a></li>
+          <li><a href="we-buy-accessories-nyc/">Accessories</a></li>
+          <li><a href="we-buy-streetwear-nyc/">Streetwear</a></li>
+          <li><a href="we-buy-sneakers-nyc/">Sneakers</a></li>
+          <li><a href="we-buy-watches-nyc/">Watches</a></li>
+          <li><a href="we-buy-electronics-nyc/">Electronics</a></li>
         </ul>
       </div>
 
@@ -5595,7 +5595,7 @@
           </div>
           <button type="button" class="evb-ck-x" onclick="evbCk('dismissed')" aria-label="Dismiss cookie notice">&times;</button>
         </div>
-        <p class="evb-ck-desc">We use essential cookies and may use analytics &amp; advertising cookies (Google, Meta) to improve your experience. <a href="cookie-policy.html" style="color:#f97316;text-decoration:underline;text-underline-offset:2px;font-weight:600;">Cookie Policy</a></p>
+        <p class="evb-ck-desc">We use essential cookies and may use analytics &amp; advertising cookies (Google, Meta) to improve your experience. <a href="cookie-policy/" style="color:#f97316;text-decoration:underline;text-underline-offset:2px;font-weight:600;">Cookie Policy</a></p>
         <div class="evb-ck-actions">
           <button type="button" id="evbCkNo" class="evb-ck-btn" onclick="evbCk('rejected')">Essential only</button>
           <button type="button" id="evbCkYes" class="evb-ck-btn" onclick="evbCk('accepted')">Accept all</button>
