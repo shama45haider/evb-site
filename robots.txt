@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.eastvillagebuyers.com/sitemap.xml
+Sitemap: https://eastvillagebuyers.com/sitemap.xml
