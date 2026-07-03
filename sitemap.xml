@@ -146,5 +146,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.eastvillagebuyers.com/the-history-of-supreme-from-a-skate-shop-to-a-global-icon/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
 </urlset>
