@@ -121,8 +121,39 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
   <meta name="theme-color" content="#f97316">
 
-  <script src="https://cdn.tailwindcss.com?v=3"></script>
-  <script>tailwind.config = { corePlugins: { preflight: false } }</script>
+  <style>
+    /* Static replacements for the Tailwind utilities this page uses
+       (previously served by cdn.tailwindcss.com with preflight disabled) */
+    .bg-\[\#f8f5f0\]{background-color:#f8f5f0}
+    .bg-white{background-color:#fff}
+    .font-black{font-weight:900}
+    .font-bold{font-weight:700}
+    .gap-2{gap:.5rem}
+    .items-center{align-items:center}
+    .justify-center{justify-content:center}
+    .max-w-6xl{max-width:72rem}
+    .mb-0{margin-bottom:0}
+    .mb-1{margin-bottom:.25rem}
+    .mb-2{margin-bottom:.5rem}
+    .mb-4{margin-bottom:1rem}
+    .mb-6{margin-bottom:1.5rem}
+    .mt-4{margin-top:1rem}
+    .mx-auto{margin-left:auto;margin-right:auto}
+    .py-12{padding-top:3rem;padding-bottom:3rem}
+    .py-16{padding-top:4rem;padding-bottom:4rem}
+    .scroll-mt-20{scroll-margin-top:5rem}
+    .text-black{color:#000}
+    .text-black\/50{color:rgb(0 0 0 / .5)}
+    .text-orange-500{color:#f97316}
+    .text-sm{font-size:.875rem;line-height:1.25rem}
+    .text-xs{font-size:.75rem;line-height:1rem}
+    .tracking-\[\.22em\]{letter-spacing:.22em}
+    .uppercase{text-transform:uppercase}
+    @media (min-width:1024px){
+      .lg\:px-20{padding-left:5rem;padding-right:5rem}
+      .lg\:text-5xl{font-size:3rem;line-height:1}
+    }
+  </style>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@600;700&family=Bebas+Neue&family=Caveat:wght@700&family=Fjalla+One&family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Oswald:wght@600;700&family=Playfair+Display:wght@800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Roboto:wght@400;500;600;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -458,6 +489,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @media (max-width: 600px) {
       .evb-cc { width: 80vw; }
       .evb-cc-img { height: 170px; }
+    }
+    @media (max-width: 375px) {
+      .evb-cc { width: calc(100vw - 48px); }
     }
 
 
@@ -3859,9 +3893,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        HERO — PROFESSIONAL INFO LAYOUT
        ═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"——"— -->
   <section class="hero-section" style="position:relative;overflow:hidden;">
-    <img src="indeximagehat4.webp" alt="Luxury streetwear hat" class="evb-accent-img evb-accent-hat4" loading="lazy">
-    <img src="goyardbackground.webp" alt="Goyard luxury" class="evb-accent-img evb-accent-goyard" loading="lazy">
-    <img src="eeknicks.webp" alt="Sneaker collectible" class="evb-accent-img evb-accent-eeknicks" loading="lazy">
+    <img src="indeximagehat4.webp" alt="Luxury streetwear hat" class="evb-accent-img evb-accent-hat4" loading="lazy" decoding="async">
+    <img src="goyardbackground.webp" alt="Goyard luxury" class="evb-accent-img evb-accent-goyard" loading="lazy" decoding="async">
+    <img src="eeknicks.webp" alt="Sneaker collectible" class="evb-accent-img evb-accent-eeknicks" loading="lazy" decoding="async">
 
     <!-- Storefront — edge to edge -->
     <div class="hero-logo-frame">
@@ -4025,7 +4059,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h2 class="whats-new-title">What's New</h2>
         <div class="nk-card">
           <div class="nk-img">
-            <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy">
+            <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
             <div class="wn-slide-badge" style="background:#006BB6;">LET'S GO KNICKS</div>
           </div>
           <div class="nk-body">
@@ -4059,7 +4093,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <h2 class="whats-new-title">What's New</h2>
           <div class="nk-card">
             <div class="nk-img">
-              <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy">
+              <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
               <div class="wn-slide-badge" style="background:#006BB6;">LET'S GO KNICKS</div>
             </div>
             <div class="nk-body">
@@ -4137,8 +4171,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <!-- WHAT WE BUY -->
   <section id="what-we-buy" class="px-6 lg:px-20 py-16 scroll-mt-20" style="position:relative;overflow:hidden;background-color:#f8f5f0;background-image:radial-gradient(circle,rgba(249,115,22,0.07) 1px,transparent 1px);background-size:22px 22px;">
-    <img src="indeximageshoe.webp" alt="Sneakers for sale NYC" class="evb-accent-img evb-accent-shoe" loading="lazy">
-    <img src="indeximagewatch3.webp" alt="Gold luxury watch" class="evb-accent-img evb-accent-watch3" loading="lazy">
+    <img src="indeximageshoe.webp" alt="Sneakers for sale NYC" class="evb-accent-img evb-accent-shoe" loading="lazy" decoding="async">
+    <img src="indeximagewatch3.webp" alt="Gold luxury watch" class="evb-accent-img evb-accent-watch3" loading="lazy" decoding="async">
 
     <div class="max-w-6xl mx-auto" style="position:relative;z-index:2;">
 
@@ -4365,9 +4399,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <!-- INSIDE THE STORE — COMPACT CAROUSEL -->
   <section id="store" class="px-6 lg:px-20 py-12 bg-white scroll-mt-20" style="position:relative;overflow:hidden;">
-    <img src="indeximagewatch.webp" alt="Luxury timepiece" class="evb-accent-img evb-accent-watch" loading="lazy">
-    <img src="indeximagebag3.webp" alt="Designer bag" class="evb-accent-img evb-accent-bag3" loading="lazy">
-    <img src="amiribackground.webp" alt="Amiri fashion" class="evb-accent-img evb-accent-amiri" loading="lazy">
+    <img src="indeximagewatch.webp" alt="Luxury timepiece" class="evb-accent-img evb-accent-watch" loading="lazy" decoding="async">
+    <img src="indeximagebag3.webp" alt="Designer bag" class="evb-accent-img evb-accent-bag3" loading="lazy" decoding="async">
+    <img src="amiribackground.webp" alt="Amiri fashion" class="evb-accent-img evb-accent-amiri" loading="lazy" decoding="async">
     <div class="flex justify-between items-center mb-6">
       <div>
         <h2 class="text-4xl font-black uppercase mb-1">Inside The Store</h2>
@@ -4417,9 +4451,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <!-- FAQ -->
   <section id="faq" class="evb-faq-section scroll-mt-20" style="position:relative;overflow:hidden;">
-    <img src="indeximageduffle.webp" alt="BAPE duffle bag" class="evb-accent-img evb-accent-duffle" loading="lazy">
-    <img src="indeximagehandbag.webp" alt="Designer handbag" class="evb-accent-img evb-accent-handbag" loading="lazy">
-    <img src="indeximagehat.webp" alt="Streetwear hat" class="evb-accent-img evb-accent-hat" loading="lazy">
+    <img src="indeximageduffle.webp" alt="BAPE duffle bag" class="evb-accent-img evb-accent-duffle" loading="lazy" decoding="async">
+    <img src="indeximagehandbag.webp" alt="Designer handbag" class="evb-accent-img evb-accent-handbag" loading="lazy" decoding="async">
+    <img src="indeximagehat.webp" alt="Streetwear hat" class="evb-accent-img evb-accent-hat" loading="lazy" decoding="async">
     <div class="evb-faq-wrap" style="position:relative;z-index:2;">
 
       <!-- ── SIDEBAR ── -->
@@ -5674,7 +5708,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
   <link rel="stylesheet" href="evb-assistant.css">
   <script src="site-ticker.js"></script>
-  <script src="evb-knowledge.js"></script>
   <script src="evb-assistant.js" defer data-evb-assistant></script>
 </body>
 </html>

@@ -431,9 +431,9 @@
 /* ── Mobile ── */
 @media (max-width: 480px) {
   .evb-asst-root {
-    bottom: 12px !important;
-    right: 12px !important;
-    left: 12px !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    right: max(12px, env(safe-area-inset-right)) !important;
+    left: max(12px, env(safe-area-inset-left)) !important;
   }
 
   .evb-asst-panel {
@@ -441,7 +441,13 @@
     right: 0 !important;
     left: 0 !important;
     margin: 0 auto !important;
-    height: min(580px, calc(100vh - 80px)) !important;
+    height: min(520px, calc(100vh - 100px)) !important;
+  }
+
+  @supports (height: 100dvh) {
+    .evb-asst-panel {
+      height: min(520px, calc(100dvh - 100px)) !important;
+    }
   }
 
   .evb-asst-toggle-label {
