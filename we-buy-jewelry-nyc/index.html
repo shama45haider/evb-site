@@ -298,18 +298,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <div class="jw-cards" id="jwCards">
 
-        <div class="jw-c" data-jw>
+        <div class="jw-c" data-jw-link="../we-buy-gold-nyc/">
           <div class="jw-c-photo"><img src="../jw-bg-gold.webp" alt="Gold jewelry" loading="lazy" decoding="async"></div>
           <div class="jw-c-body">
             <div class="jw-c-top">
               <div><div class="jw-c-name">Gold</div><div class="jw-c-sub">10K&ndash;24K &middot; chains, rings, bracelets, scrap</div></div>
-              <div class="jw-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              <div class="jw-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
             </div>
             <div class="jw-c-detail"><div class="jw-c-detail-inner">
               <div><div class="jw-c-dl">Karats</div><div class="jw-c-tags"><span class="jw-c-tag">10K</span><span class="jw-c-tag">14K</span><span class="jw-c-tag">18K</span><span class="jw-c-tag">22K</span><span class="jw-c-tag">24K</span></div></div>
               <div><div class="jw-c-dl">How We Price</div><p class="jw-c-dt">Karat purity, weight in grams, and live spot price. Designer pieces may carry premium over melt.</p></div>
               <div><div class="jw-c-dl">How We Test</div><p class="jw-c-dt">Acid testing and electronic karat verification, done in front of you at the counter.</p></div>
               <div><div class="jw-c-dl">Also Accepted</div><p class="jw-c-dt">Broken chains, single earrings, dental gold, gold watches, scrap of any condition.</p></div>
+              <div><div class="jw-c-dl">Full Guide</div><p class="jw-c-dt">See the full gold page for a live price reference and how we check value &rarr;</p></div>
             </div></div>
           </div>
         </div>
@@ -427,6 +428,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 (function(){
   var cards = document.querySelectorAll('#jwCards .jw-c');
   cards.forEach(function(card) {
+    var link = card.getAttribute('data-jw-link');
+    if (link) {
+      card.addEventListener('click', function() { window.location.href = link; });
+      return;
+    }
     card.addEventListener('click', function() {
       var wasOpen = card.classList.contains('jw-c--open');
       cards.forEach(function(c) { c.classList.remove('jw-c--open'); });
