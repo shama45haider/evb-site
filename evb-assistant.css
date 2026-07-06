@@ -23,6 +23,43 @@
   pointer-events: auto !important;
 }
 
+/* ── Toggle wrapper (shrink-to-fit positioning context for the dismiss badge) ── */
+.evb-asst-toggle-wrap {
+  display: inline-flex !important;
+  position: relative !important;
+}
+
+/* ── Dismiss badge (hide widget for this session) ── */
+.evb-asst-dismiss {
+  pointer-events: auto !important;
+  position: absolute !important;
+  top: -8px !important;
+  right: -8px !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #0c0b0a !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  z-index: 1 !important;
+  transition: transform 0.15s ease, background 0.15s ease !important;
+}
+.evb-asst-dismiss:hover {
+  background: #f97316 !important;
+  transform: scale(1.1) !important;
+}
+.evb-asst-root--open .evb-asst-dismiss {
+  display: none !important;
+}
+
 /* ── Toggle button ── */
 .evb-asst-toggle {
   pointer-events: auto !important;

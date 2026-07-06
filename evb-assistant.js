@@ -686,7 +686,11 @@
   }
 
   // ── Build UI ──────────────────────────────────────────────────────────────
+  const HIDE_KEY = 'evb_asst_hidden_v1';
+
   function buildUI() {
+    if (sessionStorage.getItem(HIDE_KEY)) return;
+
     const root = document.createElement('div');
     root.className = 'evb-asst-root';
     root.setAttribute('role', 'complementary');
@@ -695,12 +699,15 @@
     const iconSvg = buildIconSvg();
 
     root.innerHTML =
+      '<div class="evb-asst-toggle-wrap">' +
+      '<button type="button" class="evb-asst-dismiss" aria-label="Hide chat assistant">&times;</button>' +
       '<button type="button" class="evb-asst-toggle" aria-expanded="false" aria-controls="evb-asst-panel">' +
       '<span class="evb-asst-toggle-icon" aria-hidden="true">' +
       iconSvg +
       '</span>' +
       '<span class="evb-asst-toggle-label">Ask EVB<small>Site assistant</small></span>' +
       '</button>' +
+      '</div>' +
       '<div class="evb-asst-panel" id="evb-asst-panel" hidden>' +
       '<div class="evb-asst-head">' +
       '<div class="evb-asst-head-logo">' +
@@ -720,6 +727,13 @@
       '</div>';
 
     document.body.appendChild(root);
+
+    const dismissBtn = root.querySelector('.evb-asst-dismiss');
+    dismissBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      sessionStorage.setItem(HIDE_KEY, '1');
+      root.remove();
+    });
 
     const toggle   = root.querySelector('.evb-asst-toggle');
     const panel    = root.querySelector('.evb-asst-panel');

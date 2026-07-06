@@ -272,6 +272,11 @@
   animation: none;
 }
 
+@media (max-width: 480px) {
+  .wb-cta-row { flex-direction: column; }
+  .wb-cta { width: 100%; white-space: normal; font-size: 11.5px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .wb-cta-primary { animation: none; }
   .wb-cta::before { display: none; }
