@@ -686,11 +686,10 @@
   }
 
   // ── Build UI ──────────────────────────────────────────────────────────────
-  const HIDE_KEY = 'evb_asst_hidden_v1';
+  const HIDE_KEY = 'evb_asst_minimized_v1';
+  const POS_KEY  = 'evb_asst_pos_v1';
 
   function buildUI() {
-    if (sessionStorage.getItem(HIDE_KEY)) return;
-
     const root = document.createElement('div');
     root.className = 'evb-asst-root';
     root.setAttribute('role', 'complementary');
@@ -700,7 +699,7 @@
 
     root.innerHTML =
       '<div class="evb-asst-toggle-wrap">' +
-      '<button type="button" class="evb-asst-dismiss" aria-label="Hide chat assistant">&times;</button>' +
+      '<button type="button" class="evb-asst-dismiss" aria-label="Minimize chat assistant">&times;</button>' +
       '<button type="button" class="evb-asst-toggle" aria-expanded="false" aria-controls="evb-asst-panel">' +
       '<span class="evb-asst-toggle-icon" aria-hidden="true">' +
       iconSvg +
@@ -708,15 +707,20 @@
       '<span class="evb-asst-toggle-label">Ask EVB<small>Site assistant</small></span>' +
       '</button>' +
       '</div>' +
+      '<button type="button" class="evb-asst-restore" aria-label="Reopen chat assistant">' +
+      '<span class="evb-asst-icon-svg-wrap" aria-hidden="true">' +
+      iconSvg +
+      '</span>' +
+      '</button>' +
       '<div class="evb-asst-panel" id="evb-asst-panel" hidden>' +
       '<div class="evb-asst-head">' +
       '<div class="evb-asst-head-logo">' +
       '<span class="evb-asst-head-logo-icon" aria-hidden="true">' +
       iconSvg +
       '</span>' +
-      '<div class="evb-asst-head-text"><h2>East Village Buyers</h2><p>Ask me anything about the shop</p></div>' +
+      '<div class="evb-asst-head-text"><h2>East Village Buyers</h2><p>Drag to move &middot; ask me anything</p></div>' +
       '</div>' +
-      '<button type="button" class="evb-asst-close" aria-label="Close chat">×</button>' +
+      '<button type="button" class="evb-asst-close" aria-label="Close chat">&times;</button>' +
       '</div>' +
       '<div class="evb-asst-messages" role="log" aria-live="polite" aria-relevant="additions"></div>' +
       '<div class="evb-asst-chips"></div>' +
@@ -728,12 +732,131 @@
 
     document.body.appendChild(root);
 
+    // ── Restore last dragged position (if any) for this session ─────────────
+    try {
+      const savedPos = JSON.parse(sessionStorage.getItem(POS_KEY) || 'null');
+      if (savedPos && typeof savedPos.right === 'number' && typeof savedPos.bottom === 'number') {
+        root.style.setProperty('right', savedPos.right + 'px', 'important');
+        root.style.setProperty('bottom', savedPos.bottom + 'px', 'important');
+        root.style.setProperty('left', 'auto', 'important');
+        root.style.setProperty('top', 'auto', 'important');
+      }
+    } catch (_) { /* ignore malformed storage */ }
+
+    // ── Minimize / restore ───────────────────────────────────────────────────
+    const restoreBtn = root.querySelector('.evb-asst-restore');
+
+    function minimize() {
+      root.classList.add('evb-asst-root--minimized');
+      sessionStorage.setItem(HIDE_KEY, '1');
+    }
+    function unminimize() {
+      root.classList.remove('evb-asst-root--minimized');
+      sessionStorage.removeItem(HIDE_KEY);
+    }
+    if (sessionStorage.getItem(HIDE_KEY)) minimize();
+
     const dismissBtn = root.querySelector('.evb-asst-dismiss');
     dismissBtn.addEventListener('click', e => {
       e.stopPropagation();
-      sessionStorage.setItem(HIDE_KEY, '1');
-      root.remove();
+      minimize();
     });
+
+    // ── Keep the widget fully on-screen ──────────────────────────────────────
+    function keepInViewport() {
+      const rect = root.getBoundingClientRect();
+      const margin = 8;
+      let right = parseFloat(getComputedStyle(root).right) || 0;
+      let bottom = parseFloat(getComputedStyle(root).bottom) || 0;
+      if (rect.left < margin) right += (margin - rect.left);
+      if (rect.top < margin) bottom += (margin - rect.top);
+      if (rect.right > window.innerWidth - margin) right -= (rect.right - (window.innerWidth - margin));
+      if (rect.bottom > window.innerHeight - margin) bottom -= (rect.bottom - (window.innerHeight - margin));
+      right = Math.max(margin, right);
+      bottom = Math.max(margin, bottom);
+      root.style.setProperty('right', right + 'px', 'important');
+      root.style.setProperty('bottom', bottom + 'px', 'important');
+      root.style.setProperty('left', 'auto', 'important');
+      root.style.setProperty('top', 'auto', 'important');
+    }
+
+    // ── Draggable (mouse + touch via Pointer Events) ─────────────────────────
+    function makeDraggable(handleEl) {
+      let dragging = false;
+      let moved = false;
+      let startX = 0, startY = 0, startRight = 0, startBottom = 0;
+      let pointerId = null;
+
+      function onPointerDown(e) {
+        if (e.button !== undefined && e.button !== 0 && e.pointerType === 'mouse') return;
+        dragging = true;
+        moved = false;
+        pointerId = e.pointerId;
+        const rect = root.getBoundingClientRect();
+        startX = e.clientX;
+        startY = e.clientY;
+        startRight = window.innerWidth - rect.right;
+        startBottom = window.innerHeight - rect.bottom;
+        root.classList.add('evb-asst-root--dragging');
+        try { handleEl.setPointerCapture(pointerId); } catch (_) { /* noop */ }
+      }
+
+      function onPointerMove(e) {
+        if (!dragging || e.pointerId !== pointerId) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) moved = true;
+        if (!moved) return;
+        e.preventDefault();
+        const rect = root.getBoundingClientRect();
+        const margin = 8;
+        let newRight = startRight - dx;
+        let newBottom = startBottom - dy;
+        newRight = Math.min(Math.max(newRight, margin), window.innerWidth - rect.width - margin);
+        newBottom = Math.min(Math.max(newBottom, margin), window.innerHeight - rect.height - margin);
+        root.style.setProperty('right', newRight + 'px', 'important');
+        root.style.setProperty('bottom', newBottom + 'px', 'important');
+        root.style.setProperty('left', 'auto', 'important');
+        root.style.setProperty('top', 'auto', 'important');
+      }
+
+      function onPointerUp(e) {
+        if (!dragging || e.pointerId !== pointerId) return;
+        dragging = false;
+        root.classList.remove('evb-asst-root--dragging');
+        try { handleEl.releasePointerCapture(pointerId); } catch (_) { /* noop */ }
+        if (moved) {
+          keepInViewport();
+          const right = parseFloat(getComputedStyle(root).right) || 0;
+          const bottom = parseFloat(getComputedStyle(root).bottom) || 0;
+          sessionStorage.setItem(POS_KEY, JSON.stringify({ right, bottom }));
+          suppressNextClick = true;
+          setTimeout(() => { suppressNextClick = false; }, 0);
+        }
+      }
+
+      handleEl.addEventListener('pointerdown', onPointerDown);
+      handleEl.addEventListener('pointermove', onPointerMove);
+      handleEl.addEventListener('pointerup', onPointerUp);
+      handleEl.addEventListener('pointercancel', onPointerUp);
+
+      return {
+        wasDragged: () => moved
+      };
+    }
+
+    let suppressNextClick = false;
+    const toggleDrag = makeDraggable(root.querySelector('.evb-asst-toggle'));
+    makeDraggable(root.querySelector('.evb-asst-head'));
+    const restoreDrag = makeDraggable(restoreBtn);
+
+    restoreBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (suppressNextClick || restoreDrag.wasDragged()) return;
+      unminimize();
+    });
+
+    window.addEventListener('resize', keepInViewport);
 
     const toggle   = root.querySelector('.evb-asst-toggle');
     const panel    = root.querySelector('.evb-asst-panel');
@@ -752,6 +875,7 @@
       root.classList.add('evb-asst-root--open');
       panel.hidden = false;
       toggle.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(keepInViewport);
       if (!greeted) {
         greeted = true;
         addBotMessage(
@@ -880,7 +1004,10 @@
       askQuestion(q);
     }
 
-    toggle.addEventListener('click', openPanel);
+    toggle.addEventListener('click', () => {
+      if (suppressNextClick || toggleDrag.wasDragged()) return;
+      openPanel();
+    });
     closeBtn.addEventListener('click', closePanel);
 
     form.addEventListener('submit', e => { e.preventDefault(); submitQuery(); });

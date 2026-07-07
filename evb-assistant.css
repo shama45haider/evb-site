@@ -465,19 +465,76 @@
   transform: none !important;
 }
 
+/* ── Draggable handles ── */
+.evb-asst-toggle-wrap,
+.evb-asst-head {
+  touch-action: none !important;
+}
+.evb-asst-root--dragging .evb-asst-toggle,
+.evb-asst-root--dragging .evb-asst-head {
+  cursor: grabbing !important;
+}
+.evb-asst-toggle,
+.evb-asst-head {
+  cursor: grab !important;
+}
+
+/* ── Minimize / restore ── */
+.evb-asst-restore {
+  display: none !important;
+}
+.evb-asst-root--minimized .evb-asst-toggle-wrap {
+  display: none !important;
+}
+.evb-asst-root--minimized .evb-asst-restore {
+  display: flex !important;
+  pointer-events: auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  background: var(--evb-asst-dark) !important;
+  color: #fff !important;
+  border: 2px solid var(--evb-asst-accent) !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  animation: evb-asst-restore-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+             evb-asst-restore-pulse 2.6s ease-in-out 0.6s infinite !important;
+}
+.evb-asst-restore .evb-asst-icon-svg {
+  width: 22px !important;
+  height: 22px !important;
+  color: var(--evb-asst-accent) !important;
+}
+@keyframes evb-asst-restore-in {
+  from { opacity: 0; transform: scale(0.4) rotate(-25deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes evb-asst-restore-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.25), 0 0 0 0 rgba(249,115,22,0.35); }
+  50%       { box-shadow: 0 4px 14px rgba(0,0,0,0.25), 0 0 0 8px rgba(249,115,22,0); }
+}
+
 /* ── Mobile ── */
+@media (max-width: 760px) {
+  .evb-asst-root {
+    bottom: 78px !important;
+  }
+}
 @media (max-width: 480px) {
   .evb-asst-root {
-    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    bottom: calc(68px + max(10px, env(safe-area-inset-bottom))) !important;
     right: max(12px, env(safe-area-inset-right)) !important;
     left: max(12px, env(safe-area-inset-left)) !important;
   }
 
   .evb-asst-panel {
-    width: 100% !important;
+    width: calc(100vw - 24px) !important;
     right: 0 !important;
-    left: 0 !important;
-    margin: 0 auto !important;
+    left: auto !important;
+    margin: 0 !important;
     height: min(520px, calc(100vh - 100px)) !important;
   }
 
@@ -498,7 +555,8 @@
   .evb-asst-toggle-icon,
   .evb-asst-panel,
   .evb-asst-msg,
-  .evb-asst-typing span {
+  .evb-asst-typing span,
+  .evb-asst-restore {
     animation: none !important;
     transition: none !important;
   }
