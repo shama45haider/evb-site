@@ -450,31 +450,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .blog-section-h2 { font-size: 17px; margin-bottom: 14px; }
       .blog-section-h2--grid { margin-top: 32px; padding-top: 28px; }
       .blog-section-lead { font-size: 13px; margin-bottom: 22px; }
-      .blog-featured-title { font-size: 1.15rem; }
-      .blog-featured-excerpt { font-size: 13.5px; }
       .blog-card-body { padding: 14px 14px 16px; }
       .blog-card-title { font-size: 13px; }
       .blog-card-excerpt { font-size: 12px; }
       .evb-visit-strip-inner { flex-direction: column; align-items: stretch; padding: 0 16px; }
       .evb-visit-pill { justify-content: center; width: 100%; font-size: 12px; padding: 12px 14px; }
     }
-
-    /* ── Featured post ── */
-    .blog-featured { margin-bottom: 40px; border-radius: 18px; overflow: hidden; background: #fff; border: 1px solid #e8e4de; box-shadow: 0 6px 28px rgba(0,0,0,0.07); text-decoration: none; color: inherit; display: block; transition: transform 0.25s, box-shadow 0.25s; }
-    .blog-featured:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,0.11); }
-    .blog-featured-media { width: 100%; height: 320px; background: #ece8e2; overflow: hidden; position: relative; }
-    @media (max-width: 640px) { .blog-featured-media { height: 200px; } }
-    .blog-featured-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .blog-featured-body { padding: 28px 28px 32px; }
-    @media (max-width: 640px) { .blog-featured-body { padding: 20px 18px 24px; } }
-    .blog-featured-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .blog-featured-cat { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #e8690a; }
-    .blog-featured-date { font-size: 12px; color: #9a9490; }
-    .blog-featured-title { font-family: 'Montserrat', sans-serif; font-size: clamp(1.3rem, 3vw, 1.75rem); font-weight: 900; color: #0c0b0a; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; text-transform: uppercase; }
-    .blog-featured-excerpt { font-size: 14.5px; color: #5a5550; line-height: 1.72; margin-bottom: 20px; font-family: 'Inter', sans-serif; }
-    .blog-featured-read { display: inline-flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #e8690a; }
-    .blog-featured-read svg { width: 14px; height: 14px; transition: transform 0.2s; }
-    .blog-featured:hover .blog-featured-read svg { transform: translateX(4px); }
 
     /* ── Post grid ── */
     .blog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
@@ -860,25 +841,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <h2 class="blog-section-h2">Latest <em>Buy &amp; Sell</em> Market Guides for NYC</h2>
       <p class="blog-section-lead">Expert articles on buying and selling gold, jewelry, luxury watches, designer handbags, sneakers, and streetwear in New York — from the team at 39 Avenue A.</p>
 
-      <!-- Featured post -->
-      <h2 class="blog-section-h2 blog-section-kicker">Featured Buy &amp; Sell Guide — Gold &amp; Jewelry NYC</h2>
-      <a href="why-gold-prices-fluctuate-nyc/" class="blog-featured" data-cat="jewelry">
-        <div class="blog-featured-media">
-          <img src="../blog-img-gold-prices.webp" alt="Why gold prices fluctuate and when to sell in NYC" loading="lazy" decoding="async">
-          
-        </div>
-        <div class="blog-featured-body">
-          <div class="blog-featured-meta">
-            <span class="blog-featured-cat">Jewelry</span>
-            <span class="blog-featured-date">June 10, 2026</span>
-          </div>
-          <h3 class="blog-featured-title">Why Gold Prices Fluctuate (And When to Sell in NYC)</h3>
-          <p class="blog-featured-excerpt">Gold is sitting near all-time highs, but the market never stays still. We break down what causes the price to jump and why now is the perfect time to cash out your jewelry at 39 Avenue A.</p>
-          <span class="blog-featured-read">Read the guide <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-        </div>
-      </a>
-
-      <h2 class="blog-section-h2 blog-section-h2--grid">More <em>Buy &amp; Sell</em> Articles — Gold, Watches, Designer &amp; Streetwear</h2>
+      <h2 class="blog-section-h2 blog-section-h2--grid"><em>Buy &amp; Sell</em> Articles — Gold, Watches, Designer &amp; Streetwear</h2>
 
       <!-- Post grid -->
       <div class="blog-grid" id="blogGrid">
