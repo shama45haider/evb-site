@@ -361,9 +361,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <h1 class="blog-article-title">Inside a 4.7M View Viral Reel: How EVB Turns Jewelry Into Cash</h1>
       </header>
       <div class="blog-article-embed" id="igEmbedWrap">
-        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DVcO56okXEj/" data-instgrm-version="14" style="display:none;">
-          <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
-        </blockquote>
+        <div class="iframely-embed">
+          <div class="iframely-responsive" style="height: 480px; padding-bottom: 0;">
+            <a href="https://www.instagram.com/reel/DVcO56okXEj/" data-iframely-url="https://iframely.net/5DenAA7v?theme=dark"></a>
+          </div>
+        </div>
         <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer" class="ig-fallback" id="igFallback">
           <img src="../../estatejewl.webp" alt="Vintage estate ring from the viral East Village Buyers Instagram reel">
           <span class="ig-fallback-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
@@ -373,13 +375,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </span>
         </a>
       </div>
-      <script async src="//www.instagram.com/embed.js"></script>
+      <script async src="https://iframely.net/embed.js"></script>
       <script>
         (function () {
           var wrap = document.getElementById('igEmbedWrap');
           var fallback = document.getElementById('igFallback');
           setTimeout(function () {
-            var loaded = wrap && wrap.querySelector('iframe.instagram-media');
+            var loaded = wrap && wrap.querySelector('iframe');
             if (loaded && fallback) fallback.style.display = 'none';
           }, 2500);
         })();
