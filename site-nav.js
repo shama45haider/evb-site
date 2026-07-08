@@ -17,6 +17,46 @@ function toggleMobNav() { toggleEvbNav(); }
 function toggleNav() { toggleEvbNav(); }
 
 (function () {
+  function setupNavDropdown() {
+    var drops = document.querySelectorAll('.site-nav-drop');
+    if (!drops.length) return;
+    drops.forEach(function (drop) {
+      var btn = drop.querySelector('.site-nav-link--drop');
+      if (!btn) return;
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var isOpen = drop.classList.contains('site-nav-drop--open');
+        drops.forEach(function (d) {
+          d.classList.remove('site-nav-drop--open');
+          var b = d.querySelector('.site-nav-link--drop');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          drop.classList.add('site-nav-drop--open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      drops.forEach(function (d) {
+        if (!d.contains(e.target)) {
+          d.classList.remove('site-nav-drop--open');
+          var b = d.querySelector('.site-nav-link--drop');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        drops.forEach(function (d) {
+          d.classList.remove('site-nav-drop--open');
+          var b = d.querySelector('.site-nav-link--drop');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  }
+
   function buildMobileCta() {
     if (document.querySelector('.evb-mobile-cta')) return;
     var bar = document.createElement('div');
@@ -29,7 +69,9 @@ function toggleNav() { toggleEvbNav(); }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', buildMobileCta);
+    document.addEventListener('DOMContentLoaded', setupNavDropdown);
   } else {
     buildMobileCta();
+    setupNavDropdown();
   }
 })();

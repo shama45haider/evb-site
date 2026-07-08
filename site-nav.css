@@ -107,7 +107,8 @@
 }
 .site-nav-drop-caret { width: 11px; height: 11px; transition: transform 0.18s ease; }
 .site-nav-drop:hover .site-nav-drop-caret,
-.site-nav-drop:focus-within .site-nav-drop-caret { transform: rotate(180deg); }
+.site-nav-drop:focus-within .site-nav-drop-caret,
+.site-nav-drop--open .site-nav-drop-caret { transform: rotate(180deg); }
 
 .site-nav-drop-menu {
   position: absolute;
@@ -127,7 +128,8 @@
   z-index: 60;
 }
 .site-nav-drop:hover .site-nav-drop-menu,
-.site-nav-drop:focus-within .site-nav-drop-menu {
+.site-nav-drop:focus-within .site-nav-drop-menu,
+.site-nav-drop--open .site-nav-drop-menu {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
