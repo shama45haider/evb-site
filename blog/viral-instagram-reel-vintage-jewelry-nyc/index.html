@@ -150,16 +150,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .blog-article-embed-stat-label { font-family: 'Inter', sans-serif; font-size: 12.5px; color: #4a4540; line-height: 1.4; max-width: 220px; }
     @media (max-width: 640px) { .blog-article-embed { padding: 20px 14px; } }
 
-    /* Fallback card shown if Instagram's embed script is blocked or fails to load */
-    .ig-fallback { display: block; position: relative; width: 100%; border-radius: 14px; overflow: hidden; text-decoration: none; box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
-    .ig-fallback img { width: 100%; height: 320px; object-fit: cover; display: block; }
-    .ig-fallback::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.05) 45%, transparent 70%); }
-    .ig-fallback-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(0,0,0,0.35); z-index: 2; }
-    .ig-fallback-play svg { width: 22px; height: 22px; color: #e8690a; margin-left: 3px; }
-    .ig-fallback-label { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 2; color: #fff; font-family: 'Montserrat', sans-serif; }
-    .ig-fallback-label .ig-fallback-views { font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.9; display: block; margin-bottom: 2px; }
-    .ig-fallback-label .ig-fallback-cta { font-size: 13px; font-weight: 800; }
-
     .blog-article-body { padding: 36px; font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.75; color: #3a3530; }
     @media (max-width: 640px) { .blog-article-body { padding: 24px 20px; font-size: 15px; } }
     .blog-article-body h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: #0c0b0a; margin: 40px 0 16px; letter-spacing: -0.01em; text-transform: uppercase; }
@@ -376,14 +366,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DVcO56okXEj/" data-instgrm-version="14">
             <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
           </blockquote>
-          <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer" class="ig-fallback" id="igFallback">
-            <img src="../../estatejewl.webp" alt="Vintage estate ring from the viral East Village Buyers Instagram reel">
-            <span class="ig-fallback-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
-            <span class="ig-fallback-label">
-              <span class="ig-fallback-views">Watch on IG</span>
-              <span class="ig-fallback-cta">Tap to Play &rarr;</span>
-            </span>
-          </a>
         </div>
         <div class="blog-article-embed-stats">
           <div class="blog-article-embed-stat">
@@ -397,16 +379,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       </div>
       <script async src="//www.instagram.com/embed.js"></script>
-      <script>
-        (function () {
-          var wrap = document.getElementById('igEmbedWrap');
-          var fallback = document.getElementById('igFallback');
-          setTimeout(function () {
-            var loaded = wrap && wrap.querySelector('iframe.instagram-media');
-            if (loaded && fallback) fallback.style.display = 'none';
-          }, 2500);
-        })();
-      </script>
       <div class="blog-article-body">
 <p>If you follow us on social media, you might have seen a certain video blowing up your feed lately. We recently shared a raw, behind-the-scenes look at a piece of vintage jewelry with a wild story &mdash; and judging by the <strong>4.7 million views</strong> it racked up, the internet loves the thrill of the hustle just as much as we do.</p>
 <p>In the viral clip, we handle a vintage estate ring that was originally purchased two decades ago for just $400. Today? The market value has surged to a cool $2,000.</p>
