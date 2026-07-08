@@ -364,7 +364,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DVcO56okXEj/" data-instgrm-version="14" style="display:none;">
           <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer">View this post on Instagram</a>
         </blockquote>
-        <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer" class="ig-fallback" id="igFallback" style="display:none;">
+        <a href="https://www.instagram.com/reel/DVcO56okXEj/" target="_blank" rel="noopener noreferrer" class="ig-fallback" id="igFallback">
           <img src="../../estatejewl.webp" alt="Vintage estate ring from the viral East Village Buyers Instagram reel">
           <span class="ig-fallback-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
           <span class="ig-fallback-label">
@@ -380,7 +380,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           var fallback = document.getElementById('igFallback');
           setTimeout(function () {
             var loaded = wrap && wrap.querySelector('iframe.instagram-media');
-            if (fallback) fallback.style.display = loaded ? 'none' : 'block';
+            if (loaded && fallback) fallback.style.display = 'none';
           }, 2500);
         })();
       </script>
