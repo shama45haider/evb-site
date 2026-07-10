@@ -12,6 +12,14 @@
 }
 .cta-addr-note--center { justify-content: center; }
 
+/* Blog posts: the sidebar stacks directly under the article on
+   narrower screens, which duplicates the "Text Photos for a Quote"
+   CTA that already sits at the end of the article. Hide the sidebar
+   copy there since the article's own CTA covers it. */
+@media (max-width: 900px) {
+  .sidebar-cta-widget { display: none; }
+}
+
 /* East Village Buyers — shared light footer (cream + orange) */
 
 .evb-footer,
