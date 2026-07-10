@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Manage Blogs — East Village Buyers</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>East Village Buyers <span class="brand">// Manage Blogs</span></h1>
+  <button id="logoutBtn" class="hidden">Sign out</button>
+</header>
+
+<div id="loginScreen">
+  <h1>Manage Blogs</h1>
+  <p class="sub">Sign in with a GitHub token to create and publish new blog posts directly to eastvillagebuyers.com.</p>
+  <div class="card">
+    <form id="loginForm">
+      <label for="tokenInput">GitHub Personal Access Token</label>
+      <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" required>
+      <div class="help-box">
+        Needs a <strong>fine-grained token</strong> scoped only to the <code>evb-site</code> repo, with
+        <strong>Contents: Read and write</strong> permission. Create one at
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>.
+        The token is stored only in this browser (localStorage) and is sent directly to GitHub's API — never to any third-party server.
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:18px;width:100%;">Sign In</button>
+    </form>
+  </div>
+</div>
+
+<main id="app" class="hidden">
+
+  <div class="card">
+    <h2>New Blog Post</h2>
+    <p class="hint">Fill this in and publish — it builds the post using the site's existing template, adds it to the blog index, and updates the sitemap.</p>
+
+    <form id="postForm">
+      <label for="titleInput">Title</label>
+      <input type="text" id="titleInput" placeholder='e.g. "Why Is Gold Still Climbing in 2026?"' required>
+
+      <label for="slugInput">URL Slug</label>
+      <input type="text" id="slugInput" placeholder="auto-generated from title">
+
+      <div class="field-row">
+        <div>
+          <label for="categoryInput">Category</label>
+          <input type="text" id="categoryInput" placeholder="Gold / Silver / Jewelry / Streetwear...">
+        </div>
+        <div>
+          <label for="dateInput">Publish Date</label>
+          <input type="date" id="dateInput">
+        </div>
+      </div>
+
+      <label for="descriptionInput">Meta Description (for Google + social shares)</label>
+      <textarea id="descriptionInput" rows="2" required></textarea>
+
+      <label for="keywordsInput">Keywords (comma separated, for SEO)</label>
+      <input type="text" id="keywordsInput" placeholder="sell gold nyc, gold price 2026, ...">
+
+      <div class="field-row">
+        <div>
+          <label for="heroImageInput">Hero Image filename</label>
+          <input type="text" id="heroImageInput" placeholder="goldbar2.5.webp" required>
+        </div>
+        <div>
+          <label for="heroAltInput">Hero Image Alt Text</label>
+          <input type="text" id="heroAltInput" placeholder="Describe the image">
+        </div>
+      </div>
+      <div class="help-box">Image must already be uploaded to the root of the site repo (same place as your other product photos).</div>
+
+      <label for="excerptInput">Short Excerpt (shown on the blog index card)</label>
+      <textarea id="excerptInput" rows="2"></textarea>
+
+      <label for="bodyInput">Body (HTML — paragraphs, &lt;h2&gt;, &lt;ul&gt;, etc.)</label>
+      <textarea id="bodyInput" rows="14" placeholder="&lt;p&gt;Opening paragraph...&lt;/p&gt;&#10;&lt;h2&gt;A Section Heading&lt;/h2&gt;&#10;&lt;p&gt;More content...&lt;/p&gt;" required></textarea>
+
+      <label>FAQ (optional, powers the FAQ rich-snippet schema)</label>
+      <div id="faqList"></div>
+      <button type="button" id="addFaqBtn" class="btn btn-ghost btn-small">+ Add FAQ item</button>
+
+      <div style="margin-top:26px;">
+        <button type="submit" id="submitBtn" class="btn btn-primary">Publish Post</button>
+      </div>
+      <div id="formStatus" class="status"></div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Existing Posts</h2>
+    <p class="hint">Pulled live from the blog/ folder in your repo.</p>
+    <ul class="post-list" id="postList"></ul>
+  </div>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
