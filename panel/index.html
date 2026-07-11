@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVB Panel — East Village Buyers</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/webp" href="evblogo.webp">
+  <meta name="theme-color" content="#f97316">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <img src="evblogo.webp" alt="East Village Buyers" class="login-logo">
+    <h1 class="login-title">EVB Panel</h1>
+    <p class="login-sub">Business dashboard &middot; East Village Buyers</p>
+    <form id="loginForm" autocomplete="off">
+      <label for="loginUser">Username</label>
+      <input type="text" id="loginUser" placeholder="Username" required>
+      <label for="loginPass">Password</label>
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <button type="submit" class="btn btn-solid btn-block">Sign In</button>
+      <div id="loginError" class="login-error"></div>
+    </form>
+    <div class="login-demo-hint">
+      Demo login: <code>demo</code> / <code>evb2026</code>
+    </div>
+  </div>
+  <p class="login-foot">39 Avenue A, New York, NY 10009 &middot; eastvillagebuyers.com</p>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app hidden">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <img src="evblogo.webp" alt="EVB">
+      <div>
+        <div class="sidebar-brand-name">EVB Panel</div>
+        <div class="sidebar-brand-sub">East Village Buyers</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item is-active" data-tab="overview">
+        <span class="nav-ico">&#8962;</span> Overview
+      </button>
+      <button class="nav-item" data-tab="blogmaker">
+        <span class="nav-ico">&#9998;</span> Blog Maker
+      </button>
+      <button class="nav-item" data-tab="scanner">
+        <span class="nav-ico">&#128269;</span> Site Scanner
+      </button>
+      <div class="nav-sep">Coming Soon</div>
+      <button class="nav-item" data-tab="ticker">
+        <span class="nav-ico">&#128176;</span> Price Ticker <span class="nav-badge">demo</span>
+      </button>
+      <button class="nav-item" data-tab="social">
+        <span class="nav-ico">&#128247;</span> Social Planner <span class="nav-badge">demo</span>
+      </button>
+      <button class="nav-item" data-tab="reviews">
+        <span class="nav-ico">&#11088;</span> Reviews <span class="nav-badge">demo</span>
+      </button>
+      <div class="nav-sep"></div>
+      <button class="nav-item" data-tab="settings">
+        <span class="nav-ico">&#9881;</span> Settings
+      </button>
+    </nav>
+    <div class="sidebar-foot">
+      <button id="logoutBtn" class="btn btn-ghost btn-block btn-sm">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="tab is-active" id="tab-overview">
+      <header class="page-head">
+        <h2>Overview</h2>
+        <p>Everything at a glance. <span id="greetName"></span></p>
+      </header>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Site Status</div>
+          <div class="stat-value" id="statSiteStatus">—</div>
+          <div class="stat-sub" id="statSiteSub">Run a scan to check</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Open Issues</div>
+          <div class="stat-value" id="statIssues">—</div>
+          <div class="stat-sub" id="statIssuesSub">From last scan</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Last Scan</div>
+          <div class="stat-value stat-value-sm" id="statLastScan">Never</div>
+          <div class="stat-sub">Auto-scan runs daily on open</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Posts Published</div>
+          <div class="stat-value" id="statPosts">—</div>
+          <div class="stat-sub">Via Blog Maker</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <h3 class="card-title">Quick Actions</h3>
+          <div class="quick-actions">
+            <button class="qa" data-goto="blogmaker"><span>&#9998;</span> Write a new blog post</button>
+            <button class="qa" data-goto="scanner"><span>&#128269;</span> Run a full site scan</button>
+            <a class="qa" href="https://eastvillagebuyers.com" target="_blank" rel="noopener"><span>&#127760;</span> Open live site</a>
+            <a class="qa" href="https://github.com/shama45haider/evb-site" target="_blank" rel="noopener"><span>&#128193;</span> Open GitHub repo</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Recent Activity</h3>
+          <ul class="activity-list" id="activityList">
+            <li class="activity-empty">No activity yet this session.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== BLOG MAKER ===== -->
+    <section class="tab" id="tab-blogmaker">
+      <header class="page-head">
+        <h2>Blog Maker</h2>
+        <p>Describe the post, drop in photos, pick a date — it writes and publishes in the site's exact blog layout.</p>
+      </header>
+
+      <div class="bm-grid">
+        <div class="bm-left">
+          <div class="card">
+            <h3 class="card-title">1 &middot; What should this post be about?</h3>
+            <textarea id="bmPrompt" rows="3" placeholder="e.g. Why vintage Rolex prices are climbing in 2026 and what your watch is worth"></textarea>
+            <div class="field-row">
+              <div class="field">
+                <label>Title <span class="opt">(leave blank to let AI decide)</span></label>
+                <input type="text" id="bmTitle" placeholder="Auto-generated from your prompt">
+              </div>
+              <div class="field field-sm">
+                <label>Category</label>
+                <select id="bmCategory">
+                  <option>Jewelry</option>
+                  <option>Gold</option>
+                  <option>Silver</option>
+                  <option>Watches</option>
+                  <option>Streetwear</option>
+                  <option>Sneakers</option>
+                  <option>Designer</option>
+                  <option>Electronics</option>
+                </select>
+              </div>
+              <div class="field field-sm">
+                <label>Post date</label>
+                <input type="date" id="bmDate">
+              </div>
+            </div>
+            <div class="field">
+              <label>Description <span class="opt">(meta description — optional, AI fills it)</span></label>
+              <input type="text" id="bmDesc" placeholder="Auto-generated">
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">2 &middot; Images</h3>
+            <div id="bmDrop" class="dropzone">
+              <span class="dz-ico">&#128444;</span>
+              <strong>Drag &amp; drop images here</strong>
+              <span>or click to browse — first image becomes the hero</span>
+              <input type="file" id="bmFiles" accept="image/*" multiple hidden>
+            </div>
+            <div id="bmThumbs" class="thumbs"></div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">3 &middot; Generate &amp; publish</h3>
+            <div class="gen-row">
+              <button id="bmGenerate" class="btn btn-solid">&#10024; Generate Post</button>
+              <button id="bmPublish" class="btn btn-solid btn-green" disabled>&#128640; Publish Live</button>
+              <span id="bmEngine" class="engine-chip">AI: demo mode</span>
+            </div>
+            <div id="bmStatus" class="status"></div>
+            <ul id="bmSteps" class="steps hidden"></ul>
+          </div>
+        </div>
+
+        <div class="bm-right">
+          <div class="card card-fill">
+            <h3 class="card-title">Preview</h3>
+            <div id="bmPreviewEmpty" class="preview-empty">
+              <span>&#128196;</span>
+              <p>Your generated post will preview here in the real blog layout.</p>
+            </div>
+            <iframe id="bmPreview" class="preview-frame hidden" title="Post preview"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCANNER ===== -->
+    <section class="tab" id="tab-scanner">
+      <header class="page-head">
+        <h2>Site Scanner</h2>
+        <p>Crawls every page in the sitemap and tells you exactly what to fix.</p>
+      </header>
+
+      <div class="card scan-controls">
+        <div class="scan-controls-left">
+          <button id="scanRun" class="btn btn-solid">&#128269; Run Full Scan</button>
+          <label class="toggle">
+            <input type="checkbox" id="scanDaily" checked>
+            <span class="toggle-track"></span>
+            Daily auto-scan when panel opens
+          </label>
+        </div>
+        <div class="scan-meta">
+          <span id="scanLastRun">Last scan: never</span>
+        </div>
+      </div>
+
+      <div id="scanProgress" class="card scan-progress hidden">
+        <div class="scan-progress-bar"><div id="scanBar"></div></div>
+        <div id="scanProgressText">Fetching sitemap…</div>
+      </div>
+
+      <div id="scanSummary" class="scan-summary hidden"></div>
+      <div id="scanResults" class="scan-results"></div>
+    </section>
+
+    <!-- ===== PRICE TICKER (placeholder) ===== -->
+    <section class="tab" id="tab-ticker">
+      <header class="page-head">
+        <h2>Price Ticker <span class="demo-flag">Demo Preview</span></h2>
+        <p>Control the scrolling gold &amp; silver price ticker on the site without touching code.</p>
+      </header>
+      <div class="card">
+        <h3 class="card-title">Ticker Message</h3>
+        <div class="field"><label>Live message</label>
+          <input type="text" value="Gold is at an all-time high — sell your gold today at 39 Avenue A" disabled>
+        </div>
+        <div class="field-row">
+          <div class="field field-sm"><label>Gold spot source</label><select disabled><option>goldpriceoz.com (live)</option></select></div>
+          <div class="field field-sm"><label>Update frequency</label><select disabled><option>Every 15 min</option></select></div>
+        </div>
+        <button class="btn btn-solid" disabled>Save to Live Site</button>
+        <p class="placeholder-note">Coming soon — this will edit <code>site-ticker.js</code> on GitHub directly, the same way Blog Maker publishes posts.</p>
+      </div>
+    </section>
+
+    <!-- ===== SOCIAL (placeholder) ===== -->
+    <section class="tab" id="tab-social">
+      <header class="page-head">
+        <h2>Social Planner <span class="demo-flag">Demo Preview</span></h2>
+        <p>Queue Instagram &amp; TikTok posts from product photos you drop in.</p>
+      </header>
+      <div class="card">
+        <div class="social-queue">
+          <div class="sq-item"><div class="sq-thumb">&#128141;</div><div><strong>Chrome Hearts drop</strong><span>Scheduled &middot; Tomorrow 11:00 AM</span></div><span class="sq-badge sq-sched">Queued</span></div>
+          <div class="sq-item"><div class="sq-thumb">&#8986;</div><div><strong>AP Royal Oak just in</strong><span>Posted &middot; Yesterday 2:14 PM &middot; 4.2K views</span></div><span class="sq-badge sq-done">Posted</span></div>
+          <div class="sq-item"><div class="sq-thumb">&#128091;</div><div><strong>LV Neverfull authentication reel</strong><span>Draft</span></div><span class="sq-badge sq-draft">Draft</span></div>
+        </div>
+        <p class="placeholder-note">Coming soon — connects to Meta Graph API for scheduled posting, pulling captions from the same AI as Blog Maker.</p>
+      </div>
+    </section>
+
+    <!-- ===== REVIEWS (placeholder) ===== -->
+    <section class="tab" id="tab-reviews">
+      <header class="page-head">
+        <h2>Reviews Monitor <span class="demo-flag">Demo Preview</span></h2>
+        <p>Google reviews in one place, with AI-drafted replies ready to approve.</p>
+      </header>
+      <div class="card">
+        <div class="review-item">
+          <div class="review-head"><strong>Maria G.</strong><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="review-date">2 days ago</span></div>
+          <p>"Sold my grandmother's gold bracelet here. They tested it in front of me and paid more than two other shops offered."</p>
+          <div class="review-reply">Suggested reply: "Thank you Maria! Transparency is everything to us — enjoy, and come see us anytime."</div>
+          <button class="btn btn-sm btn-solid" disabled>Approve &amp; Post Reply</button>
+        </div>
+        <div class="review-item">
+          <div class="review-head"><strong>Devon T.</strong><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="review-date">5 days ago</span></div>
+          <p>"Brought in Jordans and a Supreme box logo — quick authentication, fair cash offer, in and out in 20 minutes."</p>
+          <div class="review-reply">Suggested reply: "Appreciate you Devon! Bring the next batch through whenever."</div>
+          <button class="btn btn-sm btn-solid" disabled>Approve &amp; Post Reply</button>
+        </div>
+        <p class="placeholder-note">Coming soon — connects to the Google Business Profile API.</p>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <section class="tab" id="tab-settings">
+      <header class="page-head">
+        <h2>Settings</h2>
+        <p>Connect the accounts that power publishing and AI generation.</p>
+      </header>
+      <div class="card">
+        <h3 class="card-title">GitHub — required to publish</h3>
+        <p class="card-desc">A fine-grained personal access token with <strong>Contents: Read &amp; write</strong> on <code>shama45haider/evb-site</code>. Stored only in this browser.</p>
+        <div class="field-row">
+          <div class="field"><label>Personal access token</label><input type="password" id="setGhToken" placeholder="github_pat_…"></div>
+          <button class="btn btn-solid btn-self-end" id="setGhSave">Save</button>
+        </div>
+        <div id="setGhStatus" class="status"></div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">AI Provider — powers Blog Maker</h3>
+        <p class="card-desc">Free tier of <a href="https://console.groq.com" target="_blank" rel="noopener">Groq</a> (Llama&nbsp;3.3&nbsp;70B — no card required). Without a key, Blog Maker runs in demo mode with a built-in template writer.</p>
+        <div class="field-row">
+          <div class="field"><label>Groq API key</label><input type="password" id="setGroqKey" placeholder="gsk_…"></div>
+          <button class="btn btn-solid btn-self-end" id="setGroqSave">Save</button>
+        </div>
+        <div id="setGroqStatus" class="status"></div>
+      </div>
+      <div class="card">
+        <h3 class="card-title">About this panel</h3>
+        <p class="card-desc">Static app — no server, no database. Publishing goes straight to GitHub; GitHub Pages redeploys the site automatically. The demo login is a convenience gate, not real security: don't store anything sensitive here beyond your own tokens.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="panel.js"></script>
+<script src="blogmaker.js"></script>
+<script src="scanner.js"></script>
+</body>
+</html>
