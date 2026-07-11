@@ -4399,7 +4399,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         for(var j=0;j<dots.length;j++){ dots[j].classList.toggle('wnc-dot-active', j===idx); }
       }
       function next(){ goTo(idx+1); }
-      function start(){ timer = setInterval(next, 4500); }
+      function start(){ timer = setInterval(next, 7000); }
       function stop(){ clearInterval(timer); }
       function restart(){ stop(); start(); }
       card.addEventListener('mouseenter', stop);
