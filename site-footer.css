@@ -1,3 +1,19 @@
+/* Smooth in-page scrolling (anchor links, nav jumps) */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* Scroll-reveal: fade + rise into view, applied by site-reveal.js */
+@media (prefers-reduced-motion: no-preference) {
+  .evb-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
+    will-change: opacity, transform;
+  }
+  .evb-reveal-in { opacity: 1; transform: translateY(0); }
+}
+
 /* Subtle store address note shown under Call/Text button groups */
 .cta-addr-note {
   margin: 10px 0 0;
