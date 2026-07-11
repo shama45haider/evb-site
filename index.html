@@ -3976,6 +3976,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         .whats-new-mobile-inline{display:none;}
       }
       .hero-right-col .nk-card{flex-direction:column;}
+
+      /* Inline What's New carousel */
+      .wnc-viewport{position:relative;overflow:hidden;}
+      .wnc-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 12px;background:#fff;}
+      .wnc-dot{width:7px;height:7px;border-radius:50%;background:#e2ddd7;border:none;cursor:pointer;padding:0;transition:all .2s;}
+      .wnc-dot-active{background:#f97316;transform:scale(1.3);}
+      .whats-new-mobile-inline .nk-brands,
+      .hero-right-col .nk-brands{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;}
+      .whats-new-mobile-inline .nk-brand-pill,
+      .hero-right-col .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:3px 8px;white-space:nowrap;}
     </style>
 
     <!-- Main content — two-col on desktop -->
@@ -4109,24 +4119,117 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- What's New box (mobile/tablet only) -->
       <div class="whats-new-mobile-inline">
         <h2 class="whats-new-title">What's New</h2>
-        <div class="nk-card">
-          <div class="nk-img">
-            <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
-            <div class="wn-slide-badge" style="background:#006BB6;">LET'S GO KNICKS</div>
-          </div>
-          <div class="nk-body">
-            <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
-            <div class="nk-tag" style="color:#006BB6;">KNICKS CHAMPIONSHIP</div>
-            <h3 class="nk-title">Knicks Championship Gear</h3>
-            <p class="nk-desc">Eric Emanuel shorts, hats &amp; tees — in store now. Limited stock, don't miss out.</p>
-            <div class="nk-btns">
-              <a href="tel:9176088939" class="nk-btn nk-btn-primary">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-                Call Now</a>
-              <a href="sms:9176088939" class="nk-btn nk-btn-ghost">Text Us</a>
-            </div>
-            <div class="nk-addr">39 Avenue A, East Village, NYC</div>
-          </div>
+        <div class="nk-card wn-carousel">
+          <div class="wnc-viewport">
+            <div class="wn-track">
+
+              <div class="wn-slide">
+                <div class="nk-img">
+                  <img src="goldnecklace.webp" alt="Gold jewelry ready to sell at East Village Buyers" width="600" height="400" decoding="async">
+                  <div class="wn-slide-badge">TOP DOLLAR TODAY</div>
+                </div>
+                <div class="nk-body">
+                  <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                  <div class="nk-tag">SELL YOUR GOLD</div>
+                  <h3 class="nk-title">Sell Your Gold Today</h3>
+                  <p class="nk-desc">Gold jewelry, coins, or scrap sitting in a drawer? Walk in for a same-day cash offer at the best rate in the area.</p>
+                  <div class="nk-brands">
+                    <span class="nk-brand-pill">Gold Jewelry</span>
+                    <span class="nk-brand-pill">Coins</span>
+                    <span class="nk-brand-pill">Scrap Gold</span>
+                    <span class="nk-brand-pill">Dental Gold</span>
+                  </div>
+                  <div class="nk-btns">
+                    <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      Get a Quick Quote</a>
+                  </div>
+                  <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                </div>
+              </div>
+
+              <div class="wn-slide">
+                <div class="nk-img">
+                  <img src="sneakers-main.webp" alt="Custom Nike Air Force 1 sneakers at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                  <div class="wn-slide-badge" style="background:#16a34a;">SNEAKERS WANTED</div>
+                </div>
+                <div class="nk-body">
+                  <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                  <div class="nk-tag" style="color:#16a34a;">GOT SHOES PILING UP?</div>
+                  <h3 class="nk-title">We're Buying Sneakers</h3>
+                  <p class="nk-desc">Worn or deadstock, we're buying all the top resell brands. Bring them in for a fast cash offer.</p>
+                  <div class="nk-brands">
+                    <span class="nk-brand-pill">Jordan</span>
+                    <span class="nk-brand-pill">Nike</span>
+                    <span class="nk-brand-pill">Yeezy</span>
+                    <span class="nk-brand-pill">New Balance</span>
+                    <span class="nk-brand-pill">Travis Scott</span>
+                    <span class="nk-brand-pill">Off-White</span>
+                  </div>
+                  <div class="nk-btns">
+                    <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      Get a Quick Quote</a>
+                  </div>
+                  <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                </div>
+              </div>
+
+              <div class="wn-slide">
+                <div class="nk-img">
+                  <img src="watches-main.webp" alt="Luxury watch at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                  <div class="wn-slide-badge" style="background:#1e293b;">LUXURY WATCHES</div>
+                </div>
+                <div class="nk-body">
+                  <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                  <div class="nk-tag" style="color:#1e293b;">CASH FOR YOUR WATCH</div>
+                  <h3 class="nk-title">Sell Your Luxury Watch</h3>
+                  <p class="nk-desc">We authenticate and pay cash for luxury watches on the spot, no shipping and no waiting.</p>
+                  <div class="nk-brands">
+                    <span class="nk-brand-pill">Rolex</span>
+                    <span class="nk-brand-pill">Omega</span>
+                    <span class="nk-brand-pill">Audemars Piguet</span>
+                    <span class="nk-brand-pill">Patek Philippe</span>
+                    <span class="nk-brand-pill">Cartier</span>
+                  </div>
+                  <div class="nk-btns">
+                    <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      Get a Quick Quote</a>
+                  </div>
+                  <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                </div>
+              </div>
+
+              <div class="wn-slide">
+                <div class="nk-img">
+                  <img src="lvhandbag.webp" alt="Louis Vuitton designer handbag at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                  <div class="wn-slide-badge" style="background:#7c3aed;">DESIGNER BAGS</div>
+                </div>
+                <div class="nk-body">
+                  <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                  <div class="nk-tag" style="color:#7c3aed;">DESIGNER BAGS WANTED</div>
+                  <h3 class="nk-title">Sell Your Designer Bag</h3>
+                  <p class="nk-desc">Authenticated in front of you and paid out the same day — no shipping, no waiting.</p>
+                  <div class="nk-brands">
+                    <span class="nk-brand-pill">Louis Vuitton</span>
+                    <span class="nk-brand-pill">Chanel</span>
+                    <span class="nk-brand-pill">Gucci</span>
+                    <span class="nk-brand-pill">Goyard</span>
+                    <span class="nk-brand-pill">Herm&egrave;s</span>
+                  </div>
+                  <div class="nk-btns">
+                    <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      Get a Quick Quote</a>
+                  </div>
+                  <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                </div>
+              </div>
+
+            </div><!-- /wn-track -->
+          </div><!-- /wnc-viewport -->
+          <div class="wnc-dots"></div>
         </div>
       </div>
 
@@ -4143,24 +4246,117 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- What's New box (desktop only) -->
         <div class="whats-new-desktop">
           <h2 class="whats-new-title">What's New</h2>
-          <div class="nk-card">
-            <div class="nk-img">
-              <img src="knicks-ee-shorts.webp" alt="Eric Emanuel x Knicks shorts at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
-              <div class="wn-slide-badge" style="background:#006BB6;">LET'S GO KNICKS</div>
-            </div>
-            <div class="nk-body">
-              <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
-              <div class="nk-tag" style="color:#006BB6;">KNICKS CHAMPIONSHIP</div>
-              <h3 class="nk-title">Knicks Championship Gear</h3>
-              <p class="nk-desc">Eric Emanuel shorts, hats &amp; tees — in store now. Limited stock, don't miss out.</p>
-              <div class="nk-btns">
-                <a href="tel:9176088939" class="nk-btn nk-btn-primary">
-                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-                  Call Now</a>
-                <a href="sms:9176088939" class="nk-btn nk-btn-ghost">Text Us</a>
-              </div>
-              <div class="nk-addr">39 Avenue A, East Village, NYC</div>
-            </div>
+          <div class="nk-card wn-carousel">
+            <div class="wnc-viewport">
+              <div class="wn-track">
+
+                <div class="wn-slide">
+                  <div class="nk-img">
+                    <img src="goldnecklace.webp" alt="Gold jewelry ready to sell at East Village Buyers" width="600" height="400" decoding="async">
+                    <div class="wn-slide-badge">TOP DOLLAR TODAY</div>
+                  </div>
+                  <div class="nk-body">
+                    <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                    <div class="nk-tag">SELL YOUR GOLD</div>
+                    <h3 class="nk-title">Sell Your Gold Today</h3>
+                    <p class="nk-desc">Gold jewelry, coins, or scrap sitting in a drawer? Walk in for a same-day cash offer at the best rate in the area.</p>
+                    <div class="nk-brands">
+                      <span class="nk-brand-pill">Gold Jewelry</span>
+                      <span class="nk-brand-pill">Coins</span>
+                      <span class="nk-brand-pill">Scrap Gold</span>
+                      <span class="nk-brand-pill">Dental Gold</span>
+                    </div>
+                    <div class="nk-btns">
+                      <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Get a Quick Quote</a>
+                    </div>
+                    <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                  </div>
+                </div>
+
+                <div class="wn-slide">
+                  <div class="nk-img">
+                    <img src="sneakers-main.webp" alt="Custom Nike Air Force 1 sneakers at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                    <div class="wn-slide-badge" style="background:#16a34a;">SNEAKERS WANTED</div>
+                  </div>
+                  <div class="nk-body">
+                    <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                    <div class="nk-tag" style="color:#16a34a;">GOT SHOES PILING UP?</div>
+                    <h3 class="nk-title">We're Buying Sneakers</h3>
+                    <p class="nk-desc">Worn or deadstock, we're buying all the top resell brands. Bring them in for a fast cash offer.</p>
+                    <div class="nk-brands">
+                      <span class="nk-brand-pill">Jordan</span>
+                      <span class="nk-brand-pill">Nike</span>
+                      <span class="nk-brand-pill">Yeezy</span>
+                      <span class="nk-brand-pill">New Balance</span>
+                      <span class="nk-brand-pill">Travis Scott</span>
+                      <span class="nk-brand-pill">Off-White</span>
+                    </div>
+                    <div class="nk-btns">
+                      <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Get a Quick Quote</a>
+                    </div>
+                    <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                  </div>
+                </div>
+
+                <div class="wn-slide">
+                  <div class="nk-img">
+                    <img src="watches-main.webp" alt="Luxury watch at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                    <div class="wn-slide-badge" style="background:#1e293b;">LUXURY WATCHES</div>
+                  </div>
+                  <div class="nk-body">
+                    <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                    <div class="nk-tag" style="color:#1e293b;">CASH FOR YOUR WATCH</div>
+                    <h3 class="nk-title">Sell Your Luxury Watch</h3>
+                    <p class="nk-desc">We authenticate and pay cash for luxury watches on the spot, no shipping and no waiting.</p>
+                    <div class="nk-brands">
+                      <span class="nk-brand-pill">Rolex</span>
+                      <span class="nk-brand-pill">Omega</span>
+                      <span class="nk-brand-pill">Audemars Piguet</span>
+                      <span class="nk-brand-pill">Patek Philippe</span>
+                      <span class="nk-brand-pill">Cartier</span>
+                    </div>
+                    <div class="nk-btns">
+                      <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Get a Quick Quote</a>
+                    </div>
+                    <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                  </div>
+                </div>
+
+                <div class="wn-slide">
+                  <div class="nk-img">
+                    <img src="lvhandbag.webp" alt="Louis Vuitton designer handbag at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
+                    <div class="wn-slide-badge" style="background:#7c3aed;">DESIGNER BAGS</div>
+                  </div>
+                  <div class="nk-body">
+                    <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
+                    <div class="nk-tag" style="color:#7c3aed;">DESIGNER BAGS WANTED</div>
+                    <h3 class="nk-title">Sell Your Designer Bag</h3>
+                    <p class="nk-desc">Authenticated in front of you and paid out the same day — no shipping, no waiting.</p>
+                    <div class="nk-brands">
+                      <span class="nk-brand-pill">Louis Vuitton</span>
+                      <span class="nk-brand-pill">Chanel</span>
+                      <span class="nk-brand-pill">Gucci</span>
+                      <span class="nk-brand-pill">Goyard</span>
+                      <span class="nk-brand-pill">Herm&egrave;s</span>
+                    </div>
+                    <div class="nk-btns">
+                      <a href="sms:9176088939" class="nk-btn nk-btn-primary">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        Get a Quick Quote</a>
+                    </div>
+                    <div class="nk-addr">39 Avenue A, East Village, NYC</div>
+                  </div>
+                </div>
+
+              </div><!-- /wn-track -->
+            </div><!-- /wnc-viewport -->
+            <div class="wnc-dots"></div>
           </div>
         </div>
 
@@ -4174,6 +4370,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div><!-- /hero-inner -->
 
   </section>
+
+  <script>
+  (function(){
+    function initEvbCarousel(card){
+      var track = card.querySelector('.wn-track');
+      var dotsWrap = card.querySelector('.wnc-dots');
+      if(!track || !dotsWrap) return;
+      var slides = track.children;
+      var n = slides.length;
+      if(!n) return;
+      var idx = 0, timer;
+      var dots = [];
+      dotsWrap.innerHTML = '';
+      for(var i=0;i<n;i++){
+        var b = document.createElement('button');
+        b.className = 'wnc-dot' + (i===0 ? ' wnc-dot-active' : '');
+        b.setAttribute('aria-label','Go to slide '+(i+1));
+        b.addEventListener('click', (function(i){ return function(){ goTo(i); restart(); }; })(i));
+        dotsWrap.appendChild(b);
+        dots.push(b);
+      }
+      function goTo(i){
+        idx = (i + n) % n;
+        track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+        for(var j=0;j<dots.length;j++){ dots[j].classList.toggle('wnc-dot-active', j===idx); }
+      }
+      function next(){ goTo(idx+1); }
+      function start(){ timer = setInterval(next, 4500); }
+      function stop(){ clearInterval(timer); }
+      function restart(){ stop(); start(); }
+      card.addEventListener('mouseenter', stop);
+      card.addEventListener('mouseleave', start);
+      var touchX = null;
+      card.addEventListener('touchstart', function(e){ touchX = e.touches[0].clientX; stop(); }, {passive:true});
+      card.addEventListener('touchend', function(e){
+        if(touchX === null) return;
+        var dx = e.changedTouches[0].clientX - touchX;
+        if(Math.abs(dx) > 40){ dx < 0 ? goTo(idx+1) : goTo(idx-1); }
+        touchX = null;
+        start();
+      });
+      if(!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){ start(); }
+    }
+    document.querySelectorAll('.wn-carousel').forEach(initEvbCarousel);
+  })();
+  </script>
 
   <!-- GOOGLE TRUST STRIP -->
   <div class="gts" id="gtStrip" role="region" aria-label="Google Reviews — 4.9 stars, 544 reviews">
