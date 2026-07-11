@@ -3955,40 +3955,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <style>
       .whats-new-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#111;margin:16px 0 8px;}
-      .whats-new-mobile-inline .nk-card,
-      .hero-right-col .nk-card{margin:0 auto;animation:none;width:100%;max-width:300px;}
-      .whats-new-mobile-inline .nk-img,
-      .hero-right-col .nk-img{flex:none;height:0;padding-top:66.66%;min-height:auto;background:#f4f1ec;}
-      .whats-new-mobile-inline .nk-img img,
-      .hero-right-col .nk-img img{object-fit:cover;}
-      .whats-new-mobile-inline .nk-body,
+      /* Mobile/tablet inline card — stacked, image on top */
+      .whats-new-mobile-inline .nk-card{margin:0;animation:none;width:100%;max-width:380px;flex-direction:column;}
+      .whats-new-mobile-inline .nk-img{flex:none;height:0;padding-top:66.66%;min-height:auto;background:#f4f1ec;}
+      .whats-new-mobile-inline .nk-img img{object-fit:cover;}
       .whats-new-mobile-inline .nk-body{padding:14px 14px;}
-      .hero-right-col .nk-body{padding:11px 12px;}
       .whats-new-mobile-inline .nk-title{font-size:15px;}
-      .hero-right-col .nk-title{font-size:13px;}
       .whats-new-mobile-inline .nk-desc{font-size:12px;margin-bottom:10px;}
-      .hero-right-col .nk-desc{font-size:11px;margin-bottom:8px;}
       .whats-new-mobile-inline .nk-btn{font-size:11px;padding:8px 14px;}
-      .hero-right-col .nk-btn{font-size:10px;padding:7px 12px;}
-      @media(max-width:640px){
-        .whats-new-mobile-inline .nk-card{flex-direction:column;max-width:380px;}
-      }
+      .whats-new-mobile-inline .wn-slide{flex-direction:column;}
+      .whats-new-mobile-inline .nk-brands{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;}
+      .whats-new-mobile-inline .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:3px 8px;white-space:nowrap;}
       @media(min-width:1024px){
         .whats-new-mobile-inline{display:none;}
       }
-      .hero-right-col .nk-card{flex-direction:column;}
+
+      /* Desktop sidebar card — horizontal, image left / text right */
+      .hero-right-col .nk-card{margin:0;animation:none;width:100%;max-width:400px;flex-direction:row;}
+      .hero-right-col .wn-slide{flex-direction:row;}
+      .hero-right-col .nk-img{flex:0 0 42%;height:auto;padding-top:0;min-height:180px;background:#f4f1ec;}
+      .hero-right-col .nk-img img{object-fit:cover;}
+      .hero-right-col .nk-body{padding:14px 16px;}
+      .hero-right-col .nk-title{font-size:14px;}
+      .hero-right-col .nk-desc{font-size:11.5px;margin-bottom:8px;}
+      .hero-right-col .nk-btn{font-size:10px;padding:7px 12px;}
+      .hero-right-col .nk-brands{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px;}
+      .hero-right-col .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:2px 7px;white-space:nowrap;}
 
       /* Inline What's New carousel */
       .wnc-viewport{position:relative;overflow:hidden;}
-      .whats-new-mobile-inline .wn-slide,
-      .hero-right-col .wn-slide{flex-direction:column;}
       .wnc-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 12px;background:#fff;}
       .wnc-dot{width:7px;height:7px;border-radius:50%;background:#e2ddd7;border:none;cursor:pointer;padding:0;transition:all .2s;}
       .wnc-dot-active{background:#f97316;transform:scale(1.3);}
-      .whats-new-mobile-inline .nk-brands,
-      .hero-right-col .nk-brands{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px;}
-      .whats-new-mobile-inline .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:3px 8px;white-space:nowrap;}
-      .hero-right-col .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:2px 7px;white-space:nowrap;}
     </style>
 
     <!-- Main content — two-col on desktop -->
