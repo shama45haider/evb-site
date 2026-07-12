@@ -271,6 +271,100 @@ textarea { resize: vertical; }
 .review-item > p { font-size: 13px; color: #4a453f; line-height: 1.6; margin-bottom: 10px; }
 .review-reply { font-size: 12.5px; background: #fff8f3; border: 1px solid #f5ddc8; border-radius: 9px; padding: 10px 12px; color: #7a5230; margin-bottom: 10px; }
 
+/* ---------- Inventory ---------- */
+.inv-subnav { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.inv-subtab {
+  padding: 10px 18px; border: 1.5px solid var(--line); border-radius: 99px;
+  background: #fff; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800;
+  letter-spacing: .04em; color: #6b6560; cursor: pointer; transition: all .15s;
+}
+.inv-subtab:hover { border-color: var(--orange); color: var(--orange); }
+.inv-subtab.is-active { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 3px 12px rgba(249,115,22,.3); }
+.inv-subnav-right { margin-left: auto; display: flex; gap: 8px; }
+.inv-pane { display: none; }
+.inv-pane.is-active { display: block; animation: tabIn .25s ease; }
+
+.inv-scanbar { display: flex; align-items: center; gap: 12px; padding: 14px 18px; }
+.inv-scanbar-ico { font-size: 18px; }
+.inv-scanbar input { flex: 1; border: none; font-size: 14.5px; padding: 8px 4px; background: transparent; }
+.inv-scanbar input:focus { outline: none; box-shadow: none; }
+.inv-scanbar:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,.12); }
+
+.inv-mode-chip { font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; background: #fff3e6; color: var(--orange-dark); border: 1px solid #f5c89b; padding: 2px 9px; border-radius: 99px; margin-left: 8px; vertical-align: middle; }
+.inv-sku-row { display: flex; align-items: center; gap: 18px; margin-bottom: 16px; flex-wrap: wrap; }
+.inv-barcode-box { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+.inv-sku-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.inv-sku-label { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; letter-spacing: .04em; }
+.field-mini { flex: 0 0 74px; }
+.dropzone-slim { padding: 16px 14px; gap: 2px; font-size: 12px; }
+.field > .dropzone-slim { margin-top: 2px; }
+.field .thumbs:empty { display: none; }
+
+.inv-seller-tools { display: flex; gap: 10px; margin-bottom: 10px; }
+.inv-seller-tools input { flex: 1; }
+.inv-seller-matches { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.inv-seller-hit { text-align: left; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font: inherit; font-size: 12.5px; cursor: pointer; transition: border-color .15s; }
+.inv-seller-hit:hover { border-color: var(--orange); }
+.inv-seller-nohit { font-size: 12px; color: var(--muted); padding: 4px 2px; }
+.inv-seller-card { font-size: 12.5px; background: #f0faf3; border: 1px solid #bbe5c9; border-radius: 9px; padding: 10px 12px; margin-bottom: 12px; line-height: 1.6; }
+.inv-seller-badge { font-size: 9px; font-weight: 800; letter-spacing: .07em; background: var(--green); color: #fff; padding: 2px 7px; border-radius: 5px; }
+.inv-unlink { border: none; background: none; color: var(--orange-dark); font-size: 11.5px; font-weight: 700; cursor: pointer; text-decoration: underline; }
+.inv-seller-fields .field-row { margin-top: 10px; }
+.inv-seller-fields > .field { margin-top: 10px; }
+
+.inv-filterbar { display: flex; gap: 12px; padding: 14px 16px; flex-wrap: wrap; }
+.inv-filterbar input { flex: 2; min-width: 200px; }
+.inv-filterbar select { flex: 1; min-width: 140px; width: auto; }
+.inv-tablewrap { padding: 6px 0 4px; overflow-x: auto; }
+.inv-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.inv-table th { text-align: left; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; border-bottom: 2px solid var(--line); }
+.inv-table td { padding: 11px 14px; border-bottom: 1px solid #f0ece6; vertical-align: middle; }
+.inv-table tbody tr { cursor: pointer; transition: background .12s; }
+.inv-table tbody tr:hover { background: #fdf8f2; }
+.inv-td-sku { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11.5px; letter-spacing: .03em; color: var(--orange-dark); }
+.inv-td-thumb { width: 30px; height: 30px; object-fit: cover; border-radius: 6px; margin-right: 8px; vertical-align: middle; }
+.inv-chip { font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+.inv-chip-stock { background: #fff3e6; color: var(--orange-dark); }
+.inv-chip-sold { background: #f0faf3; color: var(--green); }
+.inv-row-open { border: 1px solid var(--line); background: #fff; border-radius: 7px; padding: 5px 12px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.inv-row-open:hover { border-color: var(--orange); color: var(--orange); }
+
+.inv-drawer-wrap { position: fixed; inset: 0; z-index: 900; background: rgba(20,16,12,.45); display: flex; justify-content: flex-end; }
+.inv-drawer { width: min(460px, 94vw); background: #fff; height: 100%; overflow-y: auto; padding: 24px; box-shadow: -12px 0 40px rgba(0,0,0,.2); animation: drawerIn .25s ease; }
+@keyframes drawerIn { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+.inv-drawer-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+.inv-drawer-head h3 { font-size: 17px; font-weight: 900; margin-top: 2px; }
+.inv-drawer-photos { display: flex; gap: 8px; overflow-x: auto; margin-bottom: 16px; }
+.inv-drawer-photos img { height: 110px; border-radius: 9px; }
+.inv-drawer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; margin-bottom: 20px; }
+.inv-drawer-grid label { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); font-family: 'Montserrat', sans-serif; margin-bottom: 2px; }
+.inv-good { color: var(--green); font-weight: 700; }
+.inv-bad { color: var(--red); font-weight: 700; }
+.inv-drawer-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.inv-sell-row { display: flex; gap: 8px; width: 100%; margin-bottom: 4px; }
+.inv-sell-row input { flex: 1; }
+.inv-danger { color: var(--red); }
+.inv-danger:hover { border-color: var(--red); color: var(--red); }
+
+.inv-cam-wrap { position: fixed; inset: 0; z-index: 950; background: rgba(20,16,12,.7); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.inv-cam { background: #fff; border-radius: 16px; overflow: hidden; width: min(560px, 96vw); }
+.inv-cam-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 13px; }
+.inv-cam-x { border: none; background: var(--paper); width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; }
+.inv-cam video { width: 100%; display: block; background: #111; aspect-ratio: 4/3; object-fit: cover; }
+.inv-cam-hint { padding: 12px 18px; font-size: 12.5px; color: var(--muted); }
+
+.inv-seller-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.inv-seller-tile { margin-bottom: 0; }
+.inv-seller-tile-head { display: flex; gap: 12px; margin-bottom: 12px; }
+.inv-seller-avatar { width: 54px; height: 54px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.inv-seller-avatar-empty { background: var(--paper); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.inv-seller-meta { font-size: 11.5px; color: var(--muted); }
+.inv-seller-txns { border-top: 1px solid var(--line); padding-top: 10px; }
+.inv-seller-total { font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+.inv-seller-txn { font-size: 11.5px; color: #5a5550; padding: 4px 0; }
+.inv-seller-txn span { font-weight: 800; color: var(--orange-dark); font-size: 10.5px; }
+.inv-seller-txn em { color: var(--muted); font-style: normal; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 820px) {
   .app { flex-direction: column; }

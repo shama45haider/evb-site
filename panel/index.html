@@ -56,6 +56,9 @@
       <button class="nav-item" data-tab="scanner">
         <span class="nav-ico">&#128269;</span> Site Scanner
       </button>
+      <button class="nav-item" data-tab="inventory">
+        <span class="nav-ico">&#128230;</span> Inventory
+      </button>
       <div class="nav-sep">Coming Soon</div>
       <button class="nav-item" data-tab="ticker">
         <span class="nav-ico">&#128176;</span> Price Ticker <span class="nav-badge">demo</span>
@@ -232,6 +235,167 @@
       <div id="scanResults" class="scan-results"></div>
     </section>
 
+    <!-- ===== INVENTORY ===== -->
+    <section class="tab" id="tab-inventory">
+      <header class="page-head">
+        <h2>Inventory</h2>
+        <p>Barcode every item you buy, log who you bought it from, and track it until it sells.</p>
+      </header>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-label">In Stock</div><div class="stat-value" id="invStatStock">0</div><div class="stat-sub" id="invStatStockSub">$0 invested</div></div>
+        <div class="stat-card"><div class="stat-label">Sold</div><div class="stat-value" id="invStatSold">0</div><div class="stat-sub" id="invStatSoldSub">$0 in sales</div></div>
+        <div class="stat-card"><div class="stat-label">Profit (sold items)</div><div class="stat-value" id="invStatProfit">$0</div><div class="stat-sub">Sale price minus buy price</div></div>
+        <div class="stat-card"><div class="stat-label">Sellers on File</div><div class="stat-value" id="invStatSellers">0</div><div class="stat-sub">With full transaction logs</div></div>
+      </div>
+
+      <div class="inv-subnav">
+        <button class="inv-subtab is-active" data-invtab="intake">&#43; Intake / Scan</button>
+        <button class="inv-subtab" data-invtab="stock">Inventory List</button>
+        <button class="inv-subtab" data-invtab="sellers">Sellers</button>
+        <div class="inv-subnav-right">
+          <button class="btn btn-ghost btn-sm" id="invExportCsv">Export CSV</button>
+          <button class="btn btn-ghost btn-sm" id="invBackup">Backup</button>
+          <button class="btn btn-ghost btn-sm" id="invRestore">Restore</button>
+          <input type="file" id="invRestoreFile" accept=".json" hidden>
+        </div>
+      </div>
+
+      <!-- ---- Intake ---- -->
+      <div class="inv-pane is-active" id="invpane-intake">
+        <div class="card inv-scanbar">
+          <span class="inv-scanbar-ico">&#9889;</span>
+          <input type="text" id="invScanBox" placeholder="Scan any barcode here (USB scanner or type SKU + Enter) — existing items open instantly" autocomplete="off">
+          <button class="btn btn-solid btn-sm" id="invCamScan">&#128247; Camera</button>
+          <button class="btn btn-solid btn-sm btn-green" id="invNewItem">&#43; New Item</button>
+        </div>
+
+        <div class="bm-grid">
+          <div class="bm-left">
+            <div class="card">
+              <h3 class="card-title">Item <span id="invFormMode" class="inv-mode-chip">new</span></h3>
+              <div class="inv-sku-row">
+                <div class="inv-barcode-box"><svg id="invBarcode"></svg></div>
+                <div class="inv-sku-actions">
+                  <div class="inv-sku-label" id="invSkuLabel">EVB-—</div>
+                  <button class="btn btn-sm btn-solid" id="invPrintLabel">&#128424; Print Label</button>
+                  <div class="field field-mini"><label>Copies</label><input type="number" id="invLabelCopies" value="1" min="1" max="12"></div>
+                </div>
+              </div>
+              <div class="field"><label>Item name *</label><input type="text" id="invName" placeholder="e.g. Rolex Datejust 36 ref 16233"></div>
+              <div class="field-row">
+                <div class="field field-sm"><label>Category</label>
+                  <select id="invCategory"><option>Jewelry</option><option>Gold</option><option>Silver</option><option>Watches</option><option>Designer</option><option>Streetwear</option><option>Sneakers</option><option>Electronics</option><option>Collectibles</option><option>Other</option></select>
+                </div>
+                <div class="field field-sm"><label>Brand</label><input type="text" id="invBrand" placeholder="Rolex"></div>
+                <div class="field field-sm"><label>Condition</label>
+                  <select id="invCondition"><option>New</option><option selected>Excellent</option><option>Good</option><option>Fair</option><option>For parts</option></select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field field-sm"><label>Bought for ($) *</label><input type="number" id="invBuyPrice" min="0" step="0.01" placeholder="0.00"></div>
+                <div class="field field-sm"><label>Est. resale ($)</label><input type="number" id="invEstResale" min="0" step="0.01" placeholder="0.00"></div>
+                <div class="field field-sm"><label>Date bought</label><input type="date" id="invDate"></div>
+              </div>
+              <div class="field"><label>Notes</label><textarea id="invNotes" rows="2" placeholder="Serial number, flaws, box &amp; papers, etc."></textarea></div>
+              <div class="field"><label>Photos</label>
+                <div id="invPhotoDrop" class="dropzone dropzone-slim">
+                  <strong>Drag &amp; drop item photos</strong><span>or click to browse</span>
+                  <input type="file" id="invPhotoFiles" accept="image/*" multiple hidden>
+                </div>
+                <div id="invPhotoThumbs" class="thumbs"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bm-right">
+            <div class="card">
+              <h3 class="card-title">Bought From (seller)</h3>
+              <div class="inv-seller-tools">
+                <input type="text" id="invSellerSearch" placeholder="Search sellers on file…" autocomplete="off">
+                <button class="btn btn-solid btn-sm" id="invScanId">&#129706; Scan ID</button>
+              </div>
+              <div id="invSellerMatches" class="inv-seller-matches"></div>
+              <div id="invSellerCard" class="inv-seller-card hidden"></div>
+              <div class="inv-seller-fields" id="invSellerFields">
+                <div class="field-row">
+                  <div class="field"><label>First name</label><input type="text" id="selFirst"></div>
+                  <div class="field"><label>Last name</label><input type="text" id="selLast"></div>
+                </div>
+                <div class="field-row">
+                  <div class="field field-sm"><label>Date of birth</label><input type="date" id="selDob"></div>
+                  <div class="field"><label>ID / license number</label><input type="text" id="selIdNum"></div>
+                  <div class="field field-sm"><label>ID expires</label><input type="date" id="selIdExp"></div>
+                </div>
+                <div class="field"><label>Street address</label><input type="text" id="selAddr"></div>
+                <div class="field-row">
+                  <div class="field"><label>City</label><input type="text" id="selCity"></div>
+                  <div class="field field-mini"><label>State</label><input type="text" id="selState" maxlength="2"></div>
+                  <div class="field field-sm"><label>ZIP</label><input type="text" id="selZip"></div>
+                </div>
+                <div class="field"><label>Phone <span class="opt">(optional)</span></label><input type="text" id="selPhone"></div>
+                <div class="field"><label>ID photo <span class="opt">(optional — stays on this device)</span></label>
+                  <div id="invIdDrop" class="dropzone dropzone-slim">
+                    <strong>Drop a photo of the ID</strong><span>back side autofills the form via its barcode</span>
+                    <input type="file" id="invIdFile" accept="image/*" hidden>
+                  </div>
+                  <div id="invIdThumb" class="thumbs"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 class="card-title">Save</h3>
+              <div class="gen-row">
+                <button class="btn btn-solid btn-green" id="invSave">&#128190; Save Item + Seller</button>
+                <button class="btn btn-ghost" id="invClear">Clear Form</button>
+              </div>
+              <div id="invStatus" class="status"></div>
+              <p class="placeholder-note" style="margin-top:12px">Seller info and photos are stored only on this device (never uploaded, never pushed to GitHub). Use Backup to move data between computers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- Inventory list ---- -->
+      <div class="inv-pane" id="invpane-stock">
+        <div class="card inv-filterbar">
+          <input type="text" id="invSearch" placeholder="Search by name, SKU, brand, seller…">
+          <select id="invFilterStatus"><option value="">All statuses</option><option value="in_stock">In stock</option><option value="sold">Sold</option></select>
+          <select id="invFilterCat"><option value="">All categories</option><option>Jewelry</option><option>Gold</option><option>Silver</option><option>Watches</option><option>Designer</option><option>Streetwear</option><option>Sneakers</option><option>Electronics</option><option>Collectibles</option><option>Other</option></select>
+        </div>
+        <div class="card inv-tablewrap">
+          <table class="inv-table">
+            <thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>Bought</th><th>Paid</th><th>Status</th><th>Seller</th><th></th></tr></thead>
+            <tbody id="invTableBody"></tbody>
+          </table>
+          <div id="invTableEmpty" class="preview-empty"><span>&#128230;</span><p>No items yet — scan or add your first item in the Intake tab.</p></div>
+        </div>
+      </div>
+
+      <!-- ---- Sellers ---- -->
+      <div class="inv-pane" id="invpane-sellers">
+        <div class="card inv-filterbar">
+          <input type="text" id="invSellerListSearch" placeholder="Search sellers by name, ID number, phone…">
+        </div>
+        <div id="invSellerList" class="inv-seller-grid"></div>
+        <div id="invSellerEmpty" class="preview-empty"><span>&#129489;</span><p>No sellers on file yet — they're created automatically when you save an intake.</p></div>
+      </div>
+
+      <!-- item detail drawer -->
+      <div id="invDrawerWrap" class="inv-drawer-wrap hidden">
+        <div class="inv-drawer" id="invDrawer"></div>
+      </div>
+      <!-- camera scan modal -->
+      <div id="invCamWrap" class="inv-cam-wrap hidden">
+        <div class="inv-cam">
+          <div class="inv-cam-head"><span id="invCamTitle">Scan barcode</span><button class="inv-cam-x" id="invCamClose">&times;</button></div>
+          <video id="invCamVideo" muted playsinline></video>
+          <div class="inv-cam-hint" id="invCamHint">Point the camera at the barcode.</div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== PRICE TICKER (placeholder) ===== -->
     <section class="tab" id="tab-ticker">
       <header class="page-head">
@@ -324,8 +488,11 @@
   </main>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
 <script src="panel.js"></script>
 <script src="blogmaker.js"></script>
 <script src="scanner.js"></script>
+<script src="inventory.js"></script>
 </body>
 </html>

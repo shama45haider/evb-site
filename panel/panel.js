@@ -134,6 +134,7 @@ function switchTab(name) {
   $$('.nav-item').forEach((b) => b.classList.toggle('is-active', b.dataset.tab === name));
   $$('.tab').forEach((t) => t.classList.toggle('is-active', t.id === `tab-${name}`));
   if (name === 'overview') renderOverview();
+  document.dispatchEvent(new CustomEvent('evb:tab-shown', { detail: name }));
 }
 
 /* ---------- Settings ---------- */
