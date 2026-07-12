@@ -423,14 +423,14 @@
     $('#invTableBody').innerHTML = rows.map((i) => {
       const seller = state.sellers.find((s) => s.id === i.sellerId);
       return `<tr data-sku="${esch(i.sku)}">
-        <td class="inv-td-sku">${esch(i.sku)}</td>
-        <td>${i.photos && i.photos[0] ? `<img src="${i.photos[0]}" class="inv-td-thumb" alt="">` : ''}${esch(i.name)}</td>
-        <td>${esch(i.category || '')}</td>
-        <td>${i.date ? esch(i.date) : new Date(i.createdAt).toLocaleDateString()}</td>
-        <td>${fmt$(i.buyPrice)}</td>
-        <td><span class="inv-chip ${i.status === 'sold' ? 'inv-chip-sold' : 'inv-chip-stock'}">${i.status === 'sold' ? 'Sold ' + fmt$(i.soldPrice) : 'In stock'}</span></td>
-        <td>${seller ? esch(sellerName(seller)) : '—'}</td>
-        <td><button class="inv-row-open">Open</button></td>
+        <td class="inv-td-sku" data-label="SKU">${esch(i.sku)}</td>
+        <td data-label="Item">${i.photos && i.photos[0] ? `<img src="${i.photos[0]}" class="inv-td-thumb" alt="">` : ''}${esch(i.name)}</td>
+        <td data-label="Category">${esch(i.category || '')}</td>
+        <td data-label="Bought">${i.date ? esch(i.date) : new Date(i.createdAt).toLocaleDateString()}</td>
+        <td data-label="Paid">${fmt$(i.buyPrice)}</td>
+        <td data-label="Status"><span class="inv-chip ${i.status === 'sold' ? 'inv-chip-sold' : 'inv-chip-stock'}">${i.status === 'sold' ? 'Sold ' + fmt$(i.soldPrice) : 'In stock'}</span></td>
+        <td data-label="Seller">${seller ? esch(sellerName(seller)) : '—'}</td>
+        <td data-label=""><button class="inv-row-open">Open</button></td>
       </tr>`;
     }).join('');
     $$('#invTableBody tr').forEach((tr) => tr.addEventListener('click', () => openDrawer(tr.dataset.sku)));

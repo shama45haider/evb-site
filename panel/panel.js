@@ -173,8 +173,29 @@ document.addEventListener('DOMContentLoaded', () => {
     showLogin();
   });
 
-  $$('.nav-item').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+  $$('.nav-item').forEach((b) => b.addEventListener('click', () => { switchTab(b.dataset.tab); closeSidebar(); }));
   $$('[data-goto]').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.goto)));
+
+  // Mobile off-canvas nav
+  function openSidebar() {
+    $('#sidebar').classList.add('open');
+    $('#sidebarOverlay').classList.add('open');
+    $('#mobileHam').classList.add('open');
+    $('#mobileHam').setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    $('#sidebar').classList.remove('open');
+    $('#sidebarOverlay').classList.remove('open');
+    $('#mobileHam').classList.remove('open');
+    $('#mobileHam').setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  $('#mobileHam').addEventListener('click', () => {
+    $('#sidebar').classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+  $('#sidebarClose').addEventListener('click', closeSidebar);
+  $('#sidebarOverlay').addEventListener('click', closeSidebar);
 
   // Settings — GitHub token
   $('#setGhToken').value = ghToken();
