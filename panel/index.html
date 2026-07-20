@@ -57,34 +57,41 @@
     </div>
     <nav class="sidebar-nav">
       <button class="nav-item is-active" data-tab="overview">
-        <span class="nav-ico">&#8962;</span> Overview
+        <span class="nav-ico" data-icon="dashboard"></span> Overview
       </button>
+
+      <div class="nav-sep">Store</div>
+      <button class="nav-item" data-tab="inventory" data-subtab="intake">
+        <span class="nav-ico" data-icon="scan-barcode"></span> Intake / Scan Item
+      </button>
+      <button class="nav-item" data-tab="inventory" data-subtab="stock">
+        <span class="nav-ico" data-icon="package"></span> Inventory
+      </button>
+      <button class="nav-item" data-tab="inventory" data-subtab="sellers">
+        <span class="nav-ico" data-icon="id-card"></span> Sellers &amp; ID Logs
+      </button>
+      <button class="nav-item" data-tab="goldcalc">
+        <span class="nav-ico" data-icon="scale"></span> Gold Calculator
+      </button>
+      <button class="nav-item" data-tab="reports">
+        <span class="nav-ico" data-icon="file-text"></span> Reports
+      </button>
+
+      <div class="nav-sep">Website</div>
       <button class="nav-item" data-tab="blogmaker">
-        <span class="nav-ico">&#9998;</span> Blog Maker
+        <span class="nav-ico" data-icon="pen"></span> Blog Maker
       </button>
       <button class="nav-item" data-tab="scanner">
-        <span class="nav-ico">&#128269;</span> Site Scanner
+        <span class="nav-ico" data-icon="radar"></span> Site Scanner
       </button>
-      <button class="nav-item" data-tab="inventory">
-        <span class="nav-ico">&#128230;</span> Inventory
-      </button>
-      <div class="nav-sep">Coming Soon</div>
-      <button class="nav-item" data-tab="ticker">
-        <span class="nav-ico">&#128176;</span> Price Ticker <span class="nav-badge">demo</span>
-      </button>
-      <button class="nav-item" data-tab="social">
-        <span class="nav-ico">&#128247;</span> Social Planner <span class="nav-badge">demo</span>
-      </button>
-      <button class="nav-item" data-tab="reviews">
-        <span class="nav-ico">&#11088;</span> Reviews <span class="nav-badge">demo</span>
-      </button>
+
       <div class="nav-sep"></div>
       <button class="nav-item" data-tab="settings">
-        <span class="nav-ico">&#9881;</span> Settings
+        <span class="nav-ico" data-icon="settings"></span> Settings
       </button>
     </nav>
     <div class="sidebar-foot">
-      <button id="logoutBtn" class="btn btn-ghost btn-block btn-sm">Sign Out</button>
+      <button id="logoutBtn" class="btn btn-ghost btn-block btn-sm"><span class="btn-ico" data-icon="log-out"></span> Sign Out</button>
     </div>
   </aside>
 
@@ -97,6 +104,16 @@
         <p>Everything at a glance. <span id="greetName"></span></p>
       </header>
       <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">In Stock</div>
+          <div class="stat-value" id="ovStock">—</div>
+          <div class="stat-sub" id="ovStockSub">Add items in Intake</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sellers on File</div>
+          <div class="stat-value" id="ovSellers">—</div>
+          <div class="stat-sub">With ID records</div>
+        </div>
         <div class="stat-card">
           <div class="stat-label">Site Status</div>
           <div class="stat-value" id="statSiteStatus">—</div>
@@ -122,10 +139,12 @@
         <div class="card">
           <h3 class="card-title">Quick Actions</h3>
           <div class="quick-actions">
-            <button class="qa" data-goto="blogmaker"><span>&#9998;</span> Write a new blog post</button>
-            <button class="qa" data-goto="scanner"><span>&#128269;</span> Run a full site scan</button>
-            <a class="qa" href="https://eastvillagebuyers.com" target="_blank" rel="noopener"><span>&#127760;</span> Open live site</a>
-            <a class="qa" href="https://github.com/shama45haider/evb-site" target="_blank" rel="noopener"><span>&#128193;</span> Open GitHub repo</a>
+            <button class="qa" data-goto="inventory" data-goto-sub="intake"><span data-icon="plus"></span> Add a new item</button>
+            <button class="qa" id="qaScanId"><span data-icon="id-card"></span> Scan a seller's ID</button>
+            <button class="qa" data-goto="goldcalc"><span data-icon="scale"></span> Gold &amp; silver calculator</button>
+            <button class="qa" data-goto="blogmaker"><span data-icon="pen"></span> Write a new blog post</button>
+            <button class="qa" data-goto="scanner"><span data-icon="radar"></span> Run a full site scan</button>
+            <a class="qa" href="https://eastvillagebuyers.com" target="_blank" rel="noopener"><span data-icon="globe"></span> Open live site</a>
           </div>
         </div>
         <div class="card">
@@ -181,7 +200,7 @@
           <div class="card">
             <h3 class="card-title">2 &middot; Images</h3>
             <div id="bmDrop" class="dropzone">
-              <span class="dz-ico">&#128444;</span>
+              <span class="dz-ico" data-icon="image"></span>
               <strong>Drag &amp; drop images here</strong>
               <span>or click to browse — first image becomes the hero</span>
               <input type="file" id="bmFiles" accept="image/*" multiple hidden>
@@ -192,8 +211,8 @@
           <div class="card">
             <h3 class="card-title">3 &middot; Generate &amp; publish</h3>
             <div class="gen-row">
-              <button id="bmGenerate" class="btn btn-solid">&#10024; Generate Post</button>
-              <button id="bmPublish" class="btn btn-solid btn-green" disabled>&#128640; Publish Live</button>
+              <button id="bmGenerate" class="btn btn-solid"><span class="btn-ico" data-icon="sparkles"></span> Generate Post</button>
+              <button id="bmPublish" class="btn btn-solid btn-green" disabled><span class="btn-ico" data-icon="rocket"></span> Publish Live</button>
               <span id="bmEngine" class="engine-chip">AI: demo mode</span>
             </div>
             <div id="bmStatus" class="status"></div>
@@ -205,7 +224,7 @@
           <div class="card card-fill">
             <h3 class="card-title">Preview</h3>
             <div id="bmPreviewEmpty" class="preview-empty">
-              <span>&#128196;</span>
+              <span data-icon="file-text"></span>
               <p>Your generated post will preview here in the real blog layout.</p>
             </div>
             <iframe id="bmPreview" class="preview-frame hidden" title="Post preview"></iframe>
@@ -223,7 +242,7 @@
 
       <div class="card scan-controls">
         <div class="scan-controls-left">
-          <button id="scanRun" class="btn btn-solid">&#128269; Run Full Scan</button>
+          <button id="scanRun" class="btn btn-solid"><span class="btn-ico" data-icon="radar"></span> Run Full Scan</button>
           <label class="toggle">
             <input type="checkbox" id="scanDaily" checked>
             <span class="toggle-track"></span>
@@ -246,9 +265,9 @@
 
     <!-- ===== INVENTORY ===== -->
     <section class="tab" id="tab-inventory">
-      <header class="page-head">
-        <h2>Inventory</h2>
-        <p>Barcode every item you buy, log who you bought it from, and track it until it sells.</p>
+      <header class="page-head" id="invHead">
+        <h2 id="invHeadTitle">Intake / Scan Item</h2>
+        <p id="invHeadSub">Scan or add an item you bought, log the seller, print a label.</p>
       </header>
 
       <div class="stat-grid">
@@ -258,25 +277,13 @@
         <div class="stat-card"><div class="stat-label">Sellers on File</div><div class="stat-value" id="invStatSellers">0</div><div class="stat-sub">With full transaction logs</div></div>
       </div>
 
-      <div class="inv-subnav">
-        <button class="inv-subtab is-active" data-invtab="intake">&#43; Intake / Scan</button>
-        <button class="inv-subtab" data-invtab="stock">Inventory List</button>
-        <button class="inv-subtab" data-invtab="sellers">Sellers</button>
-        <div class="inv-subnav-right">
-          <button class="btn btn-ghost btn-sm" id="invExportCsv">Export CSV</button>
-          <button class="btn btn-ghost btn-sm" id="invBackup">Backup</button>
-          <button class="btn btn-ghost btn-sm" id="invRestore">Restore</button>
-          <input type="file" id="invRestoreFile" accept=".json" hidden>
-        </div>
-      </div>
-
       <!-- ---- Intake ---- -->
       <div class="inv-pane is-active" id="invpane-intake">
         <div class="card inv-scanbar">
-          <span class="inv-scanbar-ico">&#9889;</span>
+          <span class="inv-scanbar-ico" data-icon="zap"></span>
           <input type="text" id="invScanBox" placeholder="Scan any barcode here (USB scanner or type SKU + Enter) — existing items open instantly" autocomplete="off">
-          <button class="btn btn-solid btn-sm" id="invCamScan">&#128247; Camera</button>
-          <button class="btn btn-solid btn-sm btn-green" id="invNewItem">&#43; New Item</button>
+          <button class="btn btn-solid btn-sm" id="invCamScan"><span class="btn-ico" data-icon="camera"></span> Camera</button>
+          <button class="btn btn-solid btn-sm btn-green" id="invNewItem"><span class="btn-ico" data-icon="plus"></span> New Item</button>
         </div>
 
         <div class="bm-grid">
@@ -287,7 +294,7 @@
                 <div class="inv-barcode-box"><svg id="invBarcode"></svg></div>
                 <div class="inv-sku-actions">
                   <div class="inv-sku-label" id="invSkuLabel">EVB-—</div>
-                  <button class="btn btn-sm btn-solid" id="invPrintLabel">&#128424; Print Label</button>
+                  <button class="btn btn-sm btn-solid" id="invPrintLabel"><span class="btn-ico" data-icon="printer"></span> Print Label</button>
                   <div class="field field-mini"><label>Copies</label><input type="number" id="invLabelCopies" value="1" min="1" max="12"></div>
                 </div>
               </div>
@@ -322,7 +329,7 @@
               <h3 class="card-title">Bought From (seller)</h3>
               <div class="inv-seller-tools">
                 <input type="text" id="invSellerSearch" placeholder="Search sellers on file…" autocomplete="off">
-                <button class="btn btn-solid btn-sm" id="invScanId">&#129706; Scan ID</button>
+                <button class="btn btn-solid btn-sm" id="invScanId"><span class="btn-ico" data-icon="id-card"></span> Scan ID</button>
               </div>
               <div id="invSellerMatches" class="inv-seller-matches"></div>
               <div id="invSellerCard" class="inv-seller-card hidden"></div>
@@ -356,11 +363,12 @@
             <div class="card">
               <h3 class="card-title">Save</h3>
               <div class="gen-row">
-                <button class="btn btn-solid btn-green" id="invSave">&#128190; Save Item + Seller</button>
+                <button class="btn btn-solid btn-green" id="invSave"><span class="btn-ico" data-icon="save"></span> Save Item + Seller</button>
+                <button class="btn btn-solid" id="invReceipt"><span class="btn-ico" data-icon="receipt"></span> Receipt PDF</button>
                 <button class="btn btn-ghost" id="invClear">Clear Form</button>
               </div>
               <div id="invStatus" class="status"></div>
-              <p class="placeholder-note" style="margin-top:12px">Seller info and photos are stored only on this device (never uploaded, never pushed to GitHub). Use Backup to move data between computers.</p>
+              <p class="placeholder-note" style="margin-top:12px">Seller info and photos are stored only on this device (never uploaded, never pushed to GitHub). Use Backup in the Inventory list to move data between computers.</p>
             </div>
           </div>
         </div>
@@ -372,13 +380,18 @@
           <input type="text" id="invSearch" placeholder="Search by name, SKU, brand, seller…">
           <select id="invFilterStatus"><option value="">All statuses</option><option value="in_stock">In stock</option><option value="sold">Sold</option></select>
           <select id="invFilterCat"><option value="">All categories</option><option>Jewelry</option><option>Gold</option><option>Silver</option><option>Watches</option><option>Designer</option><option>Streetwear</option><option>Sneakers</option><option>Electronics</option><option>Collectibles</option><option>Other</option></select>
+          <div class="inv-filterbar-right">
+            <button class="btn btn-ghost btn-sm" id="invBackup"><span class="btn-ico" data-icon="download"></span> Backup</button>
+            <button class="btn btn-ghost btn-sm" id="invRestore"><span class="btn-ico" data-icon="upload"></span> Restore</button>
+            <input type="file" id="invRestoreFile" accept=".json" hidden>
+          </div>
         </div>
         <div class="card inv-tablewrap">
           <table class="inv-table">
             <thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>Bought</th><th>Paid</th><th>Status</th><th>Seller</th><th></th></tr></thead>
             <tbody id="invTableBody"></tbody>
           </table>
-          <div id="invTableEmpty" class="preview-empty"><span>&#128230;</span><p>No items yet — scan or add your first item in the Intake tab.</p></div>
+          <div id="invTableEmpty" class="preview-empty"><span data-icon="package"></span><p>No items yet — scan or add your first item in Intake.</p></div>
         </div>
       </div>
 
@@ -388,7 +401,7 @@
           <input type="text" id="invSellerListSearch" placeholder="Search sellers by name, ID number, phone…">
         </div>
         <div id="invSellerList" class="inv-seller-grid"></div>
-        <div id="invSellerEmpty" class="preview-empty"><span>&#129489;</span><p>No sellers on file yet — they're created automatically when you save an intake.</p></div>
+        <div id="invSellerEmpty" class="preview-empty"><span data-icon="users"></span><p>No sellers on file yet — they're created automatically when you save an intake.</p></div>
       </div>
 
       <!-- item detail drawer -->
@@ -401,67 +414,128 @@
           <div class="inv-cam-head"><span id="invCamTitle">Scan barcode</span><button class="inv-cam-x" id="invCamClose">&times;</button></div>
           <video id="invCamVideo" muted playsinline></video>
           <div class="inv-cam-hint" id="invCamHint">Point the camera at the barcode.</div>
+          <div class="inv-cam-foot">
+            <button class="btn btn-ghost btn-sm" id="invCamUpload"><span class="btn-ico" data-icon="upload"></span> Upload a photo instead</button>
+            <input type="file" id="invCamUploadFile" accept="image/*" hidden>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ===== PRICE TICKER (placeholder) ===== -->
-    <section class="tab" id="tab-ticker">
+    <!-- ===== GOLD CALCULATOR ===== -->
+    <section class="tab" id="tab-goldcalc">
       <header class="page-head">
-        <h2>Price Ticker <span class="demo-flag">Demo Preview</span></h2>
-        <p>Control the scrolling gold &amp; silver price ticker on the site without touching code.</p>
+        <h2>Gold &amp; Silver Calculator</h2>
+        <p>Type the weight, pick the purity — see the melt value and your offer instantly.</p>
       </header>
-      <div class="card">
-        <h3 class="card-title">Ticker Message</h3>
-        <div class="field"><label>Live message</label>
-          <input type="text" value="Gold is at an all-time high — sell your gold today at 39 Avenue A" disabled>
+
+      <div class="two-col">
+        <div class="card">
+          <h3 class="card-title">Item</h3>
+          <div class="field-row">
+            <div class="field field-sm">
+              <label>Metal &amp; purity</label>
+              <select id="gcPurity">
+                <optgroup label="Gold">
+                  <option value="gold:0.4167">10K gold (41.7%)</option>
+                  <option value="gold:0.5833" selected>14K gold (58.3%)</option>
+                  <option value="gold:0.75">18K gold (75%)</option>
+                  <option value="gold:0.9167">22K gold (91.7%)</option>
+                  <option value="gold:0.999">24K gold (99.9%)</option>
+                </optgroup>
+                <optgroup label="Silver">
+                  <option value="silver:0.925">Sterling silver .925</option>
+                  <option value="silver:0.999">Fine silver .999</option>
+                  <option value="silver:0.90">Coin silver .900</option>
+                </optgroup>
+                <optgroup label="Platinum">
+                  <option value="platinum:0.95">Platinum .950</option>
+                  <option value="platinum:0.90">Platinum .900</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="field field-sm">
+              <label>Weight</label>
+              <input type="number" id="gcWeight" min="0" step="0.01" placeholder="0.00">
+            </div>
+            <div class="field field-sm">
+              <label>Unit</label>
+              <select id="gcUnit">
+                <option value="g" selected>grams</option>
+                <option value="dwt">pennyweight (dwt)</option>
+                <option value="ozt">troy oz</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Payout: <strong id="gcPayoutLabel">70%</strong> of melt</label>
+            <input type="range" id="gcPayout" min="30" max="100" step="5" value="70">
+          </div>
+          <div class="gc-results">
+            <div class="gc-result"><div class="gc-result-label">Pure metal content</div><div class="gc-result-value" id="gcPure">0.00 g</div></div>
+            <div class="gc-result"><div class="gc-result-label">Melt value</div><div class="gc-result-value" id="gcMelt">$0.00</div></div>
+            <div class="gc-result gc-result-hot"><div class="gc-result-label">Your offer</div><div class="gc-result-value" id="gcOffer">$0.00</div></div>
+          </div>
         </div>
+
+        <div class="card">
+          <h3 class="card-title">Spot Prices <span class="opt">(per troy oz — update these to today's market)</span></h3>
+          <div class="field-row">
+            <div class="field field-sm"><label>Gold spot ($/ozt)</label><input type="number" id="gcSpotGold" min="0" step="1"></div>
+            <div class="field field-sm"><label>Silver spot ($/ozt)</label><input type="number" id="gcSpotSilver" min="0" step="0.1"></div>
+            <div class="field field-sm"><label>Platinum spot ($/ozt)</label><input type="number" id="gcSpotPlatinum" min="0" step="1"></div>
+          </div>
+          <p class="placeholder-note">Spot prices are remembered on this device. Check goldprice.org or kitco.com for the live number, type it in once, and every calculation uses it.</p>
+          <h3 class="card-title" style="margin-top:20px">Quick reference</h3>
+          <table class="gc-ref-table">
+            <thead><tr><th>Purity</th><th>Value per gram</th><th>Value per dwt</th></tr></thead>
+            <tbody id="gcRefBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REPORTS ===== -->
+    <section class="tab" id="tab-reports">
+      <header class="page-head">
+        <h2>Reports</h2>
+        <p>Download purchase records and inventory reports as PDF or CSV.</p>
+      </header>
+
+      <div class="card">
+        <h3 class="card-title">Date range</h3>
         <div class="field-row">
-          <div class="field field-sm"><label>Gold spot source</label><select disabled><option>goldpriceoz.com (live)</option></select></div>
-          <div class="field field-sm"><label>Update frequency</label><select disabled><option>Every 15 min</option></select></div>
+          <div class="field field-sm"><label>From</label><input type="date" id="repFrom"></div>
+          <div class="field field-sm"><label>To</label><input type="date" id="repTo"></div>
+          <div class="field field-sm rep-presets">
+            <label>Quick pick</label>
+            <div class="gen-row">
+              <button class="btn btn-ghost btn-sm" id="repThisMonth">This month</button>
+              <button class="btn btn-ghost btn-sm" id="repLastMonth">Last month</button>
+              <button class="btn btn-ghost btn-sm" id="repAllTime">All time</button>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-solid" disabled>Save to Live Site</button>
-        <p class="placeholder-note">Coming soon — this will edit <code>site-ticker.js</code> on GitHub directly, the same way Blog Maker publishes posts.</p>
       </div>
-    </section>
 
-    <!-- ===== SOCIAL (placeholder) ===== -->
-    <section class="tab" id="tab-social">
-      <header class="page-head">
-        <h2>Social Planner <span class="demo-flag">Demo Preview</span></h2>
-        <p>Queue Instagram &amp; TikTok posts from product photos you drop in.</p>
-      </header>
-      <div class="card">
-        <div class="social-queue">
-          <div class="sq-item"><div class="sq-thumb">&#128141;</div><div><strong>Chrome Hearts drop</strong><span>Scheduled &middot; Tomorrow 11:00 AM</span></div><span class="sq-badge sq-sched">Queued</span></div>
-          <div class="sq-item"><div class="sq-thumb">&#8986;</div><div><strong>AP Royal Oak just in</strong><span>Posted &middot; Yesterday 2:14 PM &middot; 4.2K views</span></div><span class="sq-badge sq-done">Posted</span></div>
-          <div class="sq-item"><div class="sq-thumb">&#128091;</div><div><strong>LV Neverfull authentication reel</strong><span>Draft</span></div><span class="sq-badge sq-draft">Draft</span></div>
+      <div class="two-col">
+        <div class="card">
+          <h3 class="card-title">Purchase / Transaction Report</h3>
+          <p class="card-desc">Every item bought in the date range with the date, SKU, amount paid, and full seller identity — the record book for secondhand-dealer compliance.</p>
+          <div class="gen-row">
+            <button class="btn btn-solid" id="repTransPdf"><span class="btn-ico" data-icon="file-text"></span> Download PDF</button>
+            <button class="btn btn-ghost" id="repTransCsv"><span class="btn-ico" data-icon="download"></span> Download CSV</button>
+          </div>
         </div>
-        <p class="placeholder-note">Coming soon — connects to Meta Graph API for scheduled posting, pulling captions from the same AI as Blog Maker.</p>
+        <div class="card">
+          <h3 class="card-title">Inventory Value Report</h3>
+          <p class="card-desc">Everything currently in stock, grouped by category, with what you paid and the estimated resale total.</p>
+          <div class="gen-row">
+            <button class="btn btn-solid" id="repStockPdf"><span class="btn-ico" data-icon="file-text"></span> Download PDF</button>
+          </div>
+        </div>
       </div>
-    </section>
-
-    <!-- ===== REVIEWS (placeholder) ===== -->
-    <section class="tab" id="tab-reviews">
-      <header class="page-head">
-        <h2>Reviews Monitor <span class="demo-flag">Demo Preview</span></h2>
-        <p>Google reviews in one place, with AI-drafted replies ready to approve.</p>
-      </header>
-      <div class="card">
-        <div class="review-item">
-          <div class="review-head"><strong>Maria G.</strong><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="review-date">2 days ago</span></div>
-          <p>"Sold my grandmother's gold bracelet here. They tested it in front of me and paid more than two other shops offered."</p>
-          <div class="review-reply">Suggested reply: "Thank you Maria! Transparency is everything to us — enjoy, and come see us anytime."</div>
-          <button class="btn btn-sm btn-solid" disabled>Approve &amp; Post Reply</button>
-        </div>
-        <div class="review-item">
-          <div class="review-head"><strong>Devon T.</strong><span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="review-date">5 days ago</span></div>
-          <p>"Brought in Jordans and a Supreme box logo — quick authentication, fair cash offer, in and out in 20 minutes."</p>
-          <div class="review-reply">Suggested reply: "Appreciate you Devon! Bring the next batch through whenever."</div>
-          <button class="btn btn-sm btn-solid" disabled>Approve &amp; Post Reply</button>
-        </div>
-        <p class="placeholder-note">Coming soon — connects to the Google Business Profile API.</p>
-      </div>
+      <div id="repStatus" class="status"></div>
     </section>
 
     <!-- ===== SETTINGS ===== -->
@@ -499,9 +573,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="icons.js"></script>
 <script src="panel.js"></script>
+<script src="pdf.js"></script>
 <script src="blogmaker.js"></script>
 <script src="scanner.js"></script>
 <script src="inventory.js"></script>
+<script src="goldcalc.js"></script>
 </body>
 </html>

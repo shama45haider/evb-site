@@ -1,0 +1,81 @@
+<section class="section process-steps" id="section-process">
+  <div class="section__inner">
+    <div class="section__head" style="justify-content:center;flex-direction:column;text-align:center;">
+      <span class="process-steps__eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="section__title">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="process-steps__grid">
+      {% for block in section.blocks %}
+        <div class="process-step {% if forloop.last %}process-step--final{% endif %}" {{ block.shopify_attributes }}>
+          <div class="process-step__media">
+            {% if block.settings.image %}
+              <img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.title | escape }}" loading="lazy" width="400" height="300">
+            {% elsif block.settings.fallback_image != blank %}
+              <img src="{{ block.settings.fallback_image | asset_url }}" alt="{{ block.settings.title | escape }}" loading="lazy" width="400" height="300">
+            {% else %}
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'process-step__placeholder' }}
+            {% endif %}
+            <span class="process-step__num">{{ forloop.index }}</span>
+          </div>
+          <h3 class="process-step__title">{{ block.settings.title }}</h3>
+          <p class="process-step__text">{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Process steps",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "THE PROCESS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How We Check Value"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "fallback_image",
+          "label": "Bundled fallback image filename (advanced, optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Bring It In"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Walk in with your item — no appointment needed."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Process steps"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+<section class="blog-index">
+  <h1>{{ blog.title }}</h1>
+  {% paginate blog.articles by 12 %}
+    <div class="blog-index__grid">
+      {% for article in blog.articles %}
+        <a href="{{ article.url }}" class="blog-card">
+          <div class="blog-card__media">
+            {% if article.image %}
+              <img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.title | escape }}" loading="lazy" width="600" height="400">
+            {% else %}
+              {{ 'article' | placeholder_svg_tag: 'blog-card__placeholder' }}
+            {% endif %}
+          </div>
+          <div class="blog-card__body">
+            <div class="blog-card__date">{{ article.published_at | date: '%B %Y' }}</div>
+            <h2 class="blog-card__title">{{ article.title }}</h2>
+            <p class="blog-card__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 120 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+    {% if paginate.pages > 1 %}
+      <nav class="pagination" aria-label="Pagination">
+        {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="pagination__link">&larr; Prev</a>{% endif %}
+        {% for part in paginate.parts %}
+          {% if part.is_link %}<a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>{% else %}<span class="pagination__current">{{ part.title }}</span>{% endif %}
+        {% endfor %}
+        {% if paginate.next %}<a href="{{ paginate.next.url }}" class="pagination__link">Next &rarr;</a>{% endif %}
+      </nav>
+    {% endif %}
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{ "name": "Blog pages", "settings": [] }
+{% endschema %}

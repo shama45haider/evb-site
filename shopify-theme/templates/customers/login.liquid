@@ -1,0 +1,40 @@
+<section class="account-page">
+  <div class="account-card">
+    <h1>Sign In</h1>
+    {% form 'customer_login' %}
+      {% if form.errors %}
+        <div class="account-error">{{ form.errors | default_errors }}</div>
+      {% endif %}
+      <label for="CustomerEmail">Email</label>
+      <input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required>
+
+      {% if form.password_needed %}
+        <label for="CustomerPassword">Password</label>
+        <input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required>
+      {% endif %}
+
+      <button type="submit" class="btn btn--solid btn--block">Sign In</button>
+
+      {% if form.password_needed %}
+        <a href="#recover" class="account-link" id="RecoverToggle">Forgot your password?</a>
+      {% endif %}
+    {% endform %}
+
+    {% form 'recover_customer_password', class: 'account-recover hidden', id: 'RecoverForm' %}
+      {% if form.posted_successfully? %}
+        <p class="account-success">If that email is in our system, you'll receive a reset link shortly.</p>
+      {% endif %}
+      <label for="RecoverEmail">Email to recover your password</label>
+      <input type="email" name="email" id="RecoverEmail" autocomplete="email" required>
+      <button type="submit" class="btn btn--ghost btn--block">Send Reset Link</button>
+    {% endform %}
+
+    <p class="account-alt">New here? <a href="{{ routes.account_register_url }}">Create an account</a></p>
+  </div>
+</section>
+
+<script>
+  var t = document.getElementById('RecoverToggle');
+  var f = document.getElementById('RecoverForm');
+  if (t && f) { t.addEventListener('click', function (e) { e.preventDefault(); f.classList.toggle('hidden'); }); }
+</script>

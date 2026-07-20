@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="{{ canonical_url }}">
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+  <title>
+    {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
+  </title>
+
+  {% render 'meta-tags' %}
+
+  {%- comment -%}
+    Hardcoded to the exact Google Fonts stack eastvillagebuyers.com uses,
+    so the storefront matches pixel-for-pixel instead of relying on
+    Shopify's curated font library.
+  {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fjalla+One&family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  {{ content_for_header }}
+
+  {%- comment -%}
+    Defaults are hardcoded as a fallback (via `default:`) so the palette
+    never silently disappears even if a theme setting comes back blank.
+  {%- endcomment -%}
+  <style>
+    :root{
+      --accent: {{ settings.color_accent | default: '#f97316' }};
+      --accent-dark: {{ settings.color_accent_dark | default: '#e8690a' }};
+      --accent-deep: {{ settings.color_accent_deep | default: '#b84f06' }};
+      --color-green: {{ settings.color_green | default: '#1e7d32' }};
+      --ink: {{ settings.color_ink | default: '#1a1814' }};
+      --paper: {{ settings.color_paper | default: '#f8f5f0' }};
+      --line: {{ settings.color_line | default: '#e8e4de' }};
+      --card: {{ settings.color_card | default: '#ffffff' }};
+      --radius: {{ settings.button_radius | default: 9 }}px;
+      --font-heading: 'Montserrat', sans-serif;
+      --font-accent: 'Bebas Neue', 'Fjalla One', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+  </style>
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+</head>
+<body class="template-{{ request.page_type }}">
+
+  <a class="skip-to-content" href="#MainContent">Skip to content</a>
+
+  {% section 'announcement-bar' %}
+  {% section 'header' %}
+
+  <main id="MainContent" role="main">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+  {% render 'sticky-mobile-cta' %}
+  {% render 'predictive-search' %}
+
+  {% if settings.cart_type == 'drawer' %}
+    {% render 'cart-drawer' %}
+  {% endif %}
+
+  {{ 'theme.js' | asset_url | script_tag }}
+</body>
+</html>

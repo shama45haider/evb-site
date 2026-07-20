@@ -1,0 +1,27 @@
+<section class="section newsletter">
+  <div class="newsletter__inner">
+    <h2>{{ section.settings.heading }}</h2>
+    <p>{{ section.settings.subheading }}</p>
+    {% form 'customer' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter__row">
+        <input type="email" name="contact[email]" placeholder="Your email address" required aria-label="Email">
+        <button type="submit" class="btn btn--solid">Subscribe</button>
+      </div>
+      {% if form.posted_successfully? %}
+        <p class="newsletter__success">Thanks — you're on the list.</p>
+      {% endif %}
+    {% endform %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get Drop Alerts" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "New inventory, price alerts, and same-day cash offers — straight to your inbox." }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

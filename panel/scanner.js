@@ -246,7 +246,7 @@
           (list.length > 30 ? `<div class="scan-pass-note" style="color:var(--muted)">…and ${list.length - 30} more.</div>` : '');
       return `<div class="scan-check ${state}">
         <div class="scan-check-head" data-toggle>
-          <span class="scan-check-ico">${state === 'pass' ? '✓' : '!'}</span>
+          <span class="scan-check-ico">${window.EVBIcons ? EVBIcons.get(state === 'pass' ? 'check' : 'alert') : (state === 'pass' ? '✓' : '!')}</span>
           ${c.label}
           <span class="scan-check-count">${list.length === 0 ? 'Pass' : `${list.length} issue${list.length > 1 ? 's' : ''}`}</span>
         </div>

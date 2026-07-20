@@ -1,0 +1,47 @@
+<nav class="quick-nav" aria-label="Page sections">
+  <div class="quick-nav__track">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.target }}" class="quick-nav__pill" {{ block.shopify_attributes }}>
+        {% if block.settings.icon != blank %}<span class="quick-nav__ico">{{ block.settings.icon }}</span>{% endif %}
+        {{ block.settings.label }}
+      </a>
+    {% endfor %}
+  </div>
+</nav>
+
+{% schema %}
+{
+  "name": "Quick nav",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Jump link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Section"
+        },
+        {
+          "type": "text",
+          "id": "target",
+          "label": "Target (e.g. #section-shop, or any URL)",
+          "default": "#section-shop"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Emoji icon (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick nav"
+    }
+  ]
+}
+{% endschema %}

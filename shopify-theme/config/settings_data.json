@@ -1,0 +1,29 @@
+{
+  "current": "Default",
+  "presets": {
+    "Default": {
+      "color_accent": "#f97316",
+      "color_accent_dark": "#e8690a",
+      "color_accent_deep": "#b84f06",
+      "color_green": "#1e7d32",
+      "color_ink": "#1a1814",
+      "color_paper": "#f8f5f0",
+      "color_line": "#e8e4de",
+      "color_card": "#ffffff",
+      "logo_width": 90,
+      "logo_width_footer": 130,
+      "logo_badge_frame": true,
+      "store_address": "39 Avenue A, New York, NY 10009",
+      "store_phone": "917-608-8939",
+      "store_hours": "Sun–Thu 12:30–6:30 PM · Fri 12:30–6:00 PM · Sat Closed",
+      "sms_link": "sms:9176088939",
+      "main_site_url": "https://eastvillagebuyers.com",
+      "button_radius": 9,
+      "button_pulse": true,
+      "sticky_mobile_cta": true,
+      "card_image_ratio": "square",
+      "card_show_vendor": true,
+      "cart_type": "drawer"
+    }
+  }
+}

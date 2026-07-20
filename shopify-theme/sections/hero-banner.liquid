@@ -1,0 +1,41 @@
+<section class="hero-simple">
+  <div class="hero-simple__pattern" aria-hidden="true"></div>
+  <div class="hero-simple__inner">
+    <img src="{{ 'evblogo.webp' | asset_url }}" alt="{{ shop.name }}" class="hero-simple__logo">
+    <span class="hero-simple__badge">{{ section.settings.badge }}</span>
+    <h1 class="hero-simple__title">{{ section.settings.heading }}</h1>
+    <p class="hero-simple__sub">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="15" height="12" rx="2"/><path d="M16 10h3.5a1 1 0 01.9.55L22 14v4h-6"/><circle cx="6.5" cy="18.5" r="1.75"/><circle cx="17.5" cy="18.5" r="1.75"/></svg>
+      {{ section.settings.subheading }}
+    </p>
+    <div class="hero-simple__btns">
+      {% if section.settings.btn1_text != blank %}
+        <a href="{{ section.settings.btn1_link | default: '/collections/all' }}" class="btn btn--solid btn--lg {% if settings.button_pulse %}btn--pulse{% endif %}">{{ section.settings.btn1_text }}</a>
+      {% endif %}
+      {% if section.settings.btn2_text != blank %}
+        <a href="{{ section.settings.btn2_link | default: '#section-why' }}" class="btn btn--ghost-light btn--lg">{{ section.settings.btn2_text }}</a>
+      {% endif %}
+    </div>
+    <div class="hero-simple__trust">
+      <span>&#9989; Authenticated</span>
+      <span>&#128230; 2-Day Shipping</span>
+      <span>&#128274; Secure Checkout</span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero banner",
+  "settings": [
+    { "type": "text", "id": "badge", "label": "Badge text", "default": "OFFICIAL ONLINE SHOP" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "East Village Buyers" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "All items shipped within 2 business days." },
+    { "type": "text", "id": "btn1_text", "label": "Primary button text", "default": "Shop Now" },
+    { "type": "url", "id": "btn1_link", "label": "Primary button link" },
+    { "type": "text", "id": "btn2_text", "label": "Secondary button text", "default": "Why Buy From Us" },
+    { "type": "url", "id": "btn2_link", "label": "Secondary button link" }
+  ],
+  "presets": [{ "name": "Hero banner" }]
+}
+{% endschema %}

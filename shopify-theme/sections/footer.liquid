@@ -1,0 +1,128 @@
+<footer class="site-footer">
+
+  {% if settings.main_site_url != blank %}
+    <div class="footer-back-strip">
+      <a href="{{ settings.main_site_url }}" class="footer-back-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Back to Main Website
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="footer-actions">
+    <a href="tel:{{ settings.store_phone | remove: '-' }}" class="footer-action-btn">
+      <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+      Call Us
+    </a>
+    {% if settings.sms_link != blank %}
+      <a href="{{ settings.sms_link }}" class="footer-action-btn footer-action-btn--solid">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Text Us
+      </a>
+    {% endif %}
+    <a href="https://maps.google.com/?q={{ settings.store_address | url_encode }}" target="_blank" rel="noopener" class="footer-action-btn">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Get Directions
+    </a>
+    <a href="/collections/all" class="footer-action-btn">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>
+      Shop All
+    </a>
+  </div>
+
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      {%- assign logo_w_footer = settings.logo_width_footer | default: 130 -%}
+      {% if settings.logo %}
+        <img src="{{ settings.logo | image_url: width: logo_w_footer | times: 2 }}" alt="{{ shop.name }}" width="{{ logo_w_footer }}" height="{{ logo_w_footer }}" style="width: {{ logo_w_footer }}px; height: auto;" class="site-footer__logo">
+      {% else %}
+        <img src="{{ 'evblogo.webp' | asset_url }}" alt="{{ shop.name }}" width="{{ logo_w_footer }}" height="{{ logo_w_footer }}" style="width: {{ logo_w_footer }}px; height: auto;" class="site-footer__logo">
+      {% endif %}
+      <p class="site-footer__tagline">{{ section.settings.tagline }}</p>
+      {% render 'social-icons' %}
+    </div>
+
+    {%- comment -%}
+      If no blocks are configured yet (e.g. a freshly uploaded theme before
+      the merchant opens the customizer), fall back to sensible hardcoded
+      columns so the footer is never empty.
+    {%- endcomment -%}
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'link_list' %}
+            <div class="site-footer__col" {{ block.shopify_attributes }}>
+              <p class="site-footer__heading">{{ block.settings.heading }}</p>
+              <ul>
+                {% for link in block.settings.menu.links %}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% when 'contact' %}
+            <div class="site-footer__col" {{ block.shopify_attributes }}>
+              <p class="site-footer__heading">Visit Us</p>
+              {% render 'footer-contact-block' %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    {% else %}
+      <div class="site-footer__col">
+        <p class="site-footer__heading">Company</p>
+        <ul>
+          <li><a href="{{ routes.root_url }}">Home</a></li>
+          <li><a href="/collections/all">Shop All</a></li>
+          <li><a href="/pages/about">About Us</a></li>
+          <li><a href="{{ routes.account_url }}">My Account</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <p class="site-footer__heading">Visit Us</p>
+        {% render 'footer-contact-block' %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="site-footer__bottom">
+    <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</p>
+    <div class="site-footer__payment">
+      {% for type in shop.enabled_payment_types %}
+        {{ type | payment_type_svg_tag: class: 'site-footer__payment-icon' }}
+      {% endfor %}
+    </div>
+  </div>
+
+  <button type="button" class="footer-back-to-top" id="BackToTop" aria-label="Back to top">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "NYC's trusted destination for authenticated luxury goods, fine jewelry, sneakers, watches, gold, silver, and designer fashion." }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Link list",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Company" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    },
+    {
+      "type": "contact",
+      "name": "Contact info",
+      "settings": []
+    }
+  ],
+  "default": {
+    "blocks": [
+      { "type": "link_list", "settings": { "heading": "Company" } },
+      { "type": "contact" }
+    ]
+  }
+}
+{% endschema %}

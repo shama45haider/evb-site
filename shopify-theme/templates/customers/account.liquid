@@ -1,0 +1,46 @@
+<section class="account-page account-page--wide">
+  <div class="account-head">
+    <div>
+      <h1>Your Orders</h1>
+      <p>Hi {{ customer.first_name }}, here's your order history at {{ shop.name }}.</p>
+    </div>
+    <div class="account-head__actions">
+      <a href="{{ routes.account_addresses_url }}" class="btn btn--ghost btn--sm">Addresses</a>
+      <a href="{{ routes.account_logout_url }}" class="btn btn--ghost btn--sm">Sign Out</a>
+    </div>
+  </div>
+
+  {% paginate customer.orders by 20 %}
+    {% if customer.orders.size > 0 %}
+      <table class="account-orders-table">
+        <thead><tr><th>Order</th><th>Date</th><th>Payment</th><th>Fulfillment</th><th>Total</th><th></th></tr></thead>
+        <tbody>
+          {% for order in customer.orders %}
+            <tr>
+              <td data-label="Order">{{ order.name }}</td>
+              <td data-label="Date">{{ order.created_at | date: '%B %d, %Y' }}</td>
+              <td data-label="Payment"><span class="account-status">{{ order.financial_status_label }}</span></td>
+              <td data-label="Fulfillment"><span class="account-status">{{ order.fulfillment_status_label }}</span></td>
+              <td data-label="Total">{{ order.total_price | money }}</td>
+              <td data-label=""><a href="{{ order.customer_url }}" class="account-orders-view">View</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if paginate.pages > 1 %}
+        <nav class="pagination" aria-label="Pagination">
+          {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="pagination__link">&larr; Prev</a>{% endif %}
+          {% for part in paginate.parts %}
+            {% if part.is_link %}<a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>{% else %}<span class="pagination__current">{{ part.title }}</span>{% endif %}
+          {% endfor %}
+          {% if paginate.next %}<a href="{{ paginate.next.url }}" class="pagination__link">Next &rarr;</a>{% endif %}
+        </nav>
+      {% endif %}
+    {% else %}
+      <div class="account-empty">
+        <p>You haven't placed any orders yet.</p>
+        <a href="/collections/all" class="btn btn--solid">Start Shopping</a>
+      </div>
+    {% endif %}
+  {% endpaginate %}
+</section>

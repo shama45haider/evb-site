@@ -1,0 +1,94 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+<section class="product-detail">
+  <div class="product-detail__inner">
+    <div class="product-detail__media">
+      <div class="product-detail__main-image">
+        {% if product.selected_or_first_available_variant.featured_image %}
+          <img id="ProductMainImage" src="{{ product.selected_or_first_available_variant.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" width="900" height="900">
+        {% elsif product.featured_image %}
+          <img id="ProductMainImage" src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" width="900" height="900">
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'product-detail__placeholder' }}
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="product-detail__thumbs">
+          {% for image in product.images %}
+            <button type="button" class="product-detail__thumb" data-image-url="{{ image | image_url: width: 900 }}">
+              <img src="{{ image | image_url: width: 160 }}" alt="" width="80" height="80" loading="lazy">
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="product-detail__body">
+      {% if product.vendor != blank %}<div class="product-detail__vendor">{{ product.vendor }}</div>{% endif %}
+      <h1 class="product-detail__title">{{ product.title }}</h1>
+      {% render 'price', product: product, variant: current_variant %}
+
+      <div class="product-detail__sku" id="ProductSku">{% if current_variant.sku != blank %}SKU: {{ current_variant.sku }}{% endif %}</div>
+
+      {% if product.description != blank %}
+        <div class="product-detail__desc">{{ product.description }}</div>
+      {% endif %}
+
+      {% form 'product', product, id: 'ProductForm', class: 'product-form' %}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" id="ProductVariantId">
+
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            <div class="product-form__option">
+              <label>{{ option.name }}: <span data-option-selected-label="{{ forloop.index0 }}">{{ option.selected_value }}</span></label>
+              <div class="product-form__swatches" data-option-index="{{ forloop.index0 }}">
+                {% for value in option.values %}
+                  <button type="button" class="product-form__swatch {% if option.selected_value == value %}is-selected{% endif %}" data-option-value="{{ value | escape }}">{{ value }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endunless %}
+
+        <div class="product-form__row">
+          <div class="qty-stepper" data-line="0">
+            <button type="button" class="qty-stepper__btn" data-qty-minus>&minus;</button>
+            <input type="number" class="qty-stepper__input" name="quantity" value="1" min="1" data-qty-input>
+            <button type="button" class="qty-stepper__btn" data-qty-plus>&plus;</button>
+          </div>
+          <button type="submit" class="btn btn--solid btn--lg product-form__submit {% if settings.button_pulse %}btn--pulse{% endif %}" {% unless current_variant.available %}disabled{% endunless %} id="AddToCartBtn">
+            <span id="AddToCartLabel">{% if current_variant.available %}Add to Cart{% else %}Sold Out{% endif %}</span>
+          </button>
+        </div>
+        <div class="product-form__message" id="ProductFormMessage"></div>
+      {% endform %}
+
+      <div class="product-detail__trust">
+        <div class="product-detail__trust-item">&#9989; Authenticated in-store</div>
+        <div class="product-detail__trust-item">&#128176; Same-day pickup at 39 Avenue A</div>
+        <div class="product-detail__trust-item">&#128231; Text {{ settings.store_phone }} with questions</div>
+      </div>
+
+      <div class="product-detail__accordions">
+        <details class="pd-accordion" open>
+          <summary>Shipping & Pickup<span class="pd-accordion__icon">&#43;</span></summary>
+          <div class="pd-accordion__body">Free pickup at 39 Avenue A, New York, NY 10009. Local delivery and shipping options are available at checkout.</div>
+        </details>
+        <details class="pd-accordion">
+          <summary>Authentication & Returns<span class="pd-accordion__icon">&#43;</span></summary>
+          <div class="pd-accordion__body">Every item is authenticated in-store before listing. Contact us within 3 days of pickup for any issue with your order.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" id="ProductJson">
+  {{ product.variants | json }}
+</script>
+
+{% schema %}
+{
+  "name": "Product information",
+  "settings": []
+}
+{% endschema %}

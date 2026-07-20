@@ -1,0 +1,22 @@
+<section class="section rich-text">
+  <div class="rich-text__inner">
+    {% if section.settings.heading != blank %}<h2>{{ section.settings.heading }}</h2>{% endif %}
+    <div class="rich-text__content">{{ section.settings.text }}</div>
+    {% if section.settings.btn_text != blank %}
+      <a href="{{ section.settings.btn_link }}" class="btn btn--solid">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Add your text here.</p>" },
+    { "type": "text", "id": "btn_text", "label": "Button text" },
+    { "type": "url", "id": "btn_link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Rich text" }]
+}
+{% endschema %}

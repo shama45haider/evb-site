@@ -1,0 +1,57 @@
+<section class="section faq-accordion" id="section-faq">
+  <div class="section__inner faq-accordion__inner">
+    <div class="section__head" style="justify-content:center;text-align:center;">
+      <h2 class="section__title">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="faq-accordion__list">
+      {% for block in section.blocks %}
+        <details class="faq-item" {{ block.shopify_attributes }}>
+          <summary class="faq-item__q">
+            {{ block.settings.question }}
+            <span class="faq-item__icon">&#43;</span>
+          </summary>
+          <div class="faq-item__a">{{ block.settings.answer }}</div>
+        </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "FAQ accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Do I need an appointment?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>No — walk-ins are welcome during store hours.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ accordion"
+    }
+  ]
+}
+{% endschema %}

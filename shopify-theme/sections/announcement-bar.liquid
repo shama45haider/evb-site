@@ -1,0 +1,20 @@
+<div class="announcement-bar">
+  <div class="announcement-bar__inner">
+    <a href="https://maps.google.com/?q={{ settings.store_address | default: '39 Avenue A, New York, NY 10009' | url_encode }}" target="_blank" rel="noopener" class="announcement-bar__item">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      {{ settings.store_address | default: '39 Avenue A, New York, NY 10009' }}
+    </a>
+    <span class="announcement-bar__sep">&middot;</span>
+    <span class="announcement-bar__item">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {{ settings.store_hours | default: 'Sun–Thu 12:30–6:30 PM · Fri 12:30–6:00 PM · Sat Closed' }}
+    </span>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": []
+}
+{% endschema %}

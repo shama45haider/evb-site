@@ -1,0 +1,68 @@
+<section class="section testimonials" id="section-reviews">
+  <div class="section__inner">
+    <div class="section__head">
+      <h2 class="section__title">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="testimonials__grid">
+      {% for block in section.blocks %}
+        <div class="testimonial-card" {{ block.shopify_attributes }}>
+          <div class="testimonial-card__stars">
+            {% for i in (1..5) %}
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="{% if i <= block.settings.rating %}#f5a623{% else %}#e8e4de{% endif %}"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9-6.2-3.3-6.2 3.3 1.2-6.9-5-4.9 6.9-1z"/></svg>
+            {% endfor %}
+          </div>
+          <p class="testimonial-card__quote">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+          <div class="testimonial-card__author">{{ block.settings.author }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Sold my grandmother's gold bracelet here. They tested it in front of me and paid more than two other shops offered."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author",
+          "default": "Maria G."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials"
+    }
+  ]
+}
+{% endschema %}

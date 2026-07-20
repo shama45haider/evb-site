@@ -1,0 +1,85 @@
+{%- comment -%}
+  Usage: {% render 'product-card', product: product %}
+  Matches the Dawn-style card UX: image carousel, color swatches, and
+  a quick "Add" button that adds to cart without leaving the grid.
+{%- endcomment -%}
+{%- liquid
+  assign color_option_index = -1
+  for opt in product.options_with_values
+    if opt.name == 'Color' or opt.name == 'Colour'
+      assign color_option_index = forloop.index0
+    endif
+  endfor
+  assign current_variant = product.selected_or_first_available_variant
+  assign image_count = product.images.size
+-%}
+<div class="product-card" data-product-card data-product-handle="{{ product.handle }}">
+  <a href="{{ product.url }}" class="product-card__media-link">
+    <div class="product-card__media product-card__media--{{ settings.card_image_ratio }}" data-card-media>
+      {% if product.featured_image %}
+        {% for image in product.images limit: 4 %}
+          <img
+            src="{{ image | image_url: width: 600 }}"
+            alt="{{ image.alt | default: product.title | escape }}"
+            loading="lazy"
+            width="600" height="{% if settings.card_image_ratio == 'portrait' %}750{% else %}600{% endif %}"
+            class="product-card__img{% if forloop.first %} is-active{% endif %}"
+            data-card-slide="{{ forloop.index0 }}"
+          >
+        {% endfor %}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__img product-card__placeholder is-active' }}
+      {% endif %}
+
+      {% if product.compare_at_price > product.price %}<span class="product-card__badge">Sale</span>{% endif %}
+      {% unless product.available %}<span class="product-card__badge product-card__badge--sold">Sold Out</span>{% endunless %}
+
+      {% if image_count > 1 %}
+        <button type="button" class="product-card__arrow product-card__arrow--prev" data-card-prev aria-label="Previous image">&#8249;</button>
+        <button type="button" class="product-card__arrow product-card__arrow--next" data-card-next aria-label="Next image">&#8250;</button>
+        <div class="product-card__dots">
+          {% for image in product.images limit: 4 %}
+            <span class="product-card__dot{% if forloop.first %} is-active{% endif %}" data-card-dot="{{ forloop.index0 }}"></span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </a>
+
+  <div class="product-card__body">
+    {% if settings.card_show_vendor and product.vendor != blank %}
+      <div class="product-card__vendor">{{ product.vendor }}</div>
+    {% endif %}
+    <a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a>
+    {% render 'price', product: product, variant: current_variant %}
+
+    {% if color_option_index > -1 %}
+      <div class="product-card__swatches" data-card-swatches data-option-index="{{ color_option_index }}">
+        {% for value in product.options_with_values[color_option_index].values %}
+          <button type="button" class="product-card__swatch{% if forloop.first %} is-selected{% endif %}" data-swatch-value="{{ value | escape }}">{{ value }}</button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="product-card__actions">
+      <button
+        type="button"
+        class="btn btn--solid btn--sm product-card__quick-add"
+        data-quick-add
+        data-variant-id="{{ current_variant.id }}"
+        {% unless current_variant.available %}disabled{% endunless %}
+      >
+        <span class="qa-label">{% if current_variant.available %}Add{% else %}Sold Out{% endif %}</span>
+        <span class="qa-added">Added &#10003;</span>
+      </button>
+      {% if product.options.size > 1 or color_option_index == -1 and product.has_only_default_variant == false %}
+        <a href="{{ product.url }}" class="product-card__more-options">Show all options</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% comment %} Variant map so the quick-add / swatch JS can resolve the right variant id without a page load. {% endcomment %}
+  <script type="application/json" data-card-variants>
+    {{ product.variants | json }}
+  </script>
+</div>

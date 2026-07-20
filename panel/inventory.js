@@ -153,29 +153,71 @@
     if (p.zip) $('#selZip').value = p.zip;
   }
 
+  function sellerHistory(sellerId) {
+    const txns = state.items.filter((i) => i.sellerId === sellerId);
+    return { count: txns.length, total: txns.reduce((n, i) => n + (+i.buyPrice || 0), 0) };
+  }
+
+  function downloadIdPdf(person, idPhoto, history) {
+    if (!window.EVBPdf) return;
+    try {
+      EVBPdf.sellerIdRecord(person, { idPhoto: idPhoto || person.idPhoto || null, history: history || null });
+    } catch (e) {
+      setStatus($('#invStatus'), 'err', `PDF failed: ${e.message || e}`);
+    }
+  }
+
   function applyIdScan(parsed) {
     // Returning seller? Match on ID number first.
     const existing = state.sellers.find((s) => s.idNumber && parsed.idNumber && s.idNumber === parsed.idNumber);
-    if (existing) { selectSeller(existing.id); return; }
+    if (existing) {
+      selectSeller(existing.id);
+      downloadIdPdf({ ...existing, ...parsed }, state.idPhoto || existing.idPhoto, sellerHistory(existing.id));
+      setStatus($('#invStatus'), 'ok', `ID scanned — returning seller ${sellerName(existing)}. ID record PDF saved to your downloads.`);
+      return;
+    }
     state.currentSellerId = null;
     renderSellerCard();
     fillSellerForm(parsed);
-    setStatus($('#invStatus'), 'ok', `ID scanned — ${parsed.first || ''} ${parsed.last || ''} autofilled as a new seller.`);
+    downloadIdPdf(parsed, state.idPhoto, null);
+    setStatus($('#invStatus'), 'ok', `ID scanned — ${parsed.first || ''} ${parsed.last || ''} autofilled. ID record PDF saved to your downloads.`);
+    logActivity(`ID scanned: ${parsed.first || ''} ${parsed.last || ''} — PDF record saved`);
   }
 
   /* ---------------- Camera scanning (ZXing) ---------------- */
+  async function pickBackCamera(reader) {
+    // Prefer the rear camera on phones/tablets; ZXing defaults to the first
+    // device it finds, which is often the front-facing one.
+    try {
+      const devices = await reader.listVideoInputDevices();
+      if (!devices || !devices.length) return null;
+      const back = devices.find((d) => /back|rear|environment/i.test(d.label || ''));
+      return (back || devices[devices.length - 1]).deviceId;
+    } catch { return null; }
+  }
+
+  function cameraErrorMessage(e) {
+    const msg = String((e && e.message) || e || '');
+    const name = (e && e.name) || '';
+    if (name === 'NotAllowedError' || /permission/i.test(msg)) return 'Camera permission was blocked — allow camera access for this site in your browser, then try again.';
+    if (name === 'NotFoundError' || /requested device not found/i.test(msg)) return 'No camera found on this device — use "Upload a photo instead" below the video window.';
+    if (!window.isSecureContext) return 'Cameras only work over HTTPS (or localhost). Open the panel at panel.eastvillagebuyers.com and try again.';
+    return `Camera unavailable: ${msg}. You can use "Upload a photo instead".`;
+  }
+
   async function openCamera(mode) {
     if (!window.ZXing) { setStatus($('#invStatus'), 'err', 'Scanner library still loading — try again in a second.'); return; }
     state.camMode = mode;
     $('#invCamTitle').textContent = mode === 'id' ? 'Scan the back of the ID' : 'Scan item barcode';
     $('#invCamHint').textContent = mode === 'id'
-      ? 'Point the camera at the PDF417 barcode on the back of the license.'
+      ? 'Point the camera at the PDF417 barcode on the back of the license. Hold steady, fill the frame.'
       : 'Point the camera at the label barcode.';
     $('#invCamWrap').classList.remove('hidden');
     const reader = mode === 'id' ? new ZXing.BrowserPDF417Reader() : new ZXing.BrowserMultiFormatReader();
     state.camReader = reader;
     try {
-      await reader.decodeFromVideoDevice(null, $('#invCamVideo'), (result) => {
+      const deviceId = await pickBackCamera(reader);
+      await reader.decodeFromVideoDevice(deviceId, $('#invCamVideo'), (result) => {
         if (!result) return;
         closeCamera();
         if (mode === 'id') {
@@ -188,7 +230,7 @@
       });
     } catch (e) {
       closeCamera();
-      setStatus($('#invStatus'), 'err', `Camera unavailable: ${e.message || e}`);
+      setStatus($('#invStatus'), 'err', cameraErrorMessage(e));
     }
   }
   function closeCamera() {
@@ -260,7 +302,8 @@
     if (!s) { card.classList.add('hidden'); return; }
     const n = state.items.filter((i) => i.sellerId === s.id).length;
     card.classList.remove('hidden');
-    card.innerHTML = `<span class="inv-seller-badge">RETURNING SELLER</span> <strong>${esch(sellerName(s))}</strong> — ${n} previous purchase${n === 1 ? '' : 's'} on file. Saving this intake adds to their log. <button class="inv-unlink" id="invUnlinkSeller">use someone else</button>`;
+    card.innerHTML = `<span class="inv-seller-badge">RETURNING SELLER</span> <strong>${esch(sellerName(s))}</strong> — ${n} previous purchase${n === 1 ? '' : 's'} on file. Saving this intake adds to their log. <button class="inv-unlink" id="invSellerCardPdf">ID PDF</button> <button class="inv-unlink" id="invUnlinkSeller">use someone else</button>`;
+    $('#invSellerCardPdf').addEventListener('click', () => downloadIdPdf(s, s.idPhoto, sellerHistory(s.id)));
     $('#invUnlinkSeller').addEventListener('click', () => { state.currentSellerId = null; clearSellerForm(); renderSellerCard(); });
   }
 
@@ -279,11 +322,12 @@
       const total = txns.reduce((n, i) => n + (+i.buyPrice || 0), 0);
       return `<div class="card inv-seller-tile">
         <div class="inv-seller-tile-head">
-          ${s.idPhoto ? `<img src="${s.idPhoto}" class="inv-seller-avatar" alt="">` : '<div class="inv-seller-avatar inv-seller-avatar-empty">&#129489;</div>'}
+          ${s.idPhoto ? `<img src="${s.idPhoto}" class="inv-seller-avatar" alt="">` : `<div class="inv-seller-avatar inv-seller-avatar-empty">${window.EVBIcons ? EVBIcons.get('users') : ''}</div>`}
           <div><strong>${esch(sellerName(s))}</strong>
             <div class="inv-seller-meta">${esch(s.idNumber || 'no ID on file')}${s.dob ? ' · DOB ' + esch(s.dob) : ''}</div>
             <div class="inv-seller-meta">${esch([s.addr, s.city, s.state].filter(Boolean).join(', '))}</div>
           </div>
+          <button class="btn btn-ghost btn-sm inv-seller-pdf" data-id="${esch(s.id)}" title="Download ID record PDF">${window.EVBIcons ? EVBIcons.get('file-text') : ''} ID PDF</button>
         </div>
         <div class="inv-seller-txns">
           <div class="inv-seller-total">${txns.length} purchase${txns.length === 1 ? '' : 's'} · ${fmt$(total)} paid out</div>
@@ -291,6 +335,10 @@
         </div>
       </div>`;
     }).join('');
+    $$('.inv-seller-pdf').forEach((b) => b.addEventListener('click', () => {
+      const s = state.sellers.find((x) => x.id === b.dataset.id);
+      if (s) downloadIdPdf(s, s.idPhoto, sellerHistory(s.id));
+    }));
   }
 
   /* ---------------- Intake form ---------------- */
@@ -462,12 +510,16 @@
         ${i.status === 'in_stock' ? `<div class="inv-sell-row"><input type="number" id="invSellPrice" placeholder="Sale price" min="0" step="0.01" value="${i.estResale || ''}"><button class="btn btn-solid btn-green btn-sm" id="invMarkSold">Mark Sold</button></div>` : `<button class="btn btn-ghost btn-sm" id="invMarkUnsold">Return to Stock</button>`}
         <button class="btn btn-ghost btn-sm" id="invDrawerEdit">Edit</button>
         <button class="btn btn-ghost btn-sm" id="invDrawerPrint">Print Label</button>
+        <button class="btn btn-ghost btn-sm" id="invDrawerReceipt">Receipt PDF</button>
         <button class="btn btn-ghost btn-sm inv-danger" id="invDrawerDelete">Delete</button>
       </div>`;
     $('#invDrawerWrap').classList.remove('hidden');
     $('#invDrawerClose').addEventListener('click', closeDrawer);
     $('#invDrawerEdit').addEventListener('click', () => { closeDrawer(); loadItem(i); });
     $('#invDrawerPrint').addEventListener('click', () => printLabels(i.sku, i.name, 1));
+    $('#invDrawerReceipt').addEventListener('click', () => {
+      if (window.EVBPdf) EVBPdf.purchaseReceipt(i, state.sellers.find((s) => s.id === i.sellerId) || null);
+    });
     $('#invDrawerDelete').addEventListener('click', async () => {
       if (!confirm(`Delete ${i.sku} — "${i.name}"? This can't be undone.`)) return;
       await dbDel('items', i.sku); await reload(); closeDrawer();
@@ -498,16 +550,6 @@
     URL.revokeObjectURL(a.href);
   }
 
-  function exportCsv() {
-    const head = 'SKU,Name,Category,Brand,Condition,Date bought,Paid,Est resale,Status,Sold for,Profit,Seller,Seller ID,Notes';
-    const rows = state.items.map((i) => {
-      const s = state.sellers.find((x) => x.id === i.sellerId);
-      const cells = [i.sku, i.name, i.category, i.brand, i.condition, i.date || '', i.buyPrice, i.estResale || '', i.status, i.soldPrice || '', i.status === 'sold' ? ((+i.soldPrice || 0) - (+i.buyPrice || 0)) : '', s ? sellerName(s) : '', s ? s.idNumber || '' : '', i.notes || ''];
-      return cells.map((c) => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',');
-    });
-    download(`evb-inventory-${new Date().toISOString().slice(0, 10)}.csv`, [head, ...rows].join('\n'), 'text/csv');
-  }
-
   async function backup() {
     download(`evb-inventory-backup-${new Date().toISOString().slice(0, 10)}.json`,
       JSON.stringify({ v: 1, items: state.items, sellers: state.sellers, seq: localStorage.getItem('evb_inv_seq') || '0' }),
@@ -525,18 +567,25 @@
     logActivity(`Inventory: restored backup (${data.items.length} items, ${data.sellers.length} sellers)`);
   }
 
-  /* ---------------- Sub-tabs + wiring ---------------- */
+  /* ---------------- Sub-panes (driven by the sidebar) ---------------- */
+  const PANE_HEADS = {
+    intake: ['Intake / Scan Item', 'Scan or add an item you bought, log the seller, print a label.'],
+    stock: ['Inventory', 'Everything you\'ve taken in — search it, open an item, mark it sold.'],
+    sellers: ['Sellers & ID Logs', 'Every person you\'ve bought from, with their ID record and full purchase history.'],
+  };
   function switchInvTab(name) {
-    $$('.inv-subtab').forEach((b) => b.classList.toggle('is-active', b.dataset.invtab === name));
     $$('.inv-pane').forEach((p) => p.classList.toggle('is-active', p.id === `invpane-${name}`));
+    const head = PANE_HEADS[name] || PANE_HEADS.intake;
+    $('#invHeadTitle').textContent = head[0];
+    $('#invHeadSub').textContent = head[1];
+    // Keep the sidebar highlight in sync when panes change from inside the module.
+    $$('.nav-item[data-tab="inventory"]').forEach((b) => b.classList.toggle('is-active', b.dataset.subtab === name));
     if (name === 'intake') setTimeout(() => $('#invScanBox').focus(), 50);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     $('#invDate').value = new Date().toISOString().slice(0, 10);
     reload().then(() => { renderBarcode(nextSkuPreview()); });
-
-    $$('.inv-subtab').forEach((b) => b.addEventListener('click', () => switchInvTab(b.dataset.invtab)));
 
     // Scan box: USB scanners type + press Enter
     $('#invScanBox').addEventListener('keydown', (e) => {
@@ -545,6 +594,24 @@
     $('#invCamScan').addEventListener('click', () => openCamera('sku'));
     $('#invScanId').addEventListener('click', () => openCamera('id'));
     $('#invCamClose').addEventListener('click', closeCamera);
+
+    // Camera fallback: upload a photo instead of using the video feed
+    $('#invCamUpload').addEventListener('click', () => $('#invCamUploadFile').click());
+    $('#invCamUploadFile').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      e.target.value = '';
+      if (!file) return;
+      const mode = state.camMode;
+      closeCamera();
+      if (mode === 'id') { handleIdPhoto(file); return; }
+      try {
+        const url = await compressImage(file, 1600, 0.9);
+        const result = await new ZXing.BrowserMultiFormatReader().decodeFromImageUrl(url);
+        handleScan(result.getText());
+      } catch {
+        setStatus($('#invStatus'), 'err', 'Couldn\'t find a barcode in that photo — try a sharper, closer shot.');
+      }
+    });
     $('#invNewItem').addEventListener('click', () => { clearForm(); $('#invScanBox').focus(); });
     $('#invPrintLabel').addEventListener('click', () => {
       printLabels(state.currentSku || nextSkuPreview(), $('#invName').value, parseInt($('#invLabelCopies').value, 10));
@@ -584,14 +651,20 @@
 
     $('#invSave').addEventListener('click', saveIntake);
     $('#invClear').addEventListener('click', clearForm);
+    $('#invReceipt').addEventListener('click', () => {
+      if (!window.EVBPdf) return;
+      const item = state.currentSku && state.items.find((i) => i.sku === state.currentSku);
+      if (!item) { setStatus($('#invStatus'), 'err', 'Save the item first, then download its receipt.'); return; }
+      const seller = state.sellers.find((s) => s.id === item.sellerId);
+      EVBPdf.purchaseReceipt(item, seller || null);
+    });
 
     // List filters
     ['invSearch', 'invFilterStatus', 'invFilterCat'].forEach((id) => $('#' + id).addEventListener('input', renderTable));
     $('#invSellerListSearch').addEventListener('input', renderSellers);
     $('#invDrawerWrap').addEventListener('click', (e) => { if (e.target === $('#invDrawerWrap')) closeDrawer(); });
 
-    // Export / backup / restore
-    $('#invExportCsv').addEventListener('click', exportCsv);
+    // Backup / restore (CSV export moved to the Reports tab)
     $('#invBackup').addEventListener('click', backup);
     $('#invRestore').addEventListener('click', () => $('#invRestoreFile').click());
     $('#invRestoreFile').addEventListener('change', async (e) => {
@@ -603,6 +676,23 @@
   });
 
   document.addEventListener('evb:tab-shown', (e) => {
-    if (e.detail === 'inventory') setTimeout(() => $('#invScanBox').focus(), 50);
+    const d = e.detail || {};
+    if (d.tab === 'inventory') switchInvTab(d.subtab || 'intake');
   });
+
+  /* Shared read-only access for the Overview dashboard and Reports tab. */
+  window.EVBInventory = {
+    getStats() {
+      const stock = state.items.filter((i) => i.status === 'in_stock');
+      return {
+        inStock: stock.length,
+        invested: stock.reduce((n, i) => n + (+i.buyPrice || 0), 0),
+        sellers: state.sellers.length,
+      };
+    },
+    getData() {
+      return { items: state.items.slice(), sellers: state.sellers.slice() };
+    },
+    sellerName,
+  };
 })();

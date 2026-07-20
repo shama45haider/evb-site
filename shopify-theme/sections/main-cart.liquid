@@ -1,0 +1,59 @@
+<section class="cart-page">
+  <h1>Your Cart</h1>
+
+  {% if cart.item_count == 0 %}
+    <div class="cart-page__empty">
+      <p>Your cart is empty.</p>
+      <a href="/collections/all" class="btn btn--solid">Continue Shopping</a>
+    </div>
+  {% else %}
+    {% form 'cart', cart, class: 'cart-page__form' %}
+      <table class="cart-page__table">
+        <thead>
+          <tr><th>Product</th><th>Price</th><th>Quantity</th><th>Total</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr>
+              <td data-label="Product">
+                <a href="{{ item.url }}" class="cart-page__item">
+                  {% if item.image %}<img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.title | escape }}" width="80" height="80" loading="lazy">{% endif %}
+                  <span>
+                    {{ item.product.title }}
+                    {% unless item.variant.title == 'Default Title' %}<br><small>{{ item.variant.title }}</small>{% endunless %}
+                  </span>
+                </a>
+              </td>
+              <td data-label="Price">{{ item.original_price | money }}</td>
+              <td data-label="Quantity">
+                <div class="qty-stepper" data-line="{{ forloop.index }}">
+                  <button type="button" class="qty-stepper__btn" data-qty-minus>&minus;</button>
+                  <input type="number" class="qty-stepper__input" name="updates[]" value="{{ item.quantity }}" min="0" data-qty-input>
+                  <button type="button" class="qty-stepper__btn" data-qty-plus>&plus;</button>
+                </div>
+              </td>
+              <td data-label="Total">{{ item.final_line_price | money }}</td>
+              <td data-label=""><button type="button" class="cart-page__remove" data-qty-remove data-line="{{ forloop.index }}">Remove</button></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="cart-page__summary">
+        <div class="cart-page__subtotal">
+          <span>Subtotal</span>
+          <strong>{{ cart.total_price | money }}</strong>
+        </div>
+        <p class="cart-page__note">Taxes and shipping calculated at checkout.</p>
+        <button type="submit" name="checkout" class="btn btn--solid btn--lg btn--block">Checkout</button>
+      </div>
+    {% endform %}
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Cart page",
+  "settings": []
+}
+{% endschema %}

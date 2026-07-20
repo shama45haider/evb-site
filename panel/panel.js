@@ -23,6 +23,7 @@ const DEMO_USERS = { demo: 'evb2026' };
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
+const fmtMoney = (n) => '$' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 
 /* ---------- GitHub helpers (shared with Blog Maker) ---------- */
 function ghToken() { return localStorage.getItem(EVB.KEYS.ghToken) || ''; }
@@ -95,6 +96,14 @@ function renderOverview() {
   const scan = JSON.parse(localStorage.getItem(EVB.KEYS.lastScan) || 'null');
   const posts = parseInt(localStorage.getItem(EVB.KEYS.postsPublished) || '0', 10);
 
+  // Inventory stats (exposed by inventory.js once its data loads)
+  if (window.EVBInventory) {
+    const s = window.EVBInventory.getStats();
+    $('#ovStock').textContent = s.inStock;
+    $('#ovStockSub').textContent = s.inStock ? `${fmtMoney(s.invested)} invested` : 'Add items in Intake';
+    $('#ovSellers').textContent = s.sellers;
+  }
+
   const statusEl = $('#statSiteStatus');
   const issuesEl = $('#statIssues');
   if (scan) {
@@ -130,11 +139,16 @@ function showLogin() {
   $('#loginScreen').classList.remove('hidden');
 }
 
-function switchTab(name) {
-  $$('.nav-item').forEach((b) => b.classList.toggle('is-active', b.dataset.tab === name));
+function switchTab(name, subtab) {
+  $$('.nav-item').forEach((b) => {
+    const tabMatch = b.dataset.tab === name;
+    // Tabs split across several nav entries (inventory sub-panes) highlight per sub-tab.
+    const subMatch = !b.dataset.subtab || !subtab || b.dataset.subtab === subtab;
+    b.classList.toggle('is-active', tabMatch && subMatch);
+  });
   $$('.tab').forEach((t) => t.classList.toggle('is-active', t.id === `tab-${name}`));
   if (name === 'overview') renderOverview();
-  document.dispatchEvent(new CustomEvent('evb:tab-shown', { detail: name }));
+  document.dispatchEvent(new CustomEvent('evb:tab-shown', { detail: { tab: name, subtab: subtab || null } }));
 }
 
 /* ---------- Settings ---------- */
@@ -173,8 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
     showLogin();
   });
 
-  $$('.nav-item').forEach((b) => b.addEventListener('click', () => { switchTab(b.dataset.tab); closeSidebar(); }));
-  $$('[data-goto]').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.goto)));
+  $$('.nav-item').forEach((b) => b.addEventListener('click', () => { switchTab(b.dataset.tab, b.dataset.subtab); closeSidebar(); }));
+  $$('[data-goto]').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.goto, b.dataset.gotoSub)));
+  const qaScan = $('#qaScanId');
+  if (qaScan) qaScan.addEventListener('click', () => {
+    switchTab('inventory', 'intake');
+    setTimeout(() => { const btn = $('#invScanId'); if (btn) btn.click(); }, 150);
+  });
 
   // Mobile off-canvas nav
   function openSidebar() {

@@ -1,0 +1,109 @@
+<section class="collection-page">
+  <div class="collection-page__head">
+    <h1>{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <div class="collection-page__desc">{{ collection.description }}</div>
+    {% endif %}
+  </div>
+
+  <div class="collection-page__layout">
+    <aside class="collection-filters" id="CollectionFilters">
+      {%- liquid
+        assign has_active_filters = false
+        for filter in collection.filters
+          if filter.active_values.size > 0 or filter.min_value.value != nil or filter.max_value.value != nil
+            assign has_active_filters = true
+          endif
+        endfor
+      -%}
+      <div class="collection-filters__head">
+        <h2>Filter</h2>
+        {% if has_active_filters %}
+          <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="collection-filters__clear">Clear all</a>
+        {% endif %}
+      </div>
+      <form id="FacetForm">
+        <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+        {% for filter in collection.filters %}
+          <div class="filter-group">
+            <h3 class="filter-group__title">{{ filter.label }}</h3>
+            {% case filter.type %}
+              {% when 'price_range' %}
+                <div class="filter-price-row">
+                  <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="${{ filter.range_min | money_without_currency }}" min="0">
+                  <span>&ndash;</span>
+                  <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="${{ filter.range_max | money_without_currency }}" min="0">
+                </div>
+              {% else %}
+                <div class="filter-group__list">
+                  {% for value in filter.values %}
+                    <label class="filter-check {% if value.count == 0 and value.active == false %}is-disabled{% endif %}">
+                      <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                      <span>{{ value.label }}</span>
+                      <em>({{ value.count }})</em>
+                    </label>
+                  {% endfor %}
+                </div>
+            {% endcase %}
+          </div>
+        {% endfor %}
+        <noscript><button type="submit" class="btn btn--solid btn--block">Apply Filters</button></noscript>
+      </form>
+    </aside>
+
+    <div class="collection-page__main">
+      <div class="collection-page__toolbar">
+        <button type="button" class="collection-filters__toggle" id="FiltersToggle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          Filter
+        </button>
+        <div class="collection-page__count">{{ collection.products_count }} item{% if collection.products_count != 1 %}s{% endif %}</div>
+        <form method="get" class="collection-page__sort">
+          <label for="SortBy">Sort by</label>
+          <select name="sort_by" id="SortBy" onchange="this.form.submit()">
+            {% for option in collection.sort_options %}
+              <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>{{ option.name }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+
+      {% paginate collection.products by 24 %}
+        {% if collection.products.size > 0 %}
+          <div class="product-grid">
+            {% for product in collection.products %}
+              {% render 'product-card', product: product %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="collection-page__empty">
+            <p>No products match these filters.</p>
+            <a href="{{ collection.url }}" class="btn btn--ghost">Clear Filters</a>
+          </div>
+        {% endif %}
+
+        {% if paginate.pages > 1 %}
+          <nav class="pagination" aria-label="Pagination">
+            {% if paginate.previous %}<a href="{{ paginate.previous.url }}" class="pagination__link">&larr; Prev</a>{% endif %}
+            {% for part in paginate.parts %}
+              {% if part.is_link %}
+                <a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>
+              {% else %}
+                <span class="pagination__current">{{ part.title }}</span>
+              {% endif %}
+            {% endfor %}
+            {% if paginate.next %}<a href="{{ paginate.next.url }}" class="pagination__link">Next &rarr;</a>{% endif %}
+          </nav>
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</section>
+<div class="collection-filters__overlay" id="FiltersOverlay"></div>
+
+{% schema %}
+{
+  "name": "Collection pages",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,169 @@
+<header class="site-header" id="SiteHeader">
+  <div class="site-header__inner">
+    {%- assign logo_w = settings.logo_width | default: 92 -%}
+    <a href="{{ routes.root_url }}" class="site-header__logo {% if settings.logo_badge_frame %}site-header__logo--badge{% endif %}">
+      {% if settings.logo %}
+        <img src="{{ settings.logo | image_url: width: logo_w | times: 2 }}" alt="{{ shop.name }}" width="{{ logo_w }}" height="{{ logo_w }}" style="width: {{ logo_w }}px; height: auto;">
+      {% else %}
+        <img src="{{ 'evblogo.webp' | asset_url }}" alt="{{ shop.name }}" width="{{ logo_w }}" height="{{ logo_w }}" style="width: {{ logo_w }}px; height: auto;">
+      {% endif %}
+    </a>
+
+    <nav class="site-header__nav" aria-label="Main navigation">
+      <a href="{{ routes.root_url }}" class="site-header__link">Home</a>
+
+      <div class="site-header__drop site-header__drop--mega">
+        <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
+          Shop
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="site-header__drop-menu">
+          <span class="site-header__drop-heading">Shop By Category</span>
+          <div class="site-header__drop-grid">
+            <a href="/collections/t-shirts-long-sleeves" class="site-header__drop-link">T-Shirts & Long Sleeves</a>
+            <a href="/collections/sweaters-and-hoodies" class="site-header__drop-link">Sweaters & Hoodies</a>
+            <a href="/collections/jeans" class="site-header__drop-link">Jeans</a>
+            <a href="/collections/shoes-and-sneakers" class="site-header__drop-link">Footwear</a>
+            <a href="/collections/jackets-and-winter-wear" class="site-header__drop-link">Jackets & Coats</a>
+            <a href="/collections/hats-beanies" class="site-header__drop-link">Hats & Beanies</a>
+          </div>
+          <a href="/collections/all" class="site-header__drop-viewall">Shop All Products &rarr;</a>
+        </div>
+      </div>
+
+      {% for link in section.settings.menu.links %}
+        {% unless link.url contains '/collections/' %}
+          {% if link.links != blank %}
+            <div class="site-header__drop {% if link.links.size > 6 %}site-header__drop--mega{% endif %}">
+              <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
+                {{ link.title }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="site-header__drop-menu">
+                <span class="site-header__drop-heading">{{ link.title }}</span>
+                <div class="site-header__drop-grid">
+                  {% for childlink in link.links %}
+                    <a href="{{ childlink.url }}" class="site-header__drop-link">{{ childlink.title }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% elsif link.url != routes.root_url %}
+            <a href="{{ link.url }}" class="site-header__link{% if link.active %} is-active{% endif %}">{{ link.title }}</a>
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+
+      <div class="site-header__drop">
+        <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
+          Policies
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="site-header__drop-menu">
+          <span class="site-header__drop-heading">Policies</span>
+          <div class="site-header__drop-grid">
+            <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}" class="site-header__drop-link">Privacy Policy</a>
+            <a href="{{ shop.refund_policy.url | default: '/policies/refund-policy' }}" class="site-header__drop-link">Refund Policy</a>
+            <a href="{{ shop.shipping_policy.url | default: '/policies/shipping-policy' }}" class="site-header__drop-link">Shipping Policy</a>
+            <a href="{{ shop.terms_of_service.url | default: '/policies/terms-of-service' }}" class="site-header__drop-link">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="site-header__right">
+      {% if settings.main_site_url != blank %}
+        <a href="{{ settings.main_site_url }}" class="site-header__back-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="14" height="14"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Back to Main Site</span>
+        </a>
+      {% endif %}
+      {% if settings.sms_link != blank %}
+        <a href="{{ settings.sms_link }}" class="site-header__cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" width="16" height="16"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          <span>Text Us</span>
+        </a>
+      {% endif %}
+      <div class="site-header__drop site-header__account">
+        <button class="site-header__icon-btn" id="AccountBtn" aria-label="Account" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <div class="site-header__account-menu">
+          {% if customer %}
+            <div class="site-header__account-greeting">Hi, {{ customer.first_name }}</div>
+            <a href="/account" class="site-header__account-link">Orders</a>
+            <a href="/account/addresses" class="site-header__account-link">Profile</a>
+            <a href="{{ routes.account_logout_url }}" class="site-header__account-link">Sign Out</a>
+          {% else %}
+            <a href="{{ routes.account_login_url }}" class="site-header__account-link site-header__account-link--primary">Sign In</a>
+            <a href="{{ routes.account_register_url }}" class="site-header__account-link">Create Account</a>
+          {% endif %}
+        </div>
+      </div>
+      <button type="button" class="site-header__icon-btn" id="SearchToggle" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
+      <button class="site-header__icon-btn site-header__cart-btn" id="CartIconBtn" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>
+        <span class="site-header__cart-count" id="CartCount">{{ cart.item_count }}</span>
+      </button>
+      <button class="site-header__ham" id="MobileMenuBtn" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-drawer" id="MobileDrawer">
+    <div class="mobile-drawer__head">
+      <span>{{ shop.name }}</span>
+      <button id="MobileMenuClose" aria-label="Close">&times;</button>
+    </div>
+    <nav class="mobile-drawer__nav">
+      <a href="{{ routes.root_url }}" class="mobile-drawer__link">Home</a>
+      <details class="mobile-drawer__drop">
+        <summary>Shop</summary>
+        <a href="/collections/t-shirts-long-sleeves" class="mobile-drawer__sublink">T-Shirts & Long Sleeves</a>
+        <a href="/collections/sweaters-and-hoodies" class="mobile-drawer__sublink">Sweaters & Hoodies</a>
+        <a href="/collections/jeans" class="mobile-drawer__sublink">Jeans</a>
+        <a href="/collections/shoes-and-sneakers" class="mobile-drawer__sublink">Footwear</a>
+        <a href="/collections/jackets-and-winter-wear" class="mobile-drawer__sublink">Jackets & Coats</a>
+        <a href="/collections/hats-beanies" class="mobile-drawer__sublink">Hats & Beanies</a>
+        <a href="/collections/all" class="mobile-drawer__sublink">Shop All Products</a>
+      </details>
+      {% for link in section.settings.menu.links %}
+        {% unless link.url contains '/collections/' %}
+          {% if link.links != blank %}
+            <details class="mobile-drawer__drop">
+              <summary>{{ link.title }}</summary>
+              {% for childlink in link.links %}
+                <a href="{{ childlink.url }}" class="mobile-drawer__sublink">{{ childlink.title }}</a>
+              {% endfor %}
+            </details>
+          {% elsif link.url != routes.root_url %}
+            <a href="{{ link.url }}" class="mobile-drawer__link">{{ link.title }}</a>
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+      <details class="mobile-drawer__drop">
+        <summary>Policies</summary>
+        <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}" class="mobile-drawer__sublink">Privacy Policy</a>
+        <a href="{{ shop.refund_policy.url | default: '/policies/refund-policy' }}" class="mobile-drawer__sublink">Refund Policy</a>
+        <a href="{{ shop.shipping_policy.url | default: '/policies/shipping-policy' }}" class="mobile-drawer__sublink">Shipping Policy</a>
+        <a href="{{ shop.terms_of_service.url | default: '/policies/terms-of-service' }}" class="mobile-drawer__sublink">Terms of Service</a>
+      </details>
+      {% if settings.main_site_url != blank %}
+        <a href="{{ settings.main_site_url }}" class="mobile-drawer__link mobile-drawer__link--back">&larr; Back to Main Site</a>
+      {% endif %}
+    </nav>
+  </div>
+  <div class="mobile-drawer__overlay" id="MobileDrawerOverlay"></div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" }
+  ]
+}
+{% endschema %}

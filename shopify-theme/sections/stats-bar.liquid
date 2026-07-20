@@ -1,0 +1,42 @@
+<section class="stats-bar">
+  <div class="stats-bar__inner">
+    {% for block in section.blocks %}
+      <div class="stat-item" {{ block.shopify_attributes }}>
+        <div class="stat-item__num">{{ block.settings.number }}</div>
+        <div class="stat-item__label">{{ block.settings.label }}</div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Stats bar",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "15+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Years in Business"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats bar"
+    }
+  ]
+}
+{% endschema %}

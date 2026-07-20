@@ -1,0 +1,45 @@
+<section class="account-page account-page--wide">
+  <div class="account-head">
+    <div>
+      <h1>Your Addresses</h1>
+    </div>
+    <div class="account-head__actions">
+      <a href="{{ routes.account_url }}" class="btn btn--ghost btn--sm">Orders</a>
+      <a href="{{ routes.account_logout_url }}" class="btn btn--ghost btn--sm">Sign Out</a>
+    </div>
+  </div>
+
+  {% form 'customer_address', customer.new_address, class: 'account-card' %}
+    <h2>Add a New Address</h2>
+    {% if form.errors %}<div class="account-error">{{ form.errors | default_errors }}</div>{% endif %}
+    <div class="account-field-row">
+      <div><label>First name</label><input type="text" name="address[first_name]" value="{{ form.first_name }}"></div>
+      <div><label>Last name</label><input type="text" name="address[last_name]" value="{{ form.last_name }}"></div>
+    </div>
+    <label>Address</label>
+    <input type="text" name="address[address1]" value="{{ form.address1 }}">
+    <label>Apartment, suite, etc. (optional)</label>
+    <input type="text" name="address[address2]" value="{{ form.address2 }}">
+    <div class="account-field-row">
+      <div><label>City</label><input type="text" name="address[city]" value="{{ form.city }}"></div>
+      <div><label>State / Province</label><input type="text" name="address[province]" value="{{ form.province }}"></div>
+      <div><label>ZIP</label><input type="text" name="address[zip]" value="{{ form.zip }}"></div>
+    </div>
+    <label>Phone</label>
+    <input type="tel" name="address[phone]" value="{{ form.phone }}">
+    <button type="submit" class="btn btn--solid">Save Address</button>
+  {% endform %}
+
+  {% if customer.addresses.size > 0 %}
+    <div class="account-address-grid">
+      {% for address in customer.addresses %}
+        <div class="account-address-card">
+          {{ address | format_address }}
+          {% form 'customer_address', address %}
+            <button type="submit" name="_method" value="delete" class="account-address-delete" onclick="return confirm('Delete this address?')">Delete</button>
+          {% endform %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>

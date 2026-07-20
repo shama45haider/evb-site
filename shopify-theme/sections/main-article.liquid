@@ -1,0 +1,38 @@
+<section class="article-page">
+  <div class="article-page__inner">
+    <div class="article-page__meta">
+      <a href="{{ blog.url }}" class="article-page__back">&larr; {{ blog.title }}</a>
+      <span class="article-page__date">{{ article.published_at | date: '%B %d, %Y' }}</span>
+    </div>
+    <h1>{{ article.title }}</h1>
+    {% if article.image %}
+      <img src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title | escape }}" class="article-page__hero" width="1200" height="600">
+    {% endif %}
+    <div class="article-page__body rte">{{ article.content }}</div>
+
+    {% if blog.comments_enabled? %}
+      <div class="article-page__comments">
+        <h2>Comments ({{ article.comments_count }})</h2>
+        {% for comment in article.comments %}
+          <div class="article-page__comment">
+            <strong>{{ comment.author }}</strong>
+            <p>{{ comment.content }}</p>
+          </div>
+        {% endfor %}
+        {% form 'new_comment', article %}
+          {% if form.posted_successfully? %}
+            <p class="article-page__comment-success">Thanks — your comment is awaiting approval.</p>
+          {% endif %}
+          <input type="text" name="comment[author]" placeholder="Name" required>
+          <input type="email" name="comment[email]" placeholder="Email" required>
+          <textarea name="comment[body]" placeholder="Comment" rows="4" required></textarea>
+          <button type="submit" class="btn btn--solid">Post Comment</button>
+        {% endform %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Article pages", "settings": [] }
+{% endschema %}

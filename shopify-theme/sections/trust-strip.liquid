@@ -1,0 +1,71 @@
+<section class="shop-compare" id="section-why">
+  <div class="shop-compare__inner">
+    <div class="section__head" style="justify-content:center;flex-direction:column;text-align:center;">
+      {% if section.settings.eyebrow != blank %}<span class="shop-compare__eyebrow">{{ section.settings.eyebrow }}</span>{% endif %}
+      <h2 class="section__title">{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}<p class="shop-compare__sub">{{ section.settings.subheading }}</p>{% endif %}
+    </div>
+
+    <div class="shop-compare__table">
+      <div class="shop-compare__col-head shop-compare__col-head--us">
+        <img src="{{ 'evblogo.webp' | asset_url }}" alt="East Village Buyers" class="shop-compare__logo">
+        <span>East Village Buyers</span>
+      </div>
+      <div class="shop-compare__col-head shop-compare__col-head--them">
+        <span>eBay</span>
+      </div>
+
+      {% for block in section.blocks %}
+        <div class="shop-compare__row-label" {{ block.shopify_attributes }}>{{ block.settings.feature }}</div>
+        <div class="shop-compare__cell shop-compare__cell--us">
+          <span class="shop-compare__ico shop-compare__ico--yes">&#10003;</span>{{ block.settings.us_text }}
+        </div>
+        <div class="shop-compare__cell shop-compare__cell--them">
+          <span class="shop-compare__ico shop-compare__ico--no">&#10005;</span>{{ block.settings.them_text }}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.btn_text != blank %}
+      <div class="shop-compare__cta">
+        <a href="{{ section.settings.btn_link | default: '/collections/all' }}" class="btn btn--solid btn--lg">{{ section.settings.btn_text }}</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop comparison",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "BUY WITH CONFIDENCE" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Buy From East Village Buyers Instead of eBay?" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Skip the hidden fees, bidding wars, and counterfeit risk. Every item is authenticated in person by our team before it ever gets listed." },
+    { "type": "text", "id": "btn_text", "label": "Button text", "default": "Shop All Products" },
+    { "type": "url", "id": "btn_link", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Comparison row",
+      "settings": [
+        { "type": "text", "id": "feature", "label": "Feature", "default": "Pricing" },
+        { "type": "text", "id": "us_text", "label": "East Village Buyers", "default": "The price you see is the price you pay" },
+        { "type": "text", "id": "them_text", "label": "eBay", "default": "Up to 13.6% final value fee often baked into the price" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop comparison",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Pricing", "us_text": "The price you see is the price you pay", "them_text": "Up to 13.6% final value fee often baked into the price" } },
+        { "type": "row", "settings": { "feature": "Authenticity", "us_text": "Every item authenticated in person by our team", "them_text": "Buyer beware — counterfeits slip through regularly" } },
+        { "type": "row", "settings": { "feature": "Shipping", "us_text": "Fast, tracked shipping in 2 business days", "them_text": "Seller-dependent — delays and no-ship scams happen" } },
+        { "type": "row", "settings": { "feature": "Support", "us_text": "Real local shop you can call, text, or walk into", "them_text": "Slow ticket-based support, no one to actually talk to" } },
+        { "type": "row", "settings": { "feature": "Buying process", "us_text": "Fixed price — buy it now, no bidding wars", "them_text": "Auctions can spike the final price above retail" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
