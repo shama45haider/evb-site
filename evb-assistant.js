@@ -287,14 +287,6 @@
       reply: `<p>Yes, we do both — outright purchase or consignment. Most people go with the instant cash offer since it's quick and simple. But consignment is an option if you'd rather wait and potentially get a higher number — we sell the item for you and pay you when it moves. When you come in, we can walk you through both so you can decide what makes more sense for your situation.</p>`
     },
 
-    // ── SELL vs PAWN ─────────────────────────────────────────────────────────
-    {
-      id: 'pawn',
-      keywords: [['pawn','pawnshop','loan','borrow','pawn shop']],
-      matchAny: true,
-      reply: `<p>We're actually a licensed buy/sell shop, not a traditional pawn shop. So we make outright purchase offers — you sell us the item and walk out with cash. We don't do short-term loans against items. If you're looking to sell, we're a solid option. We operate under NYC DCA license #2070477.</p>`
-    },
-
     // ── AUTHENTICITY / FAKE ──────────────────────────────────────────────────
     {
       id: 'authentication',
