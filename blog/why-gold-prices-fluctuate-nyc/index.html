@@ -503,23 +503,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <link rel="stylesheet" href="../../evb-assistant.css">
   <script src="../../we-buy-category.js"></script>
   <script src="../../evb-assistant.js" defer data-evb-assistant></script>
-  <script>
-    const ham = document.getElementById('evbHam');
-    const overlay = document.getElementById('evbOverlay');
-    const drawer = document.getElementById('evbDrawer');
-    const closeBtn = document.getElementById('evbMobClose');
-    function toggleNav() {
-      const open = drawer.classList.contains('open');
-      ham.classList.toggle('open', !open);
-      ham.setAttribute('aria-expanded', String(!open));
-      overlay.classList.toggle('open', !open);
-      drawer.classList.toggle('open', !open);
-      document.body.style.overflow = open ? '' : 'hidden';
-    }
-    ham.addEventListener('click', toggleNav);
-    overlay.addEventListener('click', toggleNav);
-    closeBtn.addEventListener('click', toggleNav);
-  </script>
 
   <script src="../../site-ticker.js"></script>
 

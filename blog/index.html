@@ -848,7 +848,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </a>
 
         <a href="gia-certified-diamond-what-it-proves-nyc/" class="blog-card" data-cat="jewelry">
-          <div class="blog-card-media"><img src="../14kgoldnecklace.webp" alt="GIA certified diamond pendant necklace with grading report" loading="lazy" decoding="async"></div>
+          <div class="blog-card-media"><img src="../14kgoldnecklace-wide.webp" alt="GIA certified diamond pendant necklace with grading report" loading="lazy" decoding="async"></div>
           <div class="blog-card-body">
             <div class="blog-card-meta"><span class="blog-card-cat">Diamonds</span><span class="blog-card-date">July 2026</span></div>
             <div class="blog-card-title">What a GIA Certificate Actually Proves Before You Sell a Diamond</div>
@@ -868,7 +868,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </a>
 
         <a href="gold-coin-pendant-value-nyc/" class="blog-card" data-cat="jewelry">
-          <div class="blog-card-media"><img src="../goldpendantcoin.webp" alt="Mexican 50 Pesos gold coin pendant necklace" loading="lazy" decoding="async"></div>
+          <div class="blog-card-media"><img src="../goldpendantcoin-wide.webp" alt="Mexican 50 Pesos gold coin pendant necklace" loading="lazy" decoding="async"></div>
           <div class="blog-card-body">
             <div class="blog-card-meta"><span class="blog-card-cat">Gold</span><span class="blog-card-date">July 2026</span></div>
             <div class="blog-card-title">Gold Coin Pendants: What They're Really Worth Beyond the Chain</div>
@@ -1414,7 +1414,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <link rel="stylesheet" href="../evb-assistant.css">
   <script src="../we-buy-category.js"></script>
   <script src="../evb-assistant.js" defer data-evb-assistant></script>
-  </footer>
 
   <script>
     const searchInput = document.getElementById('blogSearch');
@@ -1424,12 +1423,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     searchInput.addEventListener('input', function() {
       const q = this.value.toLowerCase().trim();
       let visible = 0;
-      const featuredText = (featured.textContent || '').toLowerCase();
-      if (!q || featuredText.indexOf(q) !== -1) {
-        featured.style.display = '';
-        visible++;
-      } else {
-        featured.style.display = 'none';
+      if (featured) {
+        const featuredText = (featured.textContent || '').toLowerCase();
+        if (!q || featuredText.indexOf(q) !== -1) {
+          featured.style.display = '';
+          visible++;
+        } else {
+          featured.style.display = 'none';
+        }
       }
       cards.forEach(function(card) {
         const text = (card.textContent || '').toLowerCase();
