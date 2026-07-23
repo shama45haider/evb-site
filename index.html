@@ -761,11 +761,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         width: 100%;
         flex: none;
         text-align: center;
-        height: 16px;
+        height: auto;
+        min-height: 32px;
       }
-      .gts-quote { justify-content: center; }
-      .gts-quote-text { font-size: 12px; }
-      .gts-quote-author { font-size: 11px; }
+      .gts-quote {
+        position: static;
+        inset: auto;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        opacity: 1;
+        transform: none;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
+      .gts-quote.gts-quote-active {
+        display: flex;
+      }
+      .gts-quote-text {
+        font-size: 12px;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+      }
+      .gts-quote-author { font-size: 11px; margin-left: 0; }
       .gts-link { font-size: 10px; }
     }
 
@@ -3955,6 +3976,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <style>
       .whats-new-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#111;margin:16px 0 8px;}
       /* Mobile/tablet inline card — stacked, image on top */
+      .whats-new-mobile-inline{align-self:stretch;width:100%;max-width:100%;}
       .whats-new-mobile-inline .nk-card{margin:0;animation:none;width:100%;max-width:380px;flex-direction:column;}
       .whats-new-mobile-inline .nk-img{flex:none;height:0;padding-top:66.66%;min-height:auto;background:#f4f1ec;}
       .whats-new-mobile-inline .nk-img img{object-fit:cover;}
