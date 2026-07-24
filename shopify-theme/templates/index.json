@@ -59,9 +59,11 @@
       "blocks": {
         "f1": { "type": "faq", "settings": { "question": "Do I need an appointment?", "answer": "<p>No — walk-ins are welcome during store hours.</p>" } },
         "f2": { "type": "faq", "settings": { "question": "How fast do I get paid?", "answer": "<p>Same day, on the spot, as soon as you accept the offer.</p>" } },
-        "f3": { "type": "faq", "settings": { "question": "What if my item isn't authentic?", "answer": "<p>We check every item by hand before making an offer, so you'll know right away.</p>" } }
+        "f3": { "type": "faq", "settings": { "question": "What if my item isn't authentic?", "answer": "<p>We check every item by hand before making an offer, so you'll know right away.</p>" } },
+        "f4": { "type": "faq", "settings": { "question": "Do you ship orders?", "answer": "<p>Yes — most items ship fast right to your door. Jewelry is the one exception: because of the value involved, all jewelry orders are in-store pickup only at 39 Avenue A.</p>" } },
+        "f5": { "type": "faq", "settings": { "question": "Can I pick up my order in-store instead of shipping?", "answer": "<p>Absolutely, just select in-store pickup at checkout and we'll have it ready for you at 39 Avenue A. Pickup is required for all jewelry purchases.</p>" } }
       },
-      "block_order": ["f1", "f2", "f3"],
+      "block_order": ["f1", "f2", "f3", "f4", "f5"],
       "settings": { "heading": "Frequently Asked Questions" }
     },
     "visit": {
