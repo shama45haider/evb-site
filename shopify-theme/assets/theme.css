@@ -43,15 +43,15 @@ button { font-family: inherit; cursor: pointer; }
 /* ---------- Announcement bar (subtle) ---------- */
 .announcement-bar {
   position: relative;
-  background: var(--ink);
-  color: rgba(255,255,255,.72); font-size: 11.5px; font-weight: 500; padding: 7px 0;
+  background: var(--accent);
+  color: rgba(255,255,255,.9); font-size: 11.5px; font-weight: 500; padding: 7px 0;
 }
 .announcement-bar__inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .announcement-bar__item { display: inline-flex; align-items: center; gap: 5px; color: inherit; }
-.announcement-bar__item svg { opacity: .6; }
+.announcement-bar__item svg { opacity: .8; }
 a.announcement-bar__item { transition: color .15s; }
 a.announcement-bar__item:hover { color: #fff; }
-.announcement-bar__sep { opacity: .35; }
+.announcement-bar__sep { opacity: .5; }
 
 /* ---------- Header ---------- */
 .site-header {
