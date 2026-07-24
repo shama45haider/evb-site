@@ -18,7 +18,11 @@
     <link rel="apple-touch-icon" href="{{ 'apple-touch-icon.png' | asset_url }}">
   {% endif %}
   <title>
-    {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
+    {%- if template.name == 'index' -%}
+      Online Store | {{ shop.name }}
+    {%- else -%}
+      {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
+    {%- endif -%}
   </title>
 
   {% render 'meta-tags' %}
