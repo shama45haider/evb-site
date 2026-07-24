@@ -40,22 +40,18 @@ button { font-family: inherit; cursor: pointer; }
   50% { box-shadow: 0 4px 0 var(--accent-deep), 0 0 0 9px rgba(249,115,22,0); }
 }
 
-/* ---------- Announcement bar (brand orange) ---------- */
+/* ---------- Announcement bar (subtle) ---------- */
 .announcement-bar {
   position: relative;
-  background: linear-gradient(90deg, var(--accent-deep) 0%, var(--accent) 45%, var(--accent-dark) 100%);
-  color: #fff; font-size: 12px; font-weight: 600; padding: 9px 0;
+  background: var(--ink);
+  color: rgba(255,255,255,.72); font-size: 11.5px; font-weight: 500; padding: 7px 0;
 }
-.announcement-bar::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
-  background: rgba(0,0,0,.12);
-}
-.announcement-bar__inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-.announcement-bar__item { display: inline-flex; align-items: center; gap: 6px; color: inherit; }
-.announcement-bar__item svg { opacity: .95; }
-a.announcement-bar__item { transition: opacity .15s; }
-a.announcement-bar__item:hover { opacity: .85; text-decoration: underline; text-underline-offset: 3px; }
-.announcement-bar__sep { opacity: .6; }
+.announcement-bar__inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.announcement-bar__item { display: inline-flex; align-items: center; gap: 5px; color: inherit; }
+.announcement-bar__item svg { opacity: .6; }
+a.announcement-bar__item { transition: color .15s; }
+a.announcement-bar__item:hover { color: #fff; }
+.announcement-bar__sep { opacity: .35; }
 
 /* ---------- Header ---------- */
 .site-header {
