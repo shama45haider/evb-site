@@ -50,27 +50,29 @@
   }
 
   function refreshCartDrawer() {
-    fetch('/?section_id=cart-drawer-section')
-      .catch(function () {})
-      .then(function () {});
-    // Simpler + more reliable: re-render just this section via the Section Rendering API
-    fetch(window.location.pathname + '?sections=cart-drawer')
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data && data['cart-drawer']) {
-          var wrap = document.createElement('div');
-          wrap.innerHTML = data['cart-drawer'];
-          var fresh = wrap.querySelector('#CartDrawer');
-          if (fresh && cartDrawer) {
-            fresh.classList.add('open');
-            cartDrawer.replaceWith(fresh);
-            cartDrawer = fresh;
-            bindQtyControls(cartDrawer);
-            $$('[data-cart-close]', cartDrawer).forEach(function (el) { el.addEventListener('click', function () { toggleCartDrawer(false); }); });
-          }
+    // The cart drawer is rendered as a snippet (not a Shopify section), so the
+    // Section Rendering API can't target it. Re-fetch the current page and swap
+    // in the freshly server-rendered #CartDrawer, preserving its open state.
+    fetch(window.location.pathname + window.location.search, { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (html) {
+        if (!html) return;
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var fresh = doc.getElementById('CartDrawer');
+        if (!fresh || !cartDrawer || !cartDrawer.parentNode) return;
+        var wasOpen = cartDrawer.classList.contains('open');
+        if (wasOpen) {
+          fresh.classList.add('open');
+          fresh.setAttribute('aria-hidden', 'false');
         }
+        cartDrawer.replaceWith(fresh);
+        cartDrawer = fresh;
+        $$('[data-cart-close]', cartDrawer).forEach(function (el) {
+          el.addEventListener('click', function () { toggleCartDrawer(false); });
+        });
+        bindQtyControls(cartDrawer);
       })
-      .catch(function () { /* Section Rendering API not set up for this section name — cart still works, drawer just won't live-refresh until next page load */ });
+      .catch(function () { /* network error — cart still works, drawer refreshes on next page load */ });
   }
 
   /* ---------- Add to cart (product form) ---------- */
@@ -101,7 +103,7 @@
           return fetch('/cart.js').then(function (r) { return r.json(); });
         })
         .then(function (cart) {
-          if (cart) { updateCartCount(cart.item_count); refreshCartDrawer(); toggleCartDrawer(true); }
+          if (cart) { updateCartCount(cart.item_count); toggleCartDrawer(true); refreshCartDrawer(); }
         })
         .catch(function (err) {
           msg.textContent = err.message;
@@ -443,6 +445,7 @@
           })
           .then(function (cart) {
             if (cart) updateCartCount(cart.item_count);
+            toggleCartDrawer(true);
             refreshCartDrawer();
             setTimeout(function () { quickAddBtn.classList.remove('is-added'); quickAddBtn.disabled = false; }, 1800);
           })
