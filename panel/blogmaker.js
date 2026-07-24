@@ -99,7 +99,7 @@ bodyHtml rules: open with one <p> intro (no heading first), then 4-6 <h2> sectio
 <p>Text photos to 917-608-8939 for a fast estimate, or walk into East Village Buyers at 39 Avenue A, New York, NY 10009. Transparent evaluation, same-day cash, no pressure either way.</p>`,
       faqs: [
         { q: `Do you buy ${cat} in any condition?`, a: 'Yes — condition affects the offer, but we evaluate everything honestly and explain exactly how we priced it.' },
-        { q: 'Do I need an appointment?', a: 'No. Walk-ins are welcome during store hours, Sun–Thu 12:30–6:30 PM and Fri 12:30–6 PM.' },
+        { q: 'Do I need an appointment?', a: 'No. Walk-ins are welcome during store hours, Sun 12:30–6 PM, Mon–Thu 12:30–6:30 PM and Fri 12:30–6 PM.' },
         { q: 'How fast do I get paid?', a: 'Same day, on the spot, as soon as you accept the offer.' },
         { q: 'Can I get an estimate before coming in?', a: 'Yes — text clear photos to 917-608-8939 and we\'ll give you a fast ballpark first.' },
       ],
@@ -258,7 +258,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-  <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">&middot;</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun&ndash;Thu 12:30&ndash;6:30 PM &nbsp;&middot;&nbsp; Fri 12:30&ndash;6:00 PM &nbsp;&middot;&nbsp; Sat Closed</span></div></div>
+  <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">&middot;</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun 12:30&ndash;6 PM &nbsp;&middot;&nbsp; Mon&ndash;Thu 12:30&ndash;6:30 PM &nbsp;&middot;&nbsp; Fri 12:30&ndash;6 PM &nbsp;&middot;&nbsp; Sat Closed</span></div></div>
   <header class="site-nav" id="evbNav">
     <div class="site-nav-inner">
       <a href="../../" class="site-nav-logo">
@@ -381,7 +381,7 @@ ${f.bodyHtml}
         <div class="sidebar-widget-body">
           <img src="../../evbbanner.webp" alt="East Village Buyers" class="sidebar-about-logo" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='../../evblogo.webp';">
           <p class="sidebar-about-text">East Village Buyers is NYC's neighborhood shop for luxury watches, fine jewelry, streetwear, and electronics. We've been buying and selling on Avenue A since day one.</p>
-          <p class="sidebar-about-addr">39 Avenue A &middot; New York, NY 10009<br>Sun&ndash;Thu 12:30&ndash;6:30 PM &middot; Fri 12:30&ndash;6 PM</p>
+          <p class="sidebar-about-addr">39 Avenue A &middot; New York, NY 10009<br>Sun 12:30&ndash;6 PM &middot; Mon&ndash;Thu 12:30&ndash;6:30 PM &middot; Fri 12:30&ndash;6 PM</p>
         </div>
       </div>
       <div class="sidebar-widget">

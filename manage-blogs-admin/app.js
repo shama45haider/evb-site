@@ -265,7 +265,7 @@ ${f.bodyHtml}
         <div class="sidebar-widget-body">
           <img src="../../evbbanner.webp" alt="East Village Buyers" class="sidebar-about-logo">
           <p class="sidebar-about-text">East Village Buyers is NYC's neighborhood shop for luxury watches, fine jewelry, streetwear, and electronics.</p>
-          <p class="sidebar-about-addr">39 Avenue A &middot; New York, NY 10009<br>Sun&ndash;Thu 12:30&ndash;6:30 PM &middot; Fri 12:30&ndash;6 PM</p>
+          <p class="sidebar-about-addr">39 Avenue A &middot; New York, NY 10009<br>Sun 12:30&ndash;6 PM &middot; Mon&ndash;Thu 12:30&ndash;6:30 PM &middot; Fri 12:30&ndash;6 PM</p>
         </div>
       </div>
     </aside>

@@ -10,7 +10,7 @@
   // ── Contact constants ─────────────────────────────────────────────────────
   const PHONE     = '917-608-8939';
   const ADDRESS   = '39 Avenue A, New York, NY 10009';
-  const HOURS     = 'Sun–Thu 12:30–6:30 · Fri 12:30–6 · Sat Closed';
+  const HOURS     = 'Sun 12:30–6 · Mon–Thu 12:30–6:30 · Fri 12:30–6 · Sat Closed';
   const PHONE_URL = 'tel:9176088939';
   const SMS_URL   = 'sms:9176088939';
 
@@ -57,7 +57,7 @@
     );
     add(
       ['What are your hours?', 'Store hours', 'What are your hours', 'when are you open'],
-      `<p>We're open Sunday through Thursday 12:30–6:30 PM, and Friday 12:30–6:00 PM. We're closed on Saturdays.</p>
+      `<p>We're open Sunday 12:30–6 PM, Monday through Thursday 12:30–6:30 PM, and Friday 12:30–6 PM. We're closed on Saturdays.</p>
 <p>No appointment needed — just walk in. If you're making a special trip, feel free to text us at <a href="${SMS_URL}">${PHONE}</a> first just to confirm we're good to go.</p>`
     );
     add(
@@ -94,7 +94,7 @@
       id: 'hours',
       keywords: [['what are your hours','store hours','hours','hour','open','close','closing','when','time','schedule','sunday','monday','tuesday','wednesday','thursday','friday','saturday','weekend']],
       matchAny: true,
-      reply: `<p>We're open Sunday through Thursday from 12:30 to 6:30 PM, and Friday 12:30 to 6:00 PM. Saturdays we're closed.</p>
+      reply: `<p>We're open Sunday from 12:30 to 6 PM, Monday through Thursday from 12:30 to 6:30 PM, and Friday 12:30 to 6 PM. Saturdays we're closed.</p>
 <p>No appointment needed — just walk in whenever works for you. If you're coming from far, feel free to text us at <a href="${SMS_URL}">${PHONE}</a> first just to make sure we're around.</p>`
     },
     {
@@ -317,7 +317,7 @@
       id: 'contact',
       keywords: [['contact','call','phone','number','reach','get in touch','talk to someone']],
       matchAny: true,
-      reply: `<p>Best way to reach us is by call or text at <a href="${PHONE_URL}">${PHONE}</a>. We're at ${ADDRESS}, open Sun–Thu 12:30–6:30, Fri 12:30–6, closed Saturdays.</p>
+      reply: `<p>Best way to reach us is by call or text at <a href="${PHONE_URL}">${PHONE}</a>. We're at ${ADDRESS}, open Sun 12:30–6, Mon–Thu 12:30–6:30, Fri 12:30–6, closed Saturdays.</p>
 <p>Texting is honestly the quickest way to get a response — especially handy if you want to send photos of your item before making the trip.</p>`
     },
 
@@ -360,7 +360,7 @@
       id: 'when-today',
       keywords: [['today','tomorrow','right now','open now','still open','come in now','this afternoon','this evening']],
       matchAny: true,
-      reply: `<p>Hours are Sun–Thu 12:30–6:30 PM, Fri 12:30–6 PM, closed Saturdays. Walk-ins are always welcome, no appointment needed. If you're making a long trip, feel free to text <a href="${SMS_URL}">${PHONE}</a> first just to double-check we're open.</p>`
+      reply: `<p>Hours are Sun 12:30–6 PM, Mon–Thu 12:30–6:30 PM, Fri 12:30–6 PM, closed Saturdays. Walk-ins are always welcome, no appointment needed. If you're making a long trip, feel free to text <a href="${SMS_URL}">${PHONE}</a> first just to double-check we're open.</p>`
     },
 
     // ── CATCH-ALL (always available) ──────────────────────────────────────────
