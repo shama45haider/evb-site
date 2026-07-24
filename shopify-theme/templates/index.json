@@ -61,9 +61,14 @@
         "f2": { "type": "faq", "settings": { "question": "How fast do I get paid?", "answer": "<p>Same day, on the spot, as soon as you accept the offer.</p>" } },
         "f3": { "type": "faq", "settings": { "question": "What if my item isn't authentic?", "answer": "<p>We check every item by hand before making an offer, so you'll know right away.</p>" } },
         "f4": { "type": "faq", "settings": { "question": "Do you ship orders?", "answer": "<p>Yes — most items ship fast right to your door. Jewelry is the one exception: because of the value involved, all jewelry orders are in-store pickup only at 39 Avenue A.</p>" } },
-        "f5": { "type": "faq", "settings": { "question": "Can I pick up my order in-store instead of shipping?", "answer": "<p>Absolutely, just select in-store pickup at checkout and we'll have it ready for you at 39 Avenue A. Pickup is required for all jewelry purchases.</p>" } }
+        "f5": { "type": "faq", "settings": { "question": "Can I pick up my order in-store instead of shipping?", "answer": "<p>Absolutely, just select in-store pickup at checkout and we'll have it ready for you at 39 Avenue A. Pickup is required for all jewelry purchases.</p>" } },
+        "f6": { "type": "faq", "settings": { "question": "How long does shipping take?", "answer": "<p>Most in-stock orders ship within 1–2 business days and arrive within 3–5 business days depending on your location.</p>" } },
+        "f7": { "type": "faq", "settings": { "question": "How will I know when my pickup order is ready?", "answer": "<p>You'll get an email or text as soon as your order is packed and waiting for you at 39 Avenue A, usually the same day you order during store hours.</p>" } },
+        "f8": { "type": "faq", "settings": { "question": "Why is jewelry pickup only?", "answer": "<p>Jewelry carries real value, so we verify it with you in person and hand it over face-to-face instead of shipping it — it protects both you and us.</p>" } },
+        "f9": { "type": "faq", "settings": { "question": "Do you offer local delivery instead of shipping?", "answer": "<p>Right now we offer in-store pickup and standard shipping (except jewelry, which is pickup only). If you're nearby and prefer to grab it in person, just choose pickup at checkout.</p>" } },
+        "f10": { "type": "faq", "settings": { "question": "Can someone else pick up my order for me?", "answer": "<p>Yes, just let us know ahead of time and have them bring your order confirmation and a photo ID when they come to 39 Avenue A.</p>" } }
       },
-      "block_order": ["f1", "f2", "f3", "f4", "f5"],
+      "block_order": ["f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10"],
       "settings": { "heading": "Frequently Asked Questions" }
     },
     "visit": {
