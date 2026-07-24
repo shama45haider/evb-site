@@ -451,6 +451,34 @@
     });
   }
 
+  /* ---------- Scroll reveal (fade-up on enter) ---------- */
+  function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var els = $$('.section__head, .product-card, .collection-tile, .testimonial-card, .process-step, .faq-item, .image-with-text__media, .image-with-text__body, .visit-us__info, .visit-us__map, .stat-item, .blog-card')
+      .filter(function (el) { return !el.closest || !el.closest('.hero-shop'); });
+    if (!els.length) return;
+
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('reveal-in');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    var counter = {};
+    els.forEach(function (el, i) {
+      el.classList.add('reveal-init');
+      // light stagger within the same parent grid
+      var key = el.parentNode ? (el.parentNode.className || 'x') : 'x';
+      var idx = counter[key] || 0;
+      counter[key] = idx + 1;
+      el.style.transitionDelay = (Math.min(idx, 5) * 65) + 'ms';
+      obs.observe(el);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initBackToTop();
     initMobileNav();
@@ -464,5 +492,6 @@
     initCardCarousels();
     initCardSwatchesAndQuickAdd();
     bindQtyControls(document);
+    initScrollReveal();
   });
 })();

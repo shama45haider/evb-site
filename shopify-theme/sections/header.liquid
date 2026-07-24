@@ -1,7 +1,7 @@
 <header class="site-header" id="SiteHeader">
   <div class="site-header__inner">
     {%- assign logo_w = settings.logo_width | default: 92 -%}
-    <a href="{{ routes.root_url }}" class="site-header__logo {% if settings.logo_badge_frame %}site-header__logo--badge{% endif %}">
+    <a href="{{ routes.root_url }}" class="site-header__logo">
       {% if settings.logo %}
         <img src="{{ settings.logo | image_url: width: logo_w | times: 2 }}" alt="{{ shop.name }}" width="{{ logo_w }}" height="{{ logo_w }}" style="width: {{ logo_w }}px; height: auto;">
       {% else %}
@@ -31,28 +31,27 @@
         </div>
       </div>
 
-      {% for link in section.settings.menu.links %}
-        {% unless link.url contains '/collections/' %}
-          {% if link.links != blank %}
-            <div class="site-header__drop {% if link.links.size > 6 %}site-header__drop--mega{% endif %}">
-              <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
-                {{ link.title }}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              <div class="site-header__drop-menu">
-                <span class="site-header__drop-heading">{{ link.title }}</span>
-                <div class="site-header__drop-grid">
-                  {% for childlink in link.links %}
-                    <a href="{{ childlink.url }}" class="site-header__drop-link">{{ childlink.title }}</a>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          {% elsif link.url != routes.root_url %}
-            <a href="{{ link.url }}" class="site-header__link{% if link.active %} is-active{% endif %}">{{ link.title }}</a>
-          {% endif %}
-        {% endunless %}
-      {% endfor %}
+      <div class="site-header__drop">
+        <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
+          Jewelry
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="site-header__drop-menu">
+          <span class="site-header__drop-heading">Fine Jewelry</span>
+          <div class="site-header__drop-grid">
+            <a href="/collections/gold" class="site-header__drop-link">Gold</a>
+            <a href="/collections/diamonds" class="site-header__drop-link">Diamonds</a>
+            <a href="/collections/silver" class="site-header__drop-link">Silver</a>
+            <a href="/collections/estate-jewelry" class="site-header__drop-link">Estate Jewelry</a>
+            <a href="/collections/watches" class="site-header__drop-link">Watches</a>
+          </div>
+          <a href="/collections/jewelry" class="site-header__drop-viewall">Shop All Jewelry &rarr;</a>
+        </div>
+      </div>
+
+      <a href="/collections/womens" class="site-header__link">Women's</a>
+      <a href="/collections/collectibles" class="site-header__link">Collectibles</a>
+      <a href="/collections/accessories" class="site-header__link">Accessories</a>
 
       <div class="site-header__drop">
         <button class="site-header__link site-header__link--drop" aria-haspopup="true" aria-expanded="false">
@@ -130,20 +129,18 @@
         <a href="/collections/hats-beanies" class="mobile-drawer__sublink">Hats & Beanies</a>
         <a href="/collections/all" class="mobile-drawer__sublink">Shop All Products</a>
       </details>
-      {% for link in section.settings.menu.links %}
-        {% unless link.url contains '/collections/' %}
-          {% if link.links != blank %}
-            <details class="mobile-drawer__drop">
-              <summary>{{ link.title }}</summary>
-              {% for childlink in link.links %}
-                <a href="{{ childlink.url }}" class="mobile-drawer__sublink">{{ childlink.title }}</a>
-              {% endfor %}
-            </details>
-          {% elsif link.url != routes.root_url %}
-            <a href="{{ link.url }}" class="mobile-drawer__link">{{ link.title }}</a>
-          {% endif %}
-        {% endunless %}
-      {% endfor %}
+      <details class="mobile-drawer__drop">
+        <summary>Jewelry</summary>
+        <a href="/collections/gold" class="mobile-drawer__sublink">Gold</a>
+        <a href="/collections/diamonds" class="mobile-drawer__sublink">Diamonds</a>
+        <a href="/collections/silver" class="mobile-drawer__sublink">Silver</a>
+        <a href="/collections/estate-jewelry" class="mobile-drawer__sublink">Estate Jewelry</a>
+        <a href="/collections/watches" class="mobile-drawer__sublink">Watches</a>
+        <a href="/collections/jewelry" class="mobile-drawer__sublink">Shop All Jewelry</a>
+      </details>
+      <a href="/collections/womens" class="mobile-drawer__link">Women's</a>
+      <a href="/collections/collectibles" class="mobile-drawer__link">Collectibles</a>
+      <a href="/collections/accessories" class="mobile-drawer__link">Accessories</a>
       <details class="mobile-drawer__drop">
         <summary>Policies</summary>
         <a href="{{ shop.privacy_policy.url | default: '/policies/privacy-policy' }}" class="mobile-drawer__sublink">Privacy Policy</a>
@@ -151,6 +148,12 @@
         <a href="{{ shop.shipping_policy.url | default: '/policies/shipping-policy' }}" class="mobile-drawer__sublink">Shipping Policy</a>
         <a href="{{ shop.terms_of_service.url | default: '/policies/terms-of-service' }}" class="mobile-drawer__sublink">Terms of Service</a>
       </details>
+      {% if customer %}
+        <a href="/account" class="mobile-drawer__link">My Orders</a>
+        <a href="{{ routes.account_logout_url }}" class="mobile-drawer__link">Sign Out</a>
+      {% else %}
+        <a href="{{ routes.account_login_url }}" class="mobile-drawer__link">Sign In / My Account</a>
+      {% endif %}
       {% if settings.main_site_url != blank %}
         <a href="{{ settings.main_site_url }}" class="mobile-drawer__link mobile-drawer__link--back">&larr; Back to Main Site</a>
       {% endif %}

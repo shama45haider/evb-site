@@ -43,7 +43,7 @@
     "settings": [
       { "type": "text", "id": "store_address", "label": "Address", "default": "39 Avenue A, New York, NY 10009" },
       { "type": "text", "id": "store_phone", "label": "Phone", "default": "917-608-8939" },
-      { "type": "text", "id": "store_hours", "label": "Hours", "default": "Sun–Thu 12:30–6:30 PM · Fri 12:30–6:00 PM · Sat Closed" },
+      { "type": "text", "id": "store_hours", "label": "Hours", "default": "Sun 12:30–6 PM · Mon–Thu 12:30–6:30 PM · Fri 12:30–6 PM · Sat Closed" },
       { "type": "text", "id": "sms_link", "label": "Text-us link", "default": "sms:9176088939" },
       { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
       { "type": "url", "id": "tiktok_url", "label": "TikTok URL" },

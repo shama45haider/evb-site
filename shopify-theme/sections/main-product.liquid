@@ -63,9 +63,18 @@
       {% endform %}
 
       <div class="product-detail__trust">
-        <div class="product-detail__trust-item">&#9989; Authenticated in-store</div>
-        <div class="product-detail__trust-item">&#128176; Same-day pickup at 39 Avenue A</div>
-        <div class="product-detail__trust-item">&#128231; Text {{ settings.store_phone }} with questions</div>
+        <div class="product-detail__trust-item">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l7 3v6c0 4.5-3 8.5-7 9.5-4-1-7-5-7-9.5V5l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+          Authenticated in-store
+        </div>
+        <div class="product-detail__trust-item">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.5 4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Same-day pickup at 39 Avenue A
+        </div>
+        <div class="product-detail__trust-item">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Text {{ settings.store_phone }} with questions
+        </div>
       </div>
 
       <div class="product-detail__accordions">

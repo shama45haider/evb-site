@@ -3,9 +3,13 @@
     "hero": {
       "type": "hero-banner",
       "settings": {
-        "badge": "OFFICIAL ONLINE SHOP",
-        "heading": "East Village Buyers",
-        "subheading": "All items shipped within 2 business days."
+        "heading": "East Village Buyers Official Online Store",
+        "heading_accent": "Official Online Store",
+        "subheading": "Authenticated gold, jewelry, streetwear, sneakers, and collectibles — shipped nationwide within 2 business days from our East Village shop.",
+        "cta_text": "Shop All Products",
+        "cta_link": "/collections/all",
+        "link_text": "Visit Us in the East Village",
+        "marquee_items": "Authenticated In-Store, Fast Tracked Shipping, New Drops Weekly, Same-Day Cash Offers"
       }
     },
     "shop-by-collection": {
@@ -30,7 +34,7 @@
       "blocks": {
         "s1": { "type": "stat", "settings": { "number": "15+", "label": "Years in Business" } },
         "s2": { "type": "stat", "settings": { "number": "10,000+", "label": "Items Bought & Sold" } },
-        "s3": { "type": "stat", "settings": { "number": "4.9★", "label": "Average Rating" } },
+        "s3": { "type": "stat", "settings": { "number": "4.9/5", "label": "Average Rating" } },
         "s4": { "type": "stat", "settings": { "number": "Same-Day", "label": "Cash Payouts" } }
       },
       "block_order": ["s1", "s2", "s3", "s4"],
@@ -39,24 +43,6 @@
     "reviews": {
       "type": "google-reviews-strip",
       "settings": { "rating": "4.9", "count": "500+" }
-    },
-    "trust": {
-      "type": "trust-strip",
-      "blocks": {
-        "t1": { "type": "row", "settings": { "feature": "Pricing", "us_text": "The price you see is the price you pay", "them_text": "Up to 13.6% final value fee often baked into the price" } },
-        "t2": { "type": "row", "settings": { "feature": "Authenticity", "us_text": "Every item authenticated in person by our team", "them_text": "Buyer beware — counterfeits slip through regularly" } },
-        "t3": { "type": "row", "settings": { "feature": "Shipping", "us_text": "Fast, tracked shipping in 2 business days", "them_text": "Seller-dependent — delays and no-ship scams happen" } },
-        "t4": { "type": "row", "settings": { "feature": "Support", "us_text": "Real local shop you can call, text, or walk into", "them_text": "Slow ticket-based support, no one to actually talk to" } },
-        "t5": { "type": "row", "settings": { "feature": "Buying process", "us_text": "Fixed price — buy it now, no bidding wars", "them_text": "Auctions can spike the final price above retail" } }
-      },
-      "block_order": ["t1", "t2", "t3", "t4", "t5"],
-      "settings": {
-        "eyebrow": "BUY WITH CONFIDENCE",
-        "heading": "Why Buy From East Village Buyers Instead of eBay?",
-        "subheading": "Skip the hidden fees, bidding wars, and counterfeit risk. Every item is authenticated in person by our team before it ever gets listed.",
-        "btn_text": "Shop All Products",
-        "btn_link": "/collections/all"
-      }
     },
     "testimonials": {
       "type": "testimonials",
@@ -87,5 +73,5 @@
       "settings": {}
     }
   },
-  "order": ["hero", "shop-by-collection", "featured", "stats", "reviews", "trust", "testimonials", "faq", "visit", "newsletter"]
+  "order": ["hero", "shop-by-collection", "featured", "stats", "reviews", "testimonials", "faq", "visit", "newsletter"]
 }
