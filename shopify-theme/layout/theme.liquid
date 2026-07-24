@@ -7,6 +7,16 @@
   {% if page_description %}
     <meta name="description" content="{{ page_description | escape }}">
   {% endif %}
+
+  {% if settings.favicon %}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ settings.favicon | image_url: width: 192, height: 192 }}">
+    <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+  {% else %}
+    <link rel="icon" type="image/png" href="{{ 'favicon-32x32.png' | asset_url }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ 'android-chrome-192x192.png' | asset_url }}">
+    <link rel="apple-touch-icon" href="{{ 'apple-touch-icon.png' | asset_url }}">
+  {% endif %}
   <title>
     {{ page_title }}{% unless page_title contains shop.name %} | {{ shop.name }}{% endunless %}
   </title>
