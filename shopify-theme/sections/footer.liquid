@@ -54,9 +54,22 @@
             <div class="site-footer__col" {{ block.shopify_attributes }}>
               <p class="site-footer__heading">{{ block.settings.heading }}</p>
               <ul>
-                {% for link in block.settings.menu.links %}
-                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                {% endfor %}
+                {% if block.settings.menu != blank and block.settings.menu.links.size > 0 %}
+                  {% for link in block.settings.menu.links %}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {% endfor %}
+                {% else %}
+                  {%- comment -%}
+                    No menu picked in the customizer yet — fall back to the
+                    same sensible defaults as the no-blocks case below so the
+                    column is never empty.
+                  {%- endcomment -%}
+                  <li><a href="{{ routes.root_url }}">Home</a></li>
+                  <li><a href="/collections/all">Shop All</a></li>
+                  <li><a href="/pages/about">About Us</a></li>
+                  <li><a href="/blogs/news">Blog</a></li>
+                  <li><a href="{{ routes.account_url }}">My Account</a></li>
+                {% endif %}
               </ul>
             </div>
           {% when 'contact' %}
