@@ -569,6 +569,10 @@ a.site-footer__contact-item:hover { color: var(--accent-dark); }
   .site-header__inner { gap: 16px; }
   .site-header__cta { margin-right: 2px; padding: 10px 12px; }
   .site-header__right { gap: 2px; }
+  /* .site-header__nav was the flex:1 spacer keeping the icon cluster pinned
+     right; with it hidden, push .site-header__right right explicitly so it
+     doesn't collapse against the logo. */
+  .site-header__right { margin-left: auto; }
 }
 
 /* Phone-width header compaction: shrink the logo (overrides its inline width)
