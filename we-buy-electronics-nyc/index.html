@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell iPhones, AirPods, PS5, cameras &amp; more in NYC. Same-day cash at 39 Avenue A. Walk in or text photos.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Electronics NYC",
-    "description": "We buy and sell electronics in New York City — iPhones, AirPods, AirPods Max, cameras, PlayStation 5, MacBooks, and iPads. Same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-electronics-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Electronics NYC",
+  "description": "We buy and sell electronics in New York City \u2014 iPhones, AirPods, AirPods Max, cameras, PlayStation 5, MacBooks, and iPads. Same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-electronics-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Electronics Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Electronics Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-electronics-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -90,8 +126,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Walk-ins welcome. For multiple devices, text photos to 917-608-8939 first."}}, {"@type": "Question", "name": "How do I get paid?", "acceptedAnswer": {"@type": "Answer", "text": "Same-day cash on the spot when you accept our offer."}}, {"@type": "Question", "name": "Can I text photos for a quote?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — text photos of the device and model info to 917-608-8939."}}, {"@type": "Question", "name": "Do you buy locked devices?", "acceptedAnswer": {"@type": "Answer", "text": "We prefer unlocked. Carrier-locked is case by case. iCloud-locked cannot be purchased."}}, {"@type": "Question", "name": "What if my phone has a cracked screen?", "acceptedAnswer": {"@type": "Answer", "text": "We still buy cracked screens — the offer is reduced based on repair cost."}}, {"@type": "Question", "name": "Should I erase my data first?", "acceptedAnswer": {"@type": "Answer", "text": "We recommend signing out of iCloud/Google before your visit. We can help at the counter."}}, {"@type": "Question", "name": "Which iPhones have the best value?", "acceptedAnswer": {"@type": "Answer", "text": "Latest 2–3 generations, Pro/Pro Max models, higher storage, unlocked."}}, {"@type": "Question", "name": "Best time to sell an iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "Right before a new launch — prices drop fastest in weeks after a new release."}}]}
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do you buy locked devices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We prefer unlocked. Carrier-locked is case by case. iCloud-locked cannot be purchased."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my phone has a cracked screen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We still buy cracked screens \u2014 the offer is reduced based on repair cost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I erase my data first?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We recommend signing out of iCloud/Google before your visit. We can help at the counter."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which iPhones have the best value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Latest 2\u20133 generations, Pro/Pro Max models, higher storage, unlocked."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Best time to sell an iPhone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Right before a new launch \u2014 prices drop fastest in weeks after a new release."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="cp-we-buy-page cp-electronics-page">
 <!-- Google Tag Manager (noscript) -->

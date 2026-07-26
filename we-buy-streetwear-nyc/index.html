@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell streetwear in NYC: Supreme, BAPE, vintage pieces, designer street. Free authentication, same-day cash at 39 Avenue A.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Streetwear NYC",
-    "description": "We buy and sell streetwear in New York City: Supreme box logos, BAPE hoodies, vintage tees, designer street pieces, and more. Free authentication, same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-streetwear-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Streetwear NYC",
+  "description": "We buy and sell streetwear in New York City: Supreme box logos, BAPE hoodies, vintage tees, designer street pieces, and more. Free authentication, same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-streetwear-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Streetwear Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Streetwear Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-streetwear-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -90,8 +126,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Walk-ins welcome at 39 Avenue A. For large collections, text photos to 917-608-8939 first."}}, {"@type": "Question", "name": "How do I get paid?", "acceptedAnswer": {"@type": "Answer", "text": "Same-day cash on the spot. Check payment available for high-value transactions."}}, {"@type": "Question", "name": "Can I text photos for a quote?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — text clear photos to 917-608-8939 for a rough estimate. Final offers confirmed in person."}}, {"@type": "Question", "name": "What ID do I need?", "acceptedAnswer": {"@type": "Answer", "text": "Valid government-issued photo ID required for all transactions under NYC law."}}, {"@type": "Question", "name": "Do you buy fakes or replicas?", "acceptedAnswer": {"@type": "Answer", "text": "No. We only buy and sell authentic streetwear. Counterfeits cannot be purchased."}}, {"@type": "Question", "name": "Can I sell multiple items at once?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — bring as many pieces as you like. We review everything in one visit."}}, {"@type": "Question", "name": "Do you ship or buy by mail?", "acceptedAnswer": {"@type": "Answer", "text": "All transactions are completed in person at our Avenue A shop after inspection."}}, {"@type": "Question", "name": "Can I buy and sell in one visit?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — sell for cash and browse authenticated inventory in the same trip."}}]}
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What ID do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Valid government-issued photo ID required for all transactions under NYC law."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I sell multiple items at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 bring as many pieces as you like. We review everything in one visit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you ship or buy by mail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All transactions are completed in person at our Avenue A shop after inspection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I buy and sell in one visit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 sell for cash and browse authenticated inventory in the same trip."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="cp-we-buy-page cp-streetwear-page">
 <!-- Google Tag Manager (noscript) -->

@@ -52,65 +52,125 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <!-- LocalBusiness + Store structured data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Store",
-    "name": "East Village Buyers",
-    "alternateName": "EVB",
-    "description": "NYC's trusted buy-and-sell shop for gold, silver, jewelry, watches, designer fashion, streetwear, sneakers, and electronics. Walk-in welcome. Same-day cash offers.",
-    "url": "https://eastvillagebuyers.com/",
-    "logo": "https://eastvillagebuyers.com/evblogo.webp",
-    "image": "https://eastvillagebuyers.com/evbstorefront.webp",
-    "telephone": "+1-917-608-8939",
-    "email": "eastvillagebuyers@gmail.com",
-    "priceRange": "$",
-    "currenciesAccepted": "USD",
-    "paymentAccepted": "Cash",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "39 Avenue A",
-      "addressLocality": "New York",
-      "addressRegion": "NY",
-      "postalCode": "10009",
-      "addressCountry": "US"
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": "https://eastvillagebuyers.com/#store",
+  "name": "East Village Buyers",
+  "alternateName": "EVB",
+  "description": "NYC's trusted buy-and-sell shop for gold, silver, jewelry, watches, designer fashion, streetwear, sneakers, and electronics. Walk-in welcome. Same-day cash offers.",
+  "url": "https://eastvillagebuyers.com/",
+  "logo": "https://eastvillagebuyers.com/evblogo.webp",
+  "image": "https://eastvillagebuyers.com/evbstorefront.webp",
+  "telephone": "+1-917-608-8939",
+  "email": "eastvillagebuyers@gmail.com",
+  "priceRange": "$",
+  "currenciesAccepted": "USD",
+  "paymentAccepted": "Cash",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "39 Avenue A",
+    "addressLocality": "New York",
+    "addressRegion": "NY",
+    "postalCode": "10009",
+    "addressCountry": "US"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 40.7235953,
+    "longitude": -73.9855773
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Sunday",
+      "opens": "12:30",
+      "closes": "18:00"
     },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 40.7235953,
-      "longitude": -73.9855773
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday"
+      ],
+      "opens": "12:30",
+      "closes": "18:30"
     },
-    "openingHoursSpecification": [
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "12:30", "closes": "18:00" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "12:30", "closes": "18:30" },
-      { "@type": "OpeningHoursSpecification", "dayOfWeek": "Friday", "opens": "12:30", "closes": "18:00" }
-    ],
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "hasMap": "https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z",
-    "sameAs": [
-      "https://www.instagram.com/eastvillagebuyers",
-      "https://www.tiktok.com/@eastvillagebuyers",
-      "https://www.youtube.com/@eastvillagebuyers",
-      "https://ebay.us/m/GbYU3g"
-    ],
-    "identifier": {
-      "@type": "PropertyValue",
-      "name": "DCA License",
-      "value": "2070477"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Buy & Sell Services",
-      "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Gold NYC" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Jewelry NYC" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Designer Handbags NYC" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Streetwear NYC" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Sneakers NYC" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Buy & Sell Watches NYC" } }
-      ]
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": "Friday",
+      "opens": "12:30",
+      "closes": "18:00"
     }
+  ],
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "hasMap": "https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z",
+  "sameAs": [
+    "https://www.instagram.com/eastvillagebuyers",
+    "https://www.tiktok.com/@eastvillagebuyers",
+    "https://www.youtube.com/@eastvillagebuyers",
+    "https://ebay.us/m/GbYU3g"
+  ],
+  "identifier": {
+    "@type": "PropertyValue",
+    "name": "DCA License",
+    "value": "2070477"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Buy & Sell Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Gold NYC"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Jewelry NYC"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Designer Handbags NYC"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Streetwear NYC"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Sneakers NYC"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Buy & Sell Watches NYC"
+        }
+      }
+    ]
   }
-  </script>
+}
+</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",

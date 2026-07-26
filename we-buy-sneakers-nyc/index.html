@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell sneakers in NYC: Air Jordans, Nike, Bapestas, Balenciagas, Yeezy, and Birkenstock. Same-day cash at 39 Avenue A.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Sneakers NYC",
-    "description": "We buy and sell sneakers in New York City: Air Jordans, Nike, Bapestas, Balenciagas, Yeezy, and Birkenstock. Expert authentication, same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-sneakers-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Sneakers NYC",
+  "description": "We buy and sell sneakers in New York City: Air Jordans, Nike, Bapestas, Balenciagas, Yeezy, and Birkenstock. Expert authentication, same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-sneakers-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Sneaker Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Sneaker Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-sneakers-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -90,8 +126,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Walk-ins welcome at 39 Avenue A. For large collections, text photos to 917-608-8939 first."}}, {"@type": "Question", "name": "How do I get paid?", "acceptedAnswer": {"@type": "Answer", "text": "Same-day cash on the spot when you accept our offer."}}, {"@type": "Question", "name": "Can I text photos for a quote?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — text clear photos to 917-608-8939 for a rough estimate. Final offers confirmed in person."}}, {"@type": "Question", "name": "What affects sneaker value?", "acceptedAnswer": {"@type": "Answer", "text": "Authenticity, condition, rarity, size, colorway, and current NYC resale demand."}}, {"@type": "Question", "name": "Does the original box matter?", "acceptedAnswer": {"@type": "Answer", "text": "OG box with matching label increases the offer but is not required."}}, {"@type": "Question", "name": "Do you buy used sneakers?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — gently worn pairs are welcome when condition and demand support resale."}}, {"@type": "Question", "name": "Which sizes sell best?", "acceptedAnswer": {"@type": "Answer", "text": "Sizes 8–12 have the highest demand. We still buy outside that range."}}, {"@type": "Question", "name": "Do you buy fakes or replicas?", "acceptedAnswer": {"@type": "Answer", "text": "No. We only buy and sell authentic sneakers."}}]}
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What affects sneaker value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Authenticity, condition, rarity, size, colorway, and current NYC resale demand."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the original box matter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "OG box with matching label increases the offer but is not required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy used sneakers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 gently worn pairs are welcome when condition and demand support resale."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which sizes sell best?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sizes 8\u201312 have the highest demand. We still buy outside that range."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="cp-we-buy-page cp-sneakers-page">
 <!-- Google Tag Manager (noscript) -->

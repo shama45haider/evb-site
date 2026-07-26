@@ -30,13 +30,13 @@
   <!-- We Buy pages -->
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-jewelry-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-gold-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -60,7 +60,7 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-watches-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -90,9 +90,9 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-silver/</loc>
-    <lastmod>2026-07-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
   </url>
 
   <!-- Blog posts -->
@@ -323,6 +323,50 @@
     <lastmod>2026-07-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <!-- Item-level landing pages -->
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-engagement-ring-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-gold-chain-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-gold-coins-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-gold-bullion-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-sterling-silver-flatware-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-silver-coins-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-estate-jewelry-nyc/</loc>
+    <lastmod>2026-07-26</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
 </urlset>

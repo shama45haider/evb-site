@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell Louis Vuitton, Chanel, Hermès, Gucci, Dior &amp; more in NYC. Same-day cash at 39 Avenue A. Walk in or text photos.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Designer NYC",
-    "description": "We buy and sell designer handbags and accessories in New York City — Louis Vuitton, Chanel, Hermès, Gucci, Dior, and more. Same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-designer-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Designer NYC",
+  "description": "We buy and sell designer handbags and accessories in New York City \u2014 Louis Vuitton, Chanel, Herm\u00e8s, Gucci, Dior, and more. Same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-designer-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Designer Handbags & Accessories Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Designer Handbags & Accessories Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-designer-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -90,8 +126,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Walk-ins welcome. For high-value pieces, text photos to 917-608-8939 first."}}, {"@type": "Question", "name": "How do I get paid?", "acceptedAnswer": {"@type": "Answer", "text": "Same-day cash on the spot. Check available for high-value transactions."}}, {"@type": "Question", "name": "Can I text photos for a quote?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — text clear photos to 917-608-8939 for a rough estimate."}}, {"@type": "Question", "name": "Do you buy replica bags?", "acceptedAnswer": {"@type": "Answer", "text": "No. We only buy and sell authentic designer goods."}}, {"@type": "Question", "name": "What condition does my bag need?", "acceptedAnswer": {"@type": "Answer", "text": "Good to excellent gets best offers. Minor wear is fine when demand supports it."}}, {"@type": "Question", "name": "Do I need the original receipt?", "acceptedAnswer": {"@type": "Answer", "text": "No — receipts and dust bags help but are not required."}}, {"@type": "Question", "name": "Which bags hold the most value?", "acceptedAnswer": {"@type": "Answer", "text": "Chanel Classic Flaps, Hermes Birkin/Kelly, and LV Monogram pieces consistently hold strongest resale."}}, {"@type": "Question", "name": "Us vs. consignment?", "acceptedAnswer": {"@type": "Answer", "text": "We pay cash same day. No waiting, no commission, no shipping risk."}}]}
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do you buy replica bags?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. We only buy and sell authentic designer goods."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What condition does my bag need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Good to excellent gets best offers. Minor wear is fine when demand supports it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need the original receipt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No \u2014 receipts and dust bags help but are not required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which bags hold the most value?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Chanel Classic Flaps, Hermes Birkin/Kelly, and LV Monogram pieces consistently hold strongest resale."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Us vs. consignment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We pay cash same day. No waiting, no commission, no shipping risk."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="cp-we-buy-page cp-designer-page">
 <!-- Google Tag Manager (noscript) -->

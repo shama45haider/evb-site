@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell gold, diamonds, silver, platinum &amp; estate jewelry in NYC. Same-day cash at 39 Avenue A. Free appraisal.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Jewelry NYC",
-    "description": "We buy and sell gold, diamonds, silver, platinum, estate and vintage jewelry in New York City. Free appraisal, same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-jewelry-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Jewelry NYC",
+  "description": "We buy and sell gold, diamonds, silver, platinum, estate and vintage jewelry in New York City. Free appraisal, same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-jewelry-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Gold & Jewelry Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Gold & Jewelry Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-jewelry-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -104,14 +140,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     },
     {
       "@type": "Question",
-      "name": "Where can I sell my diamond ring in NYC?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "You can bring a diamond ring to our counter at 39 Avenue A and we will grade the stone in front of you and explain what we are seeing before quoting a number. See our full diamond buying page for what we look at and how stones are priced."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Do I need an appointment?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -144,34 +172,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     },
     {
       "@type": "Question",
-      "name": "Do you buy dental gold?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes \u2014 dental gold is typically high karat. We weigh and test it the same as any other piece."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do you buy lab-grown diamonds?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Lab-grown have very limited resale. We focus on natural diamonds but can evaluate any stone."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I sell my engagement ring?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes \u2014 engagement rings, wedding bands, and diamond jewelry. Free evaluation, no pressure."
-      }
-    },
-    {
-      "@type": "Question",
       "name": "Melt value vs. resale value?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Melt is based on metal weight and purity. Resale applies to designer or collectible pieces. We quote whichever is higher."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy costume jewelry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We will look at it, but costume pieces have little or no metal value and generally are not worth selling. We tell you that directly rather than folding it into a vague total."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I sell a mixed box of jewelry I have not sorted?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, and you should not pre-sort it. We go through the whole lot at the counter and separate the precious metal from the rest in front of you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy platinum jewelry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Platinum is tested and weighed separately from gold since it trades on its own market. It is often mistaken for silver or white gold, so we check rather than assume."
       }
     }
   ]
@@ -593,6 +621,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   .sw-faq-card .sw-faq-ans a { color:#f97316; text-decoration:none; font-weight:600; }
 </style>
 
+  <section class="gd-why" id="specifics">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Go Deeper</p>
+      <h2>Selling Something Specific</h2>
+      <div class="gd-intro-text">
+        <p>If you know what you have, these pages go into more detail than this one.</p>
+          <p><a href="../sell-engagement-ring-nyc/"><strong>Engagement rings</strong></a> &mdash; why a resale offer differs from an insurance appraisal</p>
+          <p><a href="../sell-estate-jewelry-nyc/"><strong>Estate collections</strong></a> &mdash; bringing in an entire unsorted collection</p>
+          <p><a href="../sell-sterling-silver-flatware-nyc/"><strong>Sterling flatware</strong></a> &mdash; pattern, maker and weighted-handle pitfalls</p>
+      </div>
+    </div>
+  </section>
+
 <section class="sw-faq" id="faq">
   <div class="sw-faq-inner">
     <div class="sw-faq-head">
@@ -601,15 +642,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p>Quick answers about selling jewelry at East Village Buyers.</p>
     </div>
     <div class="sw-faq-grid">
+      <details class="sw-faq-card"><summary>Do you buy costume jewelry?</summary><div class="sw-faq-ans">We will look at it, but costume pieces have little or no metal value and generally are not worth selling. We tell you that directly rather than folding it into a vague total.</div></details>
+      <details class="sw-faq-card"><summary>Can I sell a mixed box of jewelry I have not sorted?</summary><div class="sw-faq-ans">Yes, and you should not pre-sort it. We go through the whole lot at the counter and separate the precious metal from the rest in front of you. See <a href="../sell-estate-jewelry-nyc/">selling an estate collection</a>.</div></details>
+      <details class="sw-faq-card"><summary>Do you buy platinum jewelry?</summary><div class="sw-faq-ans">Yes. Platinum is tested and weighed separately from gold since it trades on its own market. It is often mistaken for silver or white gold, so we check rather than assume.</div></details>
       <details class="sw-faq-card"><summary>Where can I sell jewelry in NYC?</summary><div class="sw-faq-ans">East Village Buyers at 39 Avenue A in Manhattan. We buy gold, diamonds, silver, platinum, and estate jewelry, test everything in front of you, and pay cash the same day. Walk-ins welcome during store hours.</div></details>
-      <details class="sw-faq-card"><summary>Where can I sell my diamond ring in NYC?</summary><div class="sw-faq-ans">You can bring a diamond ring to our counter at 39 Avenue A and we will grade the stone in front of you and explain what we are seeing before quoting a number. See <a href="../we-buy-diamonds-nyc/">our full diamond buying page</a> for what we look at and how stones are priced.</div></details>
       <details class="sw-faq-card"><summary>Do I need an appointment?</summary><div class="sw-faq-ans">Walk-ins welcome. For large estate collections, text photos to <a href="sms:9176088939">917-608-8939</a> ahead.</div></details>
       <details class="sw-faq-card"><summary>How do I get paid?</summary><div class="sw-faq-ans">Same-day cash or check for larger transactions. Payment immediately after you accept.</div></details>
       <details class="sw-faq-card"><summary>Can I text photos for a quote?</summary><div class="sw-faq-ans">Yes &mdash; text clear photos to <a href="sms:9176088939">917-608-8939</a> for a rough estimate.</div></details>
       <details class="sw-faq-card"><summary>Do you buy gold-plated jewelry?</summary><div class="sw-faq-ans">Gold-plated has minimal gold content &mdash; we typically pass. Gold-filled pays less than solid gold. We test and explain.</div></details>
-      <details class="sw-faq-card"><summary>Do you buy dental gold?</summary><div class="sw-faq-ans">Yes &mdash; dental gold is typically high karat. We weigh and test it the same as any other piece.</div></details>
       <details class="sw-faq-card"><summary>Do you buy lab-grown diamonds?</summary><div class="sw-faq-ans">Lab-grown have very limited resale. We focus on natural diamonds but can evaluate any stone.</div></details>
-      <details class="sw-faq-card"><summary>Can I sell my engagement ring?</summary><div class="sw-faq-ans">Yes &mdash; engagement rings, wedding bands, and diamond jewelry. Free evaluation, no pressure.</div></details>
       <details class="sw-faq-card"><summary>Melt value vs. resale value?</summary><div class="sw-faq-ans">Melt is based on metal weight and purity. Resale applies to designer or collectible pieces. We quote whichever is higher.</div></details>
       <details class="sw-faq-card"><summary>Do you buy Tiffany and Cartier?</summary><div class="sw-faq-ans">Yes &mdash; signed designer jewelry often carries premium over melt value.</div></details>
       <details class="sw-faq-card"><summary>Do you buy colored gemstones?</summary><div class="sw-faq-ans">Yes &mdash; rubies, sapphires, emeralds, and other precious stones when set in quality jewelry.</div></details>

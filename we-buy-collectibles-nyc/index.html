@@ -44,29 +44,65 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Sell KAWS, Pokemon, BAPE, Bearbrick, Lego, Funko &amp; Hot Wheels in NYC. Same-day cash at 39 Avenue A.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    "name": "Buy & Sell Collectibles NYC",
-    "description": "We buy and sell collectibles in New York City: KAWS figures, Pokemon cards, BAPE collectibles, Bearbrick, Lego sets, Funko Pops, and Hot Wheels. Same-day cash at 39 Avenue A, East Village.",
-    "url": "https://eastvillagebuyers.com/we-buy-collectibles-nyc/",
-    "provider": {
-      "@type": "LocalBusiness",
-      "name": "East Village Buyers",
-      "telephone": "+1-917-608-8939",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "39 Avenue A",
-        "addressLocality": "New York",
-        "addressRegion": "NY",
-        "postalCode": "10009",
-        "addressCountry": "US"
-      }
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Buy & Sell Collectibles NYC",
+  "description": "We buy and sell collectibles in New York City: KAWS figures, Pokemon cards, BAPE collectibles, Bearbrick, Lego sets, Funko Pops, and Hot Wheels. Same-day cash at 39 Avenue A, East Village.",
+  "url": "https://eastvillagebuyers.com/we-buy-collectibles-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
     },
-    "areaServed": { "@type": "City", "name": "New York City" },
-    "serviceType": "Collectibles Buyer and Seller"
-  }
-  </script>
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Collectibles Buyer and Seller",
+  "@id": "https://eastvillagebuyers.com/we-buy-collectibles-nyc/#service"
+}
+</script>
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -90,8 +126,45 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </script>
 
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need an appointment?", "acceptedAnswer": {"@type": "Answer", "text": "Walk-ins welcome. For large collections, text photos to 917-608-8939 first."}}, {"@type": "Question", "name": "How do I get paid?", "acceptedAnswer": {"@type": "Answer", "text": "Same-day cash on the spot when you accept our offer."}}, {"@type": "Question", "name": "Can I text photos for a quote?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — text clear photos to 917-608-8939 for a rough estimate. Final offers confirmed in person."}}, {"@type": "Question", "name": "Do you buy opened or displayed figures?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — displayed pieces are accepted if clean and undamaged. Sealed in box gets the best offer."}}, {"@type": "Question", "name": "Does the original box matter?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — OG box significantly increases value for KAWS, Bearbrick, Funko, and Lego. We buy without box at reduced price."}}, {"@type": "Question", "name": "Do you buy bulk or full collections?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — bring your entire collection. We evaluate each piece individually and make one offer for the lot."}}, {"@type": "Question", "name": "Do you buy common Funko Pops?", "acceptedAnswer": {"@type": "Answer", "text": "Common Pops have limited resale value. We focus on vaulted, chase, convention exclusives, and grails."}}, {"@type": "Question", "name": "Do you buy loose Pokemon cards?", "acceptedAnswer": {"@type": "Answer", "text": "We focus on sealed product and graded slabs. Raw cards evaluated case by case for high-value singles."}}]}
-  </script>
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do you buy opened or displayed figures?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 displayed pieces are accepted if clean and undamaged. Sealed in box gets the best offer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy bulk or full collections?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 bring your entire collection. We evaluate each piece individually and make one offer for the lot."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy common Funko Pops?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common Pops have limited resale value. We focus on vaulted, chase, convention exclusives, and grails."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy loose Pokemon cards?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We focus on sealed product and graded slabs. Raw cards evaluated case by case for high-value singles."
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body class="cp-we-buy-page cp-collectibles-page">
 <!-- Google Tag Manager (noscript) -->
