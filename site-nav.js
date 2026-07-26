@@ -88,3 +88,51 @@ function toggleNav() { toggleEvbNav(); }
     setupNavDropdown();
   }
 })();
+
+/* ---------------------------------------------------------------------------
+   Consent Mode v2 — update on banner choice
+   Defaults are set inline in <head> (see EVB-CONSENT-V2) because they must
+   run before GTM. This half only handles the user's click.
+
+   Uses delegated capture-phase listeners rather than wrapping window.evbCk,
+   because that function is assigned AFTER an early return that fires on any
+   repeat visit -- so on returning visitors it does not exist to wrap.
+
+   Two banner markups exist. The older one (11 pages) writes the same value
+   for both buttons, so accept and reject are indistinguishable in storage.
+   Keying off which button was clicked resolves that without touching markup.
+--------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+
+  var KEY = 'evb_consent_v1';
+
+  function gtag() {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(arguments);
+  }
+
+  function setConsent(granted) {
+    try { localStorage.setItem(KEY, granted ? 'granted' : 'denied'); } catch (e) {}
+    var s = granted ? 'granted' : 'denied';
+    gtag('consent', 'update', {
+      ad_storage: s,
+      ad_user_data: s,
+      ad_personalization: s,
+      analytics_storage: s
+    });
+    gtag('set', 'ads_data_redaction', !granted);
+    if (window.fbq) {
+      try { window.fbq('consent', granted ? 'grant' : 'revoke'); } catch (e) {}
+    }
+    window.evbConsentGranted = granted;
+  }
+
+  // Capture phase: the banner's own inline handlers hide/remove the node.
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('#evbCkYes, .evb-ck-accept')) { setConsent(true); return; }
+    if (t.closest('#evbCkNo, .evb-ck-ess, .evb-ck-x')) { setConsent(false); }
+  }, true);
+})();
