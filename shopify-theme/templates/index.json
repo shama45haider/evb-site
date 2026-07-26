@@ -16,7 +16,7 @@
       "type": "collection-list",
       "blocks": {
         "c1": { "type": "collection", "settings": { "title": "Shirts", "fallback_image": "mattyboy-camo-caution-tshirt.webp" } },
-        "c2": { "type": "collection", "settings": { "title": "Sweaters & Hoodies", "fallback_image": "mattyboy-sex-records-hoodie.webp" } },
+        "c2": { "type": "collection", "settings": { "title": "Sweaters & Hoodies", "fallback_image": "bape-pink-camo-hoodie.webp" } },
         "c3": { "type": "collection", "settings": { "title": "Bottoms", "fallback_image": "denim-jeans-collection.webp" } },
         "c4": { "type": "collection", "settings": { "title": "Footwear", "fallback_image": "travispink2.webp" } },
         "c5": { "type": "collection", "settings": { "title": "Jackets & Coats", "fallback_image": "red-moncler-puffer-jacket.webp" } },
