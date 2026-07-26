@@ -3977,7 +3977,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <style>
       .whats-new-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#111;margin:16px 0 8px;}
       /* Mobile/tablet inline card — stacked, image on top */
-      .whats-new-mobile-inline{align-self:stretch;width:100%;max-width:100%;}
+      /* Removed on mobile per request; desktop "What's New" card is unaffected. */
+      .whats-new-mobile-inline{display:none;align-self:stretch;width:100%;max-width:100%;}
       .whats-new-mobile-inline .nk-card{margin:0;animation:none;width:100%;max-width:380px;flex-direction:column;}
       .whats-new-mobile-inline .nk-img{flex:none;height:0;padding-top:66.66%;min-height:auto;background:#f4f1ec;}
       .whats-new-mobile-inline .nk-img img{object-fit:cover;}
@@ -3988,10 +3989,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .whats-new-mobile-inline .wn-slide{flex-direction:column;}
       .whats-new-mobile-inline .nk-brands{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;}
       .whats-new-mobile-inline .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:3px 8px;white-space:nowrap;}
-      @media(min-width:1024px){
-        .whats-new-mobile-inline{display:none;}
-      }
-
       /* Desktop sidebar card — horizontal, image left / text right */
       .hero-right-col .nk-card{margin:0;animation:none;width:100%;max-width:460px;flex-direction:row;}
       .hero-right-col .wn-slide{flex-direction:row;}
