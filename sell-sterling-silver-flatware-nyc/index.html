@@ -349,6 +349,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <p><strong>Sterling</strong> is 92.5 percent silver throughout and is marked as such. Look for the word STERLING, the numerals 925, or on English pieces a lion passant walking left. The mark is usually on the back of the handle or the underside of the stem.</p>
           <p><strong>Silverplate</strong> is a microscopically thin silver skin over a base metal, typically nickel or copper alloy. Common marks include EPNS, A1, TRIPLE, IS or the maker's name with no sterling designation at all. Rogers, Community and Oneida pieces are very often plate.</p>
           <p>Silverplate has essentially no recoverable silver value. It is worth saying plainly rather than letting anyone make the trip on false hope: a full plated service is generally not worth selling for metal.</p>
+        
+      <div class="ev-cards ev-cards-2">
+        <div class="ev-card"><span class="ev-card-tag">Real silver value</span><h4>Sterling</h4><p>92.5% silver throughout. Marked STERLING or 925, or a lion passant on English pieces. Look on the back of the handle or the underside of the stem.</p></div>
+        <div class="ev-card ev-card-muted"><span class="ev-card-tag">Effectively no value</span><h4>Silverplate</h4><p>A microscopic silver skin over base metal. Marked EPNS, A1, TRIPLE, IS, or just a maker name with no sterling mark. Rogers, Community and Oneida are very often plate.</p></div>
+      </div>
         </div>
         <div class="gd-intro-img">
           <img src="../silverpageimage1.webp" alt="Sterling silver flatware laid out for sorting" loading="lazy" decoding="async">
@@ -367,6 +372,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <p><strong>Sterling knife handles are hollow and filled with cement or pitch.</strong> The handle is a thin sterling shell wrapped around filler, and the blade itself is usually stainless steel, not silver at all. A knife that feels reassuringly heavy in the hand might contain only a small fraction of its weight in actual silver. It is still stamped sterling, entirely legitimately, because the shell genuinely is.</p>
           <p>The same construction shows up in candlesticks, some trophy cups and various decorative holloware, often marked <em>weighted</em> or <em>reinforced</em>. Those bases are filled with plaster or pitch for stability.</p>
           <p>This is why a chest of flatware is never valued by putting the whole thing on a scale. Forks and spoons are solid sterling and get weighed as such. Knives, weighted candlesticks and filled pieces are assessed separately on their actual silver content. Anyone quoting you a single price for the gross weight of a full chest is either being careless or is counting on you not knowing this.</p>
+        
+      <div class="ev-callout">
+        <div class="ev-callout-ico">!</div>
+        <div class="ev-callout-body">
+          <div class="ev-callout-title">A heavy knife is not heavy silver</div>
+          <p>Sterling knife handles are hollow shells filled with cement or pitch, and the blade is usually stainless steel. Candlesticks and trophy cups marked <em>weighted</em> or <em>reinforced</em> are filled the same way. This is why a chest is never valued by putting the whole thing on one scale.</p>
+        </div>
+      </div>
         </div>
         <div class="gd-intro-img">
           <img src="../davidyurmansterlingsilver.webp" alt="Sterling silver knife with a weighted handle" loading="lazy" decoding="async">
@@ -442,6 +455,223 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 </article>
+
+<style>
+  .jw { max-width:1100px; margin:0 auto; padding:48px 20px; }
+  @media(max-width:699px) { .jw { padding-left:4px; padding-right:4px; } }
+  .jw h2 { font-family:'Montserrat',sans-serif; font-size:clamp(20px,4vw,28px); font-weight:900; margin:0 0 6px; }
+  .jw > p { font-family:'Poppins',sans-serif; font-size:13px; color:#999; margin:0 0 28px; }
+
+  .jw-cards {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  @media(min-width:560px) { .jw-cards { grid-template-columns:repeat(2,1fr); align-items:start; } }
+  @media(min-width:860px) { .jw-cards { grid-template-columns:repeat(3,1fr); align-items:start; } }
+
+  .jw-c {
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+    border:1px solid rgba(0,0,0,0.06);
+    cursor:pointer;
+    position:relative;
+    transition:box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .jw-c:hover {
+    box-shadow:0 4px 16px rgba(0,0,0,0.08);
+    border-color:rgba(0,0,0,0.1);
+  }
+  .jw-c--open {
+    border-color:rgba(249,115,22,0.25);
+    box-shadow:0 6px 24px rgba(249,115,22,0.08);
+  }
+  .jw-c--open::before {
+    content:'';
+    position:absolute;
+    left:0; right:0; top:0;
+    height:3px;
+    background:#f97316;
+    border-radius:3px 3px 0 0;
+  }
+
+  .jw-c-photo {
+    width:100%; height:140px;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .jw-c-photo img {
+    width:100%; height:100%;
+    object-fit:cover; display:block;
+    transition:transform 0.4s ease;
+  }
+  .jw-c:hover .jw-c-photo img { transform:scale(1.06); }
+
+  .jw-c-body {
+    flex:1; min-width:0;
+    padding:16px 18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  .jw-c-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .jw-c-name {
+    font-family:'Montserrat',sans-serif;
+    font-size:14px; font-weight:700; color:#111;
+    margin:0;
+  }
+  .jw-c-sub {
+    font-family:'Poppins',sans-serif;
+    font-size:12px; color:#aaa; margin:3px 0 0; font-weight:400;
+  }
+
+  .jw-c-chevron {
+    width:24px; height:24px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 0.35s ease;
+    color:#ccc;
+  }
+  .jw-c-chevron svg { width:16px; height:16px; }
+  .jw-c--open .jw-c-chevron { transform:rotate(180deg); color:#f97316; }
+
+  .jw-c-detail {
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+  }
+  .jw-c--open .jw-c-detail {
+    max-height:400px;
+    opacity:1;
+  }
+
+  .jw-c-detail-inner {
+    padding:14px 18px 18px;
+    border-top:1px solid rgba(0,0,0,0.05);
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .jw-c-dl { font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; color:#f97316; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; }
+  .jw-c-dt { font-family:'Poppins',sans-serif; font-size:12px; color:#555; line-height:1.55; margin:0; font-weight:400; }
+  .jw-c-tags { display:flex; flex-wrap:wrap; gap:4px; }
+  .jw-c-tag { font-family:'Poppins',sans-serif; font-size:10px; font-weight:500; color:#b45309; background:#fef3e2; padding:3px 9px; border-radius:4px; }
+
+  @media(min-width:860px) {
+    .jw-c-photo { height:200px; }
+    .jw-cards { gap:18px; }
+    .jw-c-body { padding:18px 20px; }
+    .jw-c-name { font-size:16px; }
+  }
+
+  @media(max-width:559px) {
+    .jw-c { flex-direction:row; align-items:flex-start; gap:12px; padding:12px; }
+    .jw-c-photo { width:64px; height:64px; border-radius:10px; flex-shrink:0; }
+    .jw-c-body { padding:0; }
+    .jw-c--open .jw-c-detail { max-height:500px; }
+  }
+
+  @media(prefers-reduced-motion:reduce) {
+    .jw-c-detail, .jw-c-chevron, .jw-c-photo img { transition:none; }
+  }
+
+  /* "Good to know" intro section */
+  .gd-why { background:#fff; margin:0 -20px; padding:32px 20px 8px; }
+  .gd-why-inner { max-width:1100px; margin:0 auto; }
+  .gd-why-inner > .cp-eyebrow { margin-bottom:6px; }
+  .gd-why-inner > h2 { font-family:'Montserrat',sans-serif; font-size:clamp(19px,4vw,26px); font-weight:900; margin:0 0 14px; color:#111; }
+  .gd-intro-flex { display:flex; flex-direction:column; align-items:flex-start; gap:14px; }
+  .gd-intro-text { flex:1; min-width:0; }
+  .gd-intro-text p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.6; color:#4a4540; margin:0; }
+  .gd-intro-img { width:100%; height:170px; border-radius:14px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.12); }
+  .gd-intro-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  @media(min-width:860px) {
+    .gd-intro-flex { flex-direction:row; align-items:flex-start; gap:40px; }
+    .gd-intro-text { flex:1.2; min-width:0; }
+    .gd-intro-text p { font-size:14.5px; line-height:1.75; }
+    .gd-intro-img { flex-shrink:0; width:200px; height:200px; max-width:100%; border-radius:16px; margin-top:-80px; }
+  }
+
+  /* How We Check The Value section */
+  .gv { max-width:1100px; margin:0 auto; padding:16px 20px 56px; }
+  @media(max-width:699px) { .gv { padding-left:4px; padding-right:4px; } }
+  .gv h2 { font-family:'Montserrat',sans-serif; font-size:clamp(20px,4vw,28px); font-weight:900; margin:0 0 6px; }
+  .gv > p.gv-lead { font-family:'Poppins',sans-serif; font-size:13px; color:#999; margin:0 0 32px; max-width:640px; }
+
+  .gv-badge { font-family:'Poppins',sans-serif; font-size:12px; font-weight:600; color:#b45309; margin:0 0 28px; display:flex; align-items:center; gap:5px; }
+
+  .gv-steps { position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .gv-steps::before { content:''; position:absolute; top:44px; left:12.5%; right:12.5%; height:2px; background:#e8ddc9; z-index:0; }
+  @media(max-width:699px) { .gv-steps { grid-template-columns:1fr; gap:26px; } .gv-steps::before { top:0; bottom:0; left:44px; right:auto; width:2px; height:auto; } }
+
+  .gv-step { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  @media(max-width:699px) { .gv-step { flex-direction:row; text-align:left; gap:14px; } }
+
+  .gv-step-media { flex-shrink:0; position:relative; width:88px; height:88px; border-radius:50%; overflow:hidden; background:#f2ede6; border:3px solid #fff; box-shadow:0 0 0 2px #e8ddc9; margin-bottom:10px; }
+  @media(max-width:699px) { .gv-step-media { margin-bottom:0; } }
+  .gv-step.gv-step-final .gv-step-media { border-color:#f97316; box-shadow:0 0 0 2px #f97316; }
+  .gv-step-media img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .gv-step-num { font-family:'Poppins',sans-serif; font-size:11px; font-weight:700; color:#f97316; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+  .gv-step-body h3 { font-family:'Montserrat',sans-serif; font-size:14.5px; font-weight:800; color:#111; margin:0 0 4px; }
+  .gv-step-body p { font-family:'Poppins',sans-serif; font-size:12.5px; line-height:1.55; color:#555; margin:0; }
+
+  .gv-connector { width:2px; height:22px; background:#f97316; margin:0 auto; }
+
+  /* Live gold price widget wrapper */
+  .gv-price-wrap {
+    margin-top:0;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    background:#fff7ee; border:1.5px solid #f97316; border-radius:16px;
+    padding:22px 20px;
+    max-width:460px; margin-left:auto; margin-right:auto;
+  }
+  .gv-price-wrap p { font-family:'Poppins',sans-serif; font-size:12.5px; color:#8a7a68; text-align:center; margin:0; max-width:440px; }
+  .gv-price-wrap .gv-price-tag { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#f97316; }
+
+  /* ---- data + emphasis components (item-level landing pages) ---- */
+  .ev-wrap { max-width:1100px; margin:0 auto; padding:0 20px; }
+  .ev-table { width:100%; border-collapse:collapse; margin:4px 0 8px; font-family:'Poppins',sans-serif; font-size:13.5px; background:#fff;
+              border:1px solid #e8e4de; border-radius:14px; overflow:hidden; box-shadow:0 3px 14px rgba(0,0,0,0.05); }
+  .ev-table thead th { background:#fff8f3; color:#7a4a12; font-family:'Montserrat',sans-serif; font-size:10.5px; font-weight:800;
+              letter-spacing:0.12em; text-transform:uppercase; text-align:left; padding:12px 16px; border-bottom:2px solid #f5ddc8; }
+  .ev-table td { padding:12px 16px; border-top:1px solid #f0ece6; color:#4a4540; vertical-align:top; line-height:1.5; }
+  .ev-table tbody tr:nth-child(even) { background:#fcfaf7; }
+  .ev-table td:first-child { font-weight:700; color:#111; white-space:nowrap; }
+  .ev-table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-bottom:6px; }
+  @media(max-width:560px){ .ev-table { font-size:12.5px; } .ev-table td, .ev-table thead th { padding:10px 12px; } }
+
+  .ev-callout { display:flex; gap:14px; align-items:flex-start; background:#fff8f3; border:1.5px solid #f5ddc8; border-left:4px solid #f97316;
+              border-radius:14px; padding:16px 18px; margin:6px 0 10px; }
+  .ev-callout-ico { flex-shrink:0; width:30px; height:30px; border-radius:50%; background:#f97316; color:#fff; display:flex;
+              align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:900; font-size:16px; line-height:1; }
+  .ev-callout-body { min-width:0; }
+  .ev-callout-title { font-family:'Montserrat',sans-serif; font-weight:900; font-size:13.5px; color:#111; margin:2px 0 5px; text-transform:uppercase; letter-spacing:0.02em; }
+  .ev-callout-body p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.65; color:#5a5550; margin:0; }
+
+  .ev-cards { display:grid; grid-template-columns:1fr; gap:14px; margin:4px 0 10px; }
+  @media(min-width:700px){ .ev-cards.ev-cards-2 { grid-template-columns:1fr 1fr; } .ev-cards.ev-cards-3 { grid-template-columns:repeat(3,1fr); } }
+  .ev-card { background:#fff; border:1px solid #e8e4de; border-top:3px solid #f97316; border-radius:14px; padding:16px 18px; box-shadow:0 3px 14px rgba(0,0,0,0.05); }
+  .ev-card.ev-card-muted { border-top-color:#c9c2b8; }
+  .ev-card h4 { font-family:'Montserrat',sans-serif; font-size:13.5px; font-weight:900; color:#111; margin:0 0 7px; text-transform:uppercase; letter-spacing:0.02em; }
+  .ev-card p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.6; color:#5a5550; margin:0 0 7px; }
+  .ev-card p:last-child { margin-bottom:0; }
+  .ev-card .ev-card-tag { display:inline-block; font-family:'Montserrat',sans-serif; font-size:9.5px; font-weight:800; letter-spacing:0.1em;
+              text-transform:uppercase; color:#e8690a; background:#fff3e6; border-radius:5px; padding:3px 8px; margin-bottom:8px; }
+  .ev-card.ev-card-muted .ev-card-tag { color:#6b6560; background:#f2efea; }
+</style>
 
 <style>
   .sw-faq { padding:48px 20px; background:#f8f5f0; }
