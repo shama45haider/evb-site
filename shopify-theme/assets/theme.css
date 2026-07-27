@@ -299,46 +299,43 @@ a.site-footer__contact-item:hover { color: var(--accent-dark); }
 .price--on-sale .price__sale { color: var(--accent-dark); }
 .price__badge-save { margin-left: 8px; font-size: 10px; background: #fdf0e4; color: var(--accent-dark); padding: 2px 7px; border-radius: 5px; font-weight: 700; }
 
-/* ---------- Hero (light shop hero — category grid + marquee, distinct from the main site's storefront hero) ---------- */
+/* ---------- Hero (centered headline + horizontal product strip — distinct from the main site's full-bleed photo hero) ---------- */
 .hero-shop { position: relative; background: var(--paper); color: var(--ink); overflow: hidden; border-bottom: 1px solid var(--line); }
 .hero-shop::before {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(60% 60% at 100% 0%, rgba(249,115,22,.1) 0%, transparent 60%);
+  background: radial-gradient(60% 60% at 50% 0%, rgba(249,115,22,.1) 0%, transparent 60%);
 }
 .hero-shop__inner {
-  position: relative; max-width: 1280px; margin: 0 auto; padding: 60px 24px 44px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  position: relative; max-width: 720px; margin: 0 auto; padding: 64px 24px 40px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
 }
-@media (max-width: 960px) {
-  .hero-shop__inner { grid-template-columns: 1fr; gap: 34px; padding: 44px 20px 36px; }
+@media (max-width: 640px) {
+  .hero-shop__inner { padding: 44px 20px 32px; }
 }
 
 .hero-shop__copy { position: relative; }
 .hero-shop__title {
   font-family: var(--font-heading); font-weight: 900; text-transform: uppercase;
   font-size: clamp(2rem, 5.2vw, 3.4rem); line-height: 1.05; letter-spacing: -.02em;
-  color: var(--ink); margin: 0 0 18px; max-width: 560px;
+  color: var(--ink); margin: 0 0 18px;
 }
 .hero-shop__title em { font-style: normal; color: var(--accent); }
-.hero-shop__sub { font-size: 15px; line-height: 1.65; color: #5c646b; max-width: 460px; margin: 0 0 30px; }
-.hero-shop__actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.hero-shop__sub { font-size: 15px; line-height: 1.65; color: #5c646b; max-width: 460px; margin: 0 auto 30px; }
+.hero-shop__actions { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
 .hero-shop__link { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-heading); font-size: 12.5px; font-weight: 800; letter-spacing: .02em; color: var(--ink); border-bottom: 1.5px solid var(--line); padding-bottom: 3px; transition: color .15s, border-color .15s; }
 .hero-shop__link:hover { color: var(--accent-dark); border-color: var(--accent); }
 .hero-shop__link svg { width: 13px; height: 13px; transition: transform .15s; }
 .hero-shop__link:hover svg { transform: translateX(3px); }
 
-/* Framed storefront photo — replaces the category grid */
-.hero-shop__media { display: flex; align-items: center; justify-content: center; min-width: 0; }
-.hero-shop__photo {
-  width: 100%; max-width: 540px; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block;
-  border-radius: 18px; border: 1px solid rgba(0,0,0,.08);
-  box-shadow: 0 6px 14px rgba(0,0,0,.08), 0 20px 46px rgba(0,0,0,.14);
-  animation: heroPhotoIn .7s cubic-bezier(.22,1,.36,1) both;
-}
-@keyframes heroPhotoIn { from { opacity: 0; transform: translateY(20px) scale(.98); } to { opacity: 1; transform: none; } }
-@media (max-width: 960px) { .hero-shop__photo { max-width: 560px; aspect-ratio: 16 / 10; } }
-@media (max-width: 480px) { .hero-shop__photo { border-radius: 14px; aspect-ratio: 16 / 11; } }
-@media (prefers-reduced-motion: reduce) { .hero-shop__photo { animation: none; } }
+/* Horizontal product strip — real store products above the fold, replaces the old side photo */
+.hero-shop__products.section { position: relative; padding: 8px 0 28px; }
+.hero-shop__products-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.hero-shop__products-head { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.hero-shop__products-eyebrow { font-family: var(--font-heading); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-dark); }
+.hero-shop__products-headright { display: flex; align-items: center; gap: 16px; }
+.hero-shop__slider { animation: heroProductsIn .7s cubic-bezier(.22,1,.36,1) both; }
+@keyframes heroProductsIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-shop__slider { animation: none; } }
 
 /* Scrolling marquee strip — kinetic element with no equivalent on the main site's hero */
 .hero-shop__marquee { position: relative; border-top: 1px solid var(--line); background: #fff; overflow: hidden; }
