@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- EVB-CONSENT-V2 : Consent Mode v2 defaults. MUST stay above Meta Pixel and GTM. -->
+<script>
+(function(w){
+  w.dataLayer = w.dataLayer || [];
+  function gtag(){ w.dataLayer.push(arguments); }
+  w.gtag = w.gtag || gtag;
+  var granted = false;
+  try {
+    var v = w.localStorage.getItem('evb_consent_v1');
+    // One-way migration from the legacy banner key. Only the unambiguous
+    // 'accepted' carries over; the older markup wrote '1' for BOTH accept
+    // and reject, so those users stay denied until they choose again.
+    if (v === null && w.localStorage.getItem('evb_ck6') === 'accepted') {
+      v = 'granted';
+      w.localStorage.setItem('evb_consent_v1', 'granted');
+    }
+    granted = (v === 'granted');
+  } catch (e) {}
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500
+  });
+  if (granted) {
+    gtag('consent', 'update', {
+      ad_storage: 'granted', ad_user_data: 'granted',
+      ad_personalization: 'granted', analytics_storage: 'granted'
+    });
+  }
+  gtag('set', 'ads_data_redaction', !granted);
+  gtag('set', 'url_passthrough', true);
+  w.evbConsentGranted = granted;
+})(window);
+</script>
+<!-- /EVB-CONSENT-V2 -->
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('consent', window.evbConsentGranted ? 'grant' : 'revoke');
+fbq('init', '869234452921811');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=869234452921811&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MGZ7DGKM');</script>
+<!-- End Google Tag Manager -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell Designer Jewelry in NYC | Cartier, Tiffany | EVB</title>
+<meta name="description" content="Sell signed designer jewelry in NYC. Cartier, Tiffany, Van Cleef & Arpels, David Yurman, and other houses carry a brand premium above metal value. We check hallmarks in front of you.">
+<meta name="keywords" content="sell designer jewelry NYC, sell Cartier jewelry NYC, sell Tiffany jewelry NYC, sell Van Cleef NYC, sell David Yurman NYC, designer jewelry buyer NYC, signed jewelry hallmark">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://eastvillagebuyers.com/sell-designer-jewelry-nyc/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="East Village Buyers">
+<meta property="og:title" content="Sell Designer Jewelry in NYC | Cartier, Tiffany | EVB">
+<meta property="og:description" content="Sell signed designer jewelry in NYC. Cartier, Tiffany, Van Cleef & Arpels, David Yurman, and other houses carry a brand premium above metal value. We check hallmarks in front of you.">
+<meta property="og:url" content="https://eastvillagebuyers.com/sell-designer-jewelry-nyc/">
+<meta property="og:image" content="https://eastvillagebuyers.com/cartierbracelet2.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sell Designer Jewelry in NYC | Cartier, Tiffany | EVB">
+<meta name="twitter:description" content="Sell signed designer jewelry in NYC. Cartier, Tiffany, Van Cleef & Arpels, David Yurman, and other houses carry a brand premium above metal value. We check hallmarks in front of you.">
+<meta name="twitter:image" content="https://eastvillagebuyers.com/cartierbracelet2.webp">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://eastvillagebuyers.com/sell-designer-jewelry-nyc/#service",
+  "name": "Designer Jewelry Buyer NYC",
+  "description": "We buy signed designer jewelry in New York City, including Cartier, Tiffany & Co., Van Cleef & Arpels, and David Yurman. Pieces are checked for authentic hallmarks and priced for brand premium above metal value, with cash paid the same day at 39 Avenue A.",
+  "url": "https://eastvillagebuyers.com/sell-designer-jewelry-nyc/",
+  "provider": {
+    "@type": "Store",
+    "@id": "https://eastvillagebuyers.com/#store",
+    "name": "East Village Buyers",
+    "url": "https://eastvillagebuyers.com/",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 40.7235953,
+      "longitude": -73.9855773
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Sunday",
+        "opens": "12:30",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday"
+        ],
+        "opens": "12:30",
+        "closes": "18:30"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Friday",
+        "opens": "12:30",
+        "closes": "18:00"
+      }
+    ]
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "New York City"
+  },
+  "serviceType": "Designer Jewelry Buyer",
+  "mainEntityOfPage": "https://eastvillagebuyers.com/sell-designer-jewelry-nyc/"
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://eastvillagebuyers.com/sell-designer-jewelry-nyc/#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Do you buy Cartier jewelry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Love bracelets, rings, and other Cartier pieces are checked for the maker's mark and, where applicable, a matching serial number, along with construction details specific to the brand."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can you tell if a Tiffany piece is real?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We check the hallmark and metal purity stamp alongside construction quality, since counterfeits copy the logo far more easily than the manufacturing. Original clasps and proportions matter too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is designer jewelry worth more than the metal it's made of?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually yes, for an authentic piece from a recognized house. Design, maker, and brand demand add value on top of melt and stone value, which is the entire reason authentication is worth doing carefully before pricing it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need the original box or papers to sell designer jewelry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. They can help establish history and occasionally support a stronger offer on rarer pieces, but every piece is authenticated by examining the item itself. A genuine piece without its box is still genuine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does wear or scratches lower the value of a designer piece?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Normal surface wear from being worn doesn't remove the brand premium. What matters more is originality, meaning non-original replacement parts like a swapped clasp or re-set stones can reduce what a piece is worth."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you buy David Yurman jewelry?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. David Yurman's cable designs have a specific twist and finish that we check against, along with hallmark stamps."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my designer piece turns out to be a counterfeit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We'll tell you directly what we're seeing and why. A counterfeit still may have some metal or stone value depending on what it's actually made of, but it won't carry the brand premium a genuine piece would."
+      }
+    }
+  ]
+}
+</script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../android-chrome-512x512.png">
+<meta name="theme-color" content="#f97316">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../site-nav.css">
+<link rel="stylesheet" href="../we-buy-category.css">
+<link rel="stylesheet" href="../site-mobile.css">
+<link rel="stylesheet" href="../site-ticker.css">
+<link rel="stylesheet" href="../site-footer.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://eastvillagebuyers.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Jewelry",
+      "item": "https://eastvillagebuyers.com/we-buy-jewelry-nyc/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Designer Jewelry",
+      "item": "https://eastvillagebuyers.com/sell-designer-jewelry-nyc/"
+    }
+  ]
+}
+</script>
+</head>
+<body class="cp-we-buy-page">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">·</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun 12:30–6 PM &nbsp;·&nbsp; Mon–Thu 12:30–6:30 PM &nbsp;·&nbsp; Fri 12:30–6 PM &nbsp;·&nbsp; Sat Closed</span></div></div>
+  <header class="site-nav" id="evbNav">
+    <div class="site-nav-inner">
+      <a href="../" class="site-nav-logo">
+        <img src="../evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='../evblogo.webp';">
+      </a>
+      <nav class="site-nav-links" aria-label="Main navigation">
+        <a href="../" class="site-nav-link">Home</a>
+        <a href="../about/" class="site-nav-link">About</a>
+        <a href="../blog/" class="site-nav-link">Blog</a>
+        <div class="site-nav-drop">
+          <button class="site-nav-link site-nav-link--drop" aria-haspopup="true" aria-expanded="false">What We Buy
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="site-nav-drop-caret"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="site-nav-drop-menu">
+            <a href="/we-buy-gold-nyc/" class="site-nav-drop-link">Gold</a>
+            <a href="/we-buy-silver/" class="site-nav-drop-link">Silver</a>
+            <a href="/we-buy-diamonds-nyc/" class="site-nav-drop-link">Diamonds</a>
+            <a href="/we-buy-jewelry-nyc/" class="site-nav-drop-link">Jewelry</a>
+            <a href="/we-buy-watches-nyc/" class="site-nav-drop-link">Watches</a>
+            <a href="/we-buy-designer-nyc/" class="site-nav-drop-link">Designer Bags</a>
+            <a href="/we-buy-streetwear-nyc/" class="site-nav-drop-link">Streetwear</a>
+            <a href="/we-buy-sneakers-nyc/" class="site-nav-drop-link">Sneakers</a>
+            <a href="/we-buy-electronics-nyc/" class="site-nav-drop-link">Electronics</a>
+            <a href="/we-buy-collectibles-nyc/" class="site-nav-drop-link">Collectibles</a>
+            <a href="/we-buy-accessories-nyc/" class="site-nav-drop-link">Accessories</a>
+          </div>
+        </div>
+      </nav>
+      <div class="site-nav-right">
+        <div class="site-nav-phone">
+          <span class="site-nav-phone-label">Call or Text</span>
+          <span class="site-nav-phone-num">917-608-8939</span>
+        </div>
+        <a href="sms:9176088939" class="site-btn site-btn-sms">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Send a Text</span><span class="site-btn-sub">Get a Quote Fast</span></div>
+        </a>
+        <a href="tel:9176088939" class="site-btn site-btn-call">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Call Us Now</span><span class="site-btn-sub">917-608-8939</span></div>
+        </a>
+        <button class="site-ham" id="evbHam" onclick="toggleEvbNav()" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="site-mob-overlay" id="evbOverlay" onclick="toggleEvbNav()"></div>
+  <div class="site-mob-drawer" id="evbDrawer">
+    <div class="site-mob-head">
+      <img src="../evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='../evblogo.webp';">
+      <button class="site-mob-x" onclick="toggleEvbNav()" aria-label="Close">&times;</button>
+    </div>
+    <nav class="site-mob-links" aria-label="Mobile navigation">
+      <a href="../" class="site-mob-link" onclick="toggleEvbNav()">Home</a>
+      <a href="../about/" class="site-mob-link" onclick="toggleEvbNav()">About</a>
+      <a href="../blog/" class="site-mob-link" onclick="toggleEvbNav()">Blog</a>
+      <details class="site-mob-drop">
+        <summary class="site-mob-link site-mob-link--drop">What We Buy</summary>
+        <a href="/we-buy-gold-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Gold</a>
+        <a href="/we-buy-silver/" class="site-mob-sublink" onclick="toggleEvbNav()">Silver</a>
+        <a href="/we-buy-diamonds-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Diamonds</a>
+        <a href="/we-buy-jewelry-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Jewelry</a>
+        <a href="/we-buy-watches-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Watches</a>
+        <a href="/we-buy-designer-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Designer Bags</a>
+        <a href="/we-buy-streetwear-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Streetwear</a>
+        <a href="/we-buy-sneakers-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Sneakers</a>
+        <a href="/we-buy-electronics-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Electronics</a>
+        <a href="/we-buy-collectibles-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Collectibles</a>
+        <a href="/we-buy-accessories-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Accessories</a>
+      </details>
+    </nav>
+    <div class="site-mob-footer">
+      <div class="site-mob-addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>39 Avenue A, New York, NY 10009</div>
+      <a href="tel:9176088939" class="site-mob-btn site-mob-btn-call">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call 917-608-8939
+      </a>
+      <a href="sms:9176088939" class="site-mob-btn site-mob-btn-sms">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Text for a Quote
+      </a>
+    </div>
+  </div>
+  <script src="../site-nav.js"></script>
+  <script src="../site-reveal.js" defer></script>
+  <script src="../site-ticker.js"></script>
+
+<article class="cp-article cp-layout-flow" id="categories">
+  <p class="cp-breadcrumb"><a href="../">Home</a> &rsaquo; <a href="../we-buy-jewelry-nyc/">Jewelry</a> &rsaquo; Designer Jewelry</p>
+
+  <div class="wb-block">
+    <div class="wb-intro">
+      <div class="wb-intro-text">
+        <p class="cp-eyebrow">Designer Jewelry &middot; East Village</p>
+        <h1>Sell Designer Jewelry in NYC</h1>
+        <p class="wb-lead">Cartier, Tiffany, Van Cleef & Arpels, David Yurman. A signed piece from the right house is worth more than its metal and stones alone, and we check the hallmark in front of you to prove it.</p>
+        <div class="wb-cta-row">
+          <a href="sms:9176088939" class="wb-cta wb-cta-primary"><span class="cta-btn-copy"><span class="cta-btn-label">Text Photos for a Quote</span><span class="cta-btn-sub">39 Avenue A, New York, NY 10009</span></span></a>
+          <a href="tel:9176088939" class="wb-cta wb-cta-secondary">Call 917-608-8939</a>
+        </div>
+      </div>
+      <div class="cp-storefront-wrap" aria-label="East Village Buyers storefront">
+        <img src="../evbstorefront.webp" alt="East Village Buyers storefront at 39 Avenue A NYC" class="cp-storefront-img" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </div>
+
+  <section class="gd-why" id="brand-premium">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Why It's Different</p>
+      <h2>Worth More Than the Metal Inside It</h2>
+      <div class="gd-intro-flex">
+        <div class="gd-intro-text">
+          <p>Melt-and-stone value is the floor for a designer piece, not the ceiling. A genuine Cartier Love bracelet, a Tiffany T necklace, or a David Yurman cable bracelet carries a premium on top of its gold and stone content because the design itself, the maker, and ongoing brand demand all add value that a generic piece of the same metal weight doesn't have.</p>
+          <p>That premium is exactly why authentication matters so much more here than on unbranded jewelry. Get the identification wrong and you either pay a fake-driven number too low for a real piece, or miss that a convincing counterfeit isn't carrying any brand value at all.</p>
+        </div>
+        <div class="gd-intro-img">
+          <img src="../cartierbracelet2.webp" alt="Cartier bracelet in its presentation box" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gd-why" id="what-we-check">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Authentication</p>
+      <h2>Hallmarks, Serials, and Construction</h2>
+      <div class="gd-intro-flex">
+        <div class="gd-intro-text">
+          <p>Every house stamps its work differently, and we check what's specific to each: Cartier pieces carry a maker's mark and often a serial number on Love bracelets and rings; Tiffany & Co. stamps its metal purity alongside the company name; Van Cleef & Arpels signs pieces distinctly and its clover motifs have specific proportions that are hard to fake convincingly; David Yurman's cable design has a particular twist and finish that differs from generic cable jewelry.</p>
+          <p>Beyond the stamp, construction tells the real story: the weight and finish of the clasp, how cleanly stones are set, whether the proportions match known authentic pieces. Counterfeits copy the logo far more easily than they copy the manufacturing.</p>
+        </div>
+        <div class="gd-intro-img">
+          <img src="../tiffanynecklace.webp" alt="Checking a hallmark on designer gold jewelry" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gd-why" id="boxes-and-papers">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Paperwork</p>
+      <h2>Helpful, Not Required</h2>
+      <div class="gd-intro-flex">
+        <div class="gd-intro-text">
+          <p>The original box, papers, or a prior appraisal can speed up the conversation and occasionally support a stronger offer on rarer pieces, since it establishes chain of ownership more easily. None of it is required. We authenticate every piece the same way regardless, by examining the piece itself rather than trusting paperwork alone.</p>
+          <p>This matters because paperwork can be separated from a piece over years, especially on inherited jewelry, and a genuine piece without its box is still exactly as genuine.</p>
+        </div>
+        <div class="gd-intro-img">
+          <img src="../tiffanyjewelry.webp" alt="Designer jewelry box and authentication papers" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gd-why" id="condition">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Condition</p>
+      <h2>Wear Doesn't Erase the Brand</h2>
+      <div class="gd-intro-flex">
+        <div class="gd-intro-text">
+          <p>A scratched Love bracelet, a Tiffany chain with a worn clasp, a David Yurman ring that's lost its original shine, all of it is still the piece it is. Surface wear from years of being worn doesn't remove the brand premium, though heavy damage or amateur repairs can affect it.</p>
+          <p>What does matter more here than on unbranded jewelry is originality: a Cartier bracelet with a replaced non-Cartier clasp, or a piece that's had stones swapped for lower-quality ones, loses some of what made it valuable in the first place. We look closely at whether everything on the piece is original to it.</p>
+        </div>
+        <div class="gd-intro-img">
+          <img src="../cartierbracelet2.webp" alt="Worn designer bracelet with a screwdriver for the closure" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gd-why" id="related">
+    <div class="gd-why-inner">
+      <p class="cp-eyebrow">Related</p>
+      <h2>Related Pages</h2>
+      <div class="gd-intro-text">
+        <p>
+          <a href="../we-buy-jewelry-nyc/">Sell Jewelry in NYC</a> &middot;
+          <a href="../sell-engagement-ring-nyc/">Sell an Engagement Ring</a> &middot;
+          <a href="../sell-estate-jewelry-nyc/">Selling an Estate Collection</a> &middot;
+          <a href="../we-buy-designer-nyc/">Sell Designer Handbags</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</article>
+
+
+<style>
+  .jw { max-width:1100px; margin:0 auto; padding:48px 20px; }
+  @media(max-width:699px) { .jw { padding-left:4px; padding-right:4px; } }
+  .jw h2 { font-family:'Montserrat',sans-serif; font-size:clamp(20px,4vw,28px); font-weight:900; margin:0 0 6px; }
+  .jw > p { font-family:'Poppins',sans-serif; font-size:13px; color:#999; margin:0 0 28px; }
+
+  .jw-cards {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  @media(min-width:560px) { .jw-cards { grid-template-columns:repeat(2,1fr); align-items:start; } }
+  @media(min-width:860px) { .jw-cards { grid-template-columns:repeat(3,1fr); align-items:start; } }
+
+  .jw-c {
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+    border:1px solid rgba(0,0,0,0.06);
+    cursor:pointer;
+    position:relative;
+    transition:box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .jw-c:hover {
+    box-shadow:0 4px 16px rgba(0,0,0,0.08);
+    border-color:rgba(0,0,0,0.1);
+  }
+  .jw-c--open {
+    border-color:rgba(249,115,22,0.25);
+    box-shadow:0 6px 24px rgba(249,115,22,0.08);
+  }
+  .jw-c--open::before {
+    content:'';
+    position:absolute;
+    left:0; right:0; top:0;
+    height:3px;
+    background:#f97316;
+    border-radius:3px 3px 0 0;
+  }
+
+  .jw-c-photo {
+    width:100%; height:140px;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .jw-c-photo img {
+    width:100%; height:100%;
+    object-fit:cover; display:block;
+    transition:transform 0.4s ease;
+  }
+  .jw-c:hover .jw-c-photo img { transform:scale(1.06); }
+
+  .jw-c-body {
+    flex:1; min-width:0;
+    padding:16px 18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+
+  .jw-c-top {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+
+  .jw-c-name {
+    font-family:'Montserrat',sans-serif;
+    font-size:14px; font-weight:700; color:#111;
+    margin:0;
+  }
+  .jw-c-sub {
+    font-family:'Poppins',sans-serif;
+    font-size:12px; color:#aaa; margin:3px 0 0; font-weight:400;
+  }
+
+  .jw-c-chevron {
+    width:24px; height:24px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 0.35s ease;
+    color:#ccc;
+  }
+  .jw-c-chevron svg { width:16px; height:16px; }
+  .jw-c--open .jw-c-chevron { transform:rotate(180deg); color:#f97316; }
+
+  .jw-c-detail {
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+  }
+  .jw-c--open .jw-c-detail {
+    max-height:400px;
+    opacity:1;
+  }
+
+  .jw-c-detail-inner {
+    padding:14px 18px 18px;
+    border-top:1px solid rgba(0,0,0,0.05);
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .jw-c-dl { font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; color:#f97316; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; }
+  .jw-c-dt { font-family:'Poppins',sans-serif; font-size:12px; color:#555; line-height:1.55; margin:0; font-weight:400; }
+  .jw-c-tags { display:flex; flex-wrap:wrap; gap:4px; }
+  .jw-c-tag { font-family:'Poppins',sans-serif; font-size:10px; font-weight:500; color:#b45309; background:#fef3e2; padding:3px 9px; border-radius:4px; }
+
+  @media(min-width:860px) {
+    .jw-c-photo { height:200px; }
+    .jw-cards { gap:18px; }
+    .jw-c-body { padding:18px 20px; }
+    .jw-c-name { font-size:16px; }
+  }
+
+  @media(max-width:559px) {
+    .jw-c { flex-direction:row; align-items:flex-start; gap:12px; padding:12px; }
+    .jw-c-photo { width:64px; height:64px; border-radius:10px; flex-shrink:0; }
+    .jw-c-body { padding:0; }
+    .jw-c--open .jw-c-detail { max-height:500px; }
+  }
+
+  @media(prefers-reduced-motion:reduce) {
+    .jw-c-detail, .jw-c-chevron, .jw-c-photo img { transition:none; }
+  }
+
+  /* "Good to know" intro section */
+  .gd-why { background:#fff; margin:0 -20px; padding:32px 20px 8px; }
+  .gd-why-inner { max-width:1100px; margin:0 auto; }
+  .gd-why-inner > .cp-eyebrow { margin-bottom:6px; }
+  .gd-why-inner > h2 { font-family:'Montserrat',sans-serif; font-size:clamp(19px,4vw,26px); font-weight:900; margin:0 0 14px; color:#111; }
+  .gd-intro-flex { display:flex; flex-direction:column; align-items:flex-start; gap:14px; }
+  .gd-intro-text { flex:1; min-width:0; }
+  .gd-intro-text p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.6; color:#4a4540; margin:0; }
+  .gd-intro-img { width:100%; height:170px; border-radius:14px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.12); }
+  .gd-intro-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  @media(min-width:860px) {
+    .gd-intro-flex { flex-direction:row; align-items:flex-start; gap:40px; }
+    .gd-intro-text { flex:1.2; min-width:0; }
+    .gd-intro-text p { font-size:14.5px; line-height:1.75; }
+    .gd-intro-img { flex-shrink:0; width:200px; height:200px; max-width:100%; border-radius:16px; margin-top:-80px; }
+  }
+
+  /* How We Check The Value section */
+  .gv { max-width:1100px; margin:0 auto; padding:16px 20px 56px; }
+  @media(max-width:699px) { .gv { padding-left:4px; padding-right:4px; } }
+  .gv h2 { font-family:'Montserrat',sans-serif; font-size:clamp(20px,4vw,28px); font-weight:900; margin:0 0 6px; }
+  .gv > p.gv-lead { font-family:'Poppins',sans-serif; font-size:13px; color:#999; margin:0 0 32px; max-width:640px; }
+
+  .gv-badge { font-family:'Poppins',sans-serif; font-size:12px; font-weight:600; color:#b45309; margin:0 0 28px; display:flex; align-items:center; gap:5px; }
+
+  .gv-steps { position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .gv-steps::before { content:''; position:absolute; top:44px; left:12.5%; right:12.5%; height:2px; background:#e8ddc9; z-index:0; }
+  @media(max-width:699px) { .gv-steps { grid-template-columns:1fr; gap:26px; } .gv-steps::before { top:0; bottom:0; left:44px; right:auto; width:2px; height:auto; } }
+
+  .gv-step { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  @media(max-width:699px) { .gv-step { flex-direction:row; text-align:left; gap:14px; } }
+
+  .gv-step-media { flex-shrink:0; position:relative; width:88px; height:88px; border-radius:50%; overflow:hidden; background:#f2ede6; border:3px solid #fff; box-shadow:0 0 0 2px #e8ddc9; margin-bottom:10px; }
+  @media(max-width:699px) { .gv-step-media { margin-bottom:0; } }
+  .gv-step.gv-step-final .gv-step-media { border-color:#f97316; box-shadow:0 0 0 2px #f97316; }
+  .gv-step-media img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .gv-step-num { font-family:'Poppins',sans-serif; font-size:11px; font-weight:700; color:#f97316; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+  .gv-step-body h3 { font-family:'Montserrat',sans-serif; font-size:14.5px; font-weight:800; color:#111; margin:0 0 4px; }
+  .gv-step-body p { font-family:'Poppins',sans-serif; font-size:12.5px; line-height:1.55; color:#555; margin:0; }
+
+  .gv-connector { width:2px; height:22px; background:#f97316; margin:0 auto; }
+
+  /* Live gold price widget wrapper */
+  .gv-price-wrap {
+    margin-top:0;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    background:#fff7ee; border:1.5px solid #f97316; border-radius:16px;
+    padding:22px 20px;
+    max-width:460px; margin-left:auto; margin-right:auto;
+  }
+  .gv-price-wrap p { font-family:'Poppins',sans-serif; font-size:12.5px; color:#8a7a68; text-align:center; margin:0; max-width:440px; }
+  .gv-price-wrap .gv-price-tag { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:#f97316; }
+
+  /* ---- data + emphasis components (item-level landing pages) ---- */
+  .ev-wrap { max-width:1100px; margin:0 auto; padding:0 20px; }
+  .ev-table { width:100%; border-collapse:collapse; margin:4px 0 8px; font-family:'Poppins',sans-serif; font-size:13.5px; background:#fff;
+              border:1px solid #e8e4de; border-radius:14px; overflow:hidden; box-shadow:0 3px 14px rgba(0,0,0,0.05); }
+  .ev-table thead th { background:#fff8f3; color:#7a4a12; font-family:'Montserrat',sans-serif; font-size:10.5px; font-weight:800;
+              letter-spacing:0.12em; text-transform:uppercase; text-align:left; padding:12px 16px; border-bottom:2px solid #f5ddc8; }
+  .ev-table td { padding:12px 16px; border-top:1px solid #f0ece6; color:#4a4540; vertical-align:top; line-height:1.5; }
+  .ev-table tbody tr:nth-child(even) { background:#fcfaf7; }
+  .ev-table td:first-child { font-weight:700; color:#111; white-space:nowrap; }
+  .ev-table-scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-bottom:6px; }
+  @media(max-width:560px){ .ev-table { font-size:12.5px; } .ev-table td, .ev-table thead th { padding:10px 12px; } }
+
+  .ev-callout { display:flex; gap:14px; align-items:flex-start; background:#fff8f3; border:1.5px solid #f5ddc8; border-left:4px solid #f97316;
+              border-radius:14px; padding:16px 18px; margin:6px 0 10px; }
+  .ev-callout-ico { flex-shrink:0; width:30px; height:30px; border-radius:50%; background:#f97316; color:#fff; display:flex;
+              align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-weight:900; font-size:16px; line-height:1; }
+  .ev-callout-body { min-width:0; }
+  .ev-callout-title { font-family:'Montserrat',sans-serif; font-weight:900; font-size:13.5px; color:#111; margin:2px 0 5px; text-transform:uppercase; letter-spacing:0.02em; }
+  .ev-callout-body p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.65; color:#5a5550; margin:0; }
+
+  .ev-cards { display:grid; grid-template-columns:1fr; gap:14px; margin:4px 0 10px; }
+  @media(min-width:700px){ .ev-cards.ev-cards-2 { grid-template-columns:1fr 1fr; } .ev-cards.ev-cards-3 { grid-template-columns:repeat(3,1fr); } }
+  .ev-card { background:#fff; border:1px solid #e8e4de; border-top:3px solid #f97316; border-radius:14px; padding:16px 18px; box-shadow:0 3px 14px rgba(0,0,0,0.05); }
+  .ev-card.ev-card-muted { border-top-color:#c9c2b8; }
+  .ev-card h4 { font-family:'Montserrat',sans-serif; font-size:13.5px; font-weight:900; color:#111; margin:0 0 7px; text-transform:uppercase; letter-spacing:0.02em; }
+  .ev-card p { font-family:'Poppins',sans-serif; font-size:13px; line-height:1.6; color:#5a5550; margin:0 0 7px; }
+  .ev-card p:last-child { margin-bottom:0; }
+  .ev-card .ev-card-tag { display:inline-block; font-family:'Montserrat',sans-serif; font-size:9.5px; font-weight:800; letter-spacing:0.1em;
+              text-transform:uppercase; color:#e8690a; background:#fff3e6; border-radius:5px; padding:3px 8px; margin-bottom:8px; }
+  .ev-card.ev-card-muted .ev-card-tag { color:#6b6560; background:#f2efea; }
+</style>
+
+<style>
+  .sw-faq { padding:48px 20px; background:#f8f5f0; }
+  .sw-faq-inner { max-width:1000px; margin:0 auto; }
+  .sw-faq-head { text-align:center; margin-bottom:32px; }
+  .sw-faq-head h2 { font-size:clamp(20px,4vw,28px); font-weight:900; margin:0 0 6px; }
+  .sw-faq-head p { font-size:13px; color:#888; margin:0; }
+  .sw-faq-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+  @media(min-width:700px) { .sw-faq-grid { grid-template-columns:1fr 1fr; gap:12px; } }
+  .sw-faq-card { background:#fff; border:1.5px solid rgba(249,115,22,0.15); border-radius:12px; overflow:hidden; transition:border-color 0.2s; }
+  .sw-faq-card:hover { border-color:rgba(249,115,22,0.35); }
+  .sw-faq-card summary { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:#111; cursor:pointer; list-style:none; transition:color 0.2s; gap:10px; }
+  .sw-faq-card summary::-webkit-details-marker { display:none; }
+  .sw-faq-card summary::after { content:'+'; font-size:16px; font-weight:600; color:#f97316; width:24px; height:24px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(249,115,22,0.08); flex-shrink:0; transition:all 0.2s; }
+  .sw-faq-card[open] summary::after { content:'\2212'; background:#f97316; color:#fff; }
+  .sw-faq-card summary:hover { color:#f97316; }
+  .sw-faq-card .sw-faq-ans { padding:0 18px 16px; font-size:13px; color:#555; line-height:1.6; }
+  .sw-faq-card .sw-faq-ans a { color:#f97316; text-decoration:none; font-weight:600; }
+</style>
+
+<section class="sw-faq" id="faq">
+  <div class="sw-faq-inner">
+    <div class="sw-faq-head">
+      <p class="cp-eyebrow" style="justify-content:center;">FAQ</p>
+      <h2>Designer Jewelry Questions</h2>
+      <p>Mostly about authentication, since that's what separates a fair offer from a guess.</p>
+    </div>
+    <div class="sw-faq-grid">
+      <details class="sw-faq-card"><summary>Do you buy Cartier jewelry?</summary><div class="sw-faq-ans">Yes. Love bracelets, rings, and other Cartier pieces are checked for the maker's mark and, where applicable, a matching serial number, along with construction details specific to the brand.</div></details>
+      <details class="sw-faq-card"><summary>How can you tell if a Tiffany piece is real?</summary><div class="sw-faq-ans">We check the hallmark and metal purity stamp alongside construction quality, since counterfeits copy the logo far more easily than the manufacturing. Original clasps and proportions matter too.</div></details>
+      <details class="sw-faq-card"><summary>Is designer jewelry worth more than the metal it's made of?</summary><div class="sw-faq-ans">Usually yes, for an authentic piece from a recognized house. Design, maker, and brand demand add value on top of melt and stone value, which is the entire reason authentication is worth doing carefully before pricing it.</div></details>
+      <details class="sw-faq-card"><summary>Do I need the original box or papers to sell designer jewelry?</summary><div class="sw-faq-ans">No. They can help establish history and occasionally support a stronger offer on rarer pieces, but every piece is authenticated by examining the item itself. A genuine piece without its box is still genuine.</div></details>
+      <details class="sw-faq-card"><summary>Does wear or scratches lower the value of a designer piece?</summary><div class="sw-faq-ans">Normal surface wear from being worn doesn't remove the brand premium. What matters more is originality, meaning non-original replacement parts like a swapped clasp or re-set stones can reduce what a piece is worth.</div></details>
+      <details class="sw-faq-card"><summary>Do you buy David Yurman jewelry?</summary><div class="sw-faq-ans">Yes. David Yurman's cable designs have a specific twist and finish that we check against, along with hallmark stamps.</div></details>
+      <details class="sw-faq-card"><summary>What if my designer piece turns out to be a counterfeit?</summary><div class="sw-faq-ans">We'll tell you directly what we're seeing and why. A counterfeit still may have some metal or stone value depending on what it's actually made of, but it won't carry the brand premium a genuine piece would.</div></details>
+    </div>
+  </div>
+</section>
+  <section class="evb-cta-band">
+    <h2>Ready to Sell Your Designer Jewelry?</h2>
+    <p>39 Avenue A, East Village NYC &middot; Walk-ins welcome &middot; Sun 12:30&ndash;6 &middot; Mon&ndash;Thu 12:30&ndash;6:30 &middot; Fri 12:30&ndash;6</p>
+    <div class="evb-cta-btns">
+      <a href="sms:9176088939" class="evb-cta-solid"><span class="cta-btn-copy"><span class="cta-btn-label">Text Photos for a Quote</span><span class="cta-btn-sub">39 Avenue A, New York, NY 10009</span></span></a>
+      <a href="tel:9176088939" class="evb-cta-ghost">Call 917-608-8939</a></div>
+  </section>
+  <footer class="evb-footer">
+    <div class="evb-footer-topbar"></div>
+    <div class="evb-footer-main">
+      <div class="evb-footer-brand">
+        <div class="evb-footer-logo-row">
+          <img src="../evblogo.webp" class="evb-footer-logo-img" alt="East Village Buyers Logo" loading="lazy" decoding="async">
+          <div class="evb-footer-logo-text">
+            <div class="evb-footer-logo-name">East Village Buyers</div>
+            <div class="evb-footer-logo-sub">New York City</div>
+          </div>
+        </div>
+        <div class="evb-footer-divider"></div>
+        <p class="evb-footer-tagline">NYC's trusted destination for authenticated luxury goods, fine jewelry, sneakers, watches, gold, silver, and designer fashion. Walk in for an on-the-spot offer.</p>
+        <div class="evb-footer-social">
+          <a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="../icon-instagram.webp" alt="Instagram" width="24" height="24" loading="lazy" decoding="async"></a>
+          <a href="https://tiktok.com/@eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><img src="../icon-tiktok.webp" alt="TikTok" width="24" height="24" loading="lazy" decoding="async"></a>
+          <a href="https://youtube.com/@eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="../icon-youtube.webp" alt="YouTube" width="24" height="24" loading="lazy" decoding="async"></a>
+          <a href="https://www.google.com/search?q=East+Village+Buyers+reviews" target="_blank" rel="noopener noreferrer" aria-label="Google Reviews"><img src="../icon-google.webp" alt="Google Reviews" width="24" height="24" loading="lazy" decoding="async"></a>
+        </div>
+      </div>
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">Company</p>
+        <ul>
+          <li><a href="../about/">About Us</a></li>
+          <li><a href="../#location">Our Location</a></li>
+          <li><a href="sms:9176088939">Get a Quote</a></li>
+          <li><a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href="tel:9176088939">Contact</a></li>
+        </ul>
+      </div>
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">What We Buy</p>
+        <ul>
+          <li><a href="../we-buy-jewelry-nyc/">Jewelry</a></li>
+          <li><a href="../we-buy-gold-nyc/">Gold</a></li>
+          <li><a href="../we-buy-silver/">Silver</a></li>
+          <li><a href="../we-buy-designer-nyc/">Designer</a></li>
+          <li><a href="../we-buy-accessories-nyc/">Accessories</a></li>
+          <li><a href="../we-buy-streetwear-nyc/">Streetwear</a></li>
+          <li><a href="../we-buy-sneakers-nyc/">Sneakers</a></li>
+          <li><a href="../we-buy-watches-nyc/">Watches</a></li>
+          <li><a href="../we-buy-electronics-nyc/">Electronics</a></li>
+        </ul>
+      </div>
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">Visit Us</p>
+        <div class="evb-footer-contact-list">
+          <a href="tel:9176088939" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></div>
+            <div><div class="evb-footer-contact-label">Phone</div>917-608-8939</div>
+          </a>
+          <a href="https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z" target="_blank" rel="noopener noreferrer" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon"><svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg></div>
+            <div><div class="evb-footer-contact-label">Address</div>39 Avenue A, New York, NY 10009</div>
+          </a>
+          <div class="evb-footer-contact-item" style="cursor:default;">
+            <div class="evb-footer-contact-icon"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div>
+              <div class="evb-footer-contact-label evb-footer-contact-label--spaced">Hours</div>
+              <div class="evb-hours-grid">
+                <div class="evb-hours-row"><span>Sunday</span><span>12:30 – 6 PM</span></div>
+                <div class="evb-hours-row"><span>Mon – Thu</span><span>12:30 – 6:30 PM</span></div>
+                <div class="evb-hours-row"><span>Friday</span><span>12:30 – 6 PM</span></div>
+                <div class="evb-hours-row"><span>Saturday</span><span class="evb-hours-closed">Closed</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="evb-footer-bottom">
+      <p class="evb-footer-copy">&copy; 2026 East Village Buyers. All rights reserved.</p>
+      <p class="evb-footer-legal">Vintage USA Inc<span>&middot;</span>DBA East Village Buyers<span>&middot;</span>DCA Lic. #2070477</p>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="../evb-assistant.css">
+  <script src="../we-buy-category.js"></script>
+  <script src="../evb-assistant.js" defer data-evb-assistant></script>
+
+<!-- Cookie Consent -->
+<style>
+  #evbCk{--evb-ck-mb:0px;position:fixed;z-index:100000;font-family:'Montserrat',sans-serif;bottom:24px;right:24px;left:auto;width:min(400px,calc(100vw - 48px));opacity:0;transform:translateY(16px) scale(0.98);transition:opacity 0.4s cubic-bezier(0.22,1,0.36,1),transform 0.45s cubic-bezier(0.22,1,0.36,1);pointer-events:none}
+  #evbCk.evb-show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  .evb-ck-panel{position:relative;border-radius:16px;overflow:hidden;background:rgba(14,13,12,0.94);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(249,115,22,0.12),0 24px 60px rgba(0,0,0,0.45),0 8px 20px rgba(0,0,0,0.25);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+  .evb-ck-accent{height:3px;background:linear-gradient(90deg,transparent 0%,#f97316 25%,#ff9a4d 50%,#f97316 75%,transparent 100%)}
+  .evb-ck-body{padding:18px 20px 20px}
+  .evb-ck-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .evb-ck-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .evb-ck-icon{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(249,115,22,0.14);border:1px solid rgba(249,115,22,0.28);color:#f97316}
+  .evb-ck-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  .evb-ck-titles{display:flex;flex-direction:column;gap:2px}
+  .evb-ck-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-0.01em}
+  .evb-ck-tag{font-size:9px;font-weight:600;color:rgba(249,115,22,0.8);letter-spacing:0.12em;text-transform:uppercase}
+  .evb-ck-x{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;line-height:1;transition:background 0.2s,color 0.2s;padding:0}
+  .evb-ck-x:hover{background:rgba(255,255,255,0.1);color:#fff}
+  .evb-ck-desc{font-size:12px;color:rgba(255,255,255,0.55);line-height:1.55;margin-bottom:16px}
+  .evb-ck-btns{display:flex;flex-direction:column;gap:8px}
+  .evb-ck-accept{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;background:#f97316;border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.07em;text-transform:uppercase;color:#fff;cursor:pointer;box-shadow:0 4px 0 #c05a0e,0 2px 8px rgba(249,115,22,0.3);transition:transform 0.15s,box-shadow 0.15s}
+  .evb-ck-accept:hover{transform:translateY(-1px);box-shadow:0 5px 0 #c05a0e,0 4px 12px rgba(249,115,22,0.35)}
+  .evb-ck-accept:active{transform:translateY(1px);box-shadow:0 2px 0 #c05a0e}
+  .evb-ck-ess{display:flex;align-items:center;justify-content:center;padding:9px 16px;background:transparent;border:1px solid rgba(255,255,255,0.12);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.4);cursor:pointer;transition:border-color 0.2s,color 0.2s}
+  .evb-ck-ess:hover{border-color:rgba(255,255,255,0.25);color:rgba(255,255,255,0.65)}
+</style>
+<div id="evbCk" role="dialog" aria-label="Cookie consent">
+  <div class="evb-ck-panel">
+    <div class="evb-ck-accent"></div>
+    <div class="evb-ck-body">
+      <div class="evb-ck-head">
+        <div class="evb-ck-brand">
+          <div class="evb-ck-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="evb-ck-titles"><div class="evb-ck-name">East Village Buyers</div><div class="evb-ck-tag">Cookie Preferences</div></div>
+        </div>
+        <button class="evb-ck-x" onclick="evbCkDismiss()" aria-label="Close">&times;</button>
+      </div>
+      <p class="evb-ck-desc">We use cookies to improve your experience and analyze site traffic. By clicking "Accept All" you consent to our use of cookies.</p>
+      <div class="evb-ck-btns">
+        <button class="evb-ck-accept" onclick="evbCkAccept()">Accept All</button>
+        <button class="evb-ck-ess" onclick="evbCkDismiss()">Essential Only</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var K='evb_ck6';
+  if(!localStorage.getItem(K)){setTimeout(function(){var el=document.getElementById('evbCk');if(el)el.classList.add('evb-show');},1200);}
+  window.evbCkAccept=function(){localStorage.setItem(K,'1');var el=document.getElementById('evbCk');if(el){el.classList.remove('evb-show');}};
+  window.evbCkDismiss=function(){localStorage.setItem(K,'1');var el=document.getElementById('evbCk');if(el){el.classList.remove('evb-show');}};
+})();
+</script>
+
+</body>
+</html>
