@@ -329,30 +329,187 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
 
+    <style>
+      .ec-cards { display:grid; grid-template-columns:1fr; gap:14px; }
+      @media(min-width:560px) { .ec-cards { grid-template-columns:repeat(2,1fr); align-items:start; } }
+      @media(min-width:860px) { .ec-cards { grid-template-columns:repeat(3,1fr); align-items:start; } }
+      .ec-c { display:flex; flex-direction:column; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.04); border:1px solid rgba(0,0,0,0.06); cursor:pointer; position:relative; transition:box-shadow 0.3s ease, border-color 0.3s ease; }
+      .ec-c:hover { box-shadow:0 4px 16px rgba(0,0,0,0.08); border-color:rgba(0,0,0,0.1); }
+      .ec-c--open { border-color:rgba(249,115,22,0.25); box-shadow:0 6px 24px rgba(249,115,22,0.08); }
+      .ec-c--open::before { content:''; position:absolute; left:0; right:0; top:0; height:3px; background:#f97316; border-radius:3px 3px 0 0; }
+      .ec-c-photo { width:100%; height:140px; flex-shrink:0; overflow:hidden; background:#f8f5f0; display:flex; align-items:center; justify-content:center; }
+      .ec-c-photo img { width:100%; height:100%; object-fit:contain; display:block; transition:transform 0.4s ease; padding:14px; box-sizing:border-box; }
+      .ec-c-photo.ec-c-photo--icon { background:linear-gradient(145deg,#161616 0%,#0c0c0c 100%); }
+      .ec-c-photo.ec-c-photo--icon svg { width:52px; height:52px; color:#f97316; }
+      .ec-c:hover .ec-c-photo img { transform:scale(1.06); }
+      .ec-c-body { flex:1; min-width:0; padding:16px 18px; display:flex; flex-direction:column; justify-content:center; }
+      .ec-c-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .ec-c-name { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:700; color:#111; margin:0; }
+      .ec-c-sub { font-family:'Poppins',sans-serif; font-size:12px; color:#aaa; margin:3px 0 0; font-weight:400; }
+      .ec-c-chevron { width:24px; height:24px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:transform 0.35s ease; color:#ccc; }
+      .ec-c-chevron svg { width:16px; height:16px; }
+      .ec-c--open .ec-c-chevron { transform:rotate(180deg); color:#f97316; }
+      .ec-c-detail { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+      .ec-c--open .ec-c-detail { max-height:350px; opacity:1; }
+      .ec-c-detail-inner { padding:14px 18px 18px; border-top:1px solid rgba(0,0,0,0.05); display:grid; grid-template-columns:1fr; gap:12px; }
+      .ec-c-dl { font-family:'Poppins',sans-serif; font-size:10px; font-weight:600; color:#f97316; letter-spacing:0.08em; text-transform:uppercase; margin:0 0 4px; }
+      .ec-c-dt { font-family:'Poppins',sans-serif; font-size:12px; color:#555; line-height:1.55; margin:0; font-weight:400; }
+      .ec-c-tags { display:flex; flex-wrap:wrap; gap:4px; }
+      .ec-c-tag { font-family:'Poppins',sans-serif; font-size:10px; font-weight:500; color:#b45309; background:#fef3e2; padding:3px 9px; border-radius:4px; }
+      @media(min-width:860px) { .ec-c-photo { height:200px; } .ec-cards { gap:18px; } .ec-c-body { padding:18px 20px; } .ec-c-name { font-size:16px; } }
+      @media(max-width:559px) { .ec-c--open .ec-c-detail { max-height:450px; } }
+      @media(prefers-reduced-motion:reduce) { .ec-c-detail, .ec-c-chevron, .ec-c-photo img { transition:none; } }
+      .ec-also-buy { margin-top:20px; padding-top:18px; border-top:1px solid rgba(0,0,0,0.06); }
+      .ec-also-buy-label { font-family:'Poppins',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#999; margin:0 0 10px; }
+      .ec-also-buy-tags { display:flex; flex-wrap:wrap; gap:8px; }
+      .ec-also-buy-tag { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:#555; background:#f8f5f0; border:1px solid rgba(0,0,0,0.06); padding:7px 14px; border-radius:20px; }
+    </style>
     <section id="brands" class="cp-metal-band cp-metal-band--content">
       <div style="max-width:1100px;margin:0 auto;">
-        <div class="brand-grid">
-          <div class="brand-tile"><span class="brand-name">iPhone</span></div>
-          <div class="brand-tile"><span class="brand-name">AirPods</span></div>
-          <div class="brand-tile"><span class="brand-name">AirPods Pro</span></div>
-          <div class="brand-tile"><span class="brand-name">AirPods Max</span></div>
-          <div class="brand-tile"><span class="brand-name">MacBook Air</span></div>
-          <div class="brand-tile"><span class="brand-name">MacBook Pro</span></div>
-          <div class="brand-tile"><span class="brand-name">iPad</span></div>
-          <div class="brand-tile"><span class="brand-name">iPad Pro</span></div>
-          <div class="brand-tile"><span class="brand-name">PlayStation 5</span></div>
-          <div class="brand-tile"><span class="brand-name">Nintendo Switch</span></div>
-          <div class="brand-tile"><span class="brand-name">Canon</span></div>
-          <div class="brand-tile"><span class="brand-name">Nikon</span></div>
-          <div class="brand-tile"><span class="brand-name">Sony Camera</span></div>
-          <div class="brand-tile"><span class="brand-name">Fujifilm</span></div>
-          <div class="brand-tile"><span class="brand-name">DJI Drone</span></div>
-          <div class="brand-tile"><span class="brand-name">Beats</span></div>
-          <div class="brand-tile"><span class="brand-name">Meta Quest</span></div>
-          <div class="brand-tile brand-tile--cta"><span class="brand-name" style="color:#f97316;">+ More</span></div>
+        <p class="cp-yes-buy-lead" style="margin-bottom:16px;">Tap any category to see details.</p>
+        <div class="ec-cards" id="elecCards">
+
+          <div class="ec-c">
+            <div class="ec-c-photo ec-c-photo--icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5"/></svg></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">iPhone</div><div class="ec-c-sub">Unlocked or carrier-locked &middot; all generations</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">Best Value</div><div class="ec-c-tags"><span class="ec-c-tag">Pro Max</span><span class="ec-c-tag">Pro</span><span class="ec-c-tag">Latest 2&ndash;3 Gens</span><span class="ec-c-tag">Higher Storage</span></div></div>
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">iCloud/activation lock status, screen and battery health, and functionality &mdash; tested at the counter.</p></div>
+                <div><div class="ec-c-dl">Also Accepted</div><p class="ec-c-dt">Cracked screens buy with a reduced offer based on repair cost.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../4000308504-847__1.webp" alt="Apple AirPods" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">AirPods &amp; AirPods Pro</div><div class="ec-c-sub">All generations &middot; with or without case</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Battery health on both buds and the case, charging function, and pairing tested live.</p></div>
+                <div><div class="ec-c-dl">Also Accepted</div><p class="ec-c-dt">Missing case or single earbud &mdash; still worth a look, offer adjusted accordingly.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../airpodmax.webp" alt="Apple AirPods Max headphones" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">AirPods Max</div><div class="ec-c-sub">Any color &middot; with or without case</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Battery health, ear cushion condition, and audio/noise cancellation function tested at the counter.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../macbook.webp" alt="Apple MacBook" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">MacBook Air &amp; Pro</div><div class="ec-c-sub">Any screen size &middot; Intel or Apple Silicon</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Screen, keyboard, trackpad, ports, and battery health &mdash; powered on and tested in front of you.</p></div>
+                <div><div class="ec-c-dl">Also Accepted</div><p class="ec-c-dt">Battery under 80% reduces the offer but we still buy functional units.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../ipad.webp" alt="Apple iPad" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">iPad &amp; iPad Pro</div><div class="ec-c-sub">Wi-Fi or cellular &middot; any generation</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Activation lock, screen condition, and battery health verified before an offer.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../ps5.webp" alt="Sony PlayStation 5 console and controller" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">PlayStation 5</div><div class="ec-c-sub">Disc or digital &middot; with or without controller</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Powers on, reads discs, and controller drift/connection tested at the counter.</p></div>
+                <div><div class="ec-c-dl">Also Accepted</div><p class="ec-c-dt">Select controllers, headsets, and limited-edition peripherals sold separately.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../metaquest3.webp" alt="Meta Quest VR headset and controllers" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">Meta Quest</div><div class="ec-c-sub">Headset &amp; controllers &middot; any storage size</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Lenses, straps, controller tracking, and factory reset status checked before an offer.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+          <div class="ec-c">
+            <div class="ec-c-photo"><img src="../canon-g7x-camera.webp" alt="Canon camera" loading="lazy" decoding="async"></div>
+            <div class="ec-c-body">
+              <div class="ec-c-top">
+                <div><div class="ec-c-name">Cameras &amp; Lenses</div><div class="ec-c-sub">Bodies, lenses &amp; kits</div></div>
+                <div class="ec-c-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+              </div>
+              <div class="ec-c-detail"><div class="ec-c-detail-inner">
+                <div><div class="ec-c-dl">Brands</div><div class="ec-c-tags"><span class="ec-c-tag">Canon</span><span class="ec-c-tag">Nikon</span><span class="ec-c-tag">Sony</span><span class="ec-c-tag">Fujifilm</span><span class="ec-c-tag">GoPro</span></div></div>
+                <div><div class="ec-c-dl">How We Check</div><p class="ec-c-dt">Shutter count where available, sensor and lens glass condition, and autofocus tested at the counter.</p></div>
+              </div></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="ec-also-buy">
+          <p class="ec-also-buy-label">Also Buy</p>
+          <div class="ec-also-buy-tags">
+            <span class="ec-also-buy-tag">Nintendo Switch</span>
+            <span class="ec-also-buy-tag">Samsung Galaxy</span>
+            <span class="ec-also-buy-tag">Beats Headphones</span>
+            <span class="ec-also-buy-tag">Apple Watch</span>
+            <span class="ec-also-buy-tag">DJI Drones</span>
+            <span class="ec-also-buy-tag">Xbox Series X/S</span>
+          </div>
         </div>
       </div>
     </section>
+
+    <script>
+    (function(){
+      var cards = document.querySelectorAll('#elecCards .ec-c');
+      cards.forEach(function(card) {
+        card.addEventListener('click', function() {
+          var wasOpen = card.classList.contains('ec-c--open');
+          cards.forEach(function(c) { c.classList.remove('ec-c--open'); });
+          if (!wasOpen) {
+            card.classList.add('ec-c--open');
+            setTimeout(function() { card.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 200);
+          }
+        });
+      });
+    })();
+    </script>
 
     <section id="authentication" class="cp-metal-band cp-metal-band--content">
       <div class="cp-metal-band-layout">
