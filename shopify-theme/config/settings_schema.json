@@ -14,9 +14,9 @@
       { "type": "color", "id": "color_accent_dark", "label": "Accent dark", "default": "#e8690a" },
       { "type": "color", "id": "color_accent_deep", "label": "Accent deep (button shadow)", "default": "#b84f06" },
       { "type": "color", "id": "color_green", "label": "Secondary green (VILLAGE accent)", "default": "#1e7d32" },
-      { "type": "color", "id": "color_ink", "label": "Text", "default": "#1a1814" },
-      { "type": "color", "id": "color_paper", "label": "Background", "default": "#f8f5f0" },
-      { "type": "color", "id": "color_line", "label": "Border", "default": "#e8e4de" },
+      { "type": "color", "id": "color_ink", "label": "Text", "default": "#14181d" },
+      { "type": "color", "id": "color_paper", "label": "Background", "default": "#f1f4f6" },
+      { "type": "color", "id": "color_line", "label": "Border", "default": "#dbe1e6" },
       { "type": "color", "id": "color_card", "label": "Card background", "default": "#ffffff" }
     ]
   },

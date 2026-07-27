@@ -28,19 +28,24 @@
   {% render 'meta-tags' %}
 
   {%- comment -%}
-    Hardcoded to the exact Google Fonts stack eastvillagebuyers.com uses,
-    so the storefront matches pixel-for-pixel instead of relying on
-    Shopify's curated font library.
+    Deliberately its own font pairing, distinct from eastvillagebuyers.com's
+    stack (Bebas Neue/Inter/Montserrat/DM Sans/Poppins/Roboto/Space Grotesk),
+    so the storefront reads as its own thing rather than pixel-matching the
+    marketing site.
   {%- endcomment -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fjalla+One&family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   {{ content_for_header }}
 
   {%- comment -%}
     Defaults are hardcoded as a fallback (via `default:`) so the palette
     never silently disappears even if a theme setting comes back blank.
+    Neutrals are deliberately cooler than the main site's warm cream/ink,
+    so the storefront still carries the same accent orange but a
+    different backdrop mood. The accent colors are unchanged on purpose --
+    brand continuity.
   {%- endcomment -%}
   <style>
     :root{
@@ -48,14 +53,15 @@
       --accent-dark: {{ settings.color_accent_dark | default: '#e8690a' }};
       --accent-deep: {{ settings.color_accent_deep | default: '#b84f06' }};
       --color-green: {{ settings.color_green | default: '#1e7d32' }};
-      --ink: {{ settings.color_ink | default: '#1a1814' }};
-      --paper: {{ settings.color_paper | default: '#f8f5f0' }};
-      --line: {{ settings.color_line | default: '#e8e4de' }};
+      --ink: {{ settings.color_ink | default: '#14181d' }};
+      --paper: {{ settings.color_paper | default: '#f1f4f6' }};
+      --line: {{ settings.color_line | default: '#dbe1e6' }};
       --card: {{ settings.color_card | default: '#ffffff' }};
       --radius: {{ settings.button_radius | default: 9 }}px;
-      --font-heading: 'Montserrat', sans-serif;
-      --font-accent: 'Bebas Neue', 'Fjalla One', sans-serif;
-      --font-body: 'Inter', sans-serif;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Manrope', sans-serif;
+      --shadow-rest: 0 1px 2px rgba(20,24,29,.08), 0 1px 1px rgba(20,24,29,.04);
+      --shadow-hover: 0 6px 16px rgba(20,24,29,.14);
     }
   </style>
   {{ 'theme.css' | asset_url | stylesheet_tag }}
