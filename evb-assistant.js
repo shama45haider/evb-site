@@ -14,6 +14,41 @@
   const PHONE_URL = 'tel:9176088939';
   const SMS_URL   = 'sms:9176088939';
 
+  // ── Groq AI proxy (optional) ──────────────────────────────────────────────
+  // Empty string = AI disabled, assistant runs on the local keyword-matching
+  // bot below only. Fill in with the deployed Cloudflare Worker URL from
+  // groq-worker.js (repo root) to turn on real AI answers. The Groq API key
+  // itself lives ONLY in that Worker's server-side secret -- never here.
+  const GROQ_PROXY_URL = '';
+  const GROQ_TIMEOUT_MS = 12000;
+
+  async function askGroq(message, history) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
+    try {
+      const res = await fetch(GROQ_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, history }),
+        signal: controller.signal,
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data && typeof data.reply === 'string' ? data.reply : null;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  function textToHtml(text) {
+    return text
+      .split(/\n{2,}/)
+      .map((para) => '<p>' + escapeHtml(para.trim()).replace(/\n/g, '<br>') + '</p>')
+      .join('');
+  }
+
   const STOP = new Set('a an the and or but in on at to for of is are was were be been have has had do does did will would can could should may might i me my we you your our they them it its this that with from as by'.split(' '));
 
   function normalize(text) {
@@ -861,6 +896,7 @@
 
     let greeted = false;
     let conversationHistory = [];
+    let aiHistory = []; // {role: 'user'|'assistant', content} pairs, sent to Groq for context
     let detectedProductType = null;
 
     function openPanel() {
@@ -909,6 +945,33 @@
       renderContextAwareChips(null);
     }
 
+    function answerLocally(text, typing) {
+      typing.remove();
+
+      // Get top matches for potential follow-up detection
+      const topMatches = rankKb(text).slice(0, 3);
+
+      // Check if query is ambiguous
+      if (isAmbiguousQuery(topMatches)) {
+        const followUp = generateFollowUp(topMatches, detectedProductType);
+        if (followUp) {
+          addBotMessage(followUp);
+          renderContextAwareChips(topMatches);
+          sendBtn.disabled = false;
+          input.focus();
+          return;
+        }
+      }
+
+      const answer = resolveAnswer(text);
+      addBotMessage(answer);
+      aiHistory.push({ role: 'assistant', content: answer.replace(/<[^>]+>/g, ' ').trim() });
+      renderContextAwareChips(topMatches);
+
+      sendBtn.disabled = false;
+      input.focus();
+    }
+
     function askQuestion(q) {
       const text = (q || '').trim();
       if (!text) return;
@@ -924,37 +987,28 @@
 
       // Store in conversation history
       conversationHistory.push({ user: text, type: productType });
+      aiHistory.push({ role: 'user', content: text });
 
       const typing = showTyping();
 
-      setTimeout(() => {
-        typing.remove();
-
-        // Get top matches for potential follow-up detection
-        const topMatches = rankKb(text).slice(0, 3);
-
-        // Check if query is ambiguous
-        if (isAmbiguousQuery(topMatches)) {
-          const followUp = generateFollowUp(topMatches, detectedProductType);
-          if (followUp) {
-            addBotMessage(followUp);
-            // Show context-specific chips
-            renderContextAwareChips(topMatches);
+      if (GROQ_PROXY_URL) {
+        askGroq(text, aiHistory.slice(0, -1)).then((reply) => {
+          if (reply) {
+            typing.remove();
+            addBotMessage(textToHtml(reply));
+            aiHistory.push({ role: 'assistant', content: reply });
+            renderContextAwareChips(rankKb(text).slice(0, 3));
             sendBtn.disabled = false;
             input.focus();
-            return;
+          } else {
+            // Groq unavailable/errored/timed out -- fall back to the local bot
+            answerLocally(text, typing);
           }
-        }
+        });
+        return;
+      }
 
-        // Normal answer
-        addBotMessage(resolveAnswer(text));
-
-        // Render context-aware suggestions
-        renderContextAwareChips(topMatches);
-
-        sendBtn.disabled = false;
-        input.focus();
-      }, 400);
+      setTimeout(() => answerLocally(text, typing), 400);
     }
 
     function renderContextAwareChips(topMatches) {
