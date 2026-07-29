@@ -19,7 +19,7 @@
   // bot below only. Fill in with the deployed Cloudflare Worker URL from
   // groq-worker.js (repo root) to turn on real AI answers. The Groq API key
   // itself lives ONLY in that Worker's server-side secret -- never here.
-  const GROQ_PROXY_URL = '';
+  const GROQ_PROXY_URL = 'https://evbworker.shama45haider.workers.dev/';
   const GROQ_TIMEOUT_MS = 12000;
 
   async function askGroq(message, history) {
