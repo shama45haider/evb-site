@@ -17,6 +17,13 @@
  *    and give it to Claude, or paste it into GROQ_PROXY_URL at the top of
  *    evb-assistant.js yourself.
  *
+ * ── Rate limiting (recommended, stops spam/abuse from burning Groq quota) ─
+ * 6. Settings -> Bindings -> Add -> "Rate Limiting".
+ *    Variable name: RATE_LIMITER. Limit: 10 requests per 60 seconds
+ *    (or whatever you prefer) -> Save and deploy.
+ *    Without this binding attached, the code below just skips the check --
+ *    it fails open, not closed, so deploying without it is still safe.
+ *
  * That's it -- no KV, no D1, no other bindings required.
  */
 
@@ -59,6 +66,19 @@ export default {
         status: 403,
         headers: { ...headers, 'Content-Type': 'application/json' },
       });
+    }
+
+    // Fails open (skips the check) if the RATE_LIMITER binding isn't attached,
+    // so this is safe to deploy before or after adding it in Settings > Bindings.
+    if (env.RATE_LIMITER) {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { success } = await env.RATE_LIMITER.limit({ key: ip });
+      if (!success) {
+        return new Response(JSON.stringify({ error: 'Too many requests' }), {
+          status: 429,
+          headers: { ...headers, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     if (request.method !== 'POST') {
