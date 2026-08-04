@@ -1036,7 +1036,7 @@
       if (suppressNextClick || toggleDrag.wasDragged()) return;
       openPanel();
     });
-    closeBtn.addEventListener('click', closePanel);
+    closeBtn.addEventListener('click', closeWidget);
 
     form.addEventListener('submit', e => { e.preventDefault(); submitQuery(); });
 
