@@ -726,7 +726,7 @@
 
     root.innerHTML =
       '<div class="evb-asst-toggle-wrap">' +
-      '<button type="button" class="evb-asst-dismiss" aria-label="Minimize chat assistant">&times;</button>' +
+      '<button type="button" class="evb-asst-dismiss" aria-label="Close chat assistant">&times;</button>' +
       '<button type="button" class="evb-asst-toggle" aria-expanded="false" aria-controls="evb-asst-panel">' +
       '<span class="evb-asst-toggle-icon" aria-hidden="true">' +
       iconSvg +
@@ -734,11 +734,6 @@
       '<span class="evb-asst-toggle-label">Ask EVB<small>Site assistant</small></span>' +
       '</button>' +
       '</div>' +
-      '<button type="button" class="evb-asst-restore" aria-label="Reopen chat assistant">' +
-      '<span class="evb-asst-icon-svg-wrap" aria-hidden="true">' +
-      iconSvg +
-      '</span>' +
-      '</button>' +
       '<div class="evb-asst-panel" id="evb-asst-panel" hidden>' +
       '<div class="evb-asst-head">' +
       '<div class="evb-asst-head-logo">' +
@@ -770,23 +765,17 @@
       }
     } catch (_) { /* ignore malformed storage */ }
 
-    // ── Minimize / restore ───────────────────────────────────────────────────
-    const restoreBtn = root.querySelector('.evb-asst-restore');
-
-    function minimize() {
-      root.classList.add('evb-asst-root--minimized');
+    // ── Close (fully hides the widget for the rest of this tab's session) ────
+    function closeWidget() {
+      root.classList.add('evb-asst-root--closed');
       sessionStorage.setItem(HIDE_KEY, '1');
     }
-    function unminimize() {
-      root.classList.remove('evb-asst-root--minimized');
-      sessionStorage.removeItem(HIDE_KEY);
-    }
-    if (sessionStorage.getItem(HIDE_KEY)) minimize();
+    if (sessionStorage.getItem(HIDE_KEY)) closeWidget();
 
     const dismissBtn = root.querySelector('.evb-asst-dismiss');
     dismissBtn.addEventListener('click', e => {
       e.stopPropagation();
-      minimize();
+      closeWidget();
     });
 
     // ── Keep the widget fully on-screen ──────────────────────────────────────
@@ -875,13 +864,6 @@
     let suppressNextClick = false;
     const toggleDrag = makeDraggable(root.querySelector('.evb-asst-toggle'));
     makeDraggable(root.querySelector('.evb-asst-head'));
-    const restoreDrag = makeDraggable(restoreBtn);
-
-    restoreBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      if (suppressNextClick || restoreDrag.wasDragged()) return;
-      unminimize();
-    });
 
     window.addEventListener('resize', keepInViewport);
 
