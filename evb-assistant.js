@@ -734,6 +734,11 @@
       '<span class="evb-asst-toggle-label">Ask EVB<small>Site assistant</small></span>' +
       '</button>' +
       '</div>' +
+      '<button type="button" class="evb-asst-restore" aria-label="Reopen chat assistant">' +
+      '<span class="evb-asst-icon-svg-wrap" aria-hidden="true">' +
+      iconSvg +
+      '</span>' +
+      '</button>' +
       '<div class="evb-asst-panel" id="evb-asst-panel" hidden>' +
       '<div class="evb-asst-head">' +
       '<div class="evb-asst-head-logo">' +
@@ -765,10 +770,19 @@
       }
     } catch (_) { /* ignore malformed storage */ }
 
-    // ── Close (fully hides the widget for the rest of this tab's session) ────
+    // ── Close / reopen ─────────────────────────────────────────────────────
+    // "Close" hides the main toggle and panel but leaves a small on-brand
+    // button so the visitor can always get back in during this tab's
+    // session -- closing should never be a dead end with no way back.
+    const restoreBtn = root.querySelector('.evb-asst-restore');
+
     function closeWidget() {
       root.classList.add('evb-asst-root--closed');
       sessionStorage.setItem(HIDE_KEY, '1');
+    }
+    function reopenWidget() {
+      root.classList.remove('evb-asst-root--closed');
+      sessionStorage.removeItem(HIDE_KEY);
     }
     if (sessionStorage.getItem(HIDE_KEY)) closeWidget();
 
@@ -871,6 +885,13 @@
     let suppressNextClick = false;
     const toggleDrag = makeDraggable(root.querySelector('.evb-asst-toggle'));
     makeDraggable(root.querySelector('.evb-asst-head'));
+    const restoreDrag = makeDraggable(restoreBtn);
+
+    restoreBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (suppressNextClick || restoreDrag.wasDragged()) return;
+      reopenWidget();
+    });
 
     window.addEventListener('resize', keepInViewport);
 
