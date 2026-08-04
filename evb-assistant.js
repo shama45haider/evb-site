@@ -805,6 +805,13 @@
 
       function onPointerDown(e) {
         if (e.button !== undefined && e.button !== 0 && e.pointerType === 'mouse') return;
+        // Never start a drag from an interactive child of the handle (e.g. the
+        // close button inside the panel header). setPointerCapture() below would
+        // retarget the click to the handle and the button would never fire.
+        // The handle itself may be a button (the toggle), so only bail when the
+        // interactive element is a descendant, not the handle.
+        const interactive = e.target.closest && e.target.closest('button, a, input, textarea, select');
+        if (interactive && interactive !== handleEl) return;
         dragging = true;
         moved = false;
         pointerId = e.pointerId;
