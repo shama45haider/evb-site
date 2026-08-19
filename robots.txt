@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /panel/
 Disallow: /manage-blogs-admin/
 
 Sitemap: https://eastvillagebuyers.com/sitemap.xml
