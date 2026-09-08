@@ -270,94 +270,201 @@ body.evb-store-page {
   background: var(--evb-orange-soft); padding: 3px 8px; border-radius: 20px;
 }
 
-/* ---------- Toolbar / filters -------------------------------------------- */
+/* ---------- Shop layout: filter rail + results ---------------------------
+   Marketplace structure — a persistent facet rail on desktop, a slide-in
+   panel on mobile. Colour is held back here so the product photos carry the
+   page; orange returns for actions and active states only.
+-------------------------------------------------------------------------- */
 
-.evb-toolbar {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  padding: 16px; margin-bottom: 20px;
-  background: #fff; border: 1px solid var(--evb-line); border-radius: var(--evb-radius);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+.evb-shop { display: grid; grid-template-columns: 228px 1fr; gap: 34px; align-items: start; }
+@media (max-width: 900px) { .evb-shop { grid-template-columns: 1fr; gap: 0; } }
+
+.evb-filters {
+  position: sticky;
+  top: calc(var(--evb-navh, 0px) + var(--evb-storebar-h, 0px) + 20px);
+  max-height: calc(100vh - var(--evb-navh, 0px) - var(--evb-storebar-h, 0px) - 40px);
+  overflow-y: auto; padding-right: 4px;
 }
-.evb-search { position: relative; flex: 1 1 260px; min-width: 200px; }
-.evb-search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--evb-faint); pointer-events: none; }
-.evb-search input {
-  width: 100%; padding: 13px 14px 13px 40px; font-family: 'Montserrat', sans-serif;
-  font-size: 14px; font-weight: 500; color: var(--evb-ink);
-  border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm); background: var(--evb-cream);
+.evb-filters-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.evb-filters-title { font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--evb-ink); margin: 0; flex: 1; }
+.evb-filters-clear {
+  background: none; border: none; padding: 0; cursor: pointer; font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px; font-weight: 700; color: var(--evb-orange);
+  text-decoration: underline; text-underline-offset: 3px;
 }
-.evb-search input:focus { outline: none; border-color: var(--evb-orange); background: #fff; box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
-.evb-select {
+.evb-filters-clear:hover { color: var(--evb-orange-dark); }
+.evb-filters-close { display: none; }
+
+.evb-fgroup { padding: 16px 0; border-top: 1px solid var(--evb-line-soft); }
+.evb-fgroup:first-of-type { border-top: none; padding-top: 0; }
+.evb-fgroup-title { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--evb-muted); margin: 0 0 10px; }
+.evb-fopts { display: grid; gap: 2px; }
+.evb-fopts--scroll { max-height: 232px; overflow-y: auto; padding-right: 4px; }
+.evb-fopts--scroll::-webkit-scrollbar { width: 5px; }
+.evb-fopts--scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+.evb-fopt {
+  display: flex; align-items: center; gap: 9px; cursor: pointer;
+  padding: 6px 8px; margin: 0 -8px; border-radius: 6px;
+  font-size: 12.5px; font-weight: 500; color: var(--evb-body);
+  transition: background 0.14s, color 0.14s;
+}
+.evb-fopt:hover { background: #f4f1ec; color: var(--evb-ink); }
+.evb-fopt input { margin: 0; accent-color: var(--evb-orange); width: 15px; height: 15px; flex-shrink: 0; }
+.evb-fopt-label { flex: 1; min-width: 0; }
+.evb-fopt-count { font-size: 11px; color: var(--evb-faint); font-weight: 500; font-variant-numeric: tabular-nums; }
+.evb-fopt.is-empty { opacity: 0.4; cursor: not-allowed; }
+.evb-fopt.is-empty:hover { background: none; }
+/* A checked facet reads as selected without shouting. */
+.evb-fopt:has(input:checked) { color: var(--evb-ink); font-weight: 700; }
+
+/* ---- results column ---- */
+
+.evb-results { min-width: 0; }
+.evb-results-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.evb-results-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; min-height: 20px; }
+
+.evb-filters-toggle {
+  display: none; align-items: center; gap: 7px; flex-shrink: 0;
   font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800;
-  letter-spacing: 0.04em; text-transform: uppercase; color: var(--evb-ink);
-  padding: 13px 34px 13px 14px; min-height: 48px;
-  border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm); background-color: #fff; cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--evb-ink);
+  background: #fff; border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm);
+  padding: 0 16px; min-height: 46px; cursor: pointer;
+}
+.evb-filters-toggle svg { width: 16px; height: 16px; }
+.evb-filters-toggle span {
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 20px;
+  background: var(--evb-orange); color: #fff; font-size: 10px; font-weight: 800; line-height: 18px;
+}
+@media (max-width: 900px) { .evb-filters-toggle { display: inline-flex; } }
+
+/* Search + sort controls in the results bar. */
+.evb-search { position: relative; flex: 1; min-width: 0; }
+.evb-search svg {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; color: var(--evb-faint); pointer-events: none;
+}
+.evb-search input {
+  width: 100%; padding: 0 14px 0 40px; min-height: 46px;
+  font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 500; color: var(--evb-ink);
+  border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm); background: #fff;
+  transition: border-color 0.16s, box-shadow 0.16s;
+}
+.evb-search input:focus { outline: none; border-color: var(--evb-orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.1); }
+.evb-search input::placeholder { color: var(--evb-faint); }
+
+.evb-select {
+  flex-shrink: 0;
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; color: var(--evb-ink);
+  padding: 0 34px 0 14px; min-height: 46px;
+  border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm);
+  background-color: #fff; cursor: pointer; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
 }
 .evb-select:focus { outline: none; border-color: var(--evb-orange); }
-.evb-toolbar-count { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--evb-muted); white-space: nowrap; }
+@media (max-width: 620px) { .evb-select { max-width: 132px; } }
 
-.evb-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.evb-chip {
-  font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800;
-  letter-spacing: 0.06em; text-transform: uppercase; color: var(--evb-body);
-  padding: 9px 15px; border-radius: 20px; cursor: pointer;
-  background: #fff; border: 1.5px solid var(--evb-line);
-  transition: border-color 0.16s, background 0.16s, color 0.16s, transform 0.16s;
-}
-.evb-chip:hover { border-color: var(--evb-orange); color: var(--evb-orange-dark); transform: translateY(-1px); }
-.evb-chip.is-active {
-  background: var(--evb-orange); border-color: var(--evb-orange); color: #fff;
-  box-shadow: 0 3px 0 var(--evb-orange-deep);
+/* Below this the three controls crush the search field, so it takes its own row. */
+@media (max-width: 620px) {
+  .evb-results-bar { flex-wrap: wrap; }
+  .evb-search { flex: 1 1 100%; order: -1; }
+  .evb-filters-toggle { flex: 1; justify-content: center; }
+  .evb-select { flex: 1; max-width: none; }
 }
 
-/* ---------- Product grid + card ------------------------------------------ */
+.evb-toolbar-count { font-size: 11.5px; font-weight: 600; color: var(--evb-muted); white-space: nowrap; }
 
-.evb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-@media (max-width: 1080px) { .evb-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 780px)  { .evb-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
-@media (max-width: 400px)  { .evb-grid { grid-template-columns: 1fr; } }
+.evb-active { display: flex; flex-wrap: wrap; gap: 6px; }
+.evb-activepill {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; color: var(--evb-ink);
+  background: #fff; border: 1px solid var(--evb-line); border-radius: 20px; padding: 5px 11px;
+  transition: border-color 0.14s, color 0.14s;
+}
+.evb-activepill span { font-size: 14px; line-height: 1; color: var(--evb-faint); }
+.evb-activepill:hover { border-color: var(--evb-orange); color: var(--evb-orange-dark); }
+.evb-activepill:hover span { color: var(--evb-orange); }
+
+.evb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- mobile: rail becomes a slide-in panel ---- */
+
+.evb-filters-scrim {
+  position: fixed; inset: 0; z-index: 9996; background: rgba(0,0,0,0.4);
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s;
+}
+@media (max-width: 900px) {
+  .evb-filters {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 9997;
+    width: min(310px, 86vw); max-height: none; background: #fff;
+    padding: 20px calc(20px + env(safe-area-inset-left, 0px)) 30px 20px;
+    transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+    box-shadow: 8px 0 40px rgba(0,0,0,0.18);
+  }
+  .evb-filters.is-open { transform: translateX(0); }
+  .evb-filters-scrim.is-open { opacity: 1; visibility: visible; }
+  .evb-filters-close {
+    display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0;
+    border: 1px solid var(--evb-line); border-radius: 8px; background: #fff;
+    font-size: 20px; line-height: 1; color: var(--evb-body); cursor: pointer;
+  }
+}
+@media (prefers-reduced-motion: reduce) { .evb-filters { transition: none; } }
+
+/* ---------- Product grid + card ------------------------------------------
+   Flat and dense. One badge at most, quiet type, price carrying a microlabel
+   the way a marketplace labels an ask.
+-------------------------------------------------------------------------- */
+
+.evb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(206px, 1fr)); gap: 16px; }
+@media (max-width: 520px) { .evb-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
 
 .evb-card {
   display: flex; flex-direction: column; overflow: hidden;
-  background: #fff; border: 1.5px solid var(--evb-orange-line); border-radius: var(--evb-radius);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  background: #fff; border: 1px solid #ececec; border-radius: 8px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.evb-card:hover { transform: translateY(-4px); border-color: var(--evb-orange); box-shadow: 0 12px 30px rgba(249,115,22,0.18); }
-.evb-card.is-out { opacity: 0.6; }
-.evb-card.is-out:hover { transform: none; }
+.evb-card:hover { border-color: #d6d2cb; box-shadow: 0 6px 20px rgba(0,0,0,0.07); }
+.evb-card.is-out { opacity: 0.55; }
+.evb-card.is-out:hover { box-shadow: none; border-color: #ececec; }
+
 .evb-card-media {
   position: relative; display: block; aspect-ratio: 1 / 1; overflow: hidden;
-  background: var(--evb-cream); padding: 16px;
-  border-bottom: 1px solid var(--evb-line-soft);
+  background: #fafafa; padding: 13%;
 }
-.evb-card-media img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.35s ease; }
-.evb-card:hover .evb-card-media img { transform: scale(1.05); }
-.evb-card-badges { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; flex-direction: column; gap: 5px; align-items: flex-start; }
+.evb-card-media img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform 0.3s ease; }
+.evb-card:hover .evb-card-media img { transform: scale(1.04); }
+.evb-card-badges { position: absolute; top: 10px; left: 10px; z-index: 2; }
 .evb-badge {
-  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 20px; color: #fff; background: var(--evb-orange); line-height: 1.4;
+  font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 8px; border-radius: 4px; background: var(--evb-ink); color: #fff; line-height: 1.4;
 }
 .evb-badge--save { background: var(--evb-orange); }
-.evb-badge--out  { background: #888; }
+.evb-badge--out  { background: #fff; color: var(--evb-muted); border: 1px solid #ddd; }
+.evb-badge--last { background: #fff; color: var(--evb-ink); border: 1px solid #ddd; }
 .evb-badge--ds   { background: var(--evb-ink); }
-.evb-badge--last { background: var(--evb-red); }
 
-.evb-card-body { padding: 15px 16px 17px; display: flex; flex-direction: column; flex: 1; }
-.evb-card-brand { font-size: 9.5px; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; color: var(--evb-orange); margin: 0 0 7px; }
-.evb-card-title { font-size: 13.5px; font-weight: 700; line-height: 1.4; margin: 0 0 8px; }
-.evb-card-title a { color: var(--evb-ink); text-decoration: none; }
-.evb-card-title a:hover { color: var(--evb-orange-dark); }
-.evb-card-cond { font-size: 11px; color: var(--evb-muted); margin: 0 0 12px; font-weight: 600; }
-.evb-card-foot {
-  margin-top: auto; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-  padding-top: 11px; border-top: 1.5px solid rgba(249,115,22,0.25);
+.evb-card-body {
+  padding: 14px 14px 16px; display: flex; flex-direction: column; flex: 1;
+  text-decoration: none; color: inherit;
 }
-.evb-card-price { font-size: 17px; font-weight: 900; color: var(--evb-ink); letter-spacing: -0.02em; }
-.evb-card-compare { font-size: 12px; color: var(--evb-faint); text-decoration: line-through; font-weight: 600; }
+.evb-card-brand { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--evb-faint); margin: 0 0 6px; }
+.evb-card-title {
+  font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--evb-ink); margin: 0 0 14px;
+  /* Two lines keeps every card in a row the same height. */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: 2.9em;
+}
+.evb-card:hover .evb-card-title { color: var(--evb-orange-dark); }
+.evb-card-foot { margin-top: auto; }
+.evb-card-label { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--evb-faint); margin: 0 0 4px; }
+.evb-card-pricerow { display: flex; align-items: baseline; gap: 7px; margin: 0; flex-wrap: wrap; }
+.evb-card-price { font-size: 16px; font-weight: 800; color: var(--evb-ink); letter-spacing: -0.01em; }
+.evb-card-compare { font-size: 12px; color: #bbb; text-decoration: line-through; font-weight: 500; }
+.evb-card-sizes { font-size: 11px; color: var(--evb-faint); margin: 9px 0 0; font-weight: 500; }
 
 /* ---------- Empty / loading states --------------------------------------- */
 
@@ -439,20 +546,23 @@ body.evb-store-page {
   color: var(--evb-ink); margin-bottom: 10px;
 }
 .evb-field-label .hint { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--evb-muted); }
-.evb-variants { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Sizes as a grid, the way a sneaker marketplace shows a size run: every
+   option the same width, sold-out ones visible but struck through. */
+.evb-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
 .evb-variant {
-  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800;
-  letter-spacing: 0.04em; color: var(--evb-ink);
-  min-width: 60px; padding: 12px 16px; cursor: pointer;
-  background: #fff; border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm);
-  transition: border-color 0.16s, background 0.16s, color 0.16s, transform 0.16s, box-shadow 0.16s;
+  font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 600;
+  color: var(--evb-ink); text-align: center;
+  padding: 13px 8px; cursor: pointer;
+  background: #fff; border: 1.5px solid #e2e2e2; border-radius: 8px;
+  transition: border-color 0.16s, color 0.16s, background 0.16s;
 }
-.evb-variant:hover:not(:disabled) { border-color: var(--evb-orange); color: var(--evb-orange-dark); transform: translateY(-2px); }
-.evb-variant.is-active {
-  background: var(--evb-orange); border-color: var(--evb-orange); color: #fff;
-  box-shadow: 0 3px 0 var(--evb-orange-deep);
+.evb-variant:hover:not(:disabled) { border-color: var(--evb-ink); }
+.evb-variant.is-active { border-color: var(--evb-ink); background: var(--evb-ink); color: #fff; font-weight: 700; }
+.evb-variant:disabled {
+  color: #c4c4c4; cursor: not-allowed; background: #fafafa; border-color: #eee;
+  text-decoration: line-through;
 }
-.evb-variant:disabled { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+@media (max-width: 420px) { .evb-variants { grid-template-columns: repeat(3, 1fr); } }
 
 .evb-qty { display: inline-flex; align-items: center; border: 1.5px solid var(--evb-line); border-radius: var(--evb-radius-sm); background: #fff; overflow: hidden; }
 .evb-qty-btn {

@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.1.1">
+<link rel="stylesheet" href="/store/store.css?v=1.2.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -219,32 +219,71 @@
       <div>
         <p class="evb-eyebrow">The floor</p>
         <h2 class="evb-h2">Everything in stock</h2>
-        <p class="evb-sub">Most of what we carry is one-of-one. When it sells, it is gone.</p>
       </div>
     </div>
 
-    <div class="evb-toolbar">
-      <label class="evb-search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="search" id="q" placeholder="Search brand, model or category…" aria-label="Search products" autocomplete="off">
-      </label>
-      <select class="evb-select" id="sort" aria-label="Sort products">
-        <option value="featured">Sort: Featured</option>
-        <option value="price-asc">Price: Low to high</option>
-        <option value="price-desc">Price: High to low</option>
-        <option value="name">Name: A–Z</option>
-        <option value="brand">Brand: A–Z</option>
-      </select>
-      <select class="evb-select" id="brand" aria-label="Filter by brand"><option value="">All brands</option></select>
-      <span class="evb-toolbar-count" id="resultCount"></span>
-    </div>
+    <div class="evb-shop">
 
-    <div class="evb-chips" id="catChips"></div>
+      <!-- Filter rail. Collapses behind a button below 900px. -->
+      <aside class="evb-filters" id="filterRail" aria-label="Filter products">
+        <div class="evb-filters-head">
+          <p class="evb-filters-title">Filters</p>
+          <button type="button" class="evb-filters-clear" id="clearFilters" hidden>Clear all</button>
+          <button type="button" class="evb-filters-close" id="closeFilters" aria-label="Close filters">&times;</button>
+        </div>
 
-    <div id="gridHost">
-      <div class="evb-skeleton-grid" id="skeleton">
-        <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
-        <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Category</p>
+          <div class="evb-fopts" id="fCategory"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Condition</p>
+          <div class="evb-fopts" id="fCondition"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Price</p>
+          <div class="evb-fopts" id="fPrice"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Brand</p>
+          <div class="evb-fopts evb-fopts--scroll" id="fBrand"></div>
+        </div>
+      </aside>
+      <div class="evb-filters-scrim" id="filterScrim"></div>
+
+      <div class="evb-results">
+        <div class="evb-results-bar">
+          <label class="evb-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="q" placeholder="Search brand, model or category&hellip;" aria-label="Search products" autocomplete="off">
+          </label>
+          <button type="button" class="evb-filters-toggle" id="openFilters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            Filters<span id="filterBadge" hidden></span>
+          </button>
+          <select class="evb-select" id="sort" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to high</option>
+            <option value="price-desc">Price: High to low</option>
+            <option value="name">Name: A&ndash;Z</option>
+            <option value="brand">Brand: A&ndash;Z</option>
+          </select>
+        </div>
+
+        <div class="evb-results-meta">
+          <span class="evb-toolbar-count" id="resultCount"></span>
+          <div class="evb-active" id="activeFilters"></div>
+        </div>
+
+        <div id="gridHost">
+          <div class="evb-skeleton-grid" id="skeleton">
+            <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
+            <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -358,95 +397,177 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.1.1"></script>
-<script src="/store/store-catalog.js?v=1.1.1"></script>
-<script src="/store/store-core.js?v=1.1.1"></script>
+<script src="/store/store-config.js?v=1.2.0"></script>
+<script src="/store/store-catalog.js?v=1.2.0"></script>
+<script src="/store/store-core.js?v=1.2.0"></script>
 <script>
 (function () {
   'use strict';
   var S = window.EVB_STORE, C = window.EVB_CATALOG;
 
+  var el = function (id) { return document.getElementById(id); };
   var els = {
-    catTiles: document.getElementById('catTiles'),
-    catChips: document.getElementById('catChips'),
-    barCats: document.getElementById('storeBarCats'),
-    grid: document.getElementById('gridHost'),
-    featured: document.getElementById('featuredGrid'),
-    featuredSection: document.getElementById('featuredSection'),
-    q: document.getElementById('q'),
-    sort: document.getElementById('sort'),
-    brand: document.getElementById('brand'),
-    count: document.getElementById('resultCount')
+    catTiles: el('catTiles'), barCats: el('storeBarCats'),
+    grid: el('gridHost'), featured: el('featuredGrid'), featuredSection: el('featuredSection'),
+    q: el('q'), sort: el('sort'), count: el('resultCount'), active: el('activeFilters'),
+    fCategory: el('fCategory'), fCondition: el('fCondition'), fPrice: el('fPrice'), fBrand: el('fBrand'),
+    rail: el('filterRail'), scrim: el('filterScrim'),
+    clear: el('clearFilters'), badge: el('filterBadge')
   };
 
-  // Filter state lives in the URL, so category and search links are shareable
-  // and the back button behaves.
-  var state = { cat: 'all', q: '', sort: 'featured', brand: '' };
+  var CONDITIONS = [
+    { id: 'new',      label: 'Deadstock / Sealed' },
+    { id: 'preowned', label: 'Pre-owned' },
+    { id: 'bullion',  label: 'Bullion' }
+  ];
+
+  // Buckets rather than a slider: faster to hit on mobile, and the inventory
+  // spans $65 to $29,000, so a linear slider would be useless.
+  var PRICES = [
+    { id: 'u250',   label: 'Under $250',       min: 0,      max: 25000 },
+    { id: '250-1k', label: '$250 to $1,000',   min: 25000,  max: 100000 },
+    { id: '1k-5k',  label: '$1,000 to $5,000', min: 100000, max: 500000 },
+    { id: 'o5k',    label: '$5,000+',          min: 500000, max: Infinity }
+  ];
+
+  // Multi-select facets are arrays; category, query and sort are scalars.
+  var state = { cat: 'all', q: '', sort: 'featured', brands: [], conds: [], prices: [] };
+
+  /* ---- URL <-> state ---- */
 
   function readUrl() {
     var p = new URLSearchParams(location.search);
     state.cat = p.get('c') || 'all';
     state.q = p.get('q') || '';
     state.sort = p.get('sort') || 'featured';
-    state.brand = p.get('brand') || '';
+    state.brands = (p.get('brand') || '').split(',').filter(Boolean);
+    state.conds = (p.get('cond') || '').split(',').filter(Boolean);
+    state.prices = (p.get('price') || '').split(',').filter(Boolean);
   }
 
   function writeUrl(push) {
     var p = new URLSearchParams();
     if (state.cat && state.cat !== 'all') p.set('c', state.cat);
     if (state.q) p.set('q', state.q);
-    if (state.sort && state.sort !== 'featured') p.set('sort', state.sort);
-    if (state.brand) p.set('brand', state.brand);
+    if (state.sort !== 'featured') p.set('sort', state.sort);
+    if (state.brands.length) p.set('brand', state.brands.join(','));
+    if (state.conds.length) p.set('cond', state.conds.join(','));
+    if (state.prices.length) p.set('price', state.prices.join(','));
     var qs = p.toString();
     var url = location.pathname + (qs ? '?' + qs : '') + '#shop';
-    if (push) history.pushState(state, '', url);
-    else history.replaceState(state, '', url);
+    if (push) history.pushState(null, '', url); else history.replaceState(null, '', url);
   }
 
-  function counts() {
+  function toggle(list, value) {
+    var i = list.indexOf(value);
+    if (i === -1) list.push(value); else list.splice(i, 1);
+    return list;
+  }
+
+  function activeCount() {
+    return state.brands.length + state.conds.length + state.prices.length +
+      (state.cat !== 'all' ? 1 : 0) + (state.q ? 1 : 0);
+  }
+
+  /* ---- filtering ---- */
+
+  // Applies every facet except `skip`, so each facet can be counted against
+  // the others the way a marketplace shows availability per option.
+  function filtered(skip) {
+    var list = state.q ? C.search(state.q) : C.products.slice();
+    if (skip !== 'cat' && state.cat !== 'all') {
+      list = list.filter(function (p) { return p.category === state.cat; });
+    }
+    if (skip !== 'brand' && state.brands.length) {
+      list = list.filter(function (p) { return state.brands.indexOf(p.brand) !== -1; });
+    }
+    if (skip !== 'cond' && state.conds.length) {
+      list = list.filter(function (p) { return state.conds.indexOf(S.conditionGroup(p.condition)) !== -1; });
+    }
+    if (skip !== 'price' && state.prices.length) {
+      list = list.filter(function (p) {
+        return state.prices.some(function (id) {
+          var b = PRICES.filter(function (x) { return x.id === id; })[0];
+          return b && p.price >= b.min && p.price < b.max;
+        });
+      });
+    }
+    return list;
+  }
+
+  function countBy(list, fn) {
     var m = {};
-    C.products.forEach(function (p) { m[p.category] = (m[p.category] || 0) + 1; });
+    list.forEach(function (p) { var k = fn(p); if (k != null) m[k] = (m[k] || 0) + 1; });
     return m;
   }
 
-  function renderCategories() {
-    var n = counts();
-    els.catTiles.innerHTML = C.categories.map(function (c) {
-      return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
-        '<span class="evb-cat-count">' + (n[c.id] || 0) + '</span>' +
-        '<p class="evb-cat-name">' + S.esc(c.label) + '</p>' +
-        '<p class="evb-cat-blurb">' + S.esc(c.blurb) + '</p>' +
-      '</a>';
+  /* ---- rendering ---- */
+
+  function opt(kind, value, label, count, checked, type) {
+    return '<label class="evb-fopt' + (count ? '' : ' is-empty') + '">' +
+      '<input type="' + (type || 'checkbox') + '" name="f-' + kind + '" value="' + S.attr(value) + '"' +
+        (checked ? ' checked' : '') + (count ? '' : ' disabled') + '>' +
+      '<span class="evb-fopt-label">' + S.esc(label) + '</span>' +
+      '<span class="evb-fopt-count">' + count + '</span>' +
+    '</label>';
+  }
+
+  function renderFilters() {
+    var catList = filtered('cat');
+    var byCat = countBy(catList, function (p) { return p.category; });
+    els.fCategory.innerHTML =
+      opt('cat', 'all', 'All categories', catList.length, state.cat === 'all', 'radio') +
+      C.categories.map(function (c) {
+        return opt('cat', c.id, c.label, byCat[c.id] || 0, state.cat === c.id, 'radio');
+      }).join('');
+
+    var byCond = countBy(filtered('cond'), function (p) { return S.conditionGroup(p.condition); });
+    els.fCondition.innerHTML = CONDITIONS.map(function (c) {
+      return opt('cond', c.id, c.label, byCond[c.id] || 0, state.conds.indexOf(c.id) !== -1);
     }).join('');
 
-    els.barCats.innerHTML = ['<a class="evb-storebar-cat" href="?c=all#shop" data-cat="all">All</a>']
-      .concat(C.categories.map(function (c) {
-        return '<a class="evb-storebar-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' + S.esc(c.label) + '</a>';
-      })).join('');
+    var priceList = filtered('price');
+    els.fPrice.innerHTML = PRICES.map(function (b) {
+      var n = priceList.filter(function (p) { return p.price >= b.min && p.price < b.max; }).length;
+      return opt('price', b.id, b.label, n, state.prices.indexOf(b.id) !== -1);
+    }).join('');
 
-    els.catChips.innerHTML = ['<button type="button" class="evb-chip" data-chip="all">All</button>']
-      .concat(C.categories.map(function (c) {
-        return '<button type="button" class="evb-chip" data-chip="' + S.attr(c.id) + '">' + S.esc(c.label) + ' <span style="opacity:.55">' + (n[c.id] || 0) + '</span></button>';
-      })).join('');
+    var byBrand = countBy(filtered('brand'), function (p) { return p.brand; });
+    // Brands with stock in the current view float to the top.
+    els.fBrand.innerHTML = C.brands()
+      .sort(function (a, b) { return (byBrand[b] || 0) - (byBrand[a] || 0) || a.localeCompare(b); })
+      .map(function (b) { return opt('brand', b, b, byBrand[b] || 0, state.brands.indexOf(b) !== -1); })
+      .join('');
 
-    els.brand.innerHTML = '<option value="">All brands</option>' + C.brands().map(function (b) {
-      return '<option value="' + S.attr(b) + '">' + S.esc(b) + '</option>';
+    var n = activeCount();
+    els.clear.hidden = n === 0;
+    els.badge.hidden = n === 0;
+    els.badge.textContent = n;
+  }
+
+  function renderActive() {
+    var pills = [];
+    if (state.cat !== 'all') pills.push({ k: 'cat', v: state.cat, label: C.categoryLabel(state.cat) });
+    state.conds.forEach(function (id) {
+      var c = CONDITIONS.filter(function (x) { return x.id === id; })[0];
+      if (c) pills.push({ k: 'cond', v: id, label: c.label });
+    });
+    state.prices.forEach(function (id) {
+      var b = PRICES.filter(function (x) { return x.id === id; })[0];
+      if (b) pills.push({ k: 'price', v: id, label: b.label });
+    });
+    state.brands.forEach(function (b) { pills.push({ k: 'brand', v: b, label: b }); });
+    if (state.q) pills.push({ k: 'q', v: state.q, label: '“' + state.q + '”' });
+
+    els.active.innerHTML = pills.map(function (p) {
+      return '<button type="button" class="evb-activepill" data-k="' + S.attr(p.k) + '" data-v="' + S.attr(p.v) + '">' +
+        S.esc(p.label) + '<span aria-hidden="true">&times;</span></button>';
     }).join('');
   }
 
-  function renderFeatured() {
-    var f = C.products.filter(function (p) { return p.featured && p.stock > 0; }).slice(0, 8);
-    if (!f.length) return;
-    els.featuredSection.hidden = false;
-    els.featured.innerHTML = f.map(function (p) { return S.productCard(p, ''); }).join('');
-  }
+  function apply(push) {
+    var list = filtered();
 
-  function apply() {
-    var list = state.q ? C.search(state.q) : C.products.slice();
-    if (state.cat && state.cat !== 'all') list = list.filter(function (p) { return p.category === state.cat; });
-    if (state.brand) list = list.filter(function (p) { return p.brand === state.brand; });
-
-    // Sold-out items always sink to the bottom regardless of sort.
     var sorters = {
       'price-asc':  function (a, b) { return a.price - b.price; },
       'price-desc': function (a, b) { return b.price - a.price; },
@@ -455,82 +576,131 @@
       'featured':   function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.price - a.price; }
     };
     var cmp = sorters[state.sort] || sorters.featured;
+    // Sold items always sink, whatever the sort.
     list.sort(function (a, b) {
-      var ao = a.stock > 0 ? 0 : 1, bo = b.stock > 0 ? 0 : 1;
-      return ao - bo || cmp(a, b);
+      return (a.stock > 0 ? 0 : 1) - (b.stock > 0 ? 0 : 1) || cmp(a, b);
     });
 
-    els.count.textContent = list.length + (list.length === 1 ? ' item' : ' items');
+    els.count.textContent = list.length + (list.length === 1 ? ' result' : ' results');
 
-    if (!list.length) {
-      els.grid.innerHTML = '<div class="evb-empty">' +
-        '<p class="evb-empty-title">Nothing matches that yet</p>' +
-        '<p class="evb-empty-sub">Inventory turns over fast and everything is one-of-one. Text a photo of what you are after to 917-608-8939 and we will tell you if it is in the back.</p>' +
-        '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text 917-608-8939</a>' +
-      '</div>';
-    } else {
-      els.grid.innerHTML = '<div class="evb-grid">' + list.map(function (p) { return S.productCard(p, ''); }).join('') + '</div>';
-    }
+    els.grid.innerHTML = list.length
+      ? '<div class="evb-grid">' + list.map(function (p) { return S.productCard(p, '/'); }).join('') + '</div>'
+      : '<div class="evb-empty">' +
+          '<p class="evb-empty-title">No matches</p>' +
+          '<p class="evb-empty-sub">Inventory turns over fast and nearly everything is one-of-one. Text a photo of what you are after to 917-608-8939 and we will tell you if it is in the back.</p>' +
+          '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text 917-608-8939</a>' +
+        '</div>';
 
-    // Reflect state into every control.
     els.q.value = state.q;
     els.sort.value = state.sort;
-    els.brand.value = state.brand;
-    document.querySelectorAll('[data-chip]').forEach(function (b) {
-      b.classList.toggle('is-active', b.getAttribute('data-chip') === state.cat);
-    });
+    renderFilters();
+    renderActive();
+    writeUrl(push);
+
     document.querySelectorAll('.evb-storebar-cat').forEach(function (a) {
       a.classList.toggle('is-active', a.getAttribute('data-cat') === state.cat);
     });
   }
 
-  function change(patch, push) {
-    Object.keys(patch).forEach(function (k) { state[k] = patch[k]; });
-    writeUrl(push !== false);
-    apply();
+  function renderStatic() {
+    var counts = countBy(C.products, function (p) { return p.category; });
+
+    els.catTiles.innerHTML = C.categories.map(function (c) {
+      return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
+        '<span class="evb-cat-count">' + (counts[c.id] || 0) + '</span>' +
+        '<p class="evb-cat-name">' + S.esc(c.label) + '</p>' +
+        '<p class="evb-cat-blurb">' + S.esc(c.blurb) + '</p></a>';
+    }).join('');
+
+    els.barCats.innerHTML = '<a class="evb-storebar-cat" href="?c=all#shop" data-cat="all">All</a>' +
+      C.categories.map(function (c) {
+        return '<a class="evb-storebar-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
+          S.esc(c.label) + '</a>';
+      }).join('');
+
+    var feat = C.products.filter(function (p) { return p.featured && p.stock > 0; }).slice(0, 5);
+    if (feat.length) {
+      els.featuredSection.hidden = false;
+      els.featured.innerHTML = feat.map(function (p) { return S.productCard(p, '/'); }).join('');
+    }
   }
 
-  /* --- events --- */
+  /* ---- filter rail open/close (mobile only) ---- */
 
-  els.catChips.addEventListener('click', function (e) {
-    var b = e.target.closest('[data-chip]');
-    if (!b) return;
-    change({ cat: b.getAttribute('data-chip') });
-    document.getElementById('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function openRail() {
+    els.rail.classList.add('is-open');
+    els.scrim.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeRail() {
+    els.rail.classList.remove('is-open');
+    els.scrim.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  /* ---- events ---- */
+
+  els.rail.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t.name || t.name.indexOf('f-') !== 0) return;
+    var kind = t.name.slice(2);
+    if (kind === 'cat') state.cat = t.value;
+    else if (kind === 'cond') toggle(state.conds, t.value);
+    else if (kind === 'price') toggle(state.prices, t.value);
+    else if (kind === 'brand') toggle(state.brands, t.value);
+    apply(true);
   });
 
-  // Category links elsewhere on the page filter in place instead of reloading.
+  els.active.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-k]');
+    if (!b) return;
+    var k = b.getAttribute('data-k'), v = b.getAttribute('data-v');
+    if (k === 'cat') state.cat = 'all';
+    else if (k === 'q') state.q = '';
+    else if (k === 'cond') toggle(state.conds, v);
+    else if (k === 'price') toggle(state.prices, v);
+    else if (k === 'brand') toggle(state.brands, v);
+    apply(true);
+  });
+
+  els.clear.addEventListener('click', function () {
+    state.cat = 'all'; state.q = ''; state.brands = []; state.conds = []; state.prices = [];
+    apply(true);
+  });
+
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[data-cat]');
     if (!a) return;
     e.preventDefault();
-    change({ cat: a.getAttribute('data-cat') });
-    document.getElementById('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    state.cat = a.getAttribute('data-cat');
+    apply(true);
+    el('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   var qTimer = null;
   els.q.addEventListener('input', function () {
     clearTimeout(qTimer);
-    // Debounced, and replaces rather than pushes so typing does not flood history.
-    qTimer = setTimeout(function () { change({ q: els.q.value.trim() }, false); }, 180);
+    // Replace rather than push, so typing does not flood history.
+    qTimer = setTimeout(function () { state.q = els.q.value.trim(); apply(false); }, 180);
   });
-  els.sort.addEventListener('change', function () { change({ sort: els.sort.value }); });
-  els.brand.addEventListener('change', function () { change({ brand: els.brand.value }); });
+  els.sort.addEventListener('change', function () { state.sort = els.sort.value; apply(true); });
 
-  window.addEventListener('popstate', function () { readUrl(); apply(); });
+  el('openFilters').addEventListener('click', openRail);
+  el('closeFilters').addEventListener('click', closeRail);
+  els.scrim.addEventListener('click', closeRail);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeRail(); });
 
-  /* --- boot --- */
+  window.addEventListener('popstate', function () { readUrl(); apply(false); });
+
+  /* ---- boot ---- */
 
   S.mountCartUI('/');
   readUrl();
 
   C.load().then(function () {
-    renderCategories();
-    renderFeatured();
-    apply();
-    if (location.hash === '#shop') {
-      document.getElementById('shop').scrollIntoView({ block: 'start' });
-    }
+    renderStatic();
+    apply(false);
+    if (location.hash === '#shop') el('shop').scrollIntoView({ block: 'start' });
   });
 })();
 </script>

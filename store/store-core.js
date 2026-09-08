@@ -546,7 +546,27 @@
   /* Shared markup builders                                                */
   /* ===================================================================== */
 
-  /** Product card used on the storefront, search results and related rails. */
+  /**
+   * Condition collapsed to one short word, used as the price microlabel the
+   * way a marketplace labels an ask. "Pre-owned — Excellent" -> "Pre-owned".
+   */
+  function conditionShort(cond) {
+    if (!cond) return 'Price';
+    return String(cond).split('—')[0].trim();
+  }
+
+  /** Coarse condition bucket, for the storefront filter rail. */
+  function conditionGroup(cond) {
+    if (/deadstock|sealed/i.test(cond || '')) return 'new';
+    if (/bullion|numismatic/i.test(cond || '')) return 'bullion';
+    return 'preowned';
+  }
+
+  /**
+   * Product card used on the storefront, search results and related rails.
+   * Deliberately quiet: the photo carries the card, the type stays out of the
+   * way, and colour is reserved for a genuine sale or a sold-out state.
+   */
   function productCard(p, base) {
     base = base == null ? BASE : base;
     var out = p.stock <= 0;
@@ -554,31 +574,36 @@
     var save = (p.compareAt && p.compareAt > p.price)
       ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
 
-    var badges = '';
-    if (out) badges += '<span class="evb-badge evb-badge--out">Sold</span>';
-    else if (save >= 5) badges += '<span class="evb-badge evb-badge--save">' + save + '% off</span>';
-    else if (p.condition === 'Deadstock' || p.condition === 'Sealed') badges += '<span class="evb-badge evb-badge--ds">' + esc(p.condition) + '</span>';
-    if (!out && p.stock === 1) badges += '<span class="evb-badge evb-badge--last">Last one</span>';
+    // At most one badge. Stacked badges are what made this look busy.
+    var badge = '';
+    if (out) badge = '<span class="evb-badge evb-badge--out">Sold</span>';
+    else if (save >= 5) badge = '<span class="evb-badge evb-badge--save">' + save + '% off</span>';
+    else if (p.stock === 1) badge = '<span class="evb-badge evb-badge--last">Last one</span>';
 
-    var price = '<span class="evb-card-price">' + money(p.price) + '</span>';
-    if (p.minPrice !== p.maxPrice) {
-      price = '<span class="evb-card-price">' + money(p.minPrice) + ' – ' + money(p.maxPrice) + '</span>';
-    }
-    if (p.compareAt && p.compareAt > p.price) {
-      price += '<span class="evb-card-compare">' + money(p.compareAt) + '</span>';
-    }
+    var price = money(p.price);
+    if (p.minPrice !== p.maxPrice) price = money(p.minPrice) + '+';
+
+    var sizes = p.variantLabel && p.variants.length > 1
+      ? p.variants.filter(function (v) { return v.stock > 0; }).length + ' ' + p.variantLabel.toLowerCase() + 's'
+      : '';
 
     return '<article class="evb-card' + (out ? ' is-out' : '') + '">' +
       '<a class="evb-card-media" href="' + attr(href) + '">' +
-        (badges ? '<div class="evb-card-badges">' + badges + '</div>' : '') +
+        (badge ? '<div class="evb-card-badges">' + badge + '</div>' : '') +
         '<img src="' + attr(p.images[0]) + '" alt="' + attr(p.title) + '" loading="lazy" decoding="async">' +
       '</a>' +
-      '<div class="evb-card-body">' +
+      '<a class="evb-card-body" href="' + attr(href) + '">' +
         (p.brand ? '<p class="evb-card-brand">' + esc(p.brand) + '</p>' : '') +
-        '<h3 class="evb-card-title"><a href="' + attr(href) + '">' + esc(p.title) + '</a></h3>' +
-        (p.condition ? '<p class="evb-card-cond">' + esc(p.condition) + '</p>' : '') +
-        '<div class="evb-card-foot">' + price + '</div>' +
-      '</div>' +
+        '<h3 class="evb-card-title">' + esc(p.title) + '</h3>' +
+        '<div class="evb-card-foot">' +
+          '<p class="evb-card-label">' + esc(out ? 'Sold' : conditionShort(p.condition)) + '</p>' +
+          '<p class="evb-card-pricerow">' +
+            '<span class="evb-card-price">' + price + '</span>' +
+            (p.compareAt && p.compareAt > p.price ? '<span class="evb-card-compare">' + money(p.compareAt) + '</span>' : '') +
+          '</p>' +
+        '</div>' +
+        (sizes ? '<p class="evb-card-sizes">' + esc(sizes) + ' available</p>' : '') +
+      '</a>' +
     '</article>';
   }
 
@@ -600,6 +625,8 @@
     closeMiniCart: closeMini,
     syncCartUI: syncCartUI,
     productCard: productCard,
+    conditionShort: conditionShort,
+    conditionGroup: conditionGroup,
     syncStickyOffsets: syncStickyOffsets,
     newOrderId: newOrderId,
     idempotencyKey: idempotencyKey,
