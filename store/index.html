@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.5.0">
+<link rel="stylesheet" href="/store/store.css?v=1.6.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -157,49 +157,56 @@
 <!-- Hero -->
 <!-- Departments — the page opener now that the hero is gone, so it carries
      the h1, the shop's context, and the stock facts. -->
-<section class="evb-lead">
-  <div class="evb-wrap">
+<!-- Store header. States plainly what is sold, where it comes from, and how
+     to get it, with the live shop status alongside the storefront. -->
+<section class="evb-hero">
+  <div class="evb-wrap evb-hero-grid">
 
-    <div class="evb-lead-head">
-      <div class="evb-lead-intro">
-        <p class="evb-eyebrow">39 Avenue A &middot; New York</p>
-        <h1 class="evb-lead-title">Shop the floor</h1>
-        <p class="evb-lead-sub">Everything here came across our counter, got tested, weighed or legit-checked in front of the person selling it, and then went up. No consignment, no drop-shipping, no guesswork.</p>
+    <div class="evb-hero-main">
+      <p class="evb-eyebrow">East Village Buyers &middot; 39 Avenue A, NYC</p>
+      <h1 class="evb-hero-title">Shop authenticated gold, watches, sneakers &amp; streetwear</h1>
+      <p class="evb-hero-sub">Every item was bought over our counter and verified in-house before it was listed. Buy it online, then pick it up the same day at the shop or have it shipped insured.</p>
+
+      <ul class="evb-hero-facts">
+        <li><strong id="statItems">&mdash;</strong><span>items in stock</span></li>
+        <li><strong id="statCats">&mdash;</strong><span>departments</span></li>
+        <li><strong id="statPrice">&mdash;</strong><span>lowest price</span></li>
+        <li><strong>Free</strong><span>counter pickup</span></li>
+      </ul>
+
+      <div class="evb-hero-actions">
+        <a href="#shop" class="evb-btn evb-btn--primary">Browse everything</a>
+        <a href="#how" class="evb-btn evb-btn--ghost">How we authenticate</a>
       </div>
-
-      <dl class="evb-lead-facts">
-        <div class="evb-lead-fact">
-          <dt id="statItemsLabel">In stock now</dt>
-          <dd id="statItems" aria-labelledby="statItemsLabel">&mdash;</dd>
-        </div>
-        <div class="evb-lead-fact">
-          <dt id="statPriceLabel">Prices from</dt>
-          <dd id="statPrice" aria-labelledby="statPriceLabel">&mdash;</dd>
-        </div>
-        <div class="evb-lead-fact">
-          <dt>Counter pickup</dt>
-          <dd>Free</dd>
-        </div>
-      </dl>
     </div>
 
+    <aside class="evb-hero-card">
+      <img src="/evbstorefront.webp" alt="The East Village Buyers storefront at 39 Avenue A, New York"
+           width="1600" height="1125" class="evb-hero-card-img" fetchpriority="high" decoding="async">
+      <div class="evb-hero-card-body">
+        <p class="evb-hero-status" id="storeStatus">
+          <span class="evb-hero-status-dot" aria-hidden="true"></span>
+          <span id="storeStatusText">Checking store hours&hellip;</span>
+        </p>
+        <dl class="evb-hero-card-rows">
+          <div><dt>Address</dt><dd><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">39 Avenue A, New York, NY 10009</a></dd></div>
+          <div><dt>Hours</dt><dd>Sun&ndash;Fri from 12:30 PM &middot; Closed Saturdays</dd></div>
+          <div><dt>Questions</dt><dd><a href="sms:9176088939">Text 917-608-8939</a></dd></div>
+        </dl>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- Departments -->
+<section class="evb-depts">
+  <div class="evb-wrap">
+    <div class="evb-depts-head">
+      <h2 class="evb-depts-title">Shop by department</h2>
+      <a href="#shop" class="evb-link-more">See everything</a>
+    </div>
     <div class="evb-cats" id="catTiles"></div>
-
-    <ul class="evb-assurances">
-      <li>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
-        <div><p class="evb-assurance-label">Tested, not guessed</p><p class="evb-assurance-sub">XRF and acid for metals, movement timing for watches, stitch and stamp checks for the rest.</p></div>
-      </li>
-      <li>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-        <div><p class="evb-assurance-label">Pick up in person</p><p class="evb-assurance-sub">Order online, collect at the counter the same day during store hours. No shipping fee.</p></div>
-      </li>
-      <li>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
-        <div><p class="evb-assurance-label">14-day returns</p><p class="evb-assurance-sub">Original condition, no restocking fee. Spot-priced bullion is final sale.</p></div>
-      </li>
-    </ul>
-
   </div>
 </section>
 
@@ -403,9 +410,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.5.0"></script>
-<script src="/store/store-catalog.js?v=1.5.0"></script>
-<script src="/store/store-core.js?v=1.5.0"></script>
+<script src="/store/store-config.js?v=1.6.0"></script>
+<script src="/store/store-catalog.js?v=1.6.0"></script>
+<script src="/store/store-core.js?v=1.6.0"></script>
 <script>
 (function () {
   'use strict';
@@ -615,6 +622,9 @@
     // Headline stock facts, derived rather than hard-coded so they stay true
     // as inventory turns over.
     el('statItems').textContent = inStock.length;
+    el('statCats').textContent = C.categories.filter(function (c) {
+      return inStock.some(function (p) { return p.category === c.id; });
+    }).length;
     el('statPrice').textContent = inStock.length
       ? S.money(inStock.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity))
       : '—';
@@ -734,10 +744,76 @@
 
   window.addEventListener('popstate', function () { readUrl(); apply(false); });
 
+  /* ---- live shop status ----------------------------------------------
+     Computed in the shop's own timezone, so a visitor in another one is
+     told whether the counter is actually open, not whether it is open
+     where they are. Index 0 is Sunday; Saturday is closed.
+  --------------------------------------------------------------------- */
+
+  var HOURS = [
+    { open: 12.5, close: 18 },    // Sun
+    { open: 12.5, close: 18.5 },  // Mon
+    { open: 12.5, close: 18.5 },  // Tue
+    { open: 12.5, close: 18.5 },  // Wed
+    { open: 12.5, close: 18.5 },  // Thu
+    { open: 12.5, close: 18 },    // Fri
+    null                          // Sat — closed
+  ];
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  function clockLabel(h) {
+    var hh = Math.floor(h), mm = Math.round((h - hh) * 60);
+    var ampm = hh >= 12 ? 'PM' : 'AM';
+    var disp = hh % 12 === 0 ? 12 : hh % 12;
+    return disp + (mm ? ':' + String(mm).padStart(2, '0') : '') + ' ' + ampm;
+  }
+
+  function shopNow() {
+    // Re-read "now" as it is in New York, whatever the visitor's timezone.
+    try {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    } catch (e) {
+      return new Date();
+    }
+  }
+
+  function renderStatus() {
+    var now = shopNow();
+    var day = now.getDay();
+    var hour = now.getHours() + now.getMinutes() / 60;
+    var today = HOURS[day];
+    var elText = el('storeStatusText'), elWrap = el('storeStatus');
+    if (!elText) return;
+
+    if (today && hour >= today.open && hour < today.close) {
+      elWrap.classList.add('is-open');
+      elText.textContent = 'Open now · until ' + clockLabel(today.close);
+      return;
+    }
+
+    elWrap.classList.remove('is-open');
+    if (today && hour < today.open) {
+      elText.textContent = 'Closed · opens today at ' + clockLabel(today.open);
+      return;
+    }
+    // Find the next day that has hours.
+    for (var i = 1; i <= 7; i++) {
+      var d = (day + i) % 7;
+      if (HOURS[d]) {
+        elText.textContent = 'Closed · opens ' +
+          (i === 1 ? 'tomorrow' : DAYS[d]) + ' at ' + clockLabel(HOURS[d].open);
+        return;
+      }
+    }
+  }
+
   /* ---- boot ---- */
 
   S.mountCartUI('/');
   readUrl();
+  renderStatus();
+  // Keeps the badge honest if the page is left open across opening time.
+  setInterval(renderStatus, 60000);
 
   C.load().then(function () {
     renderStatic();
