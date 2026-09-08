@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.3.0">
+<link rel="stylesheet" href="/store/store.css?v=1.4.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -155,70 +155,51 @@
 </div>
 
 <!-- Hero -->
-<section class="evb-hero">
-  <!-- Faded logo behind the copy, same device the homepage hero uses. -->
-  <img src="/evblogo.webp" alt="" aria-hidden="true" class="evb-hero-watermark" decoding="async">
-
-  <div class="evb-wrap evb-hero-grid">
-    <div class="evb-hero-inner">
-      <p class="evb-hero-eyebrow">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
-        Authenticated in-house
-      </p>
-      <h1 class="evb-hero-title">The shop floor at <em>39 Avenue A</em>, online.</h1>
-      <p class="evb-hero-sub">Everything here came across our counter, got tested, weighed or legit-checked in front of the person selling it, and then went up. No consignment, no drop-shipping, no guesswork.</p>
-      <div class="evb-hero-actions">
-        <a href="#shop" class="evb-btn evb-btn--primary">Shop everything</a>
-        <a href="#how" class="evb-btn evb-btn--ghost">How authentication works</a>
-      </div>
-    </div>
-
-    <div class="evb-hero-visual">
-      <figure class="evb-hero-shot">
-        <img src="/evbstorefront.webp" alt="The East Village Buyers storefront at 39 Avenue A, New York" width="1600" height="1125" fetchpriority="high" decoding="async">
-        <figcaption class="evb-hero-plate">
-          <img src="/evblogo.webp" alt="" aria-hidden="true" class="evb-hero-plate-logo" width="500" height="500" decoding="async">
-          <span class="evb-hero-plate-copy">
-            <span class="evb-hero-plate-name">East Village Buyers</span>
-            <span class="evb-hero-plate-addr">39 Avenue A &middot; New York, NY 10009</span>
-          </span>
-        </figcaption>
-      </figure>
-      <p class="evb-hero-openline">
-        <span class="evb-hero-dot" aria-hidden="true"></span>
-        Same-day pickup at the counter &middot; Sun&ndash;Fri 12:30 PM
-      </p>
-    </div>
-  </div>
-
+<!-- Departments — the page opener now that the hero is gone, so it carries
+     the h1, the shop's context, and the stock facts. -->
+<section class="evb-lead">
   <div class="evb-wrap">
-    <div class="evb-hero-trust">
-      <div class="evb-hero-trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/></svg>
-        <div><p class="evb-hero-trust-label">Tested, not guessed</p><p class="evb-hero-trust-sub">XRF and acid for metals, movement timing for watches, stitch and stamp checks for the rest.</p></div>
-      </div>
-      <div class="evb-hero-trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-        <div><p class="evb-hero-trust-label">Pick up in person</p><p class="evb-hero-trust-sub">Order online, collect at the counter the same day during store hours. No shipping fee.</p></div>
-      </div>
-      <div class="evb-hero-trust-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
-        <div><p class="evb-hero-trust-label">14-day returns</p><p class="evb-hero-trust-sub">Original condition, no restocking fee. Spot-priced bullion is final sale.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Categories -->
-<section class="evb-section evb-section--tight">
-  <div class="evb-wrap">
-    <div class="evb-section-head">
-      <div>
-        <p class="evb-eyebrow">Departments</p>
-        <h2 class="evb-h2">Shop by category</h2>
+    <div class="evb-lead-head">
+      <div class="evb-lead-intro">
+        <p class="evb-eyebrow">39 Avenue A &middot; New York</p>
+        <h1 class="evb-lead-title">Shop the floor</h1>
+        <p class="evb-lead-sub">Everything here came across our counter, got tested, weighed or legit-checked in front of the person selling it, and then went up. No consignment, no drop-shipping, no guesswork.</p>
       </div>
+
+      <dl class="evb-lead-facts">
+        <div class="evb-lead-fact">
+          <dt id="statItemsLabel">In stock now</dt>
+          <dd id="statItems" aria-labelledby="statItemsLabel">&mdash;</dd>
+        </div>
+        <div class="evb-lead-fact">
+          <dt id="statPriceLabel">Prices from</dt>
+          <dd id="statPrice" aria-labelledby="statPriceLabel">&mdash;</dd>
+        </div>
+        <div class="evb-lead-fact">
+          <dt>Counter pickup</dt>
+          <dd>Free</dd>
+        </div>
+      </dl>
     </div>
+
     <div class="evb-cats" id="catTiles"></div>
+
+    <ul class="evb-assurances">
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        <div><p class="evb-assurance-label">Tested, not guessed</p><p class="evb-assurance-sub">XRF and acid for metals, movement timing for watches, stitch and stamp checks for the rest.</p></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        <div><p class="evb-assurance-label">Pick up in person</p><p class="evb-assurance-sub">Order online, collect at the counter the same day during store hours. No shipping fee.</p></div>
+      </li>
+      <li>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>
+        <div><p class="evb-assurance-label">14-day returns</p><p class="evb-assurance-sub">Original condition, no restocking fee. Spot-priced bullion is final sale.</p></div>
+      </li>
+    </ul>
+
   </div>
 </section>
 
@@ -324,22 +305,22 @@
         <p class="evb-sub">We buy for cash across the counter. That only works if we are right about what something is — so the same testing that protects us on the buy protects you on the sale.</p>
       </div>
     </div>
-    <div class="evb-cats">
-      <div class="evb-cat" style="cursor:default">
-        <p class="evb-cat-name">Metals</p>
-        <p class="evb-cat-blurb">XRF analyzer and acid testing on every piece. Gold and silver are weighed in front of you and priced against live spot.</p>
+    <div class="evb-notes">
+      <div class="evb-note">
+        <p class="evb-note-name">Metals</p>
+        <p class="evb-note-blurb">XRF analyzer and acid testing on every piece. Gold and silver are weighed in front of you and priced against live spot.</p>
       </div>
-      <div class="evb-cat" style="cursor:default">
-        <p class="evb-cat-name">Watches</p>
-        <p class="evb-cat-blurb">Movement timed on a machine, caseback opened where appropriate, serials and papers checked against reference data.</p>
+      <div class="evb-note">
+        <p class="evb-note-name">Watches</p>
+        <p class="evb-note-blurb">Movement timed on a machine, caseback opened where appropriate, serials and papers checked against reference data.</p>
       </div>
-      <div class="evb-cat" style="cursor:default">
-        <p class="evb-cat-name">Sneakers &amp; streetwear</p>
-        <p class="evb-cat-blurb">Stitch density, tagging, box labels and materials. The tells that fakes get wrong are the ones we look at first.</p>
+      <div class="evb-note">
+        <p class="evb-note-name">Sneakers &amp; streetwear</p>
+        <p class="evb-note-blurb">Stitch density, tagging, box labels and materials. The tells that fakes get wrong are the ones we look at first.</p>
       </div>
-      <div class="evb-cat" style="cursor:default">
-        <p class="evb-cat-name">Electronics</p>
-        <p class="evb-cat-blurb">Wiped to factory, Activation Lock removed, IMEI checked against the carrier blacklist before anything is listed.</p>
+      <div class="evb-note">
+        <p class="evb-note-name">Electronics</p>
+        <p class="evb-note-blurb">Wiped to factory, Activation Lock removed, IMEI checked against the carrier blacklist before anything is listed.</p>
       </div>
     </div>
   </div>
@@ -422,9 +403,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.3.0"></script>
-<script src="/store/store-catalog.js?v=1.3.0"></script>
-<script src="/store/store-core.js?v=1.3.0"></script>
+<script src="/store/store-config.js?v=1.4.0"></script>
+<script src="/store/store-catalog.js?v=1.4.0"></script>
+<script src="/store/store-core.js?v=1.4.0"></script>
 <script>
 (function () {
   'use strict';
@@ -629,12 +610,51 @@
 
   function renderStatic() {
     var counts = countBy(C.products, function (p) { return p.category; });
+    var inStock = C.products.filter(function (p) { return p.stock > 0; });
+
+    // Headline stock facts, derived rather than hard-coded so they stay true
+    // as inventory turns over.
+    el('statItems').textContent = inStock.length;
+    el('statPrice').textContent = inStock.length
+      ? S.money(inStock.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity))
+      : '—';
 
     els.catTiles.innerHTML = C.categories.map(function (c) {
+      var items = C.byCategory(c.id).filter(function (p) { return p.stock > 0; });
+      var n = counts[c.id] || 0;
+
+      // Lead with a featured piece if the category has one, else the priciest
+      // in stock — either way the tile shows something real from that shelf.
+      var lead = items.filter(function (p) { return p.featured; })[0] ||
+        items.slice().sort(function (a, b) { return b.price - a.price; })[0];
+
+      var from = items.length
+        ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
+
+      // Up to three brands actually on the shelf, longest-tail last.
+      var brands = [];
+      items.forEach(function (p) { if (p.brand && brands.indexOf(p.brand) === -1) brands.push(p.brand); });
+      brands = brands.slice(0, 3);
+
       return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
-        '<span class="evb-cat-count">' + (counts[c.id] || 0) + '</span>' +
-        '<p class="evb-cat-name">' + S.esc(c.label) + '</p>' +
-        '<p class="evb-cat-blurb">' + S.esc(c.blurb) + '</p></a>';
+        '<span class="evb-cat-media">' +
+          (lead ? '<img src="' + S.attr(lead.images[0]) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
+        '</span>' +
+        '<span class="evb-cat-body">' +
+          '<span class="evb-cat-head">' +
+            '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
+            '<span class="evb-cat-count">' + n + '</span>' +
+          '</span>' +
+          '<span class="evb-cat-blurb">' + S.esc(c.blurb) + '</span>' +
+          (brands.length ? '<span class="evb-cat-brands">' + brands.map(function (b) {
+            return '<span class="evb-cat-brand">' + S.esc(b) + '</span>';
+          }).join('') + '</span>' : '') +
+          '<span class="evb-cat-foot">' +
+            (from != null ? 'From <strong>' + S.money(from) + '</strong>' : 'Sold out') +
+            '<span class="evb-cat-go" aria-hidden="true">&rarr;</span>' +
+          '</span>' +
+        '</span>' +
+      '</a>';
     }).join('');
 
     els.barCats.innerHTML = '<a class="evb-storebar-cat" href="?c=all#shop" data-cat="all">All</a>' +
