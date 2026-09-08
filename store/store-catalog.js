@@ -35,12 +35,18 @@
 
   /* --- variant builders -------------------------------------------------- */
 
-  // sizes([['9', 1], ['9.5', 2]]) -> [{ id:'us9', label:'US 9', stock:1 }, ...]
-  function sizes(spec) {
+  // sizes([['9', 1], ['9.5', 2]]) -> [{ id:'9', label:'US 9', stock:1 }, ...]
+  // A bare number is a US sneaker size and gets the prefix. Anything carrying
+  // its own unit or region ('20 in', 'EU 41', 'Medium') is left alone, and
+  // callers can pass prefix '' where the field label already says it
+  // (ring sizes, bracelet sizes).
+  function sizes(spec, prefix) {
+    if (prefix == null) prefix = 'US ';
     return spec.map(function (s) {
+      var raw = String(s[0]);
       return {
-        id: String(s[0]).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-        label: /^\d/.test(String(s[0])) ? 'US ' + s[0] : String(s[0]),
+        id: raw.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        label: /^\d+(\.\d+)?$/.test(raw) ? prefix + raw : raw,
         price: null, stock: s[1], squareVariationId: null
       };
     });
@@ -338,7 +344,7 @@
       blurb: 'Signed, hallmarked and serial-checked.',
       description: 'A signed Cartier bracelet in yellow gold. Hallmarks and serial verified against Cartier reference data. Light surface marks consistent with wear.',
       details: ['Signed and hallmarked', 'Serial verified', 'Screwdriver included where applicable', 'Authenticated in-house'],
-      variantLabel: 'Size', variants: sizes([['16', 1], ['17', 1]]),
+      variantLabel: 'Size', variants: sizes([['16', 1], ['17', 1]], ''),
       taxable: true, featured: true, tags: ['designer', 'gold', 'cartier'], sku: 'JW-CAR-BRC', squareItemId: null
     },
     {
@@ -360,7 +366,7 @@
       blurb: 'Signed band with clean hallmarks.',
       description: 'A signed sterling ring with legible hallmarks inside the band. Light surface wear polished out. Sizing available on request.',
       details: ['Signed hallmarks, legible', 'Sterling silver', 'Free sizing on request', 'Authenticated in-house'],
-      variantLabel: 'Ring size', variants: sizes([['6', 1], ['7', 1], ['8', 1]]),
+      variantLabel: 'Ring size', variants: sizes([['6', 1], ['7', 1], ['8', 1]], ''),
       taxable: true, featured: false, tags: ['silver', 'designer', 'tiffany'], sku: 'JW-TIF-RNG', squareItemId: null
     },
     {
@@ -404,7 +410,7 @@
       blurb: 'Sterling cross band, correct stamps and weight.',
       description: 'A Chrome Hearts sterling cross ring checked against the correct stamps, font and weight. Patina in the recesses is original and intentional.',
       details: ['Correct Chrome Hearts stamps and font', 'Sterling silver, weight verified', 'Original patina retained', 'Authenticated in-house'],
-      variantLabel: 'Ring size', variants: sizes([['9', 1], ['10', 1], ['11', 1]]),
+      variantLabel: 'Ring size', variants: sizes([['9', 1], ['10', 1], ['11', 1]], ''),
       taxable: true, featured: true, tags: ['chrome hearts', 'silver'], sku: 'JW-CH-RNG', squareItemId: null
     },
     {
