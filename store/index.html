@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.4.0">
+<link rel="stylesheet" href="/store/store.css?v=1.5.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -214,7 +214,7 @@
       </div>
       <a href="#shop" class="evb-link-more">See all</a>
     </div>
-    <div class="evb-grid" id="featuredGrid"></div>
+    <div class="evb-grid evb-grid--rail" id="featuredGrid"></div>
   </div>
 </section>
 
@@ -403,9 +403,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.4.0"></script>
-<script src="/store/store-catalog.js?v=1.4.0"></script>
-<script src="/store/store-core.js?v=1.4.0"></script>
+<script src="/store/store-config.js?v=1.5.0"></script>
+<script src="/store/store-catalog.js?v=1.5.0"></script>
+<script src="/store/store-core.js?v=1.5.0"></script>
 <script>
 (function () {
   'use strict';
@@ -624,19 +624,20 @@
       var n = counts[c.id] || 0;
 
       // Lead with a featured piece if the category has one, else the priciest
-      // in stock — either way the tile shows something real from that shelf.
+      // in stock — either way the thumbnail is something real from that shelf.
       var lead = items.filter(function (p) { return p.featured; })[0] ||
         items.slice().sort(function (a, b) { return b.price - a.price; })[0];
 
       var from = items.length
         ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
 
-      // Up to three brands actually on the shelf, longest-tail last.
+      // Three brands actually on the shelf, as one quiet line.
       var brands = [];
       items.forEach(function (p) { if (p.brand && brands.indexOf(p.brand) === -1) brands.push(p.brand); });
-      brands = brands.slice(0, 3);
+      brands = brands.slice(0, 3).join(' · ');
 
-      return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
+      return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '"' +
+          ' title="' + S.attr(c.blurb) + '">' +
         '<span class="evb-cat-media">' +
           (lead ? '<img src="' + S.attr(lead.images[0]) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
         '</span>' +
@@ -645,13 +646,9 @@
             '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
             '<span class="evb-cat-count">' + n + '</span>' +
           '</span>' +
-          '<span class="evb-cat-blurb">' + S.esc(c.blurb) + '</span>' +
-          (brands.length ? '<span class="evb-cat-brands">' + brands.map(function (b) {
-            return '<span class="evb-cat-brand">' + S.esc(b) + '</span>';
-          }).join('') + '</span>' : '') +
+          (brands ? '<span class="evb-cat-brands">' + S.esc(brands) + '</span>' : '') +
           '<span class="evb-cat-foot">' +
             (from != null ? 'From <strong>' + S.money(from) + '</strong>' : 'Sold out') +
-            '<span class="evb-cat-go" aria-hidden="true">&rarr;</span>' +
           '</span>' +
         '</span>' +
       '</a>';

@@ -195,99 +195,123 @@ body.evb-store-page {
 .evb-link-more:hover { color: var(--evb-ink); border-bottom-color: var(--evb-ink); }
 
 /* ---------- Lead: departments ---------------------------------------------
-   Opens the page. Carries the h1, the shop's context, the live stock facts
-   and the department tiles, so the store introduces itself before the grid.
+   Opens the page, so it stays compact: the point is to get someone into a
+   department or down to the grid quickly, not to fill a screen. Tiles are
+   horizontal rows rather than tall image cards, which cuts the section from
+   roughly a full viewport to about a third of one.
 -------------------------------------------------------------------------- */
 
 .evb-lead {
   background: #fff;
   border-bottom: 3px solid var(--evb-orange);
-  padding: 38px 0 42px;
+  padding: 24px 0 26px;
 }
 
 .evb-lead-head {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 34px; flex-wrap: wrap; margin-bottom: 26px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 28px; flex-wrap: wrap; margin-bottom: 18px;
 }
-.evb-lead-intro { max-width: 640px; }
+.evb-lead-intro { max-width: 620px; }
 .evb-lead-title {
-  font-size: clamp(26px, 4.2vw, 38px); font-weight: 900; line-height: 1.1;
-  letter-spacing: -0.02em; text-transform: uppercase; color: var(--evb-ink); margin: 0 0 12px;
+  font-size: clamp(21px, 2.6vw, 27px); font-weight: 900; line-height: 1.15;
+  letter-spacing: -0.02em; text-transform: uppercase; color: var(--evb-ink); margin: 0 0 7px;
 }
-.evb-lead-sub { font-size: 15px; line-height: 1.7; color: var(--evb-body); margin: 0; font-weight: 500; }
+.evb-lead-sub { font-size: 13.5px; line-height: 1.6; color: var(--evb-body); margin: 0; font-weight: 500; }
 
-/* Stock facts. A definition list so the label/value pairing is real. */
-.evb-lead-facts { display: flex; gap: 10px; margin: 0; flex-wrap: wrap; }
+/* Stock facts, as a compact inline strip. */
+.evb-lead-facts { display: flex; gap: 8px; margin: 0; flex-wrap: wrap; }
 .evb-lead-fact {
-  min-width: 108px; padding: 12px 16px;
-  background: var(--evb-cream); border: 1px solid var(--evb-line); border-radius: 10px;
+  padding: 8px 14px; background: var(--evb-cream);
+  border: 1px solid var(--evb-line); border-radius: 8px; white-space: nowrap;
 }
 .evb-lead-fact dt {
-  font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--evb-muted); margin: 0 0 5px;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--evb-muted); margin: 0 0 2px;
 }
 .evb-lead-fact dd {
-  margin: 0; font-size: 19px; font-weight: 900; letter-spacing: -0.02em; color: var(--evb-ink);
+  margin: 0; font-size: 15px; font-weight: 900; letter-spacing: -0.02em; color: var(--evb-ink);
   font-variant-numeric: tabular-nums;
 }
 @media (max-width: 560px) {
   .evb-lead-facts { width: 100%; }
-  .evb-lead-fact { flex: 1; min-width: 0; padding: 10px 12px; }
-  .evb-lead-fact dd { font-size: 16px; }
+  .evb-lead-fact { flex: 1; min-width: 0; padding: 7px 10px; text-align: center; }
+  .evb-lead-fact dd { font-size: 13.5px; }
 }
 
-/* ---- department tiles ---- */
+/* ---- department tiles: horizontal rows ---- */
 
-.evb-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.evb-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 @media (max-width: 1000px) { .evb-cats { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 520px)  { .evb-cats { grid-template-columns: 1fr; } }
+
+/* On a phone, eight stacked rows push the grid off the bottom of the screen.
+   A swipe strip keeps every department reachable in one row. The tile width
+   leaves the next one part-visible, which is the affordance. */
+@media (max-width: 640px) {
+  .evb-cats {
+    display: flex; gap: 10px; overflow-x: auto;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+    margin: 0 -20px; padding: 2px 20px 6px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .evb-cats::-webkit-scrollbar { display: none; }
+  .evb-cat { flex: 0 0 216px; scroll-snap-align: start; }
+}
 
 .evb-cat {
-  display: flex; flex-direction: column; overflow: hidden;
-  background: #fff; border: 1px solid #ececec; border-radius: 10px;
-  text-decoration: none; color: inherit;
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  background: #fff; border: 1px solid #ececec; border-radius: 9px;
+  text-decoration: none; color: inherit; min-width: 0;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
-.evb-cat:hover { border-color: var(--evb-orange); box-shadow: 0 8px 24px rgba(249,115,22,0.14); transform: translateY(-3px); }
+.evb-cat:hover { border-color: var(--evb-orange); box-shadow: 0 4px 14px rgba(249,115,22,0.14); }
 
 .evb-cat-media {
-  display: block; position: relative; aspect-ratio: 16 / 9; overflow: hidden;
-  background: var(--evb-cream); border-bottom: 1px solid var(--evb-line-soft);
+  flex-shrink: 0; width: 54px; height: 54px; border-radius: 7px; overflow: hidden;
+  background: var(--evb-cream); border: 1px solid var(--evb-line-soft);
+  display: block; position: relative;
 }
 .evb-cat-media img {
-  width: 100%; height: 100%; object-fit: contain; display: block;
-  padding: 14px; transition: transform 0.3s ease;
+  width: 100%; height: 100%; object-fit: contain; display: block; padding: 5px;
+  transition: transform 0.25s ease;
 }
-.evb-cat:hover .evb-cat-media img { transform: scale(1.05); }
+.evb-cat:hover .evb-cat-media img { transform: scale(1.07); }
 
-.evb-cat-body { display: flex; flex-direction: column; flex: 1; padding: 14px 15px 15px; }
-.evb-cat-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 7px; }
+.evb-cat-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.evb-cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .evb-cat-name {
-  font-size: 14px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: -0.005em; color: var(--evb-ink); line-height: 1.2;
+  font-size: 12.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.01em;
+  color: var(--evb-ink); line-height: 1.2;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .evb-cat-count {
-  flex-shrink: 0; font-size: 10px; font-weight: 800; color: var(--evb-orange);
-  background: var(--evb-orange-soft); padding: 3px 8px; border-radius: 20px;
+  flex-shrink: 0; font-size: 9.5px; font-weight: 800; color: var(--evb-orange);
+  background: var(--evb-orange-soft); padding: 2px 7px; border-radius: 20px;
   font-variant-numeric: tabular-nums;
 }
-.evb-cat-blurb { font-size: 12px; color: var(--evb-body); line-height: 1.55; font-weight: 500; margin-bottom: 11px; }
-
-.evb-cat-brands { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
-.evb-cat-brand {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--evb-muted); background: var(--evb-cream);
-  border: 1px solid var(--evb-line-soft); border-radius: 5px; padding: 3px 7px; white-space: nowrap;
+.evb-cat-brands {
+  font-size: 10.5px; color: var(--evb-faint); font-weight: 500; line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
+.evb-cat-foot { font-size: 11px; font-weight: 600; color: var(--evb-muted); line-height: 1.3; }
+.evb-cat-foot strong { font-size: 12.5px; font-weight: 900; color: var(--evb-ink); letter-spacing: -0.01em; }
 
-.evb-cat-foot {
-  margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  padding-top: 11px; border-top: 1px solid var(--evb-line-soft);
-  font-size: 11.5px; font-weight: 600; color: var(--evb-muted);
+/* ---- assurance strip ---- */
+
+.evb-assurances {
+  list-style: none; margin: 18px 0 0; padding: 16px 0 0;
+  border-top: 1px solid var(--evb-line-soft);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
 }
-.evb-cat-foot strong { font-size: 14px; font-weight: 900; color: var(--evb-ink); letter-spacing: -0.01em; }
-.evb-cat-go { font-size: 15px; color: var(--evb-orange); transition: transform 0.18s ease; }
-.evb-cat:hover .evb-cat-go { transform: translateX(3px); }
+@media (max-width: 760px) { .evb-assurances { grid-template-columns: 1fr; gap: 10px; } }
+.evb-assurances li { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.evb-assurances svg { width: 14px; height: 14px; color: var(--evb-orange); flex-shrink: 0; transform: translateY(2px); }
+.evb-assurance-label {
+  font-size: 11px; font-weight: 900; margin: 0; color: var(--evb-ink);
+  text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+}
+.evb-assurance-sub { font-size: 11.5px; color: var(--evb-muted); margin: 0; line-height: 1.5; font-weight: 500; }
+/* One line each: label, then the detail running on after it. */
+.evb-assurances li > div { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; min-width: 0; }
 
 /* ---- plain info tiles (the "how authentication works" band) ---------------
    Not links and not departments, so they get their own class rather than
@@ -474,6 +498,19 @@ body.evb-store-page {
 
 .evb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(206px, 1fr)); gap: 16px; }
 @media (max-width: 520px) { .evb-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+
+/* The featured rail scrolls sideways on a phone rather than stacking five
+   full-width cards between the departments and the actual grid. */
+@media (max-width: 640px) {
+  .evb-grid--rail {
+    display: flex; gap: 10px; overflow-x: auto;
+    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
+    margin: 0 -20px; padding: 2px 20px 6px;
+    scrollbar-width: none; -ms-overflow-style: none;
+  }
+  .evb-grid--rail::-webkit-scrollbar { display: none; }
+  .evb-grid--rail > .evb-card { flex: 0 0 168px; scroll-snap-align: start; }
+}
 
 .evb-card {
   display: flex; flex-direction: column; overflow: hidden;
