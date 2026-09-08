@@ -32,7 +32,9 @@
   --evb-radius-sm: 10px;
   --evb-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --evb-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --evb-max: 1180px;
+  /* Wider than the site's 1180 content width. A browse grid alongside a
+     filter rail needs the room: at 1180 only three cards fit per row. */
+  --evb-max: 1320px;
 }
 
 .evb-store,
