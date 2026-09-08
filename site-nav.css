@@ -387,3 +387,33 @@
     height: 20px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   "Store" nav button — the storefront lives at /store/ on this site now
+   (it used to be an external Shopify store at store.eastvillagebuyers.com).
+   Styled as a pill so it reads as the primary action rather than one more
+   text link. Lives here, not in store.css, because every page shows it.
+--------------------------------------------------------------------------- */
+.site-nav-link--store {
+  align-self: center;
+  padding: 9px 20px;
+  margin: 0 6px;
+  border-radius: 999px;
+  border-bottom: none;
+  color: #fff;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  box-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
+  transition: box-shadow 0.18s ease, transform 0.15s ease, filter 0.15s ease;
+}
+.site-nav-link--store:hover {
+  color: #fff;
+  border-bottom-color: transparent;
+  box-shadow: 0 5px 16px rgba(249, 115, 22, 0.45);
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+.site-nav-link--store:active { transform: translateY(0); }
+
+/* The drawer already gives every link an orange dot, so the Store entry is
+   distinguished by weight and colour instead of a competing marker. */
+.site-mob-link--store { color: #e8690a; font-weight: 800; }
