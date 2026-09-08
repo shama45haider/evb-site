@@ -177,19 +177,40 @@ body.evb-store-page {
 @media (max-width: 900px) { .evb-storebar-cats { display: none; } }
 @media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } }
 
-/* ---------- Hero — light, matching the homepage hero --------------------- */
+/* ---------- Hero ---------------------------------------------------------
+   Carries the actual brand: the storefront at 39 Avenue A, the logo, and the
+   address — the same devices the homepage hero uses, rather than type on an
+   empty white field.
+-------------------------------------------------------------------------- */
 
 .evb-hero {
   position: relative; overflow: hidden;
   background: #fff;
   border-bottom: 3px solid var(--evb-orange);
-  padding: 48px 0 52px;
+  padding: 44px 0 40px;
 }
 .evb-hero::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(620px 300px at 88% 0%, rgba(249,115,22,0.09), transparent 70%);
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(680px 320px at 92% 8%, rgba(249,115,22,0.10), transparent 70%);
 }
-.evb-hero-inner { position: relative; z-index: 1; max-width: 740px; }
+
+/* Oversized, near-invisible logo behind the copy. */
+.evb-hero-watermark {
+  position: absolute; top: 46%; left: 12%;
+  transform: translate(-50%, -50%);
+  width: 620px; max-width: none; height: auto;
+  opacity: 0.045; filter: grayscale(1);
+  pointer-events: none; user-select: none; z-index: 0;
+}
+@media (max-width: 900px) { .evb-hero-watermark { display: none; } }
+
+.evb-hero-grid {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: 1fr 0.82fr; gap: 48px; align-items: center;
+}
+@media (max-width: 900px) { .evb-hero-grid { grid-template-columns: 1fr; gap: 30px; } }
+
+.evb-hero-inner { position: relative; z-index: 1; max-width: 620px; }
 .evb-hero-eyebrow {
   display: inline-flex; align-items: center; gap: 8px; margin: 0 0 14px;
   font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
@@ -201,15 +222,15 @@ body.evb-store-page {
 }
 .evb-hero-eyebrow svg { display: none; }
 .evb-hero-title {
-  font-size: clamp(26px, 5.5vw, 42px); font-weight: 900; line-height: 1.12;
+  font-size: clamp(26px, 4.6vw, 40px); font-weight: 900; line-height: 1.1;
   letter-spacing: -0.02em; text-transform: uppercase; color: var(--evb-ink); margin: 0 0 16px;
 }
 .evb-hero-title em { font-style: normal; color: var(--evb-orange); }
 .evb-hero-sub {
   font-size: 15px; line-height: 1.7; color: var(--evb-body);
-  margin: 0 0 26px; max-width: 580px; font-weight: 500;
+  margin: 0 0 26px; max-width: 540px; font-weight: 500;
 }
-.evb-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; max-width: 480px; }
+.evb-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; max-width: 470px; }
 .evb-hero-actions .evb-btn { flex: 1; }
 /* Same breakpoint the site's own .wb-cta-row stacks at. */
 @media (max-width: 480px) {
@@ -217,9 +238,65 @@ body.evb-store-page {
   .evb-hero-actions .evb-btn { width: 100%; }
 }
 
+/* ---- storefront photo ---- */
+
+.evb-hero-visual { position: relative; z-index: 1; }
+.evb-hero-shot {
+  position: relative; margin: 0; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.16);
+  background: #111;
+}
+/* Direct child only. As a descendant selector this also matched the logo
+   inside the caption and stretched it to fill the plate. */
+.evb-hero-shot > img {
+  display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3;
+  object-fit: cover; object-position: center 42%;
+}
+/* Scrim so the plate stays readable over any part of the photo. */
+.evb-hero-shot::after {
+  content: ''; position: absolute; inset: auto 0 0 0; height: 38%;
+  background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  pointer-events: none;
+}
+
+.evb-hero-plate {
+  position: absolute; left: 14px; right: 14px; bottom: 14px; z-index: 2;
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px;
+  /* Opaque rather than translucent-with-backdrop-filter: the blur buys
+     nothing at 95% opacity and compositing it over a photo is fragile. */
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.evb-hero-plate-logo { width: 38px; height: 38px; flex-shrink: 0; object-fit: contain; }
+.evb-hero-plate-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.evb-hero-plate-name {
+  font-size: 12.5px; font-weight: 900; letter-spacing: -0.01em;
+  text-transform: uppercase; color: var(--evb-ink); line-height: 1.2;
+}
+.evb-hero-plate-addr { font-size: 11px; font-weight: 600; color: var(--evb-body); line-height: 1.3; }
+
+.evb-hero-openline {
+  display: flex; align-items: center; gap: 8px; margin: 12px 0 0;
+  font-size: 11.5px; font-weight: 700; color: var(--evb-body);
+}
+.evb-hero-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #16a34a; flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.16);
+}
+
+@media (max-width: 900px) {
+  .evb-hero-shot > img { aspect-ratio: 16 / 9; }
+  .evb-hero-openline { justify-content: center; }
+}
+
+/* ---- trust row ---- */
+
 .evb-hero-trust {
+  position: relative; z-index: 1;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-  margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--evb-line-soft);
+  margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--evb-line-soft);
 }
 @media (max-width: 720px) { .evb-hero-trust { grid-template-columns: 1fr; gap: 16px; } }
 .evb-hero-trust-item { display: flex; align-items: flex-start; gap: 10px; }

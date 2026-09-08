@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.2.1">
+<link rel="stylesheet" href="/store/store.css?v=1.3.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -156,17 +156,42 @@
 
 <!-- Hero -->
 <section class="evb-hero">
-  <div class="evb-wrap evb-hero-inner">
-    <p class="evb-hero-eyebrow">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
-      Authenticated in-house
-    </p>
-    <h1 class="evb-hero-title">The shop floor at <em>39 Avenue A</em>, online.</h1>
-    <p class="evb-hero-sub">Everything here came across our counter, got tested, weighed or legit-checked in front of the person selling it, and then went up. No consignment, no drop-shipping, no guesswork.</p>
-    <div class="evb-hero-actions">
-      <a href="#shop" class="evb-btn evb-btn--primary">Shop everything</a>
-      <a href="#how" class="evb-btn evb-btn--ghost">How authentication works</a>
+  <!-- Faded logo behind the copy, same device the homepage hero uses. -->
+  <img src="/evblogo.webp" alt="" aria-hidden="true" class="evb-hero-watermark" decoding="async">
+
+  <div class="evb-wrap evb-hero-grid">
+    <div class="evb-hero-inner">
+      <p class="evb-hero-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+        Authenticated in-house
+      </p>
+      <h1 class="evb-hero-title">The shop floor at <em>39 Avenue A</em>, online.</h1>
+      <p class="evb-hero-sub">Everything here came across our counter, got tested, weighed or legit-checked in front of the person selling it, and then went up. No consignment, no drop-shipping, no guesswork.</p>
+      <div class="evb-hero-actions">
+        <a href="#shop" class="evb-btn evb-btn--primary">Shop everything</a>
+        <a href="#how" class="evb-btn evb-btn--ghost">How authentication works</a>
+      </div>
     </div>
+
+    <div class="evb-hero-visual">
+      <figure class="evb-hero-shot">
+        <img src="/evbstorefront.webp" alt="The East Village Buyers storefront at 39 Avenue A, New York" width="1600" height="1125" fetchpriority="high" decoding="async">
+        <figcaption class="evb-hero-plate">
+          <img src="/evblogo.webp" alt="" aria-hidden="true" class="evb-hero-plate-logo" width="500" height="500" decoding="async">
+          <span class="evb-hero-plate-copy">
+            <span class="evb-hero-plate-name">East Village Buyers</span>
+            <span class="evb-hero-plate-addr">39 Avenue A &middot; New York, NY 10009</span>
+          </span>
+        </figcaption>
+      </figure>
+      <p class="evb-hero-openline">
+        <span class="evb-hero-dot" aria-hidden="true"></span>
+        Same-day pickup at the counter &middot; Sun&ndash;Fri 12:30 PM
+      </p>
+    </div>
+  </div>
+
+  <div class="evb-wrap">
     <div class="evb-hero-trust">
       <div class="evb-hero-trust-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/></svg>
@@ -397,9 +422,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.2.1"></script>
-<script src="/store/store-catalog.js?v=1.2.1"></script>
-<script src="/store/store-core.js?v=1.2.1"></script>
+<script src="/store/store-config.js?v=1.3.0"></script>
+<script src="/store/store-catalog.js?v=1.3.0"></script>
+<script src="/store/store-core.js?v=1.3.0"></script>
 <script>
 (function () {
   'use strict';
