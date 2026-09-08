@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.6.0">
+<link rel="stylesheet" href="/store/store.css?v=1.7.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -410,9 +410,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.6.0"></script>
-<script src="/store/store-catalog.js?v=1.6.0"></script>
-<script src="/store/store-core.js?v=1.6.0"></script>
+<script src="/store/store-config.js?v=1.7.0"></script>
+<script src="/store/store-catalog.js?v=1.7.0"></script>
+<script src="/store/store-core.js?v=1.7.0"></script>
 <script>
 (function () {
   'use strict';
@@ -641,26 +641,19 @@
       var from = items.length
         ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
 
-      // Three brands actually on the shelf, as one quiet line.
-      var brands = [];
-      items.forEach(function (p) { if (p.brand && brands.indexOf(p.brand) === -1) brands.push(p.brand); });
-      brands = brands.slice(0, 3).join(' · ');
+      // Count always; the "from" price is a separate span so narrow screens
+      // can drop it rather than truncate the whole line.
+      var meta = '<span class="evb-cat-n">' + n + (n === 1 ? ' item' : ' items') + '</span>' +
+        (from != null ? '<span class="evb-cat-from"> · from ' +
+          S.esc(S.money(from).replace(/\.00$/, '')) + '</span>' : '');
 
       return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '"' +
           ' title="' + S.attr(c.blurb) + '">' +
         '<span class="evb-cat-media">' +
           (lead ? '<img src="' + S.attr(lead.images[0]) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
         '</span>' +
-        '<span class="evb-cat-body">' +
-          '<span class="evb-cat-head">' +
-            '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
-            '<span class="evb-cat-count">' + n + '</span>' +
-          '</span>' +
-          (brands ? '<span class="evb-cat-brands">' + S.esc(brands) + '</span>' : '') +
-          '<span class="evb-cat-foot">' +
-            (from != null ? 'From <strong>' + S.money(from) + '</strong>' : 'Sold out') +
-          '</span>' +
-        '</span>' +
+        '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
+        '<span class="evb-cat-meta">' + meta + '</span>' +
       '</a>';
     }).join('');
 

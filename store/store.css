@@ -306,62 +306,80 @@ body.evb-store-page {
   color: var(--evb-ink); margin: 0;
 }
 
-/* ---- department tiles: horizontal rows ---- */
+/* ---- department tiles: circular, label beneath -------------------------
+   The marketplace category-row pattern: the photo is the whole tile, the
+   name sits under it, and the whole row reads in one glance.
+------------------------------------------------------------------------ */
 
-.evb-cats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-@media (max-width: 1000px) { .evb-cats { grid-template-columns: repeat(2, 1fr); } }
+.evb-cats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
+@media (max-width: 1080px) { .evb-cats { grid-template-columns: repeat(4, 1fr); gap: 14px 10px; } }
 
-/* On a phone, eight stacked rows push the grid off the bottom of the screen.
-   A swipe strip keeps every department reachable in one row. The tile width
-   leaves the next one part-visible, which is the affordance. */
-@media (max-width: 640px) {
-  .evb-cats {
-    display: flex; gap: 10px; overflow-x: auto;
-    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
-    margin: 0 -20px; padding: 2px 20px 6px;
-    scrollbar-width: none; -ms-overflow-style: none;
-  }
-  .evb-cats::-webkit-scrollbar { display: none; }
-  .evb-cat { flex: 0 0 216px; scroll-snap-align: start; }
-}
 
 .evb-cat {
-  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-  background: #fff; border: 1px solid #ececec; border-radius: 9px;
-  text-decoration: none; color: inherit; min-width: 0;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  text-decoration: none; color: inherit; text-align: center; min-width: 0;
+  padding: 4px 2px;
 }
-.evb-cat:hover { border-color: var(--evb-orange); box-shadow: 0 4px 14px rgba(249,115,22,0.14); }
 
 .evb-cat-media {
-  flex-shrink: 0; width: 54px; height: 54px; border-radius: 7px; overflow: hidden;
-  background: var(--evb-cream); border: 1px solid var(--evb-line-soft);
-  display: block; position: relative;
+  display: grid; place-items: center;
+  width: 100%; max-width: 116px; aspect-ratio: 1 / 1;
+  border-radius: 50%; overflow: hidden;
+  background: var(--evb-cream); border: 1px solid var(--evb-line);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 .evb-cat-media img {
-  width: 100%; height: 100%; object-fit: contain; display: block; padding: 5px;
-  transition: transform 0.25s ease;
+  width: 100%; height: 100%; object-fit: contain; display: block;
+  padding: 15%; transition: transform 0.28s ease;
 }
-.evb-cat:hover .evb-cat-media img { transform: scale(1.07); }
+.evb-cat:hover .evb-cat-media {
+  border-color: var(--evb-orange);
+  box-shadow: 0 6px 18px rgba(249,115,22,0.22);
+  transform: translateY(-3px);
+}
+.evb-cat:hover .evb-cat-media img { transform: scale(1.08); }
 
-.evb-cat-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.evb-cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .evb-cat-name {
-  font-size: 12.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.01em;
-  color: var(--evb-ink); line-height: 1.2;
+  font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em;
+  color: var(--evb-ink); line-height: 1.25; max-width: 100%;
+}
+.evb-cat:hover .evb-cat-name { color: var(--evb-orange-dark); }
+.evb-cat-meta {
+  font-size: 10.5px; font-weight: 500; color: var(--evb-muted); line-height: 1.3;
+  margin-top: -4px; max-width: 100%;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.evb-cat-count {
-  flex-shrink: 0; font-size: 9.5px; font-weight: 800; color: var(--evb-orange);
-  background: var(--evb-orange-soft); padding: 2px 7px; border-radius: 20px;
-  font-variant-numeric: tabular-nums;
+
+@media (max-width: 1080px) {
+  .evb-cat-media { max-width: 96px; }
 }
-.evb-cat-brands {
-  font-size: 10.5px; color: var(--evb-faint); font-weight: 500; line-height: 1.3;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+@media (max-width: 520px) {
+  .evb-cat-media { max-width: 84px; }
+  .evb-cat-name { font-size: 11px; }
+  .evb-cat-meta { font-size: 10px; }
+  /* Four across leaves no room for the price; the count still fits and the
+     grid below shows prices anyway. */
+  .evb-cat-from { display: none; }
 }
-.evb-cat-foot { font-size: 11px; font-weight: 600; color: var(--evb-muted); line-height: 1.3; }
-.evb-cat-foot strong { font-size: 12.5px; font-weight: 900; color: var(--evb-ink); letter-spacing: -0.01em; }
+
+/* ---- plain info tiles ("how we authenticate" band) ----------------------
+   Not links and not departments, so they carry their own class rather than
+   borrowing .evb-cat, whose structure they do not have.
+------------------------------------------------------------------------ */
+
+.evb-notes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+@media (max-width: 1000px) { .evb-notes { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px)  { .evb-notes { grid-template-columns: 1fr; } }
+.evb-note {
+  padding: 20px; background: var(--evb-cream);
+  border: 1px solid var(--evb-line); border-radius: 10px;
+}
+.evb-note-name {
+  font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.02em;
+  color: var(--evb-ink); margin: 0 0 9px; padding-bottom: 9px;
+  border-bottom: 1.5px solid rgba(249,115,22,0.4);
+}
+.evb-note-blurb { font-size: 12.5px; color: var(--evb-body); line-height: 1.6; font-weight: 500; margin: 0; }
 
 /* ---------- Shop layout: filter rail + results ---------------------------
    Marketplace structure — a persistent facet rail on desktop, a slide-in
