@@ -4,10 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<script>
+/* Store gate — the storefront is not public while Square is being connected.
+   Reaching any store page sends you to the coming-soon page unless this
+   session was opened with ?preview=1. Runs before render so there is no
+   flash of the gated page, and fails closed if storage is unavailable. */
+(function () {
+  var ok = false;
+  try {
+    if (new URLSearchParams(location.search).get('preview') === '1') {
+      ok = true;
+      try { sessionStorage.setItem('evb_store_preview', '1'); } catch (e) {}
+    } else {
+      try { ok = sessionStorage.getItem('evb_store_preview') === '1'; } catch (e) {}
+    }
+  } catch (e) {}
+  if (!ok) location.replace('/store/');
+})();
+</script>
+
 <title>Your Bag | East Village Buyers Store</title>
 <meta name="description" content="Review the items in your East Village Buyers bag before checking out.">
 <link rel="canonical" href="https://eastvillagebuyers.com/store/cart/">
-<meta name="robots" content="noindex, follow">
+<meta name="robots" content="noindex, nofollow">
 
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -20,7 +39,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.7.0">
+<link rel="stylesheet" href="/store/store.css?v=1.8.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -108,13 +127,13 @@
 
 <div class="evb-storebar">
   <div class="evb-wrap evb-storebar-inner">
-    <a href="/store/" class="evb-storebar-home">
+    <a href="/store/shop/" class="evb-storebar-home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
       Store
     </a>
     <nav class="evb-storebar-cats" id="storeBarCats" aria-label="Shop by category"></nav>
     <div class="evb-storebar-actions">
-      <a class="evb-btn evb-btn--ghost evb-btn--sm" href="/store/">Keep shopping</a>
+      <a class="evb-btn evb-btn--ghost evb-btn--sm" href="/store/shop/">Keep shopping</a>
     </div>
   </div>
 </div>
@@ -135,7 +154,7 @@
         <p class="evb-eyebrow">While you are here</p>
         <h2 class="evb-h2">Also on the floor</h2>
       </div>
-      <a href="/store/" class="evb-link-more">Shop all</a>
+      <a href="/store/shop/" class="evb-link-more">Shop all</a>
     </div>
     <div class="evb-grid" id="relatedGrid"></div>
   </div>
@@ -175,14 +194,14 @@
     <div class="evb-footer-col">
       <p class="footer-heading" role="heading" aria-level="2">Shop</p>
       <ul>
-        <li><a href="/store/?c=sneakers">Sneakers</a></li>
-        <li><a href="/store/?c=watches">Watches</a></li>
-        <li><a href="/store/?c=jewelry">Jewelry</a></li>
-        <li><a href="/store/?c=gold">Gold &amp; Bullion</a></li>
-        <li><a href="/store/?c=streetwear">Streetwear</a></li>
-        <li><a href="/store/?c=designer">Designer</a></li>
-        <li><a href="/store/?c=electronics">Electronics</a></li>
-        <li><a href="/store/?c=collectibles">Collectibles</a></li>
+        <li><a href="/store/shop/?c=sneakers">Sneakers</a></li>
+        <li><a href="/store/shop/?c=watches">Watches</a></li>
+        <li><a href="/store/shop/?c=jewelry">Jewelry</a></li>
+        <li><a href="/store/shop/?c=gold">Gold &amp; Bullion</a></li>
+        <li><a href="/store/shop/?c=streetwear">Streetwear</a></li>
+        <li><a href="/store/shop/?c=designer">Designer</a></li>
+        <li><a href="/store/shop/?c=electronics">Electronics</a></li>
+        <li><a href="/store/shop/?c=collectibles">Collectibles</a></li>
       </ul>
     </div>
     <div class="evb-footer-col">
@@ -218,9 +237,9 @@
 </footer>
 
 <script src="/site-nav.js"></script>
-<script src="/store/store-config.js?v=1.7.0"></script>
-<script src="/store/store-catalog.js?v=1.7.0"></script>
-<script src="/store/store-core.js?v=1.7.0"></script>
+<script src="/store/store-config.js?v=1.8.0"></script>
+<script src="/store/store-catalog.js?v=1.8.0"></script>
+<script src="/store/store-core.js?v=1.8.0"></script>
 <script>
 (function () {
   'use strict';
@@ -275,7 +294,7 @@
       host.innerHTML = '<div class="evb-empty" style="margin-bottom:70px">' +
         '<p class="evb-empty-title">Your bag is empty</p>' +
         '<p class="evb-empty-sub">Everything in the shop was authenticated at 39 Avenue A before it went up. Start with what just came in.</p>' +
-        '<a class="evb-btn evb-btn--primary" href="/store/">Shop the store</a>' +
+        '<a class="evb-btn evb-btn--primary" href="/store/shop/">Shop the store</a>' +
       '</div>';
       return;
     }
@@ -311,7 +330,7 @@
 
             '<a class="evb-btn evb-btn--primary evb-btn--block" href="/store/checkout/">Checkout</a>' +
             '<div style="height:10px"></div>' +
-            '<a class="evb-btn evb-btn--ghost evb-btn--block" href="/store/">Keep shopping</a>' +
+            '<a class="evb-btn evb-btn--ghost evb-btn--block" href="/store/shop/">Keep shopping</a>' +
           '</div>' +
 
           '<div class="evb-panel">' +
@@ -374,9 +393,9 @@
 
   function renderStoreBar() {
     document.getElementById('storeBarCats').innerHTML =
-      '<a class="evb-storebar-cat" href="/store/">All</a>' +
+      '<a class="evb-storebar-cat" href="/store/shop/">All</a>' +
       C.categories.map(function (c) {
-        return '<a class="evb-storebar-cat" href="/store/?c=' + encodeURIComponent(c.id) + '">' + S.esc(c.label) + '</a>';
+        return '<a class="evb-storebar-cat" href="/store/shop/?c=' + encodeURIComponent(c.id) + '">' + S.esc(c.label) + '</a>';
       }).join('');
   }
 

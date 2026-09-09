@@ -397,7 +397,7 @@
         '<div class="evb-mini-empty-icon">' + cartIcon() + '</div>' +
         '<p class="evb-mini-empty-title">Your bag is empty</p>' +
         '<p class="evb-mini-empty-sub">Everything in the shop is authenticated in-house before it goes up.</p>' +
-        '<a class="evb-btn evb-btn--primary" href="' + BASE + 'store/">Start shopping</a>' +
+        '<a class="evb-btn evb-btn--primary" href="' + BASE + 'store/shop/">Start shopping</a>' +
         '</div>';
     }
 
