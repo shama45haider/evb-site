@@ -263,7 +263,7 @@
   </div>
 </footer>
 
-<script src="/site-nav.js"></script>
+<script src="/site-nav.js?v=20260911"></script>
 <script>
 (function () {
   'use strict';
@@ -286,10 +286,21 @@
     try { return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })); }
     catch (e) { return new Date(); }
   }
+  // One-off closures (holidays etc.) come from site-nav.js, which loads first.
+  function ymd(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+  function hoursOn(d) {
+    var closed = window.EVB_CLOSED_DATES || [];
+    return closed.indexOf(ymd(d)) !== -1 ? null : HOURS[d.getDay()];
+  }
+
   function render() {
-    var now = shopNow(), day = now.getDay();
+    var now = shopNow();
     var hour = now.getHours() + now.getMinutes() / 60;
-    var today = HOURS[day];
+    var today = hoursOn(now);
+    var closedToday = !today && HOURS[now.getDay()];   // a normally-open day we are shut
     var t = document.getElementById('storeStatusText');
     var w = document.getElementById('storeStatus');
     if (!t) return;
@@ -303,11 +314,14 @@
       t.textContent = 'Closed · opens today at ' + clockLabel(today.open);
       return;
     }
-    for (var i = 1; i <= 7; i++) {
-      var d = (day + i) % 7;
-      if (HOURS[d]) {
-        t.textContent = 'Closed · opens ' + (i === 1 ? 'tomorrow' : DAYS[d]) +
-          ' at ' + clockLabel(HOURS[d].open);
+    // Walk forward by calendar date rather than weekday, so a closure on a
+    // specific date is skipped instead of being announced as the next opening.
+    for (var i = 1; i <= 14; i++) {
+      var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      var h = hoursOn(d);
+      if (h) {
+        t.textContent = (closedToday ? 'Closed today' : 'Closed') + ' · opens ' +
+          (i === 1 ? 'tomorrow' : DAYS[d.getDay()]) + ' at ' + clockLabel(h.open);
         return;
       }
     }

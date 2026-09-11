@@ -352,3 +352,134 @@ function toggleNav() { toggleEvbNav(); }
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 })();
+
+
+/* ---------------------------------------------------------------------------
+   One-off closure notice
+   Site-wide popup announcing a day the shop is closed outside its normal
+   weekly hours. Everything about it lives in CLOSURE below: change the date
+   and copy there, and it switches itself off after `showUntil`, so nothing
+   needs removing afterwards.
+
+   Also publishes window.EVB_CLOSED_DATES, which the live Open/Closed badge on
+   /store/ reads so it never says "Open now" on a day the shop is shut.
+   This script must load before that badge's script (it does on every page).
+--------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+
+  var CLOSURE = {
+    date: '2026-09-13',                         // YYYY-MM-DD, New York time
+    title: 'Closed Sunday, September 13',
+    body: 'The shop at 39 Avenue A will be closed all day Sunday. We are closed Saturdays as usual, so we reopen Monday, September 14 at 12:30 PM.',
+    // Monday 14 Sep 00:00 in New York. September is EDT, UTC-4.
+    showUntil: Date.UTC(2026, 8, 14, 4, 0, 0)
+  };
+
+  window.EVB_CLOSED_DATES = (window.EVB_CLOSED_DATES || []).concat(CLOSURE.date);
+
+  if (Date.now() >= CLOSURE.showUntil) return;
+
+  var KEY = 'evb_closure_seen_' + CLOSURE.date;
+  try { if (localStorage.getItem(KEY)) return; } catch (e) {}
+
+  function build() {
+    if (document.getElementById('evbClosure')) return;
+
+    // While this is up, hold back the homepage "What's New" popup so a
+    // visitor never gets two modals stacked on top of each other. An
+    // !important rule beats the inline display that popup sets on a timer.
+    var hold = document.createElement('style');
+    hold.id = 'evbClosureHold';
+    hold.textContent = '#wnWrap{display:none!important}';
+    document.head.appendChild(hold);
+
+    var css = document.createElement('style');
+    css.textContent =
+      '#evbClosure{position:fixed;inset:0;z-index:99998;display:flex;align-items:center;justify-content:center;padding:18px;' +
+        'background:rgba(0,0,0,.55);font-family:"Montserrat",system-ui,sans-serif;opacity:0;transition:opacity .25s ease}' +
+      '#evbClosure.is-in{opacity:1}' +
+      '.evb-cl-card{position:relative;width:100%;max-width:420px;background:#fff;border-radius:14px;overflow:hidden;' +
+        'box-shadow:0 24px 60px rgba(0,0,0,.35);transform:translateY(12px) scale(.98);transition:transform .3s cubic-bezier(.22,1,.36,1)}' +
+      '#evbClosure.is-in .evb-cl-card{transform:none}' +
+      '.evb-cl-bar{height:5px;background:linear-gradient(90deg,#f97316,#ea580c)}' +
+      '.evb-cl-body{padding:24px 24px 22px}' +
+      '.evb-cl-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:8px;border:1px solid rgba(0,0,0,.1);' +
+        'background:#fff;color:#555;font-size:20px;line-height:1;cursor:pointer;display:grid;place-items:center}' +
+      '.evb-cl-x:hover{border-color:#f97316;color:#f97316}' +
+      '.evb-cl-icon{width:46px;height:46px;border-radius:12px;background:rgba(249,115,22,.1);color:#f97316;' +
+        'display:grid;place-items:center;margin-bottom:14px}' +
+      '.evb-cl-icon svg{width:24px;height:24px}' +
+      '.evb-cl-eyebrow{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#f97316;margin:0 0 6px}' +
+      '.evb-cl-title{font-size:22px;font-weight:900;line-height:1.15;letter-spacing:-.02em;text-transform:uppercase;color:#111;margin:0 0 10px;padding-right:30px}' +
+      '.evb-cl-text{font-size:14px;line-height:1.65;color:#555;margin:0 0 20px;font-weight:500}' +
+      '.evb-cl-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:50px;border:none;border-radius:10px;cursor:pointer;' +
+        'font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;' +
+        'background:linear-gradient(135deg,#f97316,#ea580c);box-shadow:0 4px 0 #c2410c,0 8px 20px rgba(249,115,22,.3);' +
+        'transition:transform .2s ease,box-shadow .2s ease}' +
+      '.evb-cl-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #c2410c,0 12px 26px rgba(249,115,22,.38)}' +
+      '.evb-cl-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #c2410c}' +
+      '.evb-cl-note{font-size:12px;color:#777;margin:14px 0 0;text-align:center;font-weight:500}' +
+      '.evb-cl-note a{color:#ea580c;font-weight:700;text-decoration:none}' +
+      '@media (prefers-reduced-motion:reduce){#evbClosure,.evb-cl-card{transition:none}}';
+    document.head.appendChild(css);
+
+    var wrap = document.createElement('div');
+    wrap.id = 'evbClosure';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-labelledby', 'evbClosureTitle');
+    wrap.setAttribute('aria-describedby', 'evbClosureText');
+    wrap.innerHTML =
+      '<div class="evb-cl-card">' +
+        '<div class="evb-cl-bar" aria-hidden="true"></div>' +
+        '<button type="button" class="evb-cl-x" aria-label="Close notice">&times;</button>' +
+        '<div class="evb-cl-body">' +
+          '<div class="evb-cl-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+            '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9.5 14.5l5 5M14.5 14.5l-5 5"/></svg></div>' +
+          '<p class="evb-cl-eyebrow">Store hours update</p>' +
+          '<h2 class="evb-cl-title" id="evbClosureTitle"></h2>' +
+          '<p class="evb-cl-text" id="evbClosureText"></p>' +
+          '<button type="button" class="evb-cl-btn">Got it</button>' +
+          '<p class="evb-cl-note">Questions? Text <a href="sms:9176088939">917-608-8939</a></p>' +
+        '</div>' +
+      '</div>';
+    // Copy goes in as text, never as markup.
+    wrap.querySelector('#evbClosureTitle').textContent = CLOSURE.title;
+    wrap.querySelector('#evbClosureText').textContent = CLOSURE.body;
+    document.body.appendChild(wrap);
+
+    var lastFocus = document.activeElement;
+    var ok = wrap.querySelector('.evb-cl-btn');
+
+    function close() {
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      wrap.classList.remove('is-in');
+      document.removeEventListener('keydown', onKey);
+      setTimeout(function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 260);
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') { close(); return; }
+      // Keep Tab inside the dialog while it is open.
+      if (e.key === 'Tab') {
+        var f = wrap.querySelectorAll('button, a[href]');
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    ok.addEventListener('click', close);
+    wrap.querySelector('.evb-cl-x').addEventListener('click', close);
+    wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
+    document.addEventListener('keydown', onKey);
+
+    // Next frame so the fade-in transition actually runs.
+    setTimeout(function () { wrap.classList.add('is-in'); ok.focus(); }, 30);
+  }
+
+  function start() { setTimeout(build, 400); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
