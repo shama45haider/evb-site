@@ -43,8 +43,23 @@
       terms: false, marketing: false
     },
     errors: {},
-    square: { payments: null, card: null, ready: false, error: '' }
+    square: { payments: null, card: null, ready: false, error: '' },
+    // Free standard shipping from the email-signup popup, for this email.
+    welcomeShip: false,
+    welcomeFor: null
   };
+
+  /** Ask once per distinct email whether the signup perk applies. */
+  function checkWelcome() {
+    var email = state.data.email.trim().toLowerCase();
+    if (!email || email === state.welcomeFor) return;
+    state.welcomeFor = email;
+    S.welcome.check(email).then(function (ok) {
+      if (state.welcomeFor !== email || ok === state.welcomeShip) return;
+      state.welcomeShip = ok;
+      render();
+    });
+  }
 
   var els = {};
 
@@ -290,6 +305,7 @@
         subtotal: totals.subtotal,
         discount: totals.discount,
         promoCode: totals.promoCode,
+        welcomeShipping: totals.welcomeShip,
         shipping: totals.shipping,
         tax: totals.tax,
         total: totals.total
@@ -307,7 +323,7 @@
     state.submitting = true;
     render();
 
-    var totals = S.totals({ shippingId: state.data.shippingId, promoCode: state.data.promoCode });
+    var totals = S.totals({ shippingId: state.data.shippingId, promoCode: state.data.promoCode, welcomeShip: state.welcomeShip });
     var base = (CFG.apiBase || '').replace(/\/$/, '');
     var idem = S.idempotencyKey();
 
@@ -363,6 +379,8 @@
       .catch(function (err) {
         state.submitting = false;
         state.errors.submit = err.message || 'Something went wrong taking payment.';
+        // The welcome perk may have been spent elsewhere; ask the server again.
+        if (state.welcomeShip) { state.welcomeShip = false; state.welcomeFor = null; }
         render();
         S.toast(state.errors.submit, 'error');
         var host = document.getElementById('checkoutSteps');
@@ -423,7 +441,7 @@
     var d = state.data;
     var rates = CFG.shippingRates || [];
     var sub = S.cart.subtotal();
-    var promoFree = /^FREESHIP$/i.test(d.promoCode || '');
+    var promoFree = /^FREESHIP$/i.test(d.promoCode || '') || state.welcomeShip;
     var threshold = CFG.freeShippingThreshold || 0;
 
     var options = rates.map(function (r) {
@@ -505,7 +523,7 @@
 
   function reviewStep() {
     var d = state.data;
-    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode });
+    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
     var pickup = d.shippingId === 'pickup';
     var e = state.errors;
 
@@ -567,7 +585,7 @@
 
   function summary() {
     var d = state.data;
-    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode });
+    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
     var lines = S.cart.lines;
 
     return '<div class="evb-panel">' +
@@ -595,12 +613,15 @@
       '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
       (t.discount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount (' + S.esc(t.promoCode) + ')</span><strong>&minus;' + S.money(t.discount) + '</strong></div>' : '') +
       '<div class="evb-sumrow"><span>' + S.esc(t.shippingRate.label) + '</span><strong>' + (t.shipping === 0 ? 'Free' : S.money(t.shipping)) + '</strong></div>' +
+      (t.welcomeShip ? '<p class="evb-promo-msg is-ok">Welcome offer: free shipping on your first order.</p>' : '') +
       '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
       '<div class="evb-sumrow evb-sumrow--total"><span>Total</span><strong>' + S.money(t.total) + '</strong></div>' +
     '</div>';
   }
 
   function render() {
+    // Past the contact step the email is validated, so ask about the perk.
+    if (state.step !== 'contact') checkWelcome();
     if (!S.cart.lines.length && !state.submitting) {
       els.host.innerHTML = '<div class="evb-empty" style="margin-bottom:70px">' +
         '<p class="evb-empty-title">There is nothing to check out</p>' +

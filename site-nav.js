@@ -483,3 +483,14 @@ function toggleNav() { toggleEvbNav(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 })();
+
+/* ---------------------------------------------------------------------------
+   Email-signup popup (free shipping on the first order). Loaded from here so
+   every page that has the nav gets it without its own script tag.
+--------------------------------------------------------------------------- */
+(function () {
+  var s = document.createElement('script');
+  s.src = '/evb-signup.js?v=3';
+  s.defer = true;
+  document.head.appendChild(s);
+})();

@@ -17,6 +17,14 @@
  *   GET  /catalog         items + variations + images + inventory counts
  *   POST /orders          create the Square Order, take payment, return receipt
  *   GET  /orders/:id      fetch a stored receipt (needs the ORDERS KV binding)
+ *   POST /subscribe       email-signup popup: store the email, grant the
+ *                         free-shipping-on-first-order perk (SUBSCRIBERS KV)
+ *   POST /welcome-check   checkout asks whether an email still has the perk
+ *   GET  /subscribers     admin panel list (GitHub token with push access)
+ *   DELETE /subscribers/:email   admin panel removal
+ *
+ *   The signup routes work before Square is configured, so the popup can
+ *   collect emails while the store is still "coming soon".
  *
  * ── DEPLOY (Cloudflare dashboard, no CLI needed) ───────────────────────────
  *  1. dash.cloudflare.com -> Workers & Pages -> Create -> Create Worker.
@@ -35,6 +43,9 @@
  *         confirmation page then falls back to the copy in the buyer's browser.
  *       Bindings -> Rate Limiting -> variable name RATE_LIMITER
  *         e.g. 30 requests / 60s. Absent, the check is skipped (fails open).
+ *  4b. Required for the email-signup popup:
+ *       Bindings -> KV Namespace -> variable name SUBSCRIBERS
+ *         Without it, /subscribe returns 503 and the popup stays hidden.
  *  5. Copy the Worker URL and put it in /store/store-config.js as `apiBase`,
  *     along with your Application ID and Location ID.
  *
@@ -81,8 +92,8 @@ const FREE_SHIPPING_THRESHOLD = 50000;
 function corsHeaders(origin) {
   return {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : '',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin'
   };
@@ -308,6 +319,21 @@ async function buildSquareOrder(env, payload) {
   let shippingAmount = rate.amount;
   if (shippingId === 'standard' && (freeShipping || subtotal >= FREE_SHIPPING_THRESHOLD)) shippingAmount = 0;
 
+  // Welcome perk from the email-signup popup: free standard shipping on the
+  // first order placed with the email they signed up with.
+  const buyerEmail = normEmail(payload.order.customer && payload.order.customer.email);
+  let welcomeEmail = null;
+  if (shippingId === 'standard' && shippingAmount > 0 && env.SUBSCRIBERS && buyerEmail) {
+    const sub = await getSubscriber(env, buyerEmail);
+    if (sub && !sub.r) { shippingAmount = 0; welcomeEmail = buyerEmail; }
+  }
+  // The checkout showed free shipping from /welcome-check; if the perk was
+  // used in the meantime, stop before charging a different total.
+  const claimed = !!(payload.order.totals && payload.order.totals.welcomeShipping);
+  if (claimed && shippingId === 'standard' && shippingAmount > 0) {
+    throw Object.assign(new Error('The free-shipping welcome offer has already been used for this email. Go back to Delivery to see the updated total.'), { status: 409 });
+  }
+
   const serviceCharges = shippingAmount > 0 ? [{
     uid: 'shipping',
     name: rate.label,
@@ -353,7 +379,7 @@ async function buildSquareOrder(env, payload) {
         }
       }];
 
-  return {
+  return { welcomeEmail, order: {
     location_id: env.SQUARE_LOCATION_ID,
     reference_id: payload.order.id,
     line_items: lineItems,
@@ -371,7 +397,7 @@ async function buildSquareOrder(env, payload) {
       source: 'eastvillagebuyers.com',
       evb_order_id: String(payload.order.id).slice(0, 255)
     }
-  };
+  } };
 }
 
 async function handleCreateOrder(request, env, origin) {
@@ -388,11 +414,11 @@ async function handleCreateOrder(request, env, origin) {
     if (seen) return json({ order: JSON.parse(seen) }, 200, origin);
   }
 
-  const orderBody = await buildSquareOrder(env, payload);
+  const built = await buildSquareOrder(env, payload);
 
   const created = await square(env, '/v2/orders', 'POST', {
     idempotency_key: payload.idempotencyKey + '-order',
-    order: orderBody
+    order: built.order
   });
 
   const sqOrder = created.order;
@@ -421,6 +447,14 @@ async function handleCreateOrder(request, env, origin) {
 
   const p = paid.payment || {};
   const card = (p.card_details && p.card_details.card) || {};
+
+  // Spend the welcome perk only once money has actually moved.
+  if (built.welcomeEmail && p.status === 'COMPLETED') {
+    const sub = await getSubscriber(env, built.welcomeEmail);
+    if (sub) {
+      await env.SUBSCRIBERS.put('sub:' + built.welcomeEmail, '1', { metadata: Object.assign({}, sub, { r: Date.now() }) });
+    }
+  }
 
   const receipt = Object.assign({}, payload.order, {
     status: p.status === 'COMPLETED' ? 'PAID' : (p.status || 'PENDING'),
@@ -484,6 +518,86 @@ async function handleGetOrder(env, id, origin) {
 }
 
 /* ========================================================================= */
+/* Email signups (free shipping on the first order)                          */
+/* ========================================================================= */
+
+/* Each signup is one KV key, `sub:<email>`, with everything the admin list
+   needs in the key's metadata so listing never has to read values:
+     { e: email, t: signup ms, p: page path, r: ms the perk was used or 0 } */
+
+const ADMIN_REPO = 'shama45haider/evb-site';
+const RE_EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i;
+
+function normEmail(v) {
+  return String(v || '').trim().toLowerCase();
+}
+
+async function getSubscriber(env, email) {
+  const r = await env.SUBSCRIBERS.getWithMetadata('sub:' + email);
+  return r && r.metadata ? r.metadata : null;
+}
+
+async function handleSubscribe(request, env, origin) {
+  const body = await request.json().catch(() => ({}));
+  // Honeypot: the popup has a hidden "website" field real visitors never fill.
+  if (body.website) return json({ ok: true }, 200, origin);
+
+  const email = normEmail(body.email);
+  if (!RE_EMAIL.test(email)) return json({ error: 'Enter a valid email address.' }, 400, origin);
+
+  const existing = await getSubscriber(env, email);
+  if (existing) {
+    return json({ ok: true, already: true, perkUsed: !!existing.r }, 200, origin);
+  }
+  const meta = { e: email, t: Date.now(), p: String(body.page || '').slice(0, 200), r: 0 };
+  await env.SUBSCRIBERS.put('sub:' + email, '1', { metadata: meta });
+  return json({ ok: true }, 200, origin);
+}
+
+async function handleWelcomeCheck(request, env, origin) {
+  const body = await request.json().catch(() => ({}));
+  const sub = await getSubscriber(env, normEmail(body.email));
+  return json({ eligible: !!(sub && !sub.r) }, 200, origin, { 'Cache-Control': 'no-store' });
+}
+
+/** Admin = a GitHub token that can push to the site repo, the same token the
+    Manage Blogs panel already signs in with. No extra password to manage. */
+async function isAdmin(request) {
+  const auth = request.headers.get('Authorization') || '';
+  if (!/^Bearer \S+$/.test(auth)) return false;
+  const res = await fetch('https://api.github.com/repos/' + ADMIN_REPO, {
+    headers: { 'Authorization': auth, 'Accept': 'application/vnd.github+json', 'User-Agent': 'evb-square-worker' }
+  });
+  if (!res.ok) return false;
+  const repo = await res.json().catch(() => ({}));
+  return !!(repo.permissions && (repo.permissions.push || repo.permissions.admin));
+}
+
+async function handleListSubscribers(env, origin) {
+  const out = [];
+  let cursor;
+  do {
+    const page = await env.SUBSCRIBERS.list({ prefix: 'sub:', cursor });
+    page.keys.forEach(k => { if (k.metadata) out.push(k.metadata); });
+    cursor = page.list_complete ? null : page.cursor;
+  } while (cursor);
+  out.sort((a, b) => b.t - a.t);
+  return json({
+    subscribers: out.map(m => ({
+      email: m.e,
+      signedUpAt: new Date(m.t).toISOString(),
+      page: m.p || '',
+      perkUsedAt: m.r ? new Date(m.r).toISOString() : null
+    }))
+  }, 200, origin, { 'Cache-Control': 'private, no-store' });
+}
+
+async function handleDeleteSubscriber(env, email, origin) {
+  await env.SUBSCRIBERS.delete('sub:' + normEmail(email));
+  return json({ ok: true }, 200, origin);
+}
+
+/* ========================================================================= */
 /* Router                                                                     */
 /* ========================================================================= */
 
@@ -512,10 +626,6 @@ export default {
       }, 200, origin);
     }
 
-    if (!env.SQUARE_ACCESS_TOKEN || !env.SQUARE_LOCATION_ID) {
-      return json({ error: 'Square is not configured on the server.' }, 503, origin);
-    }
-
     // Rate limiting, when the binding is attached. Fails open by design:
     // a missing binding should not take the store down.
     if (env.RATE_LIMITER) {
@@ -524,6 +634,31 @@ export default {
         const { success } = await env.RATE_LIMITER.limit({ key });
         if (!success) return json({ error: 'Too many requests. Try again in a minute.' }, 429, origin);
       } catch (e) { /* ignore and continue */ }
+    }
+
+    // Email signups do not need Square, so they are routed before that check.
+    const subPath = path === '/subscribe' || path === '/welcome-check' || /^\/subscribers(\/|$)/.test(path);
+    if (subPath) {
+      if (!env.SUBSCRIBERS) {
+        return json({ error: 'Email signups are not configured on the server.' }, 503, origin);
+      }
+      try {
+        if (request.method === 'POST' && path === '/subscribe') return await handleSubscribe(request, env, origin);
+        if (request.method === 'POST' && path === '/welcome-check') return await handleWelcomeCheck(request, env, origin);
+
+        if (!(await isAdmin(request))) return json({ error: 'Not authorised.' }, 401, origin);
+        if (request.method === 'GET' && path === '/subscribers') return await handleListSubscribers(env, origin);
+        const d = /^\/subscribers\/(.{3,260})$/.exec(path);
+        if (request.method === 'DELETE' && d) return await handleDeleteSubscriber(env, decodeURIComponent(d[1]), origin);
+        return json({ error: 'Not found.' }, 404, origin);
+      } catch (err) {
+        console.error('[evb-square] signup', err.message);
+        return json({ error: 'Something went wrong. Please try again.' }, 500, origin);
+      }
+    }
+
+    if (!env.SQUARE_ACCESS_TOKEN || !env.SQUARE_LOCATION_ID) {
+      return json({ error: 'Square is not configured on the server.' }, 503, origin);
     }
 
     try {

@@ -356,7 +356,83 @@ async function init() {
   }
   $('#loginScreen').classList.add('hidden');
   $('#app').classList.remove('hidden');
+  refreshSubscribers();
   await refreshPostList();
+}
+
+/* ---- Email signups ----
+   Kept by the store Worker (square-worker.js), not GitHub. The Worker checks
+   this same GitHub token and only answers if it can push to the repo. */
+let subscribers = [];
+
+function signupApi() {
+  const c = window.EVB_STORE_CONFIG;
+  return c && c.apiBase ? String(c.apiBase).replace(/\/$/, '') : '';
+}
+
+async function signupFetch(path, options = {}) {
+  const res = await fetch(signupApi() + path, {
+    ...options,
+    headers: { 'Authorization': `Bearer ${getToken()}`, ...(options.headers || {}) },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `Worker ${res.status}`);
+  return data;
+}
+
+function fmtDate(iso) {
+  return new Date(iso).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function renderSubscribers() {
+  const body = $('#subTable tbody');
+  $('#subCount').textContent = subscribers.length ? String(subscribers.length) : '';
+  $('#subCsvBtn').disabled = !subscribers.length;
+  if (!subscribers.length) {
+    body.innerHTML = '<tr class="empty"><td colspan="5">No signups yet.</td></tr>';
+    return;
+  }
+  body.innerHTML = subscribers.map((s, i) => `
+    <tr>
+      <td class="email">${esc(s.email)}</td>
+      <td class="muted">${esc(fmtDate(s.signedUpAt))}</td>
+      <td class="muted">${esc(s.page || '—')}</td>
+      <td>${s.perkUsedAt
+        ? `<span class="tag used" title="${esc(fmtDate(s.perkUsedAt))}">Used</span>`
+        : '<span class="tag avail">Available</span>'}</td>
+      <td><button type="button" class="remove-sub" data-i="${i}">Remove</button></td>
+    </tr>`).join('');
+}
+
+async function refreshSubscribers() {
+  const status = $('#subStatus');
+  if (!signupApi()) {
+    subscribers = [];
+    renderSubscribers();
+    setStatus(status, 'pending', 'Signups are not connected yet. Deploy the store Worker with a SUBSCRIBERS KV binding and set apiBase in store/store-config.js.');
+    return;
+  }
+  setStatus(status, 'pending', 'Loading signups…');
+  try {
+    subscribers = (await signupFetch('/subscribers')).subscribers || [];
+    status.className = 'status';
+  } catch (e) {
+    subscribers = [];
+    setStatus(status, 'err', `Could not load signups: ${e.message}`);
+  }
+  renderSubscribers();
+}
+
+function downloadSubscribersCsv() {
+  const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+  const rows = [['email', 'signed_up_at', 'page', 'free_shipping_used_at']]
+    .concat(subscribers.map((s) => [s.email, s.signedUpAt, s.page, s.perkUsedAt || '']));
+  const blob = new Blob([rows.map((r) => r.map(cell).join(',')).join('\r\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `evb-email-signups-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 async function refreshPostList() {
@@ -388,6 +464,24 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#logoutBtn').addEventListener('click', () => {
     clearToken();
     init();
+  });
+
+  $('#subRefreshBtn').addEventListener('click', refreshSubscribers);
+  $('#subCsvBtn').addEventListener('click', downloadSubscribersCsv);
+  $('#subTable').addEventListener('click', async (e) => {
+    const btn = e.target.closest('.remove-sub');
+    if (!btn) return;
+    const s = subscribers[Number(btn.dataset.i)];
+    if (!s || !confirm(`Remove ${s.email} from the signup list? They lose the free-shipping offer.`)) return;
+    btn.disabled = true;
+    try {
+      await signupFetch(`/subscribers/${encodeURIComponent(s.email)}`, { method: 'DELETE' });
+      subscribers = subscribers.filter((x) => x !== s);
+      renderSubscribers();
+    } catch (err) {
+      setStatus($('#subStatus'), 'err', `Could not remove: ${err.message}`);
+      btn.disabled = false;
+    }
   });
 
   $('#titleInput').addEventListener('input', () => {

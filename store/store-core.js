@@ -211,11 +211,40 @@
   };
 
   /* ===================================================================== */
+  /* Welcome offer (email-signup popup)                                    */
+  /* ===================================================================== */
+
+  /* Free standard shipping on the first order placed with the email a
+     visitor gave the signup popup (/evb-signup.js). With the Worker
+     connected, eligibility is the server's answer; in demo mode it is just
+     "this browser signed up with this email". */
+  var welcome = {
+    check: function (email) {
+      email = String(email || '').trim().toLowerCase();
+      if (!email) return Promise.resolve(false);
+      var base = (CFG.apiBase || '').replace(/\/$/, '');
+      if (!base) {
+        var mine = '';
+        try { mine = localStorage.getItem('evb_signup_email') || ''; } catch (e) {}
+        return Promise.resolve(mine === email);
+      }
+      return fetch(base + '/welcome-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+        .then(function (r) { return r.ok ? r.json() : { eligible: false }; })
+        .then(function (d) { return !!d.eligible; })
+        .catch(function () { return false; });
+    }
+  };
+
+  /* ===================================================================== */
   /* Totals                                                                */
   /* ===================================================================== */
 
   /**
-   * totals({ shippingId, promoCode }) -> integer cents throughout.
+   * totals({ shippingId, promoCode, welcomeShip }) -> integer cents throughout.
    *
    * Discounts are allocated across taxable and non-taxable subtotals in
    * proportion to each, so tax is charged on the discounted taxable amount
@@ -253,6 +282,10 @@
       shipping = 0; shippingFree = true;
     }
     if (freeShip && rate.id === 'standard') { shipping = 0; shippingFree = true; }
+    // Only flagged when it is what made shipping free, so the server can tell
+    // a stale "free" estimate apart from one the threshold or a code covers.
+    var welcomeShip = false;
+    if (opts.welcomeShip && rate.id === 'standard' && !shippingFree) { shipping = 0; shippingFree = true; welcomeShip = true; }
 
     /* --- tax --- */
     // Allocate the discount proportionally so tax lands on the discounted
@@ -273,6 +306,7 @@
       promoCode: v.ok ? v.code : '',
       shipping: shipping,
       shippingFree: shippingFree,
+      welcomeShip: welcomeShip,
       shippingRate: rate,
       tax: tax,
       taxRate: CFG.taxRate || 0,
@@ -616,6 +650,7 @@
     attr: attr,
     cart: cart,
     promo: promo,
+    welcome: welcome,
     totals: totals,
     orders: orders,
     draft: draft,

@@ -35,6 +35,26 @@
 <main id="app" class="hidden">
 
   <div class="card">
+    <div class="card-head">
+      <div>
+        <h2>Email Signups <span class="count-pill" id="subCount"></span></h2>
+        <p class="hint">From the free-shipping popup on the site. Each email gets free standard shipping on its first online order.</p>
+      </div>
+      <div class="card-actions">
+        <button type="button" id="subRefreshBtn" class="btn btn-ghost btn-small">Refresh</button>
+        <button type="button" id="subCsvBtn" class="btn btn-ghost btn-small" disabled>Download CSV</button>
+      </div>
+    </div>
+    <div id="subStatus" class="status"></div>
+    <div class="table-wrap">
+      <table class="sub-table" id="subTable">
+        <thead><tr><th>Email</th><th>Signed up</th><th>Page</th><th>Free shipping</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>New Blog Post</h2>
     <p class="hint">Fill this in and publish — it builds the post using the site's existing template, adds it to the blog index, and updates the sitemap.</p>
 
@@ -99,6 +119,8 @@
 
 </main>
 
+<!-- Shared with the storefront: supplies apiBase, the Worker that keeps signups. -->
+<script src="/store/store-config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

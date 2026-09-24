@@ -1,0 +1,54 @@
+/* East Village Buyers — email-signup popup (see /evb-signup.js) */
+
+.evbs { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; visibility: hidden; pointer-events: none; }
+.evbs.is-open { visibility: visible; pointer-events: auto; }
+html.evbs-lock { overflow: hidden; }
+
+.evbs-backdrop { position: absolute; inset: 0; background: rgba(12,11,10,0.62); opacity: 0; transition: opacity 0.25s ease; }
+.evbs.is-open .evbs-backdrop { opacity: 1; }
+
+.evbs-card { position: relative; width: 100%; max-width: 720px; display: grid; grid-template-columns: 0.85fr 1.15fr; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 0 0 4px #f97316; opacity: 0; transform: translateY(18px) scale(0.94); transition: opacity 0.3s ease, transform 0.4s cubic-bezier(.2,1.3,.4,1); }
+.evbs.is-open .evbs-card { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .evbs-card, .evbs-backdrop { transition: none; } }
+
+.evbs-x { position: absolute; top: 8px; right: 10px; z-index: 2; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: 0; border-radius: 50%; background: rgba(255,255,255,0.9); color: #3a3632; font-size: 24px; line-height: 1; cursor: pointer; }
+.evbs-x:hover { background: #f3efe9; color: #0c0b0a; }
+
+.evbs-media { position: relative; min-height: 100%; background: #0c0b0a; }
+.evbs-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.evbs-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 60%); }
+.evbs-stamp { position: absolute; z-index: 1; left: 18px; bottom: 18px; width: 104px; height: 104px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f97316; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; clip-path: polygon(50% 0%,61% 11%,75% 6%,79% 21%,94% 25%,89% 39%,100% 50%,89% 61%,94% 75%,79% 79%,75% 94%,61% 89%,50% 100%,39% 89%,25% 94%,21% 79%,6% 75%,11% 61%,0% 50%,11% 39%,6% 25%,21% 21%,25% 6%,39% 11%); transform: rotate(-10deg); }
+.evbs-stamp b { font-size: 26px; font-weight: 900; letter-spacing: -0.02em; line-height: 1; }
+
+.evbs-body { padding: 34px 30px 24px; font-family: 'Inter', sans-serif; }
+.evbs-kicker { margin: 0 0 8px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #e8690a; }
+.evbs-title { margin: 0 0 10px; font-family: 'Montserrat', sans-serif; font-size: clamp(24px, 4vw, 32px); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; text-transform: uppercase; color: #0c0b0a; }
+.evbs-title em { font-style: normal; color: #f97316; }
+.evbs-sub { margin: 0 0 18px; font-size: 14px; line-height: 1.6; color: #5a5550; }
+.evbs-sub strong { color: #0c0b0a; word-break: break-all; }
+
+.evbs-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.evbs-input { width: 100%; box-sizing: border-box; padding: 13px 14px; border: 1.5px solid #e0dbd4; border-radius: 10px; background: #fff; font: 500 15px 'Inter', sans-serif; color: #0c0b0a; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.evbs-input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.18); }
+.evbs-input[aria-invalid="true"] { border-color: #d93025; }
+.evbs-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.evbs-err { min-height: 18px; margin: 6px 0 4px; font-size: 12px; color: #d93025; }
+
+.evbs-btn { display: flex; width: 100%; box-sizing: border-box; align-items: center; justify-content: center; padding: 14px 20px; border: 0; border-radius: 10px; background: #e8690a; color: #fff; font: 800 12px 'Montserrat', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; box-shadow: 0 4px 0 #b84f06; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+.evbs-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #b84f06; }
+.evbs-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #b84f06; }
+.evbs-btn:disabled { opacity: 0.7; cursor: default; transform: none; }
+
+.evbs-skip { display: block; margin: 12px auto 0; padding: 4px 8px; border: 0; background: none; font: 600 12px 'Inter', sans-serif; color: #9a9490; text-decoration: underline; cursor: pointer; }
+.evbs-skip:hover { color: #3a3632; }
+.evbs-fine { margin: 12px 0 0; font-size: 11px; line-height: 1.5; color: #9a9490; text-align: center; }
+
+@media (max-width: 640px) {
+  .evbs { align-items: flex-end; padding: 0; }
+  .evbs-card { grid-template-columns: 1fr; max-width: none; border-radius: 18px 18px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.35), 0 -4px 0 #f97316; transform: translateY(40px); }
+  .evbs-media { min-height: 120px; }
+  .evbs-stamp { width: 84px; height: 84px; left: auto; right: 16px; bottom: -30px; font-size: 9px; }
+  .evbs-stamp b { font-size: 21px; }
+  .evbs-body { padding: 26px 18px calc(18px + env(safe-area-inset-bottom)); }
+  .evbs-title { padding-right: 70px; }
+}
