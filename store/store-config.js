@@ -65,7 +65,7 @@ window.EVB_STORE_CONFIG = {
     phone: '917-608-8939',
     phoneHref: 'tel:9176088939',
     email: 'info@eastvillagebuyers.com',
-    hours: 'Sun 12:30–6 PM · Mon–Thu 12:30–6:30 PM · Fri 12:30–6 PM · Sat Closed'
+    hours: 'Sun 12:30–6 PM · Mon–Thu 12:30–6:30 PM · Fri 12:30–4 PM · Sat Closed'
   },
 
   /* ---- Policy copy shown at checkout ---- */
