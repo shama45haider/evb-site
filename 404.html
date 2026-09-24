@@ -87,26 +87,62 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Montserrat', sans-serif; background: #f8f5f0; color: #111; -webkit-font-smoothing: antialiased; }
 
-    /* ── HERO SPLIT ── */
-    .p404-hero { display: grid; grid-template-columns: 1fr 1fr; min-height: 420px; }
-    @media (max-width: 768px) { .p404-hero { grid-template-columns: 1fr; } }
-    .p404-hero-img { position: relative; overflow: hidden; min-height: 280px; }
-    .p404-hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-    .p404-hero-img-overlay { position: absolute; inset: 0; background: linear-gradient(to right, transparent 60%, #f8f5f0); }
-    @media (max-width: 768px) { .p404-hero-img-overlay { background: linear-gradient(to bottom, transparent 50%, #f8f5f0); } }
-    .p404-hero-content { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 52px 48px; }
-    @media (max-width: 768px) { .p404-hero-content { padding: 36px 24px 48px; } }
-    /* logo above 404 */
-    .p404-logo { display: block; width: 72px; margin-bottom: 20px; }
-    .p404-code { font-size: clamp(72px, 14vw, 120px); font-weight: 900; color: #f97316; line-height: 1; letter-spacing: -0.05em; margin-bottom: 8px; }
-    .p404-headline { font-size: clamp(20px, 3vw, 28px); font-weight: 900; color: #0c0b0a; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 14px; text-transform: uppercase; }
-    .p404-sub { font-family: 'Inter', sans-serif; font-size: 15px; color: #5a5550; line-height: 1.65; margin-bottom: 32px; max-width: 400px; }
-    .p404-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-    /* background deco accents */
-    .p404-deco { position: absolute; pointer-events: none; z-index: 0; opacity: 0.055; filter: grayscale(30%) saturate(0.7); }
-    .p404-deco-1 { width: 300px; bottom: -40px; right: -30px; transform: rotate(-14deg); }
-    .p404-deco-2 { width: 260px; top: -20px; right: 30px; transform: rotate(12deg); }
-    .p404-hero-content > *:not(.p404-deco) { position: relative; z-index: 1; }
+    /* ── HERO: popup-ad over a dimmed storefront ── */
+    .p404-hero { position: relative; overflow: hidden; padding: 56px 20px 64px; background: #0c0b0a; }
+    .p404-hero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: blur(3px) brightness(0.45) saturate(0.8); transform: scale(1.06); }
+    .p404-hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(12,11,10,0.2), rgba(12,11,10,0.75)); }
+    @media (max-width: 768px) { .p404-hero { padding: 28px 16px 40px; } }
+
+    .p404-ad { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 4px #f97316; display: grid; grid-template-columns: 0.9fr 1.1fr; animation: p404Pop 0.5s cubic-bezier(.2,1.4,.4,1) both; }
+    @keyframes p404Pop { from { opacity: 0; transform: scale(0.88) translateY(18px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .p404-ad { animation: none; } }
+    @media (max-width: 768px) { .p404-ad { grid-template-columns: 1fr; } }
+
+    .p404-ad-notice { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; padding: 10px 56px 10px 18px; background: #1a1714; color: #d9d3cc; font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.45; }
+    .p404-ad-notice strong { color: #fff; }
+    .p404-ad-notice-tag { flex-shrink: 0; padding: 3px 8px; background: #f97316; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 900; letter-spacing: 0.1em; border-radius: 5px; }
+    .p404-ad-close { position: absolute; top: 6px; right: 8px; z-index: 3; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: #d9d3cc; text-decoration: none; font-size: 22px; line-height: 1; transition: background 0.15s, color 0.15s; }
+    .p404-ad-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    .p404-ad-media { position: relative; min-height: 320px; background: #0c0b0a; }
+    .p404-ad-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .p404-ad-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 55%); }
+    @media (max-width: 768px) { .p404-ad-media { min-height: 200px; } }
+    .p404-badge { position: absolute; top: 18px; left: 18px; z-index: 2; width: 112px; height: 112px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: #f97316; color: #fff; clip-path: polygon(50% 0%,61% 11%,75% 6%,79% 21%,94% 25%,89% 39%,100% 50%,89% 61%,94% 75%,79% 79%,75% 94%,61% 89%,50% 100%,39% 89%,25% 94%,21% 79%,6% 75%,11% 61%,0% 50%,11% 39%,6% 25%,21% 21%,25% 6%,39% 11%); transform: rotate(-10deg); }
+    .p404-badge-num { font-size: 34px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
+    .p404-badge-txt { font-size: 9px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1.25; margin-top: 2px; }
+    @media (max-width: 768px) { .p404-badge { width: 88px; height: 88px; } .p404-badge-num { font-size: 26px; } .p404-badge-txt { font-size: 7.5px; } }
+    .p404-ad-media-cap { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 2; color: #fff; }
+    .p404-ad-media-cap b { display: block; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+    .p404-ad-media-cap span { font-family: 'Inter', sans-serif; font-size: 12px; color: #e6e0d9; }
+
+    .p404-ad-body { padding: 28px 30px 26px; }
+    @media (max-width: 768px) { .p404-ad-body { padding: 22px 18px 20px; } }
+    .p404-ad-kicker { font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: #e8690a; margin-bottom: 8px; }
+    .p404-ad-title { font-size: clamp(28px, 4.4vw, 42px); font-weight: 900; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; color: #0c0b0a; margin-bottom: 12px; }
+    .p404-ad-title em { font-style: normal; color: #f97316; }
+    .p404-ad-desc { font-family: 'Inter', sans-serif; font-size: 14px; color: #5a5550; line-height: 1.6; margin-bottom: 16px; }
+
+    .p404-rating { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 12px; background: #f8f5f0; border: 1px solid #e8e4de; border-radius: 10px; text-decoration: none; color: inherit; margin-bottom: 10px; }
+    .p404-rating:hover { border-color: #e8690a; }
+    .p404-rating img { width: 22px; height: 22px; }
+    .p404-rating-score { font-size: 20px; font-weight: 900; color: #0c0b0a; }
+    .p404-rating-stars { color: #fbbc04; font-size: 15px; letter-spacing: 1px; }
+    .p404-rating-count { font-family: 'Inter', sans-serif; font-size: 12px; color: #6b6560; }
+    .p404-quotes { display: grid; gap: 6px; margin-bottom: 16px; }
+    .p404-quote { font-family: 'Inter', sans-serif; font-size: 12.5px; color: #3a3632; line-height: 1.5; padding-left: 10px; border-left: 3px solid #f97316; }
+    .p404-quote cite { font-style: normal; color: #9a9490; }
+
+    .p404-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+    @media (max-width: 420px) { .p404-facts { grid-template-columns: 1fr; } }
+    .p404-fact { display: flex; gap: 8px; align-items: flex-start; font-family: 'Inter', sans-serif; font-size: 12px; color: #5a5550; line-height: 1.45; text-decoration: none; }
+    .p404-fact svg { width: 15px; height: 15px; flex-shrink: 0; color: #e8690a; margin-top: 1px; }
+    .p404-fact b { display: block; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #0c0b0a; }
+    a.p404-fact:hover b { color: #e8690a; }
+
+    .p404-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .p404-ad-fine { margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 11px; color: #9a9490; line-height: 1.5; }
+    .p404-ad-fine a { color: #6b6560; }
     /* strip deco */
     .p404-strip { position: relative; overflow: hidden; background: #fff; border-top: 1px solid #e8e4de; border-bottom: 1px solid #e8e4de; padding: 40px 24px; }
     .p404-strip-deco { position: absolute; pointer-events: none; opacity: 0.05; filter: grayscale(30%) saturate(0.6); }
@@ -240,25 +276,54 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/site-nav.js?v=20260911"></script>
   <script src="/site-reveal.js"></script>
 
-  <!-- Hero split: storefront photo + 404 message -->
-  <div class="p404-hero">
-    <div class="p404-hero-img">
-      <img src="/evbstorefront.webp" alt="East Village Buyers storefront at 39 Avenue A NYC">
-      <div class="p404-hero-img-overlay"></div>
-    </div>
-    <div class="p404-hero-content">
-      <img src="/evblogo.webp" alt="East Village Buyers" class="p404-logo" loading="lazy" decoding="async">
-      <img src="/indeximageshoe.webp" alt="" class="p404-deco p404-deco-1" aria-hidden="true" loading="lazy" decoding="async">
-      <img src="/indeximagewatch.webp" alt="" class="p404-deco p404-deco-2" aria-hidden="true" loading="lazy" decoding="async">
-      <div class="p404-code">404</div>
-      <h1 class="p404-headline">Page Not Found</h1>
-      <p class="p404-sub">This page doesn't exist — but we do. East Village Buyers is NYC's go-to spot for buying and selling luxury goods, jewelry, sneakers, and designer pieces. Walk in anytime.</p>
-      <div class="p404-btns">
-        <a href="/" class="p404-btn-primary">Go to Homepage</a>
-        <a href="/blog/" class="p404-btn-ghost">Read Our Blog</a>
+  <!-- Hero: popup-style ad shown in place of the missing page -->
+  <section class="p404-hero">
+    <img src="/evbstorefront.webp" alt="" class="p404-hero-bg" aria-hidden="true">
+    <div class="p404-ad" role="region" aria-labelledby="p404Title" aria-describedby="p404Notice">
+      <p class="p404-ad-notice" id="p404Notice"><span class="p404-ad-notice-tag">404</span><span><strong>This page doesn't exist.</strong> You're seeing this info about our store because the link you followed is broken or the page has moved.</span></p>
+      <a href="/" class="p404-ad-close" aria-label="Close and go to the homepage">&times;</a>
+
+      <div class="p404-ad-media">
+        <img src="/evbstorefront.webp" alt="East Village Buyers storefront at 39 Avenue A, NYC">
+        <div class="p404-badge" aria-hidden="true"><span class="p404-badge-num">#1</span><span class="p404-badge-txt">Resale<br>Shop<br>in NYC</span></div>
+        <div class="p404-ad-media-cap"><b>39 Avenue A &middot; East Village</b><span>Walk in &mdash; no appointment needed</span></div>
+      </div>
+
+      <div class="p404-ad-body">
+        <p class="p404-ad-kicker">East Village Buyers</p>
+        <h1 class="p404-ad-title" id="p404Title">NYC's <em>#1</em> Resale Shop</h1>
+        <p class="p404-ad-desc">We buy and sell gold, diamonds, watches, designer bags, sneakers, streetwear, and electronics. Bring it in for an on-the-spot offer and same-day cash.</p>
+
+        <a href="https://www.google.com/search?q=East+Village+Buyers+reviews" target="_blank" rel="noopener" class="p404-rating" aria-label="Rated 4.8 out of 5 from 562 Google reviews">
+          <img src="/google-icon.webp" alt="" loading="lazy" decoding="async">
+          <span class="p404-rating-score">4.8</span>
+          <span class="p404-rating-stars" aria-hidden="true">★★★★★</span>
+          <span class="p404-rating-count">562 Google reviews</span>
+        </a>
+        <div class="p404-quotes">
+          <p class="p404-quote">"Selling sneakers has never been easier! Had an offer within minutes." <cite>&mdash; Alex Tait</cite></p>
+          <p class="p404-quote">"Very respectable people with everything for the best prices." <cite>&mdash; B Smoove</cite></p>
+        </div>
+
+        <div class="p404-facts">
+          <a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener" class="p404-fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span><b>39 Avenue A</b>New York, NY 10009</span>
+          </a>
+          <div class="p404-fact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span><b>Sun&ndash;Fri from 12:30 PM</b>Closed Saturdays</span>
+          </div>
+        </div>
+
+        <div class="p404-btns">
+          <a href="sms:9176088939" class="p404-btn-primary">Text for a Quote</a>
+          <a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener" class="p404-btn-ghost">Get Directions</a>
+        </div>
+        <p class="p404-ad-fine">Looking for something specific? Head to the <a href="/">homepage</a>, browse the <a href="/blog/">blog</a>, or call <a href="tel:9176088939">917-608-8939</a>.</p>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- What we buy -->
   <div class="p404-strip">
