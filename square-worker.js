@@ -26,6 +26,9 @@
  *       SQUARE_ACCESS_TOKEN   type Secret    (Square Dashboard -> Credentials)
  *       SQUARE_LOCATION_ID    type Text      (Square Dashboard -> Locations)
  *       SQUARE_ENVIRONMENT    type Text      "sandbox" or "production"
+ *       CATALOG_SOURCE        type Text      optional: "panel" (default) sells
+ *                             only items posted from the EVB panel; "all"
+ *                             sells every item in the Square catalog
  *  4. Optional but recommended:
  *       Bindings -> KV Namespace -> variable name ORDERS
  *         Without it, everything still works except GET /orders/:id — the
@@ -138,15 +141,45 @@ function money(amount, currency) {
 /* GET /catalog                                                               */
 /* ========================================================================= */
 
-async function handleCatalog(env, origin) {
-  // ITEM pulls the products, IMAGE resolves image_ids to URLs.
-  const cat = await square(
-    env,
-    '/v2/catalog/list?types=ITEM,IMAGE',
-    'GET'
-  );
+/**
+ * Items posted from the EVB panel carry an `evb_listing` custom attribute
+ * (the panel's listing number). By default only those are sold online, so
+ * anything that only exists for ringing up at the counter stays off the
+ * website. Set the Worker variable CATALOG_SOURCE=all to show everything.
+ */
+function isPanelListing(o) {
+  const values = o.custom_attribute_values || {};
+  return Object.keys(values).some(k => {
+    const v = values[k] || {};
+    const named = v.name === 'evb_listing' || k === 'evb_listing' || k.endsWith(':evb_listing');
+    return named && Boolean(v.string_value);
+  });
+}
 
-  const objects = cat.objects || [];
+async function handleCatalog(env, origin) {
+  // ITEM pulls the products, IMAGE resolves image_ids to URLs. ListCatalog is
+  // paginated — follow the cursor, or everything past the first page (about
+  // a hundred objects, and every item brings its images) silently vanishes
+  // from the store.
+  let all = [];
+  let cursor = '';
+  for (let page = 0; page < 50; page++) {
+    const cat = await square(
+      env,
+      '/v2/catalog/list?types=ITEM,IMAGE' + (cursor ? '&cursor=' + encodeURIComponent(cursor) : ''),
+      'GET'
+    );
+    all = all.concat(cat.objects || []);
+    cursor = cat.cursor || '';
+    if (!cursor) break;
+  }
+
+  const panelOnly = (env.CATALOG_SOURCE || 'panel') !== 'all';
+  const items = all.filter(o => o.type === 'ITEM' && !o.is_deleted && (!panelOnly || isPanelListing(o)));
+  // Only the images those items use — no reason to ship the rest.
+  const usedImages = new Set();
+  items.forEach(o => ((o.item_data && o.item_data.image_ids) || []).forEach(id => usedImages.add(id)));
+  const objects = items.concat(all.filter(o => o.type === 'IMAGE' && usedImages.has(o.id)));
 
   // Fold live inventory onto each variation so the storefront can mark
   // one-of-one pieces as sold the moment they go.

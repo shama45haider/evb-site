@@ -847,7 +847,10 @@
         compareAt: custom.compare_at ? Number(custom.compare_at) : null,
         images: imgs.length ? imgs : ['/evblogo.webp'],
         blurb: custom.blurb || '',
-        description: d.description || '',
+        // `description` is deprecated in Square's API; items written with
+        // `description_html` (as the EVB panel does) carry the text in
+        // Square's server-made `description_plaintext` instead.
+        description: d.description_plaintext || d.description || '',
         details: custom.details ? String(custom.details).split('|') : [],
         variantLabel: vars.length > 1 ? (custom.variant_label || 'Option') : null,
         variants: vars.length ? vars : one(1),
