@@ -185,6 +185,25 @@
       </div>
     </div>
   </div>
+  <!-- Staff preview. The storefront stays hidden from customers until it is
+       connected to Square; this lets the shop look at it in the meantime. -->
+  <div class="evb-wrap">
+    <details class="evb-staff" id="evbStaff">
+      <summary>Staff preview</summary>
+      <div id="evbStaffOpen" class="evb-staff-open" hidden>
+        <a href="/store/shop/" class="evb-btn evb-btn--primary evb-btn--sm">Open the store preview</a>
+        <button type="button" id="evbStaffLock" class="evb-btn evb-btn--ghost evb-btn--sm">Lock it again</button>
+      </div>
+      <form id="evbStaffForm" class="evb-staff-form" autocomplete="off">
+        <label for="evbStaffPw" class="evb-staff-label">Password</label>
+        <div class="evb-staff-row">
+          <input id="evbStaffPw" type="password" class="evb-input" autocomplete="current-password" required>
+          <button type="submit" class="evb-btn evb-btn--primary evb-btn--sm">Open the store</button>
+        </div>
+        <p id="evbStaffMsg" class="evb-staff-msg" role="alert" hidden></p>
+      </form>
+    </details>
+  </div>
 </main>
 
 <footer class="evb-footer">
@@ -332,6 +351,74 @@
 </script>
 
 <link rel="stylesheet" href="/evb-assistant.css">
+<style>
+  .evb-staff { margin: 8px 0 28px; font-size: 13px; color: var(--evb-muted, #6b6b6b); }
+  .evb-staff summary { cursor: pointer; width: max-content; font-weight: 600; opacity: .75; }
+  .evb-staff summary:hover { opacity: 1; }
+  .evb-staff-form, .evb-staff-open { margin-top: 12px; max-width: 420px; }
+  .evb-staff-open { display: flex; flex-wrap: wrap; gap: 8px; }
+  .evb-staff-open[hidden], .evb-staff-form[hidden], .evb-staff-msg[hidden] { display: none; }
+  .evb-staff-label { display: block; margin-bottom: 6px; font-weight: 600; }
+  .evb-staff-row { display: flex; gap: 8px; }
+  .evb-staff-row .evb-input { flex: 1; min-width: 0; }
+  .evb-staff-msg { margin-top: 8px; color: #c2261b; font-weight: 600; }
+</style>
+<script>
+/* Staff preview unlock. The page holds only a salted SHA-256 of the password,
+   never the password. Unlocks this browser for 14 days (see the gate at the
+   top of every /store/ page). */
+(function () {
+  var HASH = '9add7e34df420a05a590bd58939a21a2dfec06d13a5b9c9d72af0ccb4557987f';
+  var DAYS = 14;
+  var form = document.getElementById('evbStaffForm');
+  var input = document.getElementById('evbStaffPw');
+  var msg = document.getElementById('evbStaffMsg');
+  var open = document.getElementById('evbStaffOpen');
+  var lock = document.getElementById('evbStaffLock');
+  if (!form) return;
+
+  function unlocked() {
+    try { return Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) { return false; }
+  }
+  function render() {
+    var on = unlocked();
+    open.hidden = !on;
+    form.hidden = on;
+  }
+  function say(text) { msg.textContent = text; msg.hidden = false; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!window.crypto || !crypto.subtle || !window.TextEncoder) {
+      say('This browser can\u2019t check the password \u2014 try Chrome or Safari.');
+      return;
+    }
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode('evb-store-preview:' + input.value)).then(function (buf) {
+      var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ('0' + b.toString(16)).slice(-2);
+      }).join('');
+      if (hex !== HASH) {
+        input.value = '';
+        say('That password isn\u2019t right.');
+        return;
+      }
+      try { localStorage.setItem('evb_store_preview_until', String(Date.now() + DAYS * 864e5)); } catch (err) {}
+      try { sessionStorage.setItem('evb_store_preview', '1'); } catch (err) {}
+      location.href = '/store/shop/';
+    });
+  });
+
+  lock.addEventListener('click', function () {
+    try { localStorage.removeItem('evb_store_preview_until'); } catch (e) {}
+    try { sessionStorage.removeItem('evb_store_preview'); } catch (e) {}
+    render();
+  });
+
+  render();
+  // Opened straight from a link to it: show the form rather than a closed toggle.
+  if (location.hash === '#staff') document.getElementById('evbStaff').open = true;
+})();
+</script>
 <script src="/evb-assistant.js" defer data-evb-assistant></script>
 </body>
 </html>

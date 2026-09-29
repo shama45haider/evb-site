@@ -7,18 +7,15 @@
 <script>
 /* Store gate — the storefront is not public while Square is being connected.
    Reaching any store page sends you to the coming-soon page unless this
-   session was opened with ?preview=1. Runs before render so there is no
-   flash of the gated page, and fails closed if storage is unavailable. */
+   browser was unlocked with the staff preview password on /store/ (good for
+   14 days). The old ?preview=1 shortcut is gone — the password is the only
+   way in. Runs before render so there is no flash of the gated page, and
+   fails closed if storage is unavailable. Not a security boundary (this is a
+   static site); it keeps the unfinished store away from customers. */
 (function () {
   var ok = false;
-  try {
-    if (new URLSearchParams(location.search).get('preview') === '1') {
-      ok = true;
-      try { sessionStorage.setItem('evb_store_preview', '1'); } catch (e) {}
-    } else {
-      try { ok = sessionStorage.getItem('evb_store_preview') === '1'; } catch (e) {}
-    }
-  } catch (e) {}
+  try { ok = Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) {}
+  if (!ok) { try { ok = sessionStorage.getItem('evb_store_preview') === '1'; } catch (e) {} }
   if (!ok) location.replace('/store/');
 })();
 </script>
