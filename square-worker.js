@@ -21,8 +21,8 @@
  *   POST /subscribe       email-signup popup: store the email, grant the
  *                         free-shipping-on-first-order perk (SUBSCRIBERS KV)
  *   POST /welcome-check   checkout asks whether an email still has the perk
- *   GET  /subscribers     admin panel list (GitHub token with push access)
- *   DELETE /subscribers/:email   admin panel removal
+ *   GET  /subscribers     staff panel list (Bearer PANEL_API_KEY)
+ *   DELETE /subscribers/:email   staff panel removal
  *
  *   The signup routes work before Square is configured, so the popup can
  *   collect emails while the store is still "coming soon".
@@ -47,6 +47,9 @@
  *  4b. Required for the email-signup popup:
  *       Bindings -> KV Namespace -> variable name SUBSCRIBERS
  *         Without it, /subscribe returns 503 and the popup stays hidden.
+ *       Variables and Secrets -> PANEL_API_KEY, type Secret, 32+ characters.
+ *         The staff panel sends it to read and remove signups; set the same
+ *         value as EVB_WORKER_PANEL_KEY in the panel's Vercel environment.
  *  5. Copy the Worker URL and put it in /store/store-config.js as `apiBase`,
  *     along with your Application ID and Location ID.
  *
@@ -561,7 +564,6 @@ async function handleGetOrder(env, id, origin) {
    needs in the key's metadata so listing never has to read values:
      { e: email, t: signup ms, p: page path, r: ms the perk was used or 0 } */
 
-const ADMIN_REPO = 'shama45haider/evb-site';
 const RE_EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i;
 
 function normEmail(v) {
@@ -596,17 +598,23 @@ async function handleWelcomeCheck(request, env, origin) {
   return json({ eligible: !!(sub && !sub.r) }, 200, origin, { 'Cache-Control': 'no-store' });
 }
 
-/** Admin = a GitHub token that can push to the site repo, the same token the
-    Manage Blogs panel already signs in with. No extra password to manage. */
-async function isAdmin(request) {
+/** Admin = the staff panel (panel.eastvillagebuyers.com), which calls from its
+    server with `Authorization: Bearer <PANEL_API_KEY>`. The key lives only in
+    this Worker's secrets and the panel's server env, never in a browser. */
+async function isAdmin(request, env) {
+  const key = env.PANEL_API_KEY || '';
   const auth = request.headers.get('Authorization') || '';
-  if (!/^Bearer \S+$/.test(auth)) return false;
-  const res = await fetch('https://api.github.com/repos/' + ADMIN_REPO, {
-    headers: { 'Authorization': auth, 'Accept': 'application/vnd.github+json', 'User-Agent': 'evb-square-worker' }
-  });
-  if (!res.ok) return false;
-  const repo = await res.json().catch(() => ({}));
-  return !!(repo.permissions && (repo.permissions.push || repo.permissions.admin));
+  if (key.length < 32 || !auth.startsWith('Bearer ')) return false;
+  // Compare digests so the check takes the same time however much matches.
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest('SHA-256', enc.encode(auth.slice(7))),
+    crypto.subtle.digest('SHA-256', enc.encode(key))
+  ]);
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
 }
 
 async function handleListSubscribers(env, origin) {
@@ -682,7 +690,7 @@ export default {
         if (request.method === 'POST' && path === '/subscribe') return await handleSubscribe(request, env, origin);
         if (request.method === 'POST' && path === '/welcome-check') return await handleWelcomeCheck(request, env, origin);
 
-        if (!(await isAdmin(request))) return json({ error: 'Not authorised.' }, 401, origin);
+        if (!(await isAdmin(request, env))) return json({ error: 'Not authorised.' }, 401, origin);
         if (request.method === 'GET' && path === '/subscribers') return await handleListSubscribers(env, origin);
         const d = /^\/subscribers\/(.{3,260})$/.exec(path);
         if (request.method === 'DELETE' && d) return await handleDeleteSubscriber(env, decodeURIComponent(d[1]), origin);
