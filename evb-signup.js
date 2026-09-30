@@ -44,7 +44,7 @@
   function loadConfig(cb) {
     if (window.EVB_STORE_CONFIG) return cb();
     var s = document.createElement('script');
-    s.src = '/store/store-config.js';
+    s.src = '/store/store-config.js?v=1.9.0';
     s.onload = s.onerror = function () { cb(); };
     document.head.appendChild(s);
   }
