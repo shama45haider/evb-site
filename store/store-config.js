@@ -70,5 +70,5 @@ window.EVB_STORE_CONFIG = {
 
   /* ---- Policy copy shown at checkout ---- */
 
-  returnsPolicy: 'All items are authenticated in-house. Returns accepted within 14 days in original condition — final sale on gold and bullion priced to the live spot market.'
+  returnsPolicy: 'All sales are final. We do not accept returns or exchanges. If an item arrives damaged or is not what you ordered, contact us within 48 hours of delivery.'
 };

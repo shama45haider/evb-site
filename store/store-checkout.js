@@ -566,13 +566,13 @@
         '</div>' +
 
         '<div class="evb-review-block">' +
-          '<p class="evb-review-label">Returns</p>' +
+          '<p class="evb-review-label">All sales final</p>' +
           '<p class="evb-review-value" style="color:var(--evb-ink-2)">' + S.esc(CFG.returnsPolicy) + '</p>' +
         '</div>' +
 
         '<label class="evb-check" style="margin-top:18px">' +
           '<input type="checkbox" name="terms"' + (d.terms ? ' checked' : '') + '>' +
-          '<span>I have read and accept the return policy, and I confirm the details above are correct.</span>' +
+          '<span>I understand all sales are final, and I confirm the details above are correct.</span>' +
         '</label>' +
         (e.terms ? '<p class="evb-error">' + S.esc(e.terms) + '</p>' : '') +
 
