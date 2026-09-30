@@ -3891,37 +3891,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<!-- What's New Carousel Popup -->
-<div id="wnWrap" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:16px;">
-  <div class="nk-card">
-    <button onclick="wnClose()" class="nk-x" aria-label="Close">&#10005;</button>
-
-    <!-- Slide track -->
-    <div class="wn-track" id="wnTrack">
-
-      <!-- Slide 1: We Buy Gold -->
-      <div class="wn-slide">
-        <div class="nk-img">
-          <img src="wn-gold-jewelry.webp" alt="Gold jewelry at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
-          <div class="wn-slide-badge">WHAT'S NEW</div>
-        </div>
-        <div class="nk-body">
-          <img src="evblogo.webp" alt="" class="nk-watermark" loading="lazy" decoding="async">
-          <div class="nk-tag">IN STORE NOW</div>
-          <h2 class="nk-title">We Buy Gold, Jewelry &amp; Watches</h2>
-          <p class="nk-desc">Bring in your items today and walk out with cash. Best rates guaranteed in the area.</p>
-          <div class="nk-btns">
-            <a href="sms:9176088939" class="nk-btn nk-btn-primary">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              Get a Quick Quote</a>
-          </div>
-          <div class="nk-addr">39 Avenue A, East Village, NYC</div>
-        </div>
-      </div>
-
-    </div><!-- /wn-track -->
-  </div>
-</div>
 <style>
   .nk-card{position:relative;max-width:580px;width:100%;background:#fff;border-radius:18px;overflow:hidden;display:flex;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:nkSlide .5s cubic-bezier(.22,1,.36,1)}
   .nk-x{position:absolute;top:10px;right:12px;z-index:10;background:rgba(255,255,255,.9);border:none;color:#333;font-size:18px;width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .2s}
@@ -3961,17 +3930,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     .nk-title{font-size:17px}
   }
 </style>
-<script>
-(function(){
-  var KEY='evb_wn_v1';
-  if(sessionStorage.getItem(KEY))return;
-  var wrap=document.getElementById('wnWrap');
-  if(!wrap)return;
-  setTimeout(function(){wrap.style.display='flex';},800);
-  window.wnClose=function(){wrap.style.display='none';sessionStorage.setItem(KEY,'1');};
-  wrap.addEventListener('click',function(e){if(e.target===wrap)wnClose();});
-})();
-</script>
 
 
 
