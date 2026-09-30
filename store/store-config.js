@@ -17,7 +17,7 @@ window.EVB_STORE_CONFIG = {
 
   // Your Cloudflare Worker's URL, no trailing slash.
   // e.g. 'https://evb-square.yourname.workers.dev'
-  apiBase: '',
+  apiBase: 'https://evb-square.shama45haider.workers.dev',
 
   // Square Developer Dashboard -> your app -> Credentials -> Application ID.
   // Sandbox ids start with 'sandbox-sq0idb-', production with 'sq0idp-'.
