@@ -52,7 +52,7 @@
     // the Worker has quoted Square's exact total (POST /quote) — Afterpay and
     // Cash App Pay approve one exact amount, so an estimate won't do.
     payMethod: 'card',
-    quote: { key: null, data: null, promise: null, unsupported: false },
+    quote: { key: null, data: null, promise: null },
     // gen/detectGen: which wallet button / method list is current, as for
     // the card. available: what this browser + account can use, per quote.
     wallet: { gen: 0, detectGen: 0, obj: null, available: null, availableKey: null, resume: null },
@@ -365,7 +365,6 @@
    */
   function ensureQuote() {
     var q = state.quote, key = quoteKey();
-    if (q.unsupported) return Promise.resolve(null);
     if (q.key === key && q.promise) return q.promise;
     var base = (CFG.apiBase || '').replace(/\/$/, '');
     q.key = key;
@@ -375,13 +374,15 @@
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ order: buildOrder(currentTotals(), {}) })
     }).then(function (r) {
-      if (r.status === 404) { q.unsupported = true; return null; }
       return r.json().catch(function () { return {}; }).then(function (json) {
-        if (!r.ok || typeof json.total !== 'number') throw new Error(json.error || 'No quote');
+        // 404 = a Worker from before /quote. Not remembered: it may be
+        // redeployed while this page is open, so the next step asks again.
+        if (!r.ok || typeof json.total !== 'number') throw new Error('HTTP ' + r.status + (json.error ? ' ' + json.error : ''));
         if (q.key === key) q.data = json;
         return json;
       });
-    }).catch(function () {
+    }).catch(function (err) {
+      console.info('[checkout] no quote from the Worker, so card only: ' + (err && err.message));
       if (q.key === key) q.promise = null;   // try again next time
       return null;
     });
@@ -489,7 +490,12 @@
         return createWallet(payments, w.id, q).then(function (obj) {
           destroyWallet(obj);
           return true;
-        }, function () { return false; });
+        }, function (err) {
+          // Square's reason, for whoever is diagnosing a missing method.
+          console.info('[checkout] ' + w.label + ' not offered: ' +
+            (err ? (err.name ? err.name + ': ' : '') + err.message : 'unavailable'));
+          return false;
+        });
       }));
     }).then(function (flags) {
       var available = {};
