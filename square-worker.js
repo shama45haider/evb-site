@@ -15,6 +15,7 @@
  * ── ROUTES ─────────────────────────────────────────────────────────────────
  *   GET  /health          quick sanity check, no Square call
  *   GET  /catalog         items + variations + images + inventory counts
+ *   POST /quote           Square's exact total for the bag, nothing created
  *   POST /orders          create the Square Order, take payment, return receipt
  *   GET  /orders/:id      fetch a stored receipt (needs the ORDERS KV binding)
  *   POST /subscribe       email-signup popup: store the email, grant the
@@ -400,6 +401,36 @@ async function buildSquareOrder(env, payload) {
   } };
 }
 
+/* ========================================================================= */
+/* POST /quote                                                                */
+/* ========================================================================= */
+
+/**
+ * Price the bag exactly as POST /orders would charge it, without creating
+ * anything: the same order, run through Square's CalculateOrder. Afterpay and
+ * Cash App Pay have the buyer approve one exact amount before the charge, and
+ * the checkout's own estimate can be a cent off Square's per-line tax rounding
+ * — so the checkout asks here first, and shows this figure on the review step.
+ */
+async function handleQuote(request, env, origin) {
+  const payload = await request.json();
+  if (!payload || !payload.order) return json({ error: 'Malformed request.' }, 400, origin);
+
+  const built = await buildSquareOrder(env, payload);
+  const calc = await square(env, '/v2/orders/calculate', 'POST', { order: built.order });
+  const o = calc.order || {};
+  const amount = m => (m && m.amount) || 0;
+
+  return json({
+    total: amount(o.total_money),
+    subtotal: (o.line_items || []).reduce((n, li) => n + amount(li.gross_sales_money), 0),
+    discount: amount(o.total_discount_money),
+    shipping: amount(o.total_service_charge_money),
+    tax: amount(o.total_tax_money),
+    welcomeShipping: !!built.welcomeEmail
+  }, 200, origin);
+}
+
 async function handleCreateOrder(request, env, origin) {
   const payload = await request.json();
 
@@ -447,6 +478,10 @@ async function handleCreateOrder(request, env, origin) {
 
   const p = paid.payment || {};
   const card = (p.card_details && p.card_details.card) || {};
+  // The checkout names the method it paid with; only these known labels are
+  // kept, anything else is recorded as plain Square.
+  const claimed = payload.order.payment && payload.order.payment.method;
+  const via = ['Apple Pay', 'Google Pay', 'Cash App Pay', 'Afterpay'].indexOf(claimed) !== -1 ? claimed : 'Square';
 
   // Spend the welcome perk only once money has actually moved.
   if (built.welcomeEmail && p.status === 'COMPLETED') {
@@ -463,9 +498,10 @@ async function handleCreateOrder(request, env, origin) {
     receiptUrl: p.receipt_url || null,
     demo: false,
     payment: {
-      brand: card.card_brand || 'Card',
+      // Cash App Pay and Afterpay have no card; the receipt names the method.
+      brand: card.card_brand || (via === 'Square' ? 'Card' : via),
       last4: card.last_4 || null,
-      method: 'Square',
+      method: via,
       status: p.status || null
     },
     // Square's numbers are authoritative and replace the client estimate.
@@ -664,6 +700,9 @@ export default {
     try {
       if (request.method === 'GET' && path === '/catalog') {
         return await handleCatalog(env, origin);
+      }
+      if (request.method === 'POST' && path === '/quote') {
+        return await handleQuote(request, env, origin);
       }
       if (request.method === 'POST' && path === '/orders') {
         return await handleCreateOrder(request, env, origin);
