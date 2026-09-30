@@ -43,7 +43,11 @@
       terms: false, marketing: false
     },
     errors: {},
-    square: { payments: null, card: null, ready: false, error: '' },
+    // gen: which card form is current — every redraw of the payment step
+    // mounts a new one, and callbacks from an older one must not touch the
+    // page. token: the card, tokenized on the way out of the payment step
+    // ({ sourceId, brand, last4 }); single-use, so cleared after any attempt.
+    square: { payments: null, card: null, ready: false, error: '', gen: 0, token: null },
     // Free standard shipping from the email-signup popup, for this email.
     welcomeShip: false,
     welcomeFor: null
@@ -171,13 +175,31 @@
     });
   }
 
+  /**
+   * Mount Square's card form into #sqCard. render() rebuilds the page with
+   * innerHTML, which throws away the previous form's iframe, so this runs on
+   * every render of the payment step. A form that was still starting up when
+   * that happened fails later with "unable to be initialized in time" — the
+   * generation check keeps that stale failure (or a stale success) from
+   * landing on the form that is actually on the page.
+   */
   function mountSquareCard() {
     var target = document.getElementById('sqCard');
     if (!target) return;
 
+    var gen = ++state.square.gen;
+    var old = state.square.card;
+    state.square.card = null;
+    state.square.ready = false;
+    state.square.token = null;
+    if (old) old.destroy().catch(function () {});
+
     loadSquareSdk()
       .then(function (Square) {
-        state.square.payments = Square.payments(CFG.squareApplicationId, CFG.squareLocationId);
+        if (gen !== state.square.gen) return null;
+        if (!state.square.payments) {
+          state.square.payments = Square.payments(CFG.squareApplicationId, CFG.squareLocationId);
+        }
         return state.square.payments.card({
           style: {
             // The card fields live in Square's iframe, which only takes fonts
@@ -192,16 +214,19 @@
         });
       })
       .then(function (card) {
+        if (!card) return;
+        if (gen !== state.square.gen) { card.destroy().catch(function () {}); return; }
         state.square.card = card;
-        return card.attach('#sqCard');
-      })
-      .then(function () {
-        state.square.ready = true;
-        state.square.error = '';
-        var n = document.getElementById('cardLoading');
-        if (n) n.remove();
+        return card.attach('#sqCard').then(function () {
+          if (gen !== state.square.gen) return;
+          state.square.ready = true;
+          state.square.error = '';
+          var n = document.getElementById('cardLoading');
+          if (n) n.remove();
+        });
       })
       .catch(function (err) {
+        if (gen !== state.square.gen) return;   // a newer form replaced this one
         state.square.ready = false;
         state.square.error = err.message || 'Payment form failed to load';
         var n = document.getElementById('cardLoading');
@@ -213,15 +238,37 @@
       });
   }
 
-  /** Tokenize the card and run buyer verification (3DS / SCA). */
-  function squareTokenize(totals) {
-    var d = state.data;
+  /**
+   * Turn the card fields into a single-use token. This has to happen on the
+   * payment step: Square's fields live in #sqCard, and moving on to review
+   * redraws the page without them.
+   */
+  function tokenizeCard() {
+    if (!state.square.card || !state.square.ready) {
+      return Promise.reject(new Error(state.square.error || 'Payment form is still loading'));
+    }
     return state.square.card.tokenize().then(function (result) {
       if (result.status !== 'OK') {
-        var msg = (result.errors && result.errors[0] && result.errors[0].message) || 'Card was declined';
+        var msg = (result.errors && result.errors[0] && result.errors[0].message) || 'Check your card details';
         throw new Error(msg);
       }
-      var payload = { sourceId: result.token, verificationToken: null };
+      var card = (result.details && result.details.card) || {};
+      return { sourceId: result.token, brand: card.brand || null, last4: card.last4 || null };
+    });
+  }
+
+  function brandLabel(brand) {
+    return String(brand || 'Card').toLowerCase().split('_')
+      .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
+  }
+
+  /** Run buyer verification (3DS / SCA) on the card tokenized at the payment step. */
+  function squareTokenize(totals) {
+    var d = state.data;
+    var tok = state.square.token;
+    if (!tok) return Promise.reject(new Error('Enter your card again'));
+    return Promise.resolve().then(function () {
+      var payload = { sourceId: tok.sourceId, verificationToken: null, brand: tok.brand, last4: tok.last4 };
 
       // verifyBuyer is required for SCA in supported regions and strengthens
       // the risk signal everywhere else. A failure here should not block the
@@ -238,7 +285,7 @@
         }
       };
 
-      return state.square.payments.verifyBuyer(result.token, details)
+      return state.square.payments.verifyBuyer(tok.sourceId, details)
         .then(function (v) { payload.verificationToken = v && v.token; return payload; })
         .catch(function () { return payload; });
     });
@@ -322,6 +369,14 @@
   function submit() {
     if (state.submitting) return;
     if (!validate('review')) { render(); return; }
+    if (S.isLive() && !state.square.token) {
+      // Reached review without passing through payment (e.g. the stepper),
+      // or the last token was spent on a failed attempt.
+      state.step = 'payment';
+      state.errors = { card: 'Enter your card to place the order' };
+      render();
+      return;
+    }
 
     state.submitting = true;
     render();
@@ -381,11 +436,19 @@
       })
       .catch(function (err) {
         state.submitting = false;
-        state.errors.submit = err.message || 'Something went wrong taking payment.';
+        var message = err.message || 'Something went wrong taking payment.';
         // The welcome perk may have been spent elsewhere; ask the server again.
         if (state.welcomeShip) { state.welcomeShip = false; state.welcomeFor = null; }
+        if (S.isLive()) {
+          // A Square card token works once — back to payment for a fresh one.
+          state.square.token = null;
+          state.step = 'payment';
+          state.errors = { card: message };
+        } else {
+          state.errors.submit = message;
+        }
         render();
-        S.toast(state.errors.submit, 'error');
+        S.toast(message, 'error');
         var host = document.getElementById('checkoutSteps');
         if (host) host.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
@@ -498,7 +561,9 @@
           '<span>Loading the secure card form…</span>' +
         '</div>' +
         '<div id="sqCard"></div>' +
-        (e.card ? '<p class="evb-error">' + S.esc(e.card) + '</p>' : '')
+        // Always present, so a card error can be shown without a redraw
+        // (a redraw would wipe what the buyer typed into Square's fields).
+        '<p class="evb-error" id="cardError"' + (e.card ? '' : ' hidden') + '>' + S.esc(e.card || '') + '</p>'
 
       : '<div class="evb-demo-flag">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5M12 8v.01"/></svg>' +
@@ -536,8 +601,9 @@
         S.esc(d.address1) + (d.address2 ? '<br>' + S.esc(d.address2) : '') + '<br>' +
         S.esc(d.city) + ', ' + S.esc(d.region) + ' ' + S.esc(d.postal);
 
+    var tok = state.square.token;
     var cardLine = S.isLive()
-      ? 'Card entered securely through Square'
+      ? (tok && tok.last4 ? brandLabel(tok.brand) + ' ending ' + tok.last4 : 'Card entered securely through Square')
       : cardBrand(d.cardNumber) + ' ending ' + digits(d.cardNumber).slice(-4);
 
     return '<div class="evb-panel">' +
@@ -681,6 +747,23 @@
     return s.slice(0, 2) + '/' + s.slice(2);
   }
 
+  function advance() {
+    persistDraft();
+    var i = STEPS.indexOf(state.step);
+    state.step = STEPS[i + 1];
+    state.reached[state.step] = true;
+    state.errors = {};
+    render();
+    document.getElementById('checkoutSteps').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function showCardError(message) {
+    var p = document.getElementById('cardError');
+    if (!p) return;
+    p.textContent = message || '';
+    p.hidden = !message;
+  }
+
   function wire() {
     var host = els.host;
 
@@ -727,19 +810,29 @@
 
     var next = host.querySelector('[data-next]');
     if (next) next.addEventListener('click', function () {
+      if (state.step === 'payment' && S.isLive()) {
+        // Tokenize now, while Square's fields are still on the page. On a
+        // bad card, show the error in place — render() would wipe the card.
+        var label = next.textContent;
+        next.disabled = true;
+        next.textContent = 'Checking card…';
+        tokenizeCard().then(function (tok) {
+          state.square.token = tok;
+          advance();
+        }).catch(function (err) {
+          next.disabled = false;
+          next.textContent = label;
+          showCardError(err.message || 'Check your card details');
+        });
+        return;
+      }
       if (!validate(state.step)) {
         render();
         var bad = els.host.querySelector('.is-invalid');
         if (bad) bad.focus();
         return;
       }
-      persistDraft();
-      var i = STEPS.indexOf(state.step);
-      state.step = STEPS[i + 1];
-      state.reached[state.step] = true;
-      state.errors = {};
-      render();
-      document.getElementById('checkoutSteps').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      advance();
     });
 
     var back = host.querySelector('[data-back]');
