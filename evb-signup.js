@@ -4,7 +4,7 @@
    page by site-nav.js.
 
    Emails go to the store Worker (POST /subscribe, see /square-worker.js),
-   which keeps the list the Manage Blogs admin panel shows and applies the
+   which keeps the signup list (GET /subscribers) and applies the
    free shipping at checkout. The Worker URL is `apiBase` in
    /store/store-config.js — until that is filled in there is nowhere to keep
    an email, so the popup stays hidden. Add ?signup-preview to any URL to see
