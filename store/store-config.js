@@ -21,14 +21,14 @@ window.EVB_STORE_CONFIG = {
 
   // Square Developer Dashboard -> your app -> Credentials -> Application ID.
   // Sandbox ids start with 'sandbox-sq0idb-', production with 'sq0idp-'.
-  squareApplicationId: 'sandbox-sq0idb-RWPUiYyjE6bacqy8RGUqxw',
+  squareApplicationId: 'sq0idp-MYZIn2r7DbdERwNYLlHO0w',
 
   // Square Dashboard -> Locations. Looks like 'L8XY2Z9ABCDEF'.
   squareLocationId: 'LTY6P3DH2D9J3',
 
   // 'sandbox' while testing, 'production' when live. Controls which Square
   // Web Payments SDK bundle gets loaded.
-  squareEnvironment: 'sandbox',
+  squareEnvironment: 'production',
 
   /* ---- Store behaviour ---- */
 
