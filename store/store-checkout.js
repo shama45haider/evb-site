@@ -180,7 +180,10 @@
         state.square.payments = Square.payments(CFG.squareApplicationId, CFG.squareLocationId);
         return state.square.payments.card({
           style: {
-            input: { fontSize: '15px', fontFamily: 'Montserrat, sans-serif', color: '#1c1917' },
+            // The card fields live in Square's iframe, which only takes fonts
+            // it knows: Montserrat (and system-ui) fail attach() with an
+            // InvalidStylesError, and the whole payment form never loads.
+            input: { fontSize: '15px', fontFamily: 'helvetica neue, sans-serif', color: '#1c1917' },
             '.input-container': { borderColor: '#e7e1d8', borderRadius: '10px' },
             '.input-container.is-focus': { borderColor: '#f97316' },
             '.input-container.is-error': { borderColor: '#b91c1c' },
