@@ -852,26 +852,42 @@
     var place = host.querySelector('#placeOrder');
     if (place) place.addEventListener('click', submit);
 
-    var promoBtn = host.querySelector('#promoBtn');
-    var promoInput = host.querySelector('#promoInput');
-    if (promoBtn) {
-      var applyPromo = function () {
-        var code = promoInput.value.trim().toUpperCase();
-        if (!code) {
-          state.data.promoCode = ''; state.promoMsg = null;
-        } else {
-          var v = S.promo.validate(code);
-          state.data.promoCode = v.ok ? v.code : '';
-          state.promoMsg = { ok: v.ok, text: v.message };
-        }
-        S.draft.set({ promoCode: state.data.promoCode });
-        render();
-      };
-      promoBtn.addEventListener('click', applyPromo);
-      promoInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); applyPromo(); }
-      });
+    wirePromo();
+  }
+
+  function wirePromo() {
+    var promoBtn = els.host.querySelector('#promoBtn');
+    var promoInput = els.host.querySelector('#promoInput');
+    if (!promoBtn) return;
+    var applyPromo = function () {
+      var code = promoInput.value.trim().toUpperCase();
+      if (!code) {
+        state.data.promoCode = ''; state.promoMsg = null;
+      } else {
+        var v = S.promo.validate(code);
+        state.data.promoCode = v.ok ? v.code : '';
+        state.promoMsg = { ok: v.ok, text: v.message };
+      }
+      S.draft.set({ promoCode: state.data.promoCode });
+      refresh();
+    };
+    promoBtn.addEventListener('click', applyPromo);
+    promoInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); applyPromo(); }
+    });
+  }
+
+  /**
+   * Redraw after the bag or the promo code changes. On the live payment step
+   * only the order summary is redrawn — render() would throw away Square's
+   * card fields and whatever the buyer has typed into them.
+   */
+  function refresh() {
+    if (S.cart.lines.length && state.step === 'payment' && S.isLive()) {
+      var box = els.host.querySelector('.evb-summary');
+      if (box) { box.innerHTML = summary(); wirePromo(); return; }
     }
+    render();
   }
 
   /* Card details are deliberately excluded from the draft. */
@@ -899,16 +915,26 @@
 
     S.mountCartUI('/');
 
+    var ready = false;
     C.load().then(function () {
       var changes = S.cart.reconcile();
       restoreDraft();
       render();
+      ready = true;
       if (changes.length) {
         S.toast('Your bag changed — please review it before paying', 'error');
       }
     });
 
-    window.addEventListener('evb:cart-external', render);
+    // The slide-out bag works on this page too, so a change made there (or
+    // in another tab) has to reach the order summary and totals — before,
+    // only other tabs' changes did, and a removed item stayed on screen.
+    // Not while submitting: a paid order clears the bag on its way out.
+    function onCartChange() {
+      if (ready && !state.submitting) refresh();
+    }
+    window.addEventListener('evb:cart-change', onCartChange);
+    window.addEventListener('evb:cart-external', onCartChange);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
