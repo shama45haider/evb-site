@@ -470,6 +470,20 @@
     });
   }
 
+  /**
+   * Square sometimes answers "Temporarily unable to register the payment
+   * method" (seen live on Cash App Pay, fine a moment later). Worth one more
+   * try before a way to pay is hidden from the buyer.
+   */
+  function createWalletRetrying(payments, method, q, referenceId) {
+    return createWallet(payments, method, q, referenceId).catch(function (err) {
+      if (!/temporarily/i.test((err && err.message) || '')) throw err;
+      return new Promise(function (resolve) { setTimeout(resolve, 1500); }).then(function () {
+        return createWallet(payments, method, q, referenceId);
+      });
+    });
+  }
+
   function destroyWallet(obj) {
     if (obj && typeof obj.destroy === 'function') {
       try { Promise.resolve(obj.destroy()).catch(noop); } catch (e) { /* already gone */ }
@@ -487,7 +501,7 @@
     }
     return squarePayments().then(function (payments) {
       return Promise.all(WALLETS.map(function (w) {
-        return createWallet(payments, w.id, q).then(function (obj) {
+        return createWalletRetrying(payments, w.id, q).then(function (obj) {
           destroyWallet(obj);
           return true;
         }, function (err) {
@@ -625,7 +639,7 @@
       return squarePayments().then(function (payments) {
         if (gen !== state.wallet.gen) return;
         var ref = resume ? resume.ref : 'evb-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-        return createWallet(payments, method, q, ref).then(function (obj) {
+        return createWalletRetrying(payments, method, q, ref).then(function (obj) {
           if (gen !== state.wallet.gen) { destroyWallet(obj); return; }
           state.wallet.obj = obj;
           return attachWallet(method, obj, q, ref);
