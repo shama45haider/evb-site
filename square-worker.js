@@ -434,7 +434,7 @@ async function handleQuote(request, env, origin) {
   }, 200, origin);
 }
 
-async function handleCreateOrder(request, env, origin) {
+async function handleCreateOrder(request, env, origin, ctx) {
   const payload = await request.json();
 
   if (!payload || !payload.order || !payload.idempotencyKey) {
@@ -538,6 +538,19 @@ async function handleCreateOrder(request, env, origin) {
     const ttl = { expirationTtl: 60 * 60 * 24 * 365 };
     await env.ORDERS.put('order:' + receipt.id, JSON.stringify(receipt), ttl);
     await env.ORDERS.put('idem:' + payload.idempotencyKey, JSON.stringify(receipt), ttl);
+  }
+
+  // Tell the staff panel straight away, so what just sold comes off eBay /
+  // Instagram and shows as sold there. Fire-and-forget: the panel also checks
+  // Square every 10 minutes, so a missed call only delays it. The same shared
+  // secret the panel uses to read signups, in the other direction.
+  if (p.status === 'COMPLETED' && env.PANEL_API_KEY) {
+    const panel = (env.PANEL_URL || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
+    const ping = fetch(panel + '/api/cron/square-sync', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + env.PANEL_API_KEY }
+    }).catch(err => console.error('[evb-square] panel sync ping failed', err.message));
+    if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(ping);
   }
 
   return json({ order: receipt }, 200, origin);
@@ -646,7 +659,7 @@ async function handleDeleteSubscriber(env, email, origin) {
 /* ========================================================================= */
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/+$/, '') || '/';
@@ -713,7 +726,7 @@ export default {
         return await handleQuote(request, env, origin);
       }
       if (request.method === 'POST' && path === '/orders') {
-        return await handleCreateOrder(request, env, origin);
+        return await handleCreateOrder(request, env, origin, ctx);
       }
       const m = /^\/orders\/([A-Za-z0-9._-]{1,64})$/.exec(path);
       if (request.method === 'GET' && m) {
