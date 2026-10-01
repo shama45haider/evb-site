@@ -30,6 +30,12 @@ window.EVB_STORE_CONFIG = {
   // Web Payments SDK bundle gets loaded.
   squareEnvironment: 'production',
 
+  // Offer Apple Pay at checkout. Only true once eastvillagebuyers.com is
+  // registered for Apple Pay with Square (done 2026-10-01; the verification
+  // file is /.well-known/apple-developer-merchantid-domain-association).
+  // Safari on Apple devices only — other browsers never see it.
+  applePay: true,
+
   /* ---- Store behaviour ---- */
 
   currency: 'USD',
