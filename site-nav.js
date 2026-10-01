@@ -496,3 +496,15 @@ function toggleNav() { toggleEvbNav(); }
   s.defer = true;
   document.head.appendChild(s);
 })();
+
+/* ---------------------------------------------------------------------------
+   Halloween touches (cobwebs, a spider, two pumpkins). Stops loading at
+   midnight Nov 1 New York time, so it removes itself.
+--------------------------------------------------------------------------- */
+(function () {
+  if (Date.now() >= Date.UTC(2026, 10, 1, 4, 0, 0)) return;
+  var s = document.createElement('script');
+  s.src = '/evb-halloween.js?v=1';
+  s.defer = true;
+  document.head.appendChild(s);
+})();
