@@ -1,7 +1,8 @@
 /* East Village Buyers — email-signup popup
    ---------------------------------------------------------------------------
-   "Enter your email, get free shipping on your first order." Loaded on every
-   page by site-nav.js.
+   "Enter your email, get free shipping on your first order." A welcome for
+   the online store: site-nav.js loads it on /store pages only, and it opens
+   shortly after the visitor lands (once; dismissing snoozes it 14 days).
 
    Emails go to the store Worker (POST /subscribe, see /square-worker.js),
    which keeps the signup list (GET /subscribers) and applies the
@@ -16,12 +17,13 @@
   var STATE_KEY = 'evb_signup_state';   // 'joined' | 'dismissed:<ms>'
   var EMAIL_KEY = 'evb_signup_email';   // read by the checkout in demo mode
   var SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
-  var DELAY_MS = 12000;
+  var DELAY_MS = 1500;
 
   var PATH = location.pathname;
   var PREVIEW = /[?&]signup-preview\b/.test(location.search);
 
-  // Never interrupt a checkout, a receipt, or the 404 page's own popup.
+  // Store pages only, and never in the middle of a checkout or on a receipt.
+  if (!PREVIEW && !/^\/store(\/|$)/.test(PATH)) return;
   if (/^\/store\/(checkout|order)\b/.test(PATH)) return;
   if (document.querySelector('.p404-ad')) return;
 
@@ -44,7 +46,7 @@
   function loadConfig(cb) {
     if (window.EVB_STORE_CONFIG) return cb();
     var s = document.createElement('script');
-    s.src = '/store/store-config.js?v=1.9.0';
+    s.src = '/store/store-config.js?v=1.9.3';
     s.onload = s.onerror = function () { cb(); };
     document.head.appendChild(s);
   }
@@ -211,15 +213,9 @@
       // Wait for other dialogs to be answered rather than stacking on them.
       if (otherDialogOpen()) return setTimeout(fire, 2000);
       fired = true;
-      window.removeEventListener('scroll', onScroll);
       open();
     }
-    function onScroll() {
-      var h = document.documentElement;
-      if ((h.scrollTop + h.clientHeight) / h.scrollHeight > 0.5) fire();
-    }
     setTimeout(fire, PREVIEW ? 600 : DELAY_MS);
-    if (!PREVIEW) setTimeout(function () { window.addEventListener('scroll', onScroll, { passive: true }); }, 4000);
   }
 
   function start() {

@@ -485,12 +485,14 @@ function toggleNav() { toggleEvbNav(); }
 })();
 
 /* ---------------------------------------------------------------------------
-   Email-signup popup (free shipping on the first order). Loaded from here so
-   every page that has the nav gets it without its own script tag.
+   Email-signup popup (free shipping on the first order). A welcome for the
+   online store, so only /store pages load it; ?signup-preview loads it
+   anywhere for checking the design.
 --------------------------------------------------------------------------- */
 (function () {
+  if (!/^\/store(\/|$)/.test(location.pathname) && !/[?&]signup-preview\b/.test(location.search)) return;
   var s = document.createElement('script');
-  s.src = '/evb-signup.js?v=4';
+  s.src = '/evb-signup.js?v=5';
   s.defer = true;
   document.head.appendChild(s);
 })();
