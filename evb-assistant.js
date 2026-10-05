@@ -695,6 +695,7 @@
     const restoreBtn = root.querySelector('.evb-asst-restore');
 
     function closeWidget() {
+      if (root.classList.contains('evb-asst-root--open')) closePanel();
       root.classList.add('evb-asst-root--closed');
       sessionStorage.setItem(HIDE_KEY, '1');
     }
