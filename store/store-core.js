@@ -1,18 +1,3 @@
-/**
- * East Village Buyers — Store runtime
- * ---------------------------------------------------------------------------
- * window.EVB_STORE — the shared engine every store page uses:
- *   money()/esc()        formatting helpers
- *   cart                 localStorage-backed line items
- *   totals()             subtotal, discount, shipping, tax, total (integer cents)
- *   promo                promo-code validation
- *   orders               order records for the receipt page
- *   toast()              transient confirmations
- *   mountCartUI()        nav cart button + slide-out mini cart
- *
- * All money is integer cents end to end. Floats are only ever produced at the
- * final formatting step, which is the only place rounding is allowed to happen.
- */
 (function () {
   'use strict';
 
@@ -20,10 +5,6 @@
   var CART_KEY = 'evb_cart_v1';
   var ORDERS_KEY = 'evb_orders_v1';
   var CHECKOUT_KEY = 'evb_checkout_v1';
-
-  /* ===================================================================== */
-  /* Formatting                                                            */
-  /* ===================================================================== */
 
   function money(cents) {
     if (typeof cents !== 'number' || !isFinite(cents)) cents = 0;
@@ -33,7 +14,6 @@
     return (neg ? '-' : '') + (CFG.currencySymbol || '$') + s;
   }
 
-  // Every dynamic string goes through this before touching innerHTML.
   function esc(str) {
     return String(str == null ? '' : str)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -41,10 +21,6 @@
   }
 
   function attr(str) { return esc(str); }
-
-  /* ===================================================================== */
-  /* Storage helpers — never throw, even in private mode                   */
-  /* ===================================================================== */
 
   function read(key, fallback) {
     try {
@@ -56,10 +32,6 @@
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch (e) { return false; }
   }
-
-  /* ===================================================================== */
-  /* Cart                                                                  */
-  /* ===================================================================== */
 
   var lines = read(CART_KEY, []);
   if (!Array.isArray(lines)) lines = [];
@@ -91,12 +63,6 @@
       return l ? l.qty : 0;
     },
 
-    /**
-     * Add a product/variant. Quantity is clamped to the variant's stock —
-     * most of this inventory is one-of-one, so silently exceeding stock would
-     * produce orders that cannot be fulfilled.
-     * Returns { ok, line, clamped, reason }.
-     */
     add: function (product, variantId, qty) {
       qty = Math.max(1, parseInt(qty, 10) || 1);
       var variant = window.EVB_CATALOG.variant(product, variantId);
@@ -155,11 +121,6 @@
 
     clear: function () { lines = []; persist(); },
 
-    /**
-     * Re-check every line against the live catalog. Catches prices that moved
-     * (gold is spot-priced) and items that sold while the cart sat in storage.
-     * Returns a list of human-readable changes for the cart page to surface.
-     */
     reconcile: function () {
       var changes = [];
       var kept = [];
@@ -189,12 +150,7 @@
     }
   };
 
-  /* ===================================================================== */
-  /* Promo codes                                                           */
-  /* ===================================================================== */
-
   var promo = {
-    /** Returns { ok, code, rule, message }. */
     validate: function (code) {
       var key = String(code || '').trim().toUpperCase();
       if (!key) return { ok: false, message: 'Enter a code.' };
@@ -210,14 +166,6 @@
     }
   };
 
-  /* ===================================================================== */
-  /* Welcome offer (email-signup popup)                                    */
-  /* ===================================================================== */
-
-  /* Free standard shipping on the first order placed with the email a
-     visitor gave the signup popup (/evb-signup.js). With the Worker
-     connected, eligibility is the server's answer; in demo mode it is just
-     "this browser signed up with this email". */
   var welcome = {
     check: function (email) {
       email = String(email || '').trim().toLowerCase();
@@ -239,17 +187,6 @@
     }
   };
 
-  /* ===================================================================== */
-  /* Totals                                                                */
-  /* ===================================================================== */
-
-  /**
-   * totals({ shippingId, promoCode, welcomeShip }) -> integer cents throughout.
-   *
-   * Discounts are allocated across taxable and non-taxable subtotals in
-   * proportion to each, so tax is charged on the discounted taxable amount
-   * rather than the full one. Bullion is flagged non-taxable in the catalog.
-   */
   function totals(opts) {
     opts = opts || {};
     var ls = lines;
@@ -261,7 +198,6 @@
       if (l.taxable) taxableSub += amt;
     });
 
-    /* --- discount --- */
     var discount = 0, freeShip = false, promoLabel = '';
     var v = opts.promoCode ? promo.validate(opts.promoCode) : { ok: false };
     if (v.ok) {
@@ -271,7 +207,6 @@
       else if (v.rule.type === 'shipping') freeShip = true;
     }
 
-    /* --- shipping --- */
     var rates = CFG.shippingRates || [];
     var rate = rates.filter(function (r) { return r.id === opts.shippingId; })[0] || rates[0] || { id: 'pickup', amount: 0 };
     var shipping = rate.amount || 0;
@@ -282,14 +217,9 @@
       shipping = 0; shippingFree = true;
     }
     if (freeShip && rate.id === 'standard') { shipping = 0; shippingFree = true; }
-    // Only flagged when it is what made shipping free, so the server can tell
-    // a stale "free" estimate apart from one the threshold or a code covers.
     var welcomeShip = false;
     if (opts.welcomeShip && rate.id === 'standard' && !shippingFree) { shipping = 0; shippingFree = true; welcomeShip = true; }
 
-    /* --- tax --- */
-    // Allocate the discount proportionally so tax lands on the discounted
-    // taxable base. Guard against a zero subtotal.
     var taxableAfterDiscount = taxableSub;
     if (discount > 0 && subtotal > 0) {
       taxableAfterDiscount = Math.max(0, taxableSub - Math.round(discount * (taxableSub / subtotal)));
@@ -315,12 +245,7 @@
     };
   }
 
-  /* ===================================================================== */
-  /* Orders — receipts                                                     */
-  /* ===================================================================== */
-
   var orders = {
-    /** Newest first. */
     all: function () {
       var list = read(ORDERS_KEY, []);
       return Array.isArray(list) ? list : [];
@@ -335,16 +260,10 @@
       var i = -1;
       list.forEach(function (o, idx) { if (o.id === order.id) i = idx; });
       if (i >= 0) list[i] = order; else list.unshift(order);
-      // Keep the local receipt history bounded.
       write(ORDERS_KEY, list.slice(0, 25));
       return order;
     },
 
-    /**
-     * Fetch a receipt. Prefers the server (source of truth once Square is
-     * connected) and falls back to the local record so the confirmation page
-     * still works in demo mode or offline.
-     */
     fetch: function (id) {
       var base = (CFG.apiBase || '').replace(/\/$/, '');
       var local = orders.get(id);
@@ -360,7 +279,6 @@
     }
   };
 
-  /* Human-facing order number: EVB-YYMMDD-XXXX */
   function newOrderId() {
     var d = new Date();
     var p = function (n) { return String(n).padStart(2, '0'); };
@@ -368,16 +286,10 @@
     return 'EVB-' + String(d.getFullYear()).slice(2) + p(d.getMonth() + 1) + p(d.getDate()) + '-' + rand;
   }
 
-  /* Idempotency key — Square requires one per payment so a retried request
-     never charges twice. */
   function idempotencyKey() {
     if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
     return 'evb-' + Date.now() + '-' + Math.random().toString(36).slice(2, 12);
   }
-
-  /* ===================================================================== */
-  /* Checkout draft — survives a refresh mid-checkout                      */
-  /* ===================================================================== */
 
   var draft = {
     get: function () { return read(CHECKOUT_KEY, {}) || {}; },
@@ -389,10 +301,6 @@
     },
     clear: function () { try { localStorage.removeItem(CHECKOUT_KEY); } catch (e) {} }
   };
-
-  /* ===================================================================== */
-  /* Toast                                                                 */
-  /* ===================================================================== */
 
   var toastTimer = null;
   function toast(message, kind) {
@@ -407,18 +315,13 @@
     }
     el.className = 'evb-toast' + (kind ? ' evb-toast--' + kind : '');
     el.innerHTML = '<span>' + esc(message) + '</span>';
-    // Force a reflow so the class change animates on repeat calls.
     void el.offsetWidth;
     el.classList.add('is-open');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { el.classList.remove('is-open'); }, 3200);
   }
 
-  /* ===================================================================== */
-  /* Cart UI — nav button + slide-out mini cart                            */
-  /* ===================================================================== */
-
-  var BASE = ''; // set by mountCartUI, so /store/ and /store/cart/ both work
+  var BASE = '';
 
   function cartIcon() {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -501,12 +404,6 @@
     document.body.style.overflow = '';
   }
 
-  /**
-   * The site nav is sticky at top:0 and its height varies with the breakpoint.
-   * Publish the measured heights as CSS variables so the store bar can stick
-   * directly beneath it instead of underneath it, and so the sticky order
-   * summary clears both.
-   */
   function syncStickyOffsets() {
     var nav = document.querySelector('.site-nav');
     var bar = document.querySelector('.evb-storebar');
@@ -515,11 +412,6 @@
     root.style.setProperty('--evb-storebar-h', (bar ? bar.offsetHeight : 0) + 'px');
   }
 
-  /**
-   * Build the mini cart and wire the nav cart button.
-   * `base` is the relative path back to the site root ('' from /store/,
-   * '../' from /store/cart/), so this works at any directory depth.
-   */
   function mountCartUI(base) {
     BASE = base == null ? '' : base;
 
@@ -547,7 +439,6 @@
       });
     }
 
-    // Delegated so it keeps working after the mini cart re-renders.
     document.addEventListener('click', function (e) {
       var t = e.target.closest ? e.target.closest('[data-cart-open],[data-cart-inc],[data-cart-dec],[data-cart-remove]') : null;
       if (!t) return;
@@ -565,7 +456,6 @@
 
     window.addEventListener('evb:cart-change', syncCartUI);
 
-    // Another tab changed the cart — keep this one honest.
     window.addEventListener('storage', function (e) {
       if (e.key !== CART_KEY) return;
       lines = read(CART_KEY, []) || [];
@@ -576,31 +466,17 @@
     syncCartUI();
   }
 
-  /* ===================================================================== */
-  /* Shared markup builders                                                */
-  /* ===================================================================== */
-
-  /**
-   * Condition collapsed to one short word, used as the price microlabel the
-   * way a marketplace labels an ask. "Pre-owned — Excellent" -> "Pre-owned".
-   */
   function conditionShort(cond) {
     if (!cond) return 'Price';
     return String(cond).split('—')[0].trim();
   }
 
-  /** Coarse condition bucket, for the storefront filter rail. */
   function conditionGroup(cond) {
     if (/deadstock|sealed/i.test(cond || '')) return 'new';
     if (/bullion|numismatic/i.test(cond || '')) return 'bullion';
     return 'preowned';
   }
 
-  /**
-   * Product card used on the storefront, search results and related rails.
-   * Deliberately quiet: the photo carries the card, the type stays out of the
-   * way, and colour is reserved for a genuine sale or a sold-out state.
-   */
   function productCard(p, base) {
     base = base == null ? BASE : base;
     var out = p.stock <= 0;
@@ -608,7 +484,6 @@
     var save = (p.compareAt && p.compareAt > p.price)
       ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
 
-    // At most one badge. Stacked badges are what made this look busy.
     var badge = '';
     if (out) badge = '<span class="evb-badge evb-badge--out">Sold</span>';
     else if (save >= 5) badge = '<span class="evb-badge evb-badge--save">' + save + '% off</span>';
@@ -640,8 +515,6 @@
       '</a>' +
     '</article>';
   }
-
-  /* ===================================================================== */
 
   window.EVB_STORE = {
     config: CFG,

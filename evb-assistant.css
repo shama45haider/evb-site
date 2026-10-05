@@ -1,4 +1,3 @@
-/* East Village Buyers — site assistant widget (redesigned) */
 .evb-asst-root {
   --evb-asst-accent: #f97316;
   --evb-asst-dark: #0c0b0a;
@@ -23,13 +22,11 @@
   pointer-events: auto !important;
 }
 
-/* ── Toggle wrapper (shrink-to-fit positioning context for the dismiss badge) ── */
 .evb-asst-toggle-wrap {
   display: inline-flex !important;
   position: relative !important;
 }
 
-/* ── Dismiss badge (hide widget for this session) ── */
 .evb-asst-dismiss {
   pointer-events: auto !important;
   position: absolute !important;
@@ -60,7 +57,6 @@
   display: none !important;
 }
 
-/* ── Toggle button ── */
 .evb-asst-toggle {
   pointer-events: auto !important;
   display: flex !important;
@@ -96,7 +92,6 @@
   transform: translateY(-1px) !important;
 }
 
-/* ── Icon in toggle button ── */
 .evb-asst-toggle-icon {
   width: 42px !important;
   height: 42px !important;
@@ -142,7 +137,6 @@
   display: none !important;
 }
 
-/* ── Panel ── */
 .evb-asst-panel {
   pointer-events: auto !important;
   position: absolute !important;
@@ -173,7 +167,6 @@
   transform: translateY(0) scale(1) !important;
 }
 
-/* ── Header with logo ── */
 .evb-asst-head {
   display: flex !important;
   align-items: center !important;
@@ -245,7 +238,6 @@
   border-color: var(--evb-asst-accent) !important;
 }
 
-/* ── Messages ── */
 .evb-asst-messages {
   flex: 1 !important;
   overflow-y: auto !important;
@@ -338,7 +330,6 @@
   color: #c2410c !important;
 }
 
-/* ── Typing dots ── */
 .evb-asst-typing {
   align-self: flex-start !important;
   display: flex !important;
@@ -366,7 +357,6 @@
   40%            { opacity: 1;   transform: translateY(-4px) scale(1); }
 }
 
-/* ── Suggestion chips ── */
 .evb-asst-chips {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -396,7 +386,6 @@
   transform: translateY(-1px) !important;
 }
 
-/* ── Input area ── */
 .evb-asst-foot {
   display: flex !important;
   gap: 8px !important;
@@ -465,7 +454,6 @@
   transform: none !important;
 }
 
-/* ── Draggable handles ── */
 .evb-asst-toggle-wrap,
 .evb-asst-head {
   touch-action: none !important;
@@ -479,7 +467,6 @@
   cursor: grab !important;
 }
 
-/* ── Close / reopen ── */
 .evb-asst-restore {
   display: none !important;
 }
@@ -517,7 +504,6 @@
   50%       { box-shadow: 0 4px 14px rgba(249,115,22,0.35), 0 0 0 8px rgba(249,115,22,0); }
 }
 
-/* ── Mobile ── */
 @media (max-width: 760px) {
   .evb-asst-root {
     bottom: 78px !important;
@@ -549,7 +535,6 @@
   }
 }
 
-/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .evb-asst-toggle,
   .evb-asst-toggle-icon,

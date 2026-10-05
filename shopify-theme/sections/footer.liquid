@@ -42,11 +42,6 @@
       {% render 'social-icons' %}
     </div>
 
-    {%- comment -%}
-      If no blocks are configured yet (e.g. a freshly uploaded theme before
-      the merchant opens the customizer), fall back to sensible hardcoded
-      columns so the footer is never empty.
-    {%- endcomment -%}
     {% if section.blocks.size > 0 %}
       {% for block in section.blocks %}
         {% case block.type %}
@@ -59,11 +54,6 @@
                     <li><a href="{{ link.url }}">{{ link.title }}</a></li>
                   {% endfor %}
                 {% else %}
-                  {%- comment -%}
-                    No menu picked in the customizer yet — fall back to the
-                    same sensible defaults as the no-blocks case below so the
-                    column is never empty.
-                  {%- endcomment -%}
                   <li><a href="{{ routes.root_url }}">Home</a></li>
                   <li><a href="/collections/all">Shop All</a></li>
                   <li><a href="/pages/about">About Us</a></li>

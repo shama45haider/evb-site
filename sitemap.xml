@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Core pages -->
   <url>
     <loc>https://eastvillagebuyers.com/</loc>
     <lastmod>2026-07-05</lastmod>
@@ -33,7 +32,6 @@
     <priority>0.3</priority>
   </url>
 
-  <!-- We Buy pages -->
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-jewelry-nyc/</loc>
     <lastmod>2026-07-26</lastmod>
@@ -101,7 +99,6 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Blog posts -->
   <url>
     <loc>https://eastvillagebuyers.com/blog/lab-grown-vs-natural-diamonds-resale-nyc/</loc>
     <lastmod>2026-07-21</lastmod>
@@ -391,7 +388,6 @@
     <priority>0.7</priority>
   </url>
 
-  <!-- Item-level landing pages -->
   <url>
     <loc>https://eastvillagebuyers.com/sell-engagement-ring-nyc/</loc>
     <lastmod>2026-07-26</lastmod>

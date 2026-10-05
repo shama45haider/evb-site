@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
-/* Store gate — the storefront is not public while Square is being connected.
-   Reaching any store page sends you to the coming-soon page unless this
-   browser was unlocked with the staff preview password on /store/ (good for
-   14 days). The old ?preview=1 shortcut is gone — the password is the only
-   way in. Runs before render so there is no flash of the gated page, and
-   fails closed if storage is unavailable. Not a security boundary (this is a
-   static site); it keeps the unfinished store away from customers. */
 (function () {
   var ok = false;
   try { ok = Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) {}
@@ -153,7 +146,6 @@
   </div>
 </div>
 
-<!-- Store sub-nav -->
 <div class="evb-storebar">
   <div class="evb-wrap evb-storebar-inner">
     <a href="/store/shop/" class="evb-storebar-home">
@@ -171,7 +163,6 @@
   </div>
 </div>
 
-<!-- Departments — the page opens here, so it carries the h1. -->
 <section class="evb-depts">
   <div class="evb-wrap">
     <div class="evb-depts-head">
@@ -182,7 +173,6 @@
   </div>
 </section>
 
-<!-- Featured -->
 <section class="evb-section evb-section--tight" id="featuredSection" hidden>
   <div class="evb-wrap">
     <div class="evb-section-head">
@@ -197,7 +187,6 @@
   </div>
 </section>
 
-<!-- Shop -->
 <section class="evb-section" id="shop">
   <div class="evb-wrap">
     <div class="evb-section-head">
@@ -209,7 +198,6 @@
 
     <div class="evb-shop">
 
-      <!-- Filter rail. Collapses behind a button below 900px. -->
       <aside class="evb-filters" id="filterRail" aria-label="Filter products">
         <div class="evb-filters-head">
           <p class="evb-filters-title">Filters</p>
@@ -274,7 +262,6 @@
   </div>
 </section>
 
-<!-- How it works -->
 <section class="evb-section" id="how" style="background:#fff;border-top:3px solid var(--evb-orange);border-bottom:3px solid var(--evb-orange)">
   <div class="evb-wrap">
     <div class="evb-section-head">
@@ -406,8 +393,6 @@
     { id: 'bullion',  label: 'Bullion' }
   ];
 
-  // Buckets rather than a slider: faster to hit on mobile, and the inventory
-  // spans $65 to $29,000, so a linear slider would be useless.
   var PRICES = [
     { id: 'u250',   label: 'Under $250',       min: 0,      max: 25000 },
     { id: '250-1k', label: '$250 to $1,000',   min: 25000,  max: 100000 },
@@ -415,10 +400,7 @@
     { id: 'o5k',    label: '$5,000+',          min: 500000, max: Infinity }
   ];
 
-  // Multi-select facets are arrays; category, query and sort are scalars.
   var state = { cat: 'all', q: '', sort: 'featured', brands: [], conds: [], prices: [] };
-
-  /* ---- URL <-> state ---- */
 
   function readUrl() {
     var p = new URLSearchParams(location.search);
@@ -454,10 +436,6 @@
       (state.cat !== 'all' ? 1 : 0) + (state.q ? 1 : 0);
   }
 
-  /* ---- filtering ---- */
-
-  // Applies every facet except `skip`, so each facet can be counted against
-  // the others the way a marketplace shows availability per option.
   function filtered(skip) {
     var list = state.q ? C.search(state.q) : C.products.slice();
     if (skip !== 'cat' && state.cat !== 'all') {
@@ -485,8 +463,6 @@
     list.forEach(function (p) { var k = fn(p); if (k != null) m[k] = (m[k] || 0) + 1; });
     return m;
   }
-
-  /* ---- rendering ---- */
 
   function opt(kind, value, label, count, checked, type) {
     return '<label class="evb-fopt' + (count ? '' : ' is-empty') + '">' +
@@ -518,7 +494,6 @@
     }).join('');
 
     var byBrand = countBy(filtered('brand'), function (p) { return p.brand; });
-    // Brands with stock in the current view float to the top.
     els.fBrand.innerHTML = C.brands()
       .sort(function (a, b) { return (byBrand[b] || 0) - (byBrand[a] || 0) || a.localeCompare(b); })
       .map(function (b) { return opt('brand', b, b, byBrand[b] || 0, state.brands.indexOf(b) !== -1); })
@@ -561,7 +536,6 @@
       'featured':   function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.price - a.price; }
     };
     var cmp = sorters[state.sort] || sorters.featured;
-    // Sold items always sink, whatever the sort.
     list.sort(function (a, b) {
       return (a.stock > 0 ? 0 : 1) - (b.stock > 0 ? 0 : 1) || cmp(a, b);
     });
@@ -594,16 +568,12 @@
       var items = C.byCategory(c.id).filter(function (p) { return p.stock > 0; });
       var n = counts[c.id] || 0;
 
-      // Lead with a featured piece if the category has one, else the priciest
-      // in stock — either way the thumbnail is something real from that shelf.
       var lead = items.filter(function (p) { return p.featured; })[0] ||
         items.slice().sort(function (a, b) { return b.price - a.price; })[0];
 
       var from = items.length
         ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
 
-      // Count always; the "from" price is a separate span so narrow screens
-      // can drop it rather than truncate the whole line.
       var meta = '<span class="evb-cat-n">' + n + (n === 1 ? ' item' : ' items') + '</span>' +
         (from != null ? '<span class="evb-cat-from"> · from ' +
           S.esc(S.money(from).replace(/\.00$/, '')) + '</span>' : '');
@@ -631,8 +601,6 @@
     }
   }
 
-  /* ---- filter rail open/close (mobile only) ---- */
-
   function openRail() {
     els.rail.classList.add('is-open');
     els.scrim.classList.add('is-open');
@@ -643,8 +611,6 @@
     els.scrim.classList.remove('is-open');
     document.body.style.overflow = '';
   }
-
-  /* ---- events ---- */
 
   els.rail.addEventListener('change', function (e) {
     var t = e.target;
@@ -686,7 +652,6 @@
   var qTimer = null;
   els.q.addEventListener('input', function () {
     clearTimeout(qTimer);
-    // Replace rather than push, so typing does not flood history.
     qTimer = setTimeout(function () { state.q = els.q.value.trim(); apply(false); }, 180);
   });
   els.sort.addEventListener('change', function () { state.sort = els.sort.value; apply(true); });
@@ -698,20 +663,14 @@
 
   window.addEventListener('popstate', function () { readUrl(); apply(false); });
 
-  /* ---- live shop status ----------------------------------------------
-     Computed in the shop's own timezone, so a visitor in another one is
-     told whether the counter is actually open, not whether it is open
-     where they are. Index 0 is Sunday; Saturday is closed.
-  --------------------------------------------------------------------- */
-
   var HOURS = [
-    { open: 12.5, close: 18 },    // Sun
-    { open: 12.5, close: 18.5 },  // Mon
-    { open: 12.5, close: 18.5 },  // Tue
-    { open: 12.5, close: 18.5 },  // Wed
-    { open: 12.5, close: 18.5 },  // Thu
-    { open: 12.5, close: 16 },    // Fri
-    null                          // Sat — closed
+    { open: 12.5, close: 18 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 16 },
+    null
   ];
   var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -723,7 +682,6 @@
   }
 
   function shopNow() {
-    // Re-read "now" as it is in New York, whatever the visitor's timezone.
     try {
       return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
     } catch (e) {
@@ -731,7 +689,6 @@
     }
   }
 
-  // One-off closures (holidays etc.) come from site-nav.js, which loads first.
   function ymd(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
@@ -745,7 +702,7 @@
     var now = shopNow();
     var hour = now.getHours() + now.getMinutes() / 60;
     var today = hoursOn(now);
-    var closedToday = !today && HOURS[now.getDay()];   // a normally-open day we are shut
+    var closedToday = !today && HOURS[now.getDay()];
     var elText = el('storeStatusText'), elWrap = el('storeStatus');
     if (!elText) return;
 
@@ -760,8 +717,6 @@
       elText.textContent = 'Closed · opens today at ' + clockLabel(today.open);
       return;
     }
-    // Walk forward by calendar date rather than weekday, so a closure on a
-    // specific date is skipped instead of being announced as the next opening.
     for (var i = 1; i <= 14; i++) {
       var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
       var h = hoursOn(d);
@@ -773,12 +728,9 @@
     }
   }
 
-  /* ---- boot ---- */
-
   S.mountCartUI('/');
   readUrl();
   renderStatus();
-  // Keeps the badge honest if the page is left open across opening time.
   setInterval(renderStatus, 60000);
 
   C.load().then(function () {

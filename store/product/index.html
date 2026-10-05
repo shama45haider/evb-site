@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
-/* Store gate — the storefront is not public while Square is being connected.
-   Reaching any store page sends you to the coming-soon page unless this
-   browser was unlocked with the staff preview password on /store/ (good for
-   14 days). The old ?preview=1 shortcut is gone — the password is the only
-   way in. Runs before render so there is no flash of the gated page, and
-   fails closed if storage is unavailable. Not a security boundary (this is a
-   static site); it keeps the unfinished store away from customers. */
 (function () {
   var ok = false;
   try { ok = Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) {}
@@ -23,8 +16,6 @@
 <title>Product | East Village Buyers Store</title>
 <meta name="description" content="Authenticated luxury goods, sneakers, watches and gold from East Village Buyers — 39 Avenue A, New York, NY 10009.">
 <link rel="canonical" href="https://eastvillagebuyers.com/store/product/">
-<!-- Product pages are rendered client-side from a query string, so they are
-     intentionally kept out of the index; /store/ is the crawlable entry point. -->
 <meta name="robots" content="noindex, nofollow">
 
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -423,7 +414,6 @@
     host.querySelectorAll('[data-variant]').forEach(function (b) {
       b.addEventListener('click', function () {
         variantId = b.getAttribute('data-variant');
-        // Quantity resets because the new variant has its own stock ceiling.
         qty = 1;
         var url = new URL(location.href);
         url.searchParams.set('v', variantId);
@@ -516,15 +506,12 @@
     document.head.appendChild(tag);
   }
 
-  /* --- boot --- */
-
   S.mountCartUI('/');
 
   C.load().then(function () {
     product = C.find(param('p'));
     if (!product) { notFound(); return; }
 
-    // Prefer the requested variant, then the first one actually in stock.
     var wanted = param('v');
     var inStock = product.variants.filter(function (v) { return v.stock > 0; });
     var match = product.variants.filter(function (v) { return v.id === wanted && v.stock > 0; })[0];

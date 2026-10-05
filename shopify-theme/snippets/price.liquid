@@ -1,7 +1,3 @@
-{%- comment -%}
-  Renders a price block for a product/variant.
-  Usage: {% render 'price', product: product, variant: variant %}
-{%- endcomment -%}
 {%- liquid
   assign target = variant | default: product.selected_or_first_available_variant
   assign compare = target.compare_at_price

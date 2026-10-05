@@ -1,26 +1,3 @@
-/**
- * East Village Buyers — Checkout
- * ---------------------------------------------------------------------------
- * Drives the four-step checkout and submits the order.
- *
- * TWO PAYMENT PATHS, one UI:
- *
- *  LIVE (EVB_STORE_CONFIG.apiBase + squareApplicationId + squareLocationId set)
- *    Loads the Square Web Payments SDK, which renders the card fields inside
- *    Square's own iframe. The PAN never touches this page or our DOM — the SDK
- *    hands back a single-use token. That token plus the buyer verification
- *    token (3DS/SCA) is POSTed to the Worker, which creates the Square Order
- *    and Payment server-side with the secret access token.
- *
- *  DEMO (nothing configured yet — the state this ships in)
- *    Renders a local card form so the whole flow can be exercised end to end.
- *    It is clearly labelled as demo, and it deliberately does NOT transmit or
- *    persist a card number: only the brand and last four are kept, for the
- *    receipt. Do not put a real card into demo mode.
- *
- * The server recomputes every total. The client figures are an estimate shown
- * to the buyer; if the two disagree, the server's numbers win.
- */
 (function () {
   'use strict';
 
@@ -43,25 +20,14 @@
       terms: false, marketing: false
     },
     errors: {},
-    // gen: which card form is current — every redraw of the payment step
-    // mounts a new one, and callbacks from an older one must not touch the
-    // page. token: the card, tokenized on the way out of the payment step
-    // ({ sourceId, brand, last4 }); single-use, so cleared after any attempt.
     square: { payments: null, card: null, ready: false, error: '', gen: 0, token: null },
-    // 'card', or one of WALLETS' ids. The other ways to pay only show once
-    // the Worker has quoted Square's exact total (POST /quote) — Afterpay and
-    // Cash App Pay approve one exact amount, so an estimate won't do.
     payMethod: 'card',
     quote: { key: null, data: null, promise: null },
-    // gen/detectGen: which wallet button / method list is current, as for
-    // the card. available: what this browser + account can use, per quote.
     wallet: { gen: 0, detectGen: 0, obj: null, available: null, availableKey: null, resume: null },
-    // Free standard shipping from the email-signup popup, for this email.
     welcomeShip: false,
     welcomeFor: null
   };
 
-  /** Ask once per distinct email whether the signup perk applies. */
   function checkWelcome() {
     var email = state.data.email.trim().toLowerCase();
     if (!email || email === state.welcomeFor) return;
@@ -75,15 +41,10 @@
 
   var els = {};
 
-  /* ===================================================================== */
-  /* Validation                                                            */
-  /* ===================================================================== */
-
   var RE_EMAIL = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
 
   function digits(v) { return String(v || '').replace(/\D/g, ''); }
 
-  // Luhn — catches transposed digits, which a length check alone will not.
   function luhn(num) {
     var s = digits(num);
     if (s.length < 13 || s.length > 19) return false;
@@ -115,7 +76,6 @@
     var now = new Date();
     var curYY = now.getFullYear() % 100;
     var curMM = now.getMonth() + 1;
-    // A two-digit year is assumed to be in this century.
     if (yy < curYY) return false;
     if (yy === curYY && mm < curMM) return false;
     return true;
@@ -143,7 +103,6 @@
 
     if (step === 'payment') {
       if (S.isLive()) {
-        // Square's iframe owns field-level validation; we only need it mounted.
         if (!state.square.ready) e.card = state.square.error || 'Payment form is still loading';
       } else {
         if (!d.cardName.trim()) e.cardName = 'Required';
@@ -164,10 +123,6 @@
     return Object.keys(e).length === 0;
   }
 
-  /* ===================================================================== */
-  /* Square Web Payments SDK                                               */
-  /* ===================================================================== */
-
   function loadSquareSdk() {
     if (window.Square) return Promise.resolve(window.Square);
     var url = CFG.squareEnvironment === 'production'
@@ -183,7 +138,6 @@
     });
   }
 
-  /** One Square.payments() for the page — the card and every wallet share it. */
   function squarePayments() {
     return loadSquareSdk().then(function (Square) {
       if (!state.square.payments) {
@@ -193,14 +147,6 @@
     });
   }
 
-  /**
-   * Mount Square's card form into #sqCard. render() rebuilds the page with
-   * innerHTML, which throws away the previous form's iframe, so this runs on
-   * every render of the payment step. A form that was still starting up when
-   * that happened fails later with "unable to be initialized in time" — the
-   * generation check keeps that stale failure (or a stale success) from
-   * landing on the form that is actually on the page.
-   */
   function mountSquareCard() {
     var target = document.getElementById('sqCard');
     if (!target) return;
@@ -217,9 +163,6 @@
         if (gen !== state.square.gen) return null;
         return payments.card({
           style: {
-            // The card fields live in Square's iframe, which only takes fonts
-            // it knows: Montserrat (and system-ui) fail attach() with an
-            // InvalidStylesError, and the whole payment form never loads.
             input: { fontSize: '15px', fontFamily: 'helvetica neue, sans-serif', color: '#1c1917' },
             '.input-container': { borderColor: '#e7e1d8', borderRadius: '10px' },
             '.input-container.is-focus': { borderColor: '#f97316' },
@@ -241,7 +184,7 @@
         });
       })
       .catch(function (err) {
-        if (gen !== state.square.gen) return;   // a newer form replaced this one
+        if (gen !== state.square.gen) return;
         state.square.ready = false;
         state.square.error = err.message || 'Payment form failed to load';
         var n = document.getElementById('cardLoading');
@@ -253,11 +196,6 @@
       });
   }
 
-  /**
-   * Turn the card fields into a single-use token. This has to happen on the
-   * payment step: Square's fields live in #sqCard, and moving on to review
-   * redraws the page without them.
-   */
   function tokenizeCard() {
     if (!state.square.card || !state.square.ready) {
       return Promise.reject(new Error(state.square.error || 'Payment form is still loading'));
@@ -277,20 +215,14 @@
       .map(function (w) { return w.charAt(0).toUpperCase() + w.slice(1); }).join(' ');
   }
 
-  /** Run buyer verification (3DS / SCA) on the card tokenized at the payment step. */
   function squareTokenize(totals) {
     var d = state.data;
     var tok = state.square.token;
     if (!tok) return Promise.reject(new Error('Enter your card again'));
     return Promise.resolve().then(function () {
       var payload = { sourceId: tok.sourceId, verificationToken: null, brand: tok.brand, last4: tok.last4, via: tok.via || null };
-      // Wallets verify the buyer as part of tokenizing; Cash App Pay and
-      // Afterpay have no card to verify.
       if (tok.via) return payload;
 
-      // verifyBuyer is required for SCA in supported regions and strengthens
-      // the risk signal everywhere else. A failure here should not block the
-      // payment attempt — Square will decide.
       var details = {
         amount: (totals.total / 100).toFixed(2),
         currencyCode: CFG.currency || 'USD',
@@ -309,25 +241,6 @@
     });
   }
 
-  /* ===================================================================== */
-  /* Other ways to pay: Apple Pay, Google Pay, Cash App Pay, Afterpay      */
-  /* ===================================================================== */
-  /*
-   * The buyer picks a method on the payment step; the method's own button
-   * then stands in for "Place order" on the review step, once "all sales
-   * final" is ticked, and paying with it places the order. Every method's
-   * token goes to the same Worker POST /orders as a card's.
-   *
-   * All four are priced from the Worker's POST /quote — Square's own total
-   * for the bag — never the page's estimate: Afterpay charges must equal what
-   * Afterpay approved, and Cash App Pay can't change its amount once shown.
-   * A Worker without /quote (404) means card only.
-   *
-   * Cash App Pay on a phone leaves for Cash App and comes back to
-   * ?cashapp=1; the pending payment is kept in sessionStorage so the reloaded
-   * checkout can reopen the review step and take the token (see boot()).
-   */
-
   var WALLETS = [
     { id: 'applepay', label: 'Apple Pay', sub: 'Face ID or Touch ID', logos: ['applepay'] },
     { id: 'googlepay', label: 'Google Pay', sub: 'Pay with a card saved to Google', logos: ['googlepay'] },
@@ -336,11 +249,6 @@
   ];
   var CARD_LOGOS = ['visa', 'mastercard', 'amex', 'discover'];
 
-  /*
-   * Payment-method marks for the "How would you like to pay?" list: paths from
-   * Simple Icons 16.33.0 (CC0) in each brand's own colours; Mastercard drawn
-   * as its two circles. Inline, so the list needs no extra requests.
-   */
   var PAY_BADGES = {
     "visa": "<svg viewBox=\"0 0 38 24\" width=\"38\" height=\"24\" aria-hidden=\"true\" focusable=\"false\"><rect x=\".5\" y=\".5\" width=\"37\" height=\"23\" rx=\"4\" fill=\"#fff\" stroke=\"#d9d4cc\"/><path transform=\"translate(4 -3) scale(1.25)\" fill=\"#1A1F71\" d=\"M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z\"/></svg>",
     "mastercard": "<svg viewBox=\"0 0 38 24\" width=\"38\" height=\"24\" aria-hidden=\"true\" focusable=\"false\"><rect x=\".5\" y=\".5\" width=\"37\" height=\"23\" rx=\"4\" fill=\"#fff\" stroke=\"#d9d4cc\"/><circle cx=\"15.5\" cy=\"12\" r=\"6.5\" fill=\"#EB001B\"/><circle cx=\"22.5\" cy=\"12\" r=\"6.5\" fill=\"#F79E1B\"/><path fill=\"#FF5F00\" d=\"M19 6.53a6.5 6.5 0 0 1 0 10.94 6.5 6.5 0 0 1 0-10.94z\"/></svg>",
@@ -352,7 +260,6 @@
     "afterpay": "<svg viewBox=\"0 0 38 24\" width=\"38\" height=\"24\" aria-hidden=\"true\" focusable=\"false\"><rect x=\".5\" y=\".5\" width=\"37\" height=\"23\" rx=\"4\" fill=\"#B2FCE4\" stroke=\"#B2FCE4\"/><path transform=\"translate(10 3) scale(0.75)\" fill=\"#000\" d=\"M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12 6.628 0 12-5.372 12-12 0-6.627-5.372-12-12-12Zm1.236 4.924a2.21 2.21 0 0 1 1.15.299l4.457 2.557c1.495.857 1.495 3.013 0 3.87l-4.457 2.558c-1.488.854-3.342-.22-3.342-1.935v-.34a.441.441 0 0 0-.66-.383L6.287 13.9a.441.441 0 0 0 0 .765l4.096 2.35a.44.44 0 0 0 .661-.382v-.685c0-.333.36-.542.649-.376l1.041.597a.441.441 0 0 1 .222.383v.29c0 1.715-1.854 2.789-3.342 1.935L5.157 16.22c-1.495-.857-1.495-3.013 0-3.87l4.457-2.558c1.488-.854 3.342.22 3.342 1.935v.34c0 .34.366.551.66.383l4.097-2.35a.441.441 0 0 0 0-.765l-4.096-2.351a.441.441 0 0 0-.661.382v.685c0 .333-.36.541-.649.375l-1.041-.597a.442.442 0 0 1-.222-.383v-.29c0-1.285 1.043-2.21 2.192-2.233z\"/></svg>"
   };
 
-  /** The list's styles, added once — kept here so only this file changes. */
   var PAY_CSS = ".evb-pay-heading{margin:0 0 10px;font-size:13px;font-weight:700;color:#1c1917;letter-spacing:0}.evb-pay-list{border:1px solid #e7e1d8;border-radius:12px;overflow:hidden;background:#fff}.evb-pay{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;transition:background .15s}.evb-pay+.evb-pay{border-top:1px solid #eee8df}.evb-pay:hover{background:#fcfaf7}.evb-pay.is-on{background:#fff7ed;box-shadow:inset 0 0 0 1.5px #f97316;border-radius:0}.evb-pay input{position:absolute;opacity:0;pointer-events:none}.evb-pay-dot{box-sizing:border-box;flex:0 0 18px;width:18px;height:18px;border-radius:50%;border:1.5px solid #c9c2b8;background:#fff;transition:border-color .15s,background .15s}.evb-pay.is-on .evb-pay-dot{border-color:#f97316;background:#f97316;box-shadow:inset 0 0 0 3.5px #fff}.evb-pay input:focus-visible+.evb-pay-dot{outline:2px solid #f97316;outline-offset:2px}.evb-pay-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.evb-pay-name{font-size:14px;font-weight:700;color:#1c1917;line-height:1.3}.evb-pay-sub{font-size:12px;font-weight:500;color:#78716c;line-height:1.4}.evb-pay-logos{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:5px;flex:0 1 auto;max-width:58%}.evb-pay-logos svg{display:block;flex:0 0 auto}@media (max-width:420px){.evb-pay{gap:12px;padding:13px 14px}.evb-pay-logos svg{width:32px;height:20px}.evb-pay-logos svg[viewBox=\"0 0 24 24\"]{width:20px}}";
 
   function ensurePayStyles() {
@@ -373,7 +280,7 @@
       '<span class="evb-pay-logos">' + logos.map(function (k) { return PAY_BADGES[k] || ''; }).join('') + '</span>' +
     '</label>';
   }
-  var AFTERPAY_MIN = 100, AFTERPAY_MAX = 200000;   // US limits, in cents
+  var AFTERPAY_MIN = 100, AFTERPAY_MAX = 200000;
   var CASHAPP_KEY = 'evb_cashapp_pending';
   var CASHAPP_TTL = 20 * 60 * 1000;
 
@@ -389,7 +296,6 @@
     return S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
   }
 
-  /** Everything that changes what Square would charge. */
   function quoteKey() {
     var d = state.data;
     return JSON.stringify([
@@ -398,10 +304,6 @@
     ]);
   }
 
-  /**
-   * Square's exact total for the bag as it stands, from the Worker. Resolves
-   * null when there isn't one to be had — then only card is offered.
-   */
   function ensureQuote() {
     var q = state.quote, key = quoteKey();
     if (q.key === key && q.promise) return q.promise;
@@ -414,15 +316,13 @@
       body: JSON.stringify({ order: buildOrder(currentTotals(), {}) })
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (json) {
-        // 404 = a Worker from before /quote. Not remembered: it may be
-        // redeployed while this page is open, so the next step asks again.
         if (!r.ok || typeof json.total !== 'number') throw new Error('HTTP ' + r.status + (json.error ? ' ' + json.error : ''));
         if (q.key === key) q.data = json;
         return json;
       });
     }).catch(function (err) {
       console.info('[checkout] no quote from the Worker, so card only: ' + (err && err.message));
-      if (q.key === key) q.promise = null;   // try again next time
+      if (q.key === key) q.promise = null;
       return null;
     });
     return q.promise;
@@ -443,9 +343,6 @@
       email: d.email.trim(), phone: d.phone.trim(), countryCode: 'US'
     };
     if (method === 'afterpay') {
-      // Afterpay needs to know where it's going. The checkout already has the
-      // address (or it's pickup), so the one option offered is the one chosen,
-      // at Square's figures.
       opts.requestShippingContact = !pickup;
       if (pickup) {
         opts.pickupContact = Object.assign({}, contact, {
@@ -481,15 +378,9 @@
     return location.origin + location.pathname + '?cashapp=1';
   }
 
-  /** Build one method's Square object. Rejects when it can't be used here. */
   function createWallet(payments, method, q, referenceId) {
     return Promise.resolve().then(function () {
       if (method === 'applepay') {
-        // Off until eastvillagebuyers.com is registered for Apple Pay in the
-        // Square Developer Console (and its verification file is hosted at
-        // /.well-known/apple-developer-merchantid-domain-association) — set
-        // `applePay: true` in store-config.js then. Before that, Safari would
-        // show the button and the payment would fail.
         if (CFG.applePay !== true) throw new Error('Apple Pay isn’t set up yet');
         if (!window.ApplePaySession) throw new Error('Apple Pay needs Safari on an Apple device');
         return payments.applePay(paymentRequestFor(payments, method, q));
@@ -509,11 +400,6 @@
     });
   }
 
-  /**
-   * Square sometimes answers "Temporarily unable to register the payment
-   * method" (seen live on Cash App Pay, fine a moment later). Worth one more
-   * try before a way to pay is hidden from the buyer.
-   */
   function createWalletRetrying(payments, method, q, referenceId) {
     return createWallet(payments, method, q, referenceId).catch(function (err) {
       if (!/temporarily/i.test((err && err.message) || '')) throw err;
@@ -525,15 +411,10 @@
 
   function destroyWallet(obj) {
     if (obj && typeof obj.destroy === 'function') {
-      try { Promise.resolve(obj.destroy()).catch(noop); } catch (e) { /* already gone */ }
+      try { Promise.resolve(obj.destroy()).catch(noop); } catch (e) { }
     }
   }
 
-  /**
-   * Which ways to pay this buyer can use: each is tried against the real
-   * SDK, whose constructors throw when the device, the shop's Square account
-   * or the amount rules it out. Cached per quote.
-   */
   function detectWallets(q) {
     if (state.wallet.available && state.wallet.availableKey === state.quote.key) {
       return Promise.resolve(state.wallet.available);
@@ -544,7 +425,6 @@
           destroyWallet(obj);
           return true;
         }, function (err) {
-          // Square's reason, for whoever is diagnosing a missing method.
           console.info('[checkout] ' + w.label + ' not offered: ' +
             (err ? (err.name ? err.name + ': ' : '') + err.message : 'unavailable'));
           return false;
@@ -559,7 +439,6 @@
     });
   }
 
-  /** Fill in the "How would you like to pay?" choices on the payment step. */
   function setupPayMethods() {
     var gen = ++state.wallet.detectGen;
     ensureQuote()
@@ -584,7 +463,6 @@
       });
   }
 
-  /** Switch method in place — a redraw would wipe a half-typed card. */
   function setPayMethod(id) {
     state.payMethod = id;
     var cardArea = document.getElementById('cardArea');
@@ -620,7 +498,7 @@
   function savePendingCashApp(referenceId, total) {
     try {
       sessionStorage.setItem(CASHAPP_KEY, JSON.stringify({ ref: referenceId, total: total, key: quoteKey(), at: Date.now() }));
-    } catch (e) { /* private mode — the desktop QR flow still works */ }
+    } catch (e) { }
   }
 
   function readPendingCashApp() {
@@ -631,15 +509,14 @@
   }
 
   function clearPendingCashApp() {
-    try { sessionStorage.removeItem(CASHAPP_KEY); } catch (e) { /* nothing to clear */ }
+    try { sessionStorage.removeItem(CASHAPP_KEY); } catch (e) { }
   }
 
-  /** A wallet handed back a result: pay with it, or say why not. */
   function payWithWallet(method, result) {
     if (method === 'cashapp') clearPendingCashApp();
     if (!result || result.status !== 'OK') {
       var status = result && result.status;
-      if (status === 'Cancel' || status === 'Abort') return;   // the buyer closed it
+      if (status === 'Cancel' || status === 'Abort') return;
       showWalletError((result && result.errors && result.errors[0] && result.errors[0].message) ||
         walletLabel(method) + ' didn’t go through. Try again, or go back and pay by card.');
       return;
@@ -649,7 +526,6 @@
     submit();
   }
 
-  /** Put the chosen method's button where "Place order" would be. */
   function mountWallet() {
     var host = document.getElementById('walletBtn');
     if (!host) return;
@@ -694,8 +570,6 @@
         '-webkit-appearance:-apple-pay-button;-apple-pay-button-type:buy;-apple-pay-button-style:black;' +
         'display:block;width:100%;height:48px;border:0;border-radius:10px;cursor:pointer"></button>';
       document.getElementById('applePayBtn').addEventListener('click', function () {
-        // Apple requires the sheet to open straight from the click — nothing
-        // asynchronous before tokenize().
         if (!termsOk()) return;
         showWalletError('');
         obj.tokenize().then(function (r) { payWithWallet(method, r); }, fail);
@@ -704,8 +578,6 @@
     }
 
     if (method === 'cashapp') {
-      // The token arrives as an event — right away after a phone comes back
-      // from Cash App, so the listener goes on before anything else.
       obj.addEventListener('ontokenization', function (event) {
         var detail = event.detail || {};
         if (detail.error) { clearPendingCashApp(); fail(detail.error); return; }
@@ -730,10 +602,6 @@
       });
     });
   }
-
-  /* ===================================================================== */
-  /* Order submission                                                      */
-  /* ===================================================================== */
 
   function buildOrder(totals, payment) {
     var d = state.data;
@@ -763,8 +631,6 @@
           }
         : {
             type: 'SHIPMENT',
-            // The Worker prices shipping from this id; without it every
-            // shipment was charged as standard, express included.
             shippingId: d.shippingId,
             method: totals.shippingRate.label,
             eta: totals.shippingRate.days,
@@ -813,8 +679,6 @@
     if (state.submitting) return;
     if (!validate('review')) { render(); return; }
     if (S.isLive() && !state.square.token) {
-      // Reached review without passing through payment (e.g. the stepper),
-      // or the last token was spent on a failed attempt.
       state.step = 'payment';
       state.errors = { card: 'Enter your card to place the order' };
       render();
@@ -831,8 +695,6 @@
     var tokenStep = S.isLive()
       ? squareTokenize(totals)
       : Promise.resolve({
-          // Demo mode: the card number is used only to derive these two
-          // display fields, then dropped. It is never stored or sent.
           sourceId: null,
           brand: cardBrand(state.data.cardNumber),
           last4: digits(state.data.cardNumber).slice(-4)
@@ -847,7 +709,6 @@
         });
 
         if (!base) {
-          // No backend configured — complete locally so the flow is testable.
           order.payment.brand = order.payment.brand || 'Card';
           order.payment.status = 'DEMO';
           order.demo = true;
@@ -866,7 +727,6 @@
         }).then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (json) {
             if (!r.ok) throw new Error(json.error || ('Payment failed (' + r.status + ')'));
-            // The server is authoritative — take its order back verbatim.
             return json.order || json;
           });
         });
@@ -880,15 +740,11 @@
       .catch(function (err) {
         state.submitting = false;
         var message = err.message || 'Something went wrong taking payment.';
-        // The welcome perk may have been spent elsewhere; ask the server again.
         if (state.welcomeShip) { state.welcomeShip = false; state.welcomeFor = null; }
         if (S.isLive() && state.payMethod !== 'card') {
-          // Tokens work once; a wallet's button makes a fresh one, so stay on
-          // review and let the buyer press it again.
           state.square.token = null;
           state.errors = { wallet: message };
         } else if (S.isLive()) {
-          // A Square card token works once — back to payment for a fresh one.
           state.square.token = null;
           state.step = 'payment';
           state.errors = { card: message };
@@ -901,10 +757,6 @@
         if (host) host.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
   }
-
-  /* ===================================================================== */
-  /* Rendering                                                             */
-  /* ===================================================================== */
 
   function field(name, label, opts) {
     opts = opts || {};
@@ -1005,19 +857,13 @@
 
     var wallet = state.payMethod !== 'card';
     var cardUi = live
-      // Filled in by setupPayMethods() once Square says which methods work
-      // here; stays empty (card only) otherwise.
       ? '<div id="payMethods" style="display:none;margin-bottom:16px"></div>' +
-        // Hidden, not removed, when another method is picked, so the card
-        // form (and anything typed into it) survives switching back.
         '<div id="cardArea"' + (wallet ? ' style="display:none"' : '') + '>' +
           '<div id="cardLoading" class="evb-notice evb-notice--info">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' +
             '<span>Loading the secure card form…</span>' +
           '</div>' +
           '<div id="sqCard"></div>' +
-          // Always present, so a card error can be shown without a redraw
-          // (a redraw would wipe what the buyer typed into Square's fields).
           '<p class="evb-error" id="cardError"' + (e.card ? '' : ' hidden') + '>' + S.esc(e.card || '') + '</p>' +
         '</div>' +
         '<div id="walletNote" class="evb-notice evb-notice--info"' + (wallet ? '' : ' style="display:none"') + '>' +
@@ -1069,8 +915,6 @@
         ? (tok && tok.last4 ? brandLabel(tok.brand) + ' ending ' + tok.last4 : 'Card entered securely through Square')
         : cardBrand(d.cardNumber) + ' ending ' + digits(d.cardNumber).slice(-4);
 
-    // A wallet's own button stands in for "Place order"; walletTotal shows
-    // Square's quoted total once mountWallet() has it.
     var action = wallet && !state.submitting
       ? '<div id="walletArea" style="margin-top:18px">' +
           '<p class="evb-review-value" id="walletTotal" style="margin:0 0 10px;font-weight:800">Getting your total from Square…</p>' +
@@ -1119,7 +963,6 @@
           '<input type="checkbox" name="terms"' + (d.terms ? ' checked' : '') + '>' +
           '<span>I understand all sales are final, and I confirm the details above are correct.</span>' +
         '</label>' +
-        // Always present so a wallet button can flag it without a redraw.
         '<p class="evb-error" id="termsError"' + (e.terms ? '' : ' hidden') + '>' + S.esc(e.terms || '') + '</p>' +
 
         action +
@@ -1163,7 +1006,6 @@
   }
 
   function render() {
-    // Past the contact step the email is validated, so ask about the perk.
     if (state.step !== 'contact') checkWelcome();
     if (!S.cart.lines.length && !state.submitting) {
       els.host.innerHTML = '<div class="evb-empty" style="margin-bottom:70px">' +
@@ -1204,21 +1046,16 @@
     if (state.step === 'review' && S.isLive() && state.payMethod !== 'card' && !state.submitting) {
       mountWallet();
     } else if (state.wallet.obj) {
-      // Its button just left the page; stop anything still listening.
       state.wallet.gen++;
       destroyWallet(state.wallet.obj);
       state.wallet.obj = null;
     }
   }
 
-  /* ===================================================================== */
-  /* Wiring                                                                */
-  /* ===================================================================== */
-
   function formatCardNumber(v) {
     var s = digits(v).slice(0, 19);
     var groups = /^3[47]/.test(s)
-      ? [s.slice(0, 4), s.slice(4, 10), s.slice(10, 15)]   // Amex 4-6-5
+      ? [s.slice(0, 4), s.slice(4, 10), s.slice(10, 15)]
       : s.match(/.{1,4}/g) || [];
     return groups.filter(Boolean).join(' ');
   }
@@ -1256,8 +1093,6 @@
         input.addEventListener('change', function () {
           state.data[name] = input.checked;
           if (state.errors[name]) { delete state.errors[name]; render(); return; }
-          // A wallet button flags the terms in place (no redraw, which would
-          // rebuild the button); clear that the same way.
           var flag = document.getElementById(name + 'Error');
           if (flag && input.checked) flag.hidden = true;
         });
@@ -1274,7 +1109,6 @@
         return;
       }
 
-      // Keep state in sync as they type so a re-render never loses input.
       input.addEventListener('input', function () {
         var v = input.value;
         if (name === 'cardNumber') { v = formatCardNumber(v); input.value = v; }
@@ -1283,7 +1117,6 @@
         state.data[name] = v;
       });
 
-      // Validate on blur, but only surface an error for the field they left.
       input.addEventListener('blur', function () {
         if (!state.errors[name]) return;
         var had = state.errors;
@@ -1297,14 +1130,11 @@
     var next = host.querySelector('[data-next]');
     if (next) next.addEventListener('click', function () {
       if (state.step === 'payment' && S.isLive() && state.payMethod !== 'card') {
-        // A wallet is confirmed with its own button on the review step.
         state.square.token = null;
         advance();
         return;
       }
       if (state.step === 'payment' && S.isLive()) {
-        // Tokenize now, while Square's fields are still on the page. On a
-        // bad card, show the error in place — render() would wipe the card.
         var label = next.textContent;
         next.disabled = true;
         next.textContent = 'Checking card…';
@@ -1369,11 +1199,6 @@
     });
   }
 
-  /**
-   * Redraw after the bag or the promo code changes. On the live payment step
-   * only the order summary is redrawn — render() would throw away Square's
-   * card fields and whatever the buyer has typed into them.
-   */
   function refresh() {
     if (S.cart.lines.length && state.step === 'payment' && S.isLive()) {
       var box = els.host.querySelector('.evb-summary');
@@ -1382,7 +1207,6 @@
     render();
   }
 
-  /* Card details are deliberately excluded from the draft. */
   function persistDraft() {
     var d = state.data;
     S.draft.set({
@@ -1400,17 +1224,9 @@
     });
   }
 
-  /* ===================================================================== */
-
-  /**
-   * Back from Cash App on a phone (?cashapp=1): reopen the review step on the
-   * pending payment, so mountWallet() re-creates Cash App Pay with the same
-   * reference and its token event lands. The rest of the checkout comes back
-   * from the saved draft; terms were ticked before Cash App opened.
-   */
   function resumeCashApp() {
     if (!/[?&]cashapp=1\b/.test(location.search)) return;
-    try { history.replaceState(null, '', location.pathname); } catch (e) { /* keep the query */ }
+    try { history.replaceState(null, '', location.pathname); } catch (e) { }
     var pending = S.isLive() && S.cart.lines.length ? readPendingCashApp() : null;
     if (!pending) return;
     state.step = 'review';
@@ -1437,10 +1253,6 @@
       }
     });
 
-    // The slide-out bag works on this page too, so a change made there (or
-    // in another tab) has to reach the order summary and totals — before,
-    // only other tabs' changes did, and a removed item stayed on screen.
-    // Not while submitting: a paid order clears the bag on its way out.
     function onCartChange() {
       if (ready && !state.submitting) refresh();
     }

@@ -1,13 +1,7 @@
-/* East Village Buyers — Shopify theme JS
-   Vanilla JS, no build step. Handles: mobile nav, header dropdowns,
-   cart drawer with AJAX add/update/remove, quantity steppers,
-   product page variant + image swapping. */
 (function () {
   var $ = function (s, ctx) { return (ctx || document).querySelector(s); };
   var $$ = function (s, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(s)); };
 
-  /* ---------- Mobile nav drawer ---------- */
-  /* ---------- Back to top (footer) ---------- */
   function initBackToTop() {
     var btn = $('#BackToTop');
     if (!btn) return;
@@ -25,7 +19,6 @@
     overlay && overlay.addEventListener('click', close);
   }
 
-  /* ---------- Cart drawer ---------- */
   var cartDrawer = null;
   function initCartDrawer() {
     cartDrawer = $('#CartDrawer');
@@ -50,9 +43,6 @@
   }
 
   function refreshCartDrawer() {
-    // The cart drawer is rendered as a snippet (not a Shopify section), so the
-    // Section Rendering API can't target it. Re-fetch the current page and swap
-    // in the freshly server-rendered #CartDrawer, preserving its open state.
     fetch(window.location.pathname + window.location.search, { credentials: 'same-origin' })
       .then(function (r) { return r.ok ? r.text() : null; })
       .then(function (html) {
@@ -72,10 +62,9 @@
         });
         bindQtyControls(cartDrawer);
       })
-      .catch(function () { /* network error — cart still works, drawer refreshes on next page load */ });
+      .catch(function () { });
   }
 
-  /* ---------- Add to cart (product form) ---------- */
   function initProductForm() {
     var form = $('#ProductForm');
     if (!form) return;
@@ -113,7 +102,6 @@
     });
   }
 
-  /* ---------- Product variant swatches + image swap ---------- */
   function formatMoney(cents) {
     return (window.Shopify && Shopify.formatMoney) ? Shopify.formatMoney(cents) : '$' + (cents / 100).toFixed(2);
   }
@@ -126,7 +114,6 @@
     var variants = [];
     try { variants = jsonEl ? JSON.parse(jsonEl.textContent) : []; } catch (e) { variants = []; }
 
-    // Seed selected options from whichever swatch already has .is-selected server-side.
     var selected = swatchGroups.map(function (group) {
       var active = $('.product-form__swatch.is-selected', group);
       return active ? active.getAttribute('data-option-value') : null;
@@ -170,7 +157,6 @@
         }
       }
 
-      // Reflect the chosen combination in the URL without a page reload.
       if (variant && window.history && history.replaceState) {
         var url = new URL(window.location.href);
         url.searchParams.set('variant', variant.id);
@@ -203,7 +189,6 @@
     });
   }
 
-  /* ---------- Quantity steppers (product form, cart page, cart drawer) ---------- */
   function bindQtyControls(scope) {
     $$('.qty-stepper', scope).forEach(function (stepper) {
       var input = $('.qty-stepper__input', stepper);
@@ -241,7 +226,6 @@
       .catch(function () {});
   }
 
-  /* ---------- Predictive search ---------- */
   function initPredictiveSearch() {
     var toggle = $('#SearchToggle');
     var panel = $('#SearchPanel');
@@ -295,7 +279,6 @@
     }
   }
 
-  /* ---------- Collection filters ---------- */
   function initCollectionFilters() {
     var panel = $('#CollectionFilters');
     var toggle = $('#FiltersToggle');
@@ -318,7 +301,6 @@
     });
   }
 
-  /* ---------- Account dropdown ---------- */
   function initAccountMenu() {
     var btn = $('#AccountBtn');
     var menu = $('.site-header__account-menu');
@@ -333,7 +315,6 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
   }
 
-  /* ---------- Generic horizontal sliders (product slider, collection slider) ---------- */
   function initSliders() {
     $$('[data-slider-track]').forEach(function (track) {
       var section = track.closest('.section') || document;
@@ -348,7 +329,6 @@
     });
   }
 
-  /* ---------- Product card image carousel ---------- */
   function initCardCarousels() {
     $$('[data-product-card]').forEach(function (card) {
       var media = $('[data-card-media]', card);
@@ -370,7 +350,6 @@
     });
   }
 
-  /* ---------- Product card swatches + quick add ---------- */
   function initCardSwatchesAndQuickAdd() {
     $$('[data-product-card]').forEach(function (card) {
       var variantsScript = $('[data-card-variants]', card);
@@ -412,7 +391,6 @@
               }
               if (variant.featured_image) {
                 var match = $('.product-card__img[data-card-slide]', card);
-                // Prefer swapping to the matching variant image if it's already in the card's carousel.
                 var target = Array.prototype.find.call($$('.product-card__img', card), function (img) {
                   return img.src.indexOf(variant.featured_image.src.split('?')[0].split('/').pop()) !== -1;
                 });
@@ -454,7 +432,6 @@
     });
   }
 
-  /* ---------- Scroll reveal (fade-up on enter) ---------- */
   function initScrollReveal() {
     if (!('IntersectionObserver' in window)) return;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -473,7 +450,6 @@
     var counter = {};
     els.forEach(function (el, i) {
       el.classList.add('reveal-init');
-      // light stagger within the same parent grid
       var key = el.parentNode ? (el.parentNode.className || 'x') : 'x';
       var idx = counter[key] || 0;
       counter[key] = idx + 1;

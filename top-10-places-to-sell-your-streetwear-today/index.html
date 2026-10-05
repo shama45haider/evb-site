@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- EVB-CONSENT-V2 : Consent Mode v2 defaults. MUST stay above Meta Pixel and GTM. -->
 <script>
 (function(w){
   w.dataLayer = w.dataLayer || [];
@@ -11,9 +10,6 @@
   var granted = false;
   try {
     var v = w.localStorage.getItem('evb_consent_v1');
-    // One-way migration from the legacy banner key. Only the unambiguous
-    // 'accepted' carries over; the older markup wrote '1' for BOTH accept
-    // and reject, so those users stay denied until they choose again.
     if (v === null && w.localStorage.getItem('evb_ck6') === 'accepted') {
       v = 'granted';
       w.localStorage.setItem('evb_consent_v1', 'granted');
@@ -40,8 +36,6 @@
   w.evbConsentGranted = granted;
 })(window);
 </script>
-<!-- /EVB-CONSENT-V2 -->
-<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -58,23 +52,19 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=869234452921811&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code -->
 
-<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-MGZ7DGKM');</script>
-<!-- End Google Tag Manager -->
     <meta name="robots" content="noindex,follow">
   <meta http-equiv="refresh" content="0;url=/blog/top-10-places-to-sell-your-streetwear-today/">
   <link rel="canonical" href="https://eastvillagebuyers.com/blog/top-10-places-to-sell-your-streetwear-today/">
   <title>Top 10 Places to Sell Your Streetwear Today | East Village Buyers NYC</title>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) --></body>
+</body>
 </html>

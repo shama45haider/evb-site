@@ -3,7 +3,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<!-- EVB-CONSENT-V2 : Consent Mode v2 defaults. MUST stay above Meta Pixel and GTM. -->
 <script>
 (function(w){
   w.dataLayer = w.dataLayer || [];
@@ -12,9 +11,6 @@
   var granted = false;
   try {
     var v = w.localStorage.getItem('evb_consent_v1');
-    // One-way migration from the legacy banner key. Only the unambiguous
-    // 'accepted' carries over; the older markup wrote '1' for BOTH accept
-    // and reject, so those users stay denied until they choose again.
     if (v === null && w.localStorage.getItem('evb_ck6') === 'accepted') {
       v = 'granted';
       w.localStorage.setItem('evb_consent_v1', 'granted');
@@ -41,8 +37,6 @@
   w.evbConsentGranted = granted;
 })(window);
 </script>
-<!-- /EVB-CONSENT-V2 -->
-<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -59,15 +53,12 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=869234452921811&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code -->
 
-<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-MGZ7DGKM');</script>
-<!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Buy &amp; Sell Gold, Designer &amp; Streetwear NYC</title>
   <meta name="description" content="Buy and sell gold, jewelry, sneakers &amp; streetwear in NYC. Same-day cash at 39 Avenue A. Walk in today.">
@@ -75,7 +66,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://eastvillagebuyers.com/">
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="East Village Buyers">
   <meta property="og:title" content="Buy &amp; Sell Gold, Designer &amp; Streetwear in NYC | East Village Buyers">
@@ -90,7 +80,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Buy and sell gold, jewelry, designer handbags, streetwear &amp; sneakers in NYC. Same-day cash. Walk in to 39 Avenue A or text photos.">
   <meta name="twitter:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
 
-  <!-- LocalBusiness + Store structured data -->
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -229,7 +218,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   </script>
 
-  <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -240,8 +228,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="theme-color" content="#f97316">
 
   <style>
-    /* Static replacements for the Tailwind utilities this page uses
-       (previously served by cdn.tailwindcss.com with preflight disabled) */
     .bg-\[\#f8f5f0\]{background-color:#f8f5f0}
     .bg-white{background-color:#fff}
     .font-black{font-weight:900}
@@ -282,7 +268,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     body { font-family: 'Montserrat', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; text-rendering: optimizeSpeed; }
     img { max-width: 100%; display: block; height: auto; }
 
-    /* Below-fold sections: defer rendering until near viewport */
     #what-we-buy, #store, #faq { content-visibility: auto; contain-intrinsic-size: auto 600px; }
 
     @keyframes float {
@@ -361,7 +346,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       margin-top: auto;
     }
 
-    /* Hero (wide) card layout */
     .evb-card-hero .evb-card-inner {
       display: flex;
       flex-direction: row;
@@ -393,7 +377,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .evb-card-hero .evb-card-img { width: 100%; height: 140px; }
     }
 
-    /* Regular card layout */
     .evb-card-regular .evb-card-img {
       position: relative;
       overflow: hidden;
@@ -416,7 +399,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       padding: 14px 16px 14px;
     }
 
-    /* ── CATEGORY CAROUSEL ── */
     .evb-carousel-header {
       display: flex;
       align-items: center;
@@ -490,7 +472,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .evb-cc:hover .evb-cc-img img { transform: scale(1.22); }
 
-    /* Jewelry hover swoosh */
     .evb-cc--jwl .evb-cc-img-hover {
       position:absolute;
       inset:0;
@@ -597,8 +578,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       margin-top: auto;
     }
 
-    /* Mobile: swap the horizontal swipe-to-see carousel for a 2-column
-       grid so every category is visible at a glance — no swipe needed. */
     @media (max-width: 600px) {
       .evb-carousel-header { display: none; }
       .evb-carousel {
@@ -630,15 +609,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
 
-/* ══════════════════════════════════════════════
-   HERO — CORPORATE STORE REDESIGN
-   ══════════════════════════════════════════════ */
-
-    /* TOP HERO TICKER (same band style as section ticker below) */
     .hero-topstrip { position: relative; z-index: 10; }
     .hero-topstrip-scan { display: none; }
 
-    /* HERO SHELL */
     .hero-section {
       position: relative;
       display: flex;
@@ -656,7 +629,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .hero-tagline { display: none; }
     .hero-title-sub { display: none; }
 
-    /*  INNER WRAPPER — two-col on desktop  */
     .hero-inner {
       position: relative; z-index: 3;
       display: flex;
@@ -679,7 +651,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /* Left column */
     .hero-left {
       display: flex;
       flex-direction: column;
@@ -698,7 +669,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-cards-wrap { width: 100%; }
     }
 
-    /*  HERO HEADING BLOCK  */
     .hero-heading-block {
       width: 100%;
       margin-bottom: 24px;
@@ -727,13 +697,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /* Reviews panel removed — replaced by trust strip */
     .hero-reviews-panel { display: none; }
     .hero-reviews-compact { display: none; }
-
-    /* ═══════════════════════════════════════════════
-       GOOGLE TRUST STRIP
-       ═══════════════════════════════════════════════ */
 
     .gts {
       display: flex;
@@ -908,7 +873,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .gts-link { font-size: 10px; }
     }
 
-    /* Logo frame — black background, logo scales to fit */
     .hero-logo-frame {
       width: 100%;
       margin: 0;
@@ -945,7 +909,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /* Location pill */
     .hero-location-pill {
       display: inline-flex;
       align-items: center;
@@ -963,7 +926,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .hero-location-pill svg { width: 10px; height: 10px; flex-shrink: 0; }
 
-    /* Headline */
     .hero-title {
       font-family: "Montserrat", sans-serif;
       font-size: clamp(36px, 6vw, 80px);
@@ -976,7 +938,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .hero-title span { color: #f97316; }
     .hero-title-main { display: block; }
 
-    /* Subheading bullet list */
     .hero-body {
       width: 100%;
       max-width: 520px;
@@ -1022,7 +983,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     
 
-    /*  CTA PAIR  */
     .hero-cta-pair {
       display: flex;
       gap: 10px;
@@ -1066,7 +1026,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .hero-btn-call .hero-btn-sub { color: rgba(0, 0, 0, 0.45); }
     .hero-btn-text .hero-btn-sub { color: rgba(255,255,255,0.65); }
 
-    /*  STAT BAR  */
     .hero-stats-bar {
       display: flex;
       align-items: center;
@@ -1108,7 +1067,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       text-align: center;
     }
 
-    /*  4 PLATFORM CARDS  */
     .hero-cards-wrap { width: 100%; margin-top: 8px; }
     .hero-cards { display: flex; gap: 12px; width: 100%; }
     .hero-card {
@@ -1171,8 +1129,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
     }
 
-    /*  GOOGLE BADGE — bold dark redesign  */
-    /*  PHONE RING ANIMATION  */
     @keyframes phoneRing {
       0%,100% { transform: rotate(0deg); }
       10%      { transform: rotate(-18deg); }
@@ -1269,7 +1225,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06) 40%, rgba(0,0,0,0.06) 60%, transparent);
     }
-    /* Shimmer sweep on hover */
     .hero-google::after {
       content: "";
       position: absolute;
@@ -1285,7 +1240,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
 
-    /* Google G logo */
     .hero-google-g {
       width: 28px; height: 28px;
       border-radius: 8px;
@@ -1296,7 +1250,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .hero-google-g svg { width: 15px; height: 15px; }
 
-    /* Center stack */
     .hero-google-info {
       display: flex;
       flex-direction: column;
@@ -1306,7 +1259,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       min-width: 0;
     }
 
-    /* Stars row */
     .hero-google-stars {
       display: flex;
       align-items: center;
@@ -1327,7 +1279,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .hero-google-stars span:nth-child(4) { animation-delay: 0.36s; }
     .hero-google-stars span:nth-child(5) { animation-delay: 0.48s; }
 
-    /* Score + count — single line, same baseline */
     .hero-google-headline {
       display: flex;
       align-items: center;
@@ -1357,7 +1308,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       line-height: 1;
     }
 
-    /* Sub-label */
     .hero-google-sub {
       font-size: 8.5px;
       font-weight: 600;
@@ -1368,7 +1318,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       text-align: center;
     }
 
-    /* Right arrow pill */
     .hero-google-arrow {
       flex-shrink: 0;
       width: 22px; height: 22px;
@@ -1386,7 +1335,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .hero-google-arrow svg { width: 10px; height: 10px; }
 
-    /* Bottom rainbow bar */
     .hero-google-bar {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -1410,7 +1358,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-google-count { font-size: 12px; }
     }
 
-    /* Scroll hint */
     .hero-scroll-hint { display: none; justify-content: center; gap: 5px; margin-top: 10px; }
     .hero-scroll-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(0, 0, 0, 0.15); }
     .hero-scroll-dot:first-child { width: 14px; border-radius: 999px; background: #f97316; }
@@ -1422,7 +1369,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .btn-text-bubble .text-line-2 { animation: none !important; }
     }
 
-    /* MOBILE */
     @media (max-width: 700px) {
       .hero-inner { padding: 28px 20px 40px; }
       .hero-logo-img { max-height: 200px; }
@@ -1475,7 +1421,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-cards { gap: 8px; }
     }
 
-/*  WHAT WE BUY CARDS  */
     .what-card { transition: .3s; position: relative; }
     .what-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(0,0,0,.13); }
     .what-card::before {
@@ -1489,7 +1434,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       z-index: 2;
     }
     .what-card:hover::before { transform: scaleX(1); }
-    /* DECORATIVE ACCENT IMAGES */
     .evb-accent-img {
       position: absolute;
       pointer-events: none;
@@ -1588,7 +1532,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .evb-accent-goyard { width: 150px; opacity: 0.04; }
     }
 
-    /* BUY · SELL · TRADE — category link cards */
     #what-we-buy {
       max-width: 100%;
       overflow-x: clip;
@@ -1781,7 +1724,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .bwb-cta-btn { min-height: 44px; font-size: 10px; padding: 10px; }
     }
 
-    /* STORE INFO STRIP */
     .store-info-strip {
       display: flex;
       align-items: center;
@@ -1873,7 +1815,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .store-map-embed iframe { display: block; }
 
-    /*  CAROUSEL — COMPACT  */
     .store-carousel { position: relative; overflow: hidden; border-radius: 20px; }
     .carousel-track { display: flex; transition: transform .45s ease; }
     .carousel-slide { min-width: 100%; height: 380px; position: relative; }
@@ -1898,7 +1839,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .carousel-btn.prev { left: 14px; }
     .carousel-btn.next { right: 14px; }
 
-    /*  BRAND ROW  */
     .brand-row {
       display: flex; justify-content: space-between;
       align-items: center; gap: 40px;
@@ -1906,7 +1846,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .brand-row div { font-size: 26px; font-weight: 800; text-transform: uppercase; }
 
-    /*  INSTAGRAM REVIEW CARDS  */
     .ig-review-card {
       background: white;
       border: 1.5px solid #e5e2dc;
@@ -1950,7 +1889,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .ig-placeholder p { font-size: 12px; color: #999; line-height: 1.5; max-width: 180px; }
     .ig-placeholder strong { display: block; font-size: 13px; font-weight: 800; color: #333; margin-bottom: 2px; }
 
-    /*  VIDEO CAROUSEL  */
     .vid-carousel-outer {
       overflow: hidden;
       padding: 0 0 4px;
@@ -2010,7 +1948,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .ig-placeholder strong { font-size: 14px; font-weight: 800; color: #111; }
     .ig-placeholder p { font-size: 11px; color: #aaa; line-height: 1.5; max-width: 160px; }
 
-    /* Nav buttons */
     .vid-nav-btn {
       width: 40px; height: 40px;
       border-radius: 50%;
@@ -2025,7 +1962,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .vid-nav-btn:hover { background: #f97316; border-color: #f97316; color: white; }
 
-    /* Dots */
     .vid-dots {
       display: flex;
       justify-content: center;
@@ -2046,9 +1982,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: #f97316;
     }
 
-    /* ══════════════════════════════════════════════
-       SELL SECTION — REDESIGN
-       ══════════════════════════════════════════════ */
     .sell-section {
       position: relative;
       overflow: hidden;
@@ -2077,7 +2010,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       margin: 0 auto;
     }
 
-    /* Subhead */
     .sell-subhead {
       font-size: 13.5px;
       font-weight: 500;
@@ -2086,7 +2018,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       line-height: 1.5;
     }
 
-    /* Step rows */
     .sell-rows {
       display: flex;
       flex-direction: column;
@@ -2142,7 +2073,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .sr-desc { border-left: none; padding-left: 0; padding-left: 68px; }
     }
 
-    /* Label */
     .sell-label {
       display: inline-flex;
       align-items: center;
@@ -2167,7 +2097,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       flex-shrink: 0;
     }
 
-    /* Heading */
     .sell-heading {
       font-size: clamp(42px, 5vw, 68px);
       font-weight: 900;
@@ -2179,7 +2108,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .sell-heading span { color: #f97316; }
 
-    /* Steps */
     .sell-steps { display: flex; flex-direction: column; gap: 0; }
     .sell-step {
       display: grid;
@@ -2229,10 +2157,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       line-height: 1.6;
     }
 
-    /* Right column */
     .sell-right { display: flex; flex-direction: column; gap: 20px; }
 
-    /* CTA card */
     .sell-cta-card {
       background: #fff;
       border: 1px solid rgba(0,0,0,.08);
@@ -2289,7 +2215,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .sell-btn-secondary:hover { border-color: #f97316; box-shadow: 0 4px 14px rgba(249,115,22,.15); }
     .sell-btn-secondary svg { width: 18px; height: 18px; }
 
-    /* Trust block */
     .sell-trust {
       background: #fff;
       border: 1px solid rgba(0,0,0,.08);
@@ -2338,7 +2263,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       letter-spacing: .02em;
     }
 
-    /* Mobile */
     @media (max-width: 860px) {
       .sell-section { padding: 56px 0; }
       .sell-inner {
@@ -2355,7 +2279,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .sell-btn-primary, .sell-btn-secondary { font-size: 12px; padding: 14px 16px; }
     }
 
-    /* ── EVB FAQ – SPLIT LAYOUT ── */
     .evb-faq-section {
       background: #f7f4ef;
       position: relative;
@@ -2380,7 +2303,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       position: relative;
     }
 
-    /* ── Sidebar ── */
     .evb-faq-sidebar {
       position: sticky;
       top: 96px;
@@ -2477,7 +2399,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .evb-faq-navbtn--active .evb-faq-navbtn-count { opacity: 1; }
 
-    /* Sidebar CTA */
     .evb-faq-sidebar-cta {
       background: linear-gradient(140deg, #f97316 0%, #ea580c 100%);
       border-radius: 14px;
@@ -2520,7 +2441,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       border: 1px solid rgba(0,0,0,0.08);
     }
 
-    /* ── Accordion – Card Style ── */
     .evb-faq-content { min-width: 0; }
     .evb-faq-pane { display: none; }
     .evb-faq-pane--active {
@@ -2532,7 +2452,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Card wrapper */
     .evb-faq-item {
       position: relative;
       background: #fff;
@@ -2553,7 +2472,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       box-shadow: 0 4px 24px rgba(249,115,22,0.1);
     }
 
-    /* Orange left accent bar on open */
     .evb-faq-item::after {
       content: '';
       position: absolute;
@@ -2567,7 +2485,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .evb-faq-item--open::after { transform: scaleY(1); }
 
-    /* Question button */
     .evb-faq-q {
       display: flex;
       align-items: center;
@@ -2592,7 +2509,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .evb-faq-item:hover .evb-faq-qtext,
     .evb-faq-item--open .evb-faq-qtext { color: #0d0d0d; }
 
-    /* Chevron icon */
     .evb-faq-icon {
       flex-shrink: 0;
       width: 32px;
@@ -2623,7 +2539,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .evb-faq-item--open .evb-faq-icon svg { transform: rotate(180deg); }
 
-    /* Answer */
     .evb-faq-a {
       overflow: hidden;
       max-height: 0;
@@ -2646,7 +2561,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .evb-faq-a-inner a { color: #f97316; text-decoration: none; font-weight: 600; }
     .evb-faq-a-inner a:hover { text-decoration: underline; }
 
-    /* Mobile */
     @media (max-width: 900px) {
       .evb-faq-wrap {
         grid-template-columns: 1fr;
@@ -2730,7 +2644,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .cta-imgs-wrap { height: 200px !important; }
       #dots { flex-wrap: wrap; }
 
-      /* Product card mobile optimizations */
       .evb-card-title { font-size: 18px; }
       .evb-card-desc { font-size: 13px; }
       .product-sell-btn { animation: none; }
@@ -2740,9 +2653,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .shop-panels a { flex-direction: row !important; text-align: left !important; gap: 0.75rem !important; }
     }
 
-    /* ══════════════════════════════════════════════
-       SELL HUB — unified split layout
-       ══════════════════════════════════════════════ */
     .sh-section {
       background: #f8f5f0;
       padding: 42px 20px 48px;
@@ -2779,7 +2689,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       color: #111;
       line-height: 1.05;
     }
-    /* ── Sell Hub: Steps Strip ── */
     .sh-steps-row {
       display: flex;
       gap: 20px;
@@ -2967,7 +2876,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         animation: none;
       }
     }
-    /* ── Sell Hub: Info Panels ── */
     .sh-info-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -3208,7 +3116,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .sh-actions { grid-template-columns: 1fr; }
       #what-we-buy { padding-bottom: 28px !important; }
     }
-    /*  LOCATION / MAP — ——— */
     @media (max-width: 1023px) {
       .location-map { display: none !important; }
     }
@@ -3225,7 +3132,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       box-shadow: 0 12px 32px rgba(0,0,0,.06);
     }
 
-    /* Mobile scroll hint dots */
     .hero-cards-wrap { position: relative; }
     .hero-scroll-hint {
       display: none;
@@ -3246,7 +3152,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-scroll-hint { display: none !important; }
     }
 
-    /*  HERO CTA BUTTONS (primary emphasis — overrides earlier rules)  */
     .hero-cta-pair {
       display: flex;
       gap: 10px;
@@ -3364,19 +3269,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-btn-label { font-size: 10.5px; }
     }
 
-    /* HERO DESKTOP REDESIGN */
-
-    /* Hide logo frame on desktop — logo is now a watermark */
     @media (min-width: 1024px) {
       .hero-logo-frame { display: none; }
     }
 
-    /* Hero section gets a light background */
     @media (min-width: 1024px) {
       .hero-section { background: #f8f5f0; }
     }
 
-    /* Inner: three columns on desktop */
     @media (min-width: 1024px) {
       .hero-inner {
         flex-direction: row;
@@ -3387,7 +3287,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /*  LEFT COL (text + CTAs + google badge)  */
     @media (min-width: 1024px) {
       .hero-left {
         flex: 1.1;
@@ -3397,7 +3296,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /* Faded logo watermark behind left col text */
     .hero-logo-watermark {
       display: none;
     }
@@ -3427,7 +3325,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       .hero-cta-pair { max-width: 620px; }
     }
 
-    /*  RIGHT COL: storefront + reviews stacked  */
     .hero-right-col {
       display: none;
     }
@@ -3443,7 +3340,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       }
     }
 
-    /* Storefront image card */
     .hero-storefront-card {
       width: 100%;
       border-radius: 20px;
@@ -3463,7 +3359,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       display: block;
     }
 
-    /* Compact reviews panel under storefront */
     .hero-reviews-compact {
       width: 100%;
       border-radius: 22px;
@@ -3569,13 +3464,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         height: 300px;
       }
 
-      /* 4. Hide the corner icons on the hero cards */
       .hero-card-icon {
         display: none;
       }
     }
 
-    /* ── Mobile: images + layout polish ── */
     @media (max-width: 768px) {
       img {
         max-width: 100%;
@@ -3628,7 +3521,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
 
-    /* ── FLOATING STATS BAR ── */
     @keyframes floatDrift {
       0%, 100% { transform: translateY(0px); }
       50%       { transform: translateY(-4px); }
@@ -3637,7 +3529,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       0%, 100% { transform: translateY(0px); }
       50%       { transform: translateY(-4px); }
     }
-    /* ── BRAND LOGO CAROUSEL (generic, used elsewhere) ── */
     @keyframes brandScroll {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -3671,7 +3562,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: #f97316; opacity: 0.35; flex-shrink: 0;
     }
 
-    /* ── BWB SECTION HEADER LAYOUT ── */
     .bwb-section-header {
       display: flex; flex-wrap: wrap; align-items: stretch;
       gap: 24px 40px; margin-bottom: 2.5rem;
@@ -3704,9 +3594,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       line-height: 1.7;
     }
 
-    /* ════════════════════════════════════════
-       BWB BRAND CAROUSEL — BOLD TILE REDESIGN
-    ════════════════════════════════════════ */
     @keyframes bwbScroll {
       0%   { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -3729,11 +3616,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       flex-direction: column;
       gap: 14px;
     }
-    /* Kill inherited ::before/::after fade edges */
     .bwb-brand-carousel.brand-carousel::before,
     .bwb-brand-carousel.brand-carousel::after { display: none; }
 
-    /* Top row: eyebrow label + stat pills */
     .bwb-carousel-toprow {
       display: flex;
       align-items: center;
@@ -3772,7 +3657,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       border-color: #f97316;
     }
 
-    /* The scrolling strip itself */
     .bwb-carousel-strip {
       position: relative;
       overflow: hidden;
@@ -3782,7 +3666,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: rgba(249,115,22,0.55);
       box-shadow: 0 4px 20px rgba(249,115,22,0.2), 0 1px 0 rgba(255,255,255,0.15);
     }
-    /* Edge fades matching orange bg */
     .bwb-carousel-strip::before,
     .bwb-carousel-strip::after {
       content: '';
@@ -3792,7 +3675,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .bwb-carousel-strip::before { left:  0; background: linear-gradient(to right, rgba(249,115,22,0.55) 20%, transparent); }
     .bwb-carousel-strip::after  { right: 0; background: linear-gradient(to left,  rgba(249,115,22,0.55) 20%, transparent); }
 
-    /* Track */
     .bwb-brand-carousel .brand-carousel-track {
       display: flex;
       align-items: center;
@@ -3802,7 +3684,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
 
-    /* Individual tile */
     .bwb-brand-carousel .brand-item {
       padding: 0 10px;
       flex-shrink: 0;
@@ -3830,10 +3711,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       transition: none;
     }
 
-    /* No separators needed */
     .bwb-brand-carousel .brand-sep { display: none; }
 
-    /* Bottom info row */
     .bwb-carousel-infobar {
       display: flex;
       align-items: center;
@@ -3851,7 +3730,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       background: #f97316; opacity: 0.5; flex-shrink: 0;
     }
 
-    /* ── Mobile ── */
     @media (max-width: 900px) {
       #what-we-buy { padding-top: 2.25rem !important; }
       .bwb-section-header { flex-direction: column; align-items: stretch; gap: 16px; }
@@ -3881,25 +3759,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <link rel="stylesheet" href="site-mobile.css">
   <link rel="stylesheet" href="site-ticker.css">
   <link rel="stylesheet" href="site-footer.css">
-  <!-- Google Preferred Sources Button -->
   <script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
 </head>
 
 <body class="bg-[#f8f5f0] text-black">
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
-<!-- What's New Carousel Popup -->
 <div id="wnWrap" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:16px;">
   <div class="nk-card">
     <button onclick="wnClose()" class="nk-x" aria-label="Close">&#10005;</button>
 
-    <!-- Slide track -->
     <div class="wn-track" id="wnTrack">
 
-      <!-- Slide 1: We Buy Gold -->
       <div class="wn-slide">
         <div class="nk-img">
           <img src="wn-gold-jewelry.webp" alt="Gold jewelry at East Village Buyers" width="600" height="400" loading="lazy" decoding="async">
@@ -3919,7 +3791,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-    </div><!-- /wn-track -->
+    </div>
   </div>
 </div>
 <style>
@@ -3931,7 +3803,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   .nk-img{position:relative;flex:0 0 44%;min-height:260px;overflow:hidden}
   .nk-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
   .wn-slide-badge{position:absolute;top:14px;left:14px;background:#f97316;color:#fff;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:.1em;padding:5px 10px;border-radius:6px;z-index:2}
-  /* Dots + arrows live on the image panel */
   .wn-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
   .wn-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;border:none}
   .wn-dot-active{background:#fff;transform:scale(1.3)}
@@ -3974,8 +3845,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 
 
-
-  <!-- NAV -->
 
   <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">·</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun 12:30–6 PM &nbsp;·&nbsp; Mon–Thu 12:30–6:30 PM &nbsp;·&nbsp; Fri 12:30–4 PM &nbsp;·&nbsp; Sat Closed</span></div></div>
 
@@ -4081,23 +3950,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="site-reveal.js" defer></script>
 
 
-  <!-- ═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"——"—
-       HERO — PROFESSIONAL INFO LAYOUT
-       ═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"—═"——"— -->
   <section class="hero-section" style="position:relative;overflow:hidden;">
     <img src="indeximagehat4.webp" alt="Luxury streetwear hat" class="evb-accent-img evb-accent-hat4" loading="lazy" decoding="async">
     <img src="goyardbackground.webp" alt="Goyard luxury" class="evb-accent-img evb-accent-goyard" loading="lazy" decoding="async">
     <img src="eeknicks.webp" alt="Sneaker collectible" class="evb-accent-img evb-accent-eeknicks" loading="lazy" decoding="async">
 
-    <!-- Storefront — edge to edge -->
     <div class="hero-logo-frame">
       <img src="evbstorefront.webp" alt="East Village Buyers storefront" class="hero-logo-img" width="1200" height="600" decoding="async" fetchpriority="high">
     </div>
 
     <style>
       .whats-new-title{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:#111;margin:16px 0 8px;}
-      /* Mobile/tablet inline card — stacked, image on top */
-      /* Removed on mobile per request; desktop "What's New" card is unaffected. */
       .whats-new-mobile-inline{display:none;align-self:stretch;width:100%;max-width:100%;}
       .whats-new-mobile-inline .nk-card{margin:0;animation:none;width:100%;max-width:380px;flex-direction:column;}
       .whats-new-mobile-inline .nk-img{flex:none;height:0;padding-top:66.66%;min-height:auto;background:#f4f1ec;}
@@ -4109,7 +3972,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .whats-new-mobile-inline .wn-slide{flex-direction:column;}
       .whats-new-mobile-inline .nk-brands{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;}
       .whats-new-mobile-inline .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:3px 8px;white-space:nowrap;}
-      /* Desktop sidebar card — horizontal, image left / text right */
       .hero-right-col .nk-card{margin:0;animation:none;width:100%;max-width:460px;flex-direction:row;}
       .hero-right-col .wn-slide{flex-direction:row;}
       .hero-right-col .nk-img{flex:0 0 42%;height:auto;padding-top:0;min-height:210px;background:#f4f1ec;}
@@ -4121,7 +3983,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .hero-right-col .nk-brands{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px;}
       .hero-right-col .nk-brand-pill{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#555;background:#f4f1ec;border:1px solid #e8e4de;border-radius:5px;padding:2px 7px;white-space:nowrap;}
 
-      /* Inline What's New carousel */
       .wnc-viewport{position:relative;overflow:hidden;}
       .wnc-arrow{position:absolute;z-index:4;background:rgba(0,0,0,.4);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s;padding:0;}
       .wnc-arrow:hover{background:rgba(0,0,0,.65);}
@@ -4134,16 +3995,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .wnc-dot-active{background:#f97316;transform:scale(1.3);}
     </style>
 
-    <!-- Main content — two-col on desktop -->
     <div class="hero-inner">
 
-      <!--  LEFT COLUMN  -->
       <div class="hero-left">
 
-      <!-- Faded logo watermark (desktop only) -->
       <img src="evblogo.webp" alt="East Village Buyers logo" class="hero-logo-watermark">
 
-      <!-- Hero heading block -->
       <div class="hero-heading-block">
         <p class="uppercase text-orange-500 tracking-[.22em] font-bold text-xs mb-2">39 Avenue A, New York, NY 10009</p>
         <h1 class="hero-display-title font-black uppercase">Buy And Sell Gold, Streetwear, Sneakers &amp; Luxury Goods for Cash</h1>
@@ -4167,7 +4024,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </ul>
       </div>
 
-      <!-- CTA buttons -->
       <div class="hero-cta-pair">
         <a href="sms:9176088939" class="hero-btn-text">
           <div class="hero-btn-icon">
@@ -4186,7 +4042,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </a>
         <a href="tel:9176088939" class="hero-btn-call">
           <div class="hero-btn-icon">
-            <!-- Animated ringing phone — wrapper handles the shake -->
             <span class="btn-phone-ring">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
                 <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
@@ -4201,7 +4056,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <p class="cta-addr-note cta-addr-note--center">39 Avenue A, New York, NY 10009</p>
 
-      <!-- 4 platform cards -->
       <div class="hero-cards-wrap">
         <div class="hero-cards">
 
@@ -4280,7 +4134,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- What's New box (mobile/tablet only) -->
       <div class="whats-new-mobile-inline">
         <h2 class="whats-new-title">What's New</h2>
         <div class="nk-card wn-carousel">
@@ -4393,23 +4246,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
               </div>
 
-            </div><!-- /wn-track -->
-          </div><!-- /wnc-viewport -->
+            </div>
+          </div>
           <div class="wnc-dots"></div>
         </div>
       </div>
 
-      </div><!-- /hero-left -->
+      </div>
 
-      <!--  RIGHT COLUMN: Storefront + Reviews (desktop only)  -->
       <div class="hero-right-col">
 
-        <!-- Storefront photo -->
         <div class="hero-storefront-card">
           <img src="evbstorefront.webp" alt="East Village Buyers — 39 Avenue A, NYC" width="600" height="400" loading="lazy" decoding="async">
         </div>
 
-        <!-- What's New box (desktop only) -->
         <div class="whats-new-desktop">
           <h2 class="whats-new-title">What's New</h2>
           <div class="nk-card wn-carousel">
@@ -4522,20 +4372,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   </div>
                 </div>
 
-              </div><!-- /wn-track -->
-            </div><!-- /wnc-viewport -->
+              </div>
+            </div>
             <div class="wnc-dots"></div>
           </div>
         </div>
 
-        <!-- Compact Google Reviews panel -->
-        <!-- Mobile compact panel removed — replaced by trust strip below -->
+      </div>
 
-      </div><!-- /hero-right-col -->
-
-      <!-- Desktop reviews panel removed — replaced by trust strip below -->
-
-    </div><!-- /hero-inner -->
+    </div>
 
   </section>
 
@@ -4589,7 +4434,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   })();
   </script>
 
-  <!-- GOOGLE TRUST STRIP -->
   <div class="gts" id="gtStrip" role="region" aria-label="Google Reviews — 4.8 stars, 562 reviews">
     <div class="gts-left">
       <div class="gts-g-icon">
@@ -4631,20 +4475,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   })();
   </script>
 
-  <!-- WHAT WE BUY -->
   <section id="what-we-buy" class="px-6 lg:px-20 py-16 scroll-mt-20" style="position:relative;overflow:hidden;background-color:#f8f5f0;background-image:radial-gradient(circle,rgba(249,115,22,0.07) 1px,transparent 1px);background-size:22px 22px;">
     <img src="indeximageshoe.webp" alt="Sneakers for sale NYC" class="evb-accent-img evb-accent-shoe" loading="lazy" decoding="async">
     <img src="indeximagewatch3.webp" alt="Gold luxury watch" class="evb-accent-img evb-accent-watch3" loading="lazy" decoding="async">
 
     <div class="max-w-6xl mx-auto" style="position:relative;z-index:2;">
 
-      <!-- Simple header -->
       <div class="mb-4">
         <div style="display:inline-block;width:48px;height:4px;background:#f97316;border-radius:2px;margin-bottom:10px;"></div>
         <h2 class="text-4xl lg:text-5xl font-black uppercase mb-0">What We <span style="color:#f97316;">Buy &amp; Sell</span> in NYC</h2>
       </div>
 
-      <!-- Carousel nav row -->
       <div class="evb-carousel-header">
         <p style="font-family:'Inter',sans-serif;font-size:13px;color:#999;margin:0;letter-spacing:0.03em;">Swipe or use arrows to explore &rarr;</p>
         <div class="evb-carousel-arrows">
@@ -4653,10 +4494,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- Horizontal scroll carousel -->
       <div class="evb-carousel" id="evbCarousel">
 
-        <!-- Jewelry -->
         <a href="we-buy-jewelry-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="jewelrybanner.webp" alt="Fine Jewelry & Gold" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="object-position:center 70%;">
@@ -4670,7 +4509,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Sneakers -->
         <a href="we-buy-sneakers-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="tiffanyshoe.webp" alt="Sneakers" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main">
@@ -4684,7 +4522,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Streetwear -->
         <a href="we-buy-streetwear-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="streetwear-main.webp" alt="Streetwear" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="object-position:center 30%;">
@@ -4698,7 +4535,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Watches -->
         <a href="we-buy-watches-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="watches-main.webp" alt="Luxury Watches" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main" style="transform:scale(1);object-position:center 40%;">
@@ -4712,7 +4548,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Designer Bags -->
         <a href="we-buy-accessories-nyc/" class="evb-cc evb-cc--jwl">
           <div class="evb-cc-img">
             <img src="bagbanner.webp" alt="Designer Bags" width="290" height="195" loading="lazy" decoding="async" class="evb-cc-img-main">
@@ -4726,7 +4561,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Electronics -->
         <a href="we-buy-electronics-nyc/" class="evb-cc">
           <div class="evb-cc-img">
             <img src="electronicsbanner.webp" alt="Electronics" width="290" height="195" loading="lazy" decoding="async">
@@ -4739,7 +4573,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-        <!-- Collectibles -->
         <a href="we-buy-collectibles-nyc/" class="evb-cc">
           <div class="evb-cc-img">
             <img src="kaws-the-promise.webp" alt="Collectibles & Hype" width="290" height="195" loading="lazy" decoding="async">
@@ -4752,12 +4585,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </a>
 
-      </div><!-- /carousel -->
+      </div>
 
       <script>
         (function() {
           var carousel = document.getElementById('evbCarousel');
-          var cardWidth = 304; // 290px card + 14px gap
+          var cardWidth = 304;
           document.getElementById('ccPrev').addEventListener('click', function() {
             carousel.scrollBy({ left: -cardWidth, behavior: 'smooth' });
           });
@@ -4767,19 +4600,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         })();
       </script>
 
-    </div><!-- /max-w-6xl -->
+    </div>
   </section>
 
 
-  <!-- SELL HUB — REMOVED -->
   <section id="sell" class="sell-section scroll-mt-20" aria-labelledby="sh-title" style="display:none">
 
-    <!-- background blobs + grid -->
     <div class="sell-bg" aria-hidden="true"></div>
 
     <div class="sell-inner">
 
-      <!-- LEFT: headline + steps -->
       <div class="sell-left">
 
         <p class="sell-label">Get Cash For Your Items</p>
@@ -4819,7 +4649,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- RIGHT: CTA card + trust -->
       <div class="sell-right">
 
         <div class="sell-cta-card">
@@ -4859,7 +4688,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
 
-  <!-- INSIDE THE STORE — COMPACT CAROUSEL -->
   <section id="store" class="px-6 lg:px-20 py-12 bg-white scroll-mt-20" style="position:relative;overflow:hidden;">
     <img src="indeximagewatch.webp" alt="Luxury timepiece" class="evb-accent-img evb-accent-watch" loading="lazy" decoding="async">
     <img src="indeximagebag3.webp" alt="Designer bag" class="evb-accent-img evb-accent-bag3" loading="lazy" decoding="async">
@@ -4884,7 +4712,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <div class="flex justify-center gap-2 mt-4" id="dots"></div>
 
-    <!-- Store info strip — merged from Find Our Store -->
     <div class="store-info-strip">
       <div class="store-info-block">
         <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 21s7-5.1 7-12a7 7 0 0 0-14 0c0 6.9 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
@@ -4919,14 +4746,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-  <!-- FAQ -->
   <section id="faq" class="evb-faq-section scroll-mt-20" style="position:relative;overflow:hidden;">
     <img src="indeximageduffle.webp" alt="BAPE duffle bag" class="evb-accent-img evb-accent-duffle" loading="lazy" decoding="async">
     <img src="indeximagehandbag.webp" alt="Designer handbag" class="evb-accent-img evb-accent-handbag" loading="lazy" decoding="async">
     <img src="indeximagehat.webp" alt="Streetwear hat" class="evb-accent-img evb-accent-hat" loading="lazy" decoding="async">
     <div class="evb-faq-wrap" style="position:relative;z-index:2;">
 
-      <!-- ── SIDEBAR ── -->
       <aside class="evb-faq-sidebar">
         <span class="evb-faq-eyebrow">FAQs</span>
         <h2 class="evb-faq-heading">Got Questions?<br>We've Got Answers.</h2>
@@ -4967,10 +4792,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </aside>
 
-      <!-- ── ACCORDION CONTENT ── -->
       <div class="evb-faq-content">
 
-      <!-- ── GENERAL ── -->
       <div class="evb-faq-pane evb-faq-pane--active" id="faqpane-general">
 
         <div class="evb-faq-item">
@@ -5065,7 +4888,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- ── JEWELRY & GOLD ── -->
       <div class="evb-faq-pane" id="faqpane-jewelry">
 
         <div class="evb-faq-item">
@@ -5150,7 +4972,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- ── SNEAKERS ── -->
       <div class="evb-faq-pane" id="faqpane-sneakers">
 
         <div class="evb-faq-item">
@@ -5225,7 +5046,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- ── STREETWEAR & DESIGNER ── -->
       <div class="evb-faq-pane" id="faqpane-streetwear">
 
         <div class="evb-faq-item">
@@ -5305,7 +5125,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      <!-- ── ELECTRONICS ── -->
       <div class="evb-faq-pane" id="faqpane-electronics">
 
         <div class="evb-faq-item">
@@ -5385,13 +5204,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       </div>
 
-      </div><!-- /evb-faq-content -->
-    </div><!-- /evb-faq-wrap -->
+      </div>
+    </div>
   </section>
 
   <script>
     (function() {
-      // Category nav switching
       document.querySelectorAll('.evb-faq-navbtn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.evb-faq-navbtn').forEach(function(b) { b.classList.remove('evb-faq-navbtn--active'); });
@@ -5400,7 +5218,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           document.getElementById('faqpane-' + this.dataset.pane).classList.add('evb-faq-pane--active');
         });
       });
-      // Auto-number questions per pane
       document.querySelectorAll('.evb-faq-pane').forEach(function(pane) {
         pane.querySelectorAll('.evb-faq-q').forEach(function(btn, i) {
           var num = document.createElement('span');
@@ -5409,7 +5226,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           btn.insertBefore(num, btn.firstChild);
         });
       });
-      // Accordion
       document.querySelectorAll('.evb-faq-q').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var item = this.closest('.evb-faq-item');
@@ -5430,7 +5246,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </script>
 
 
-  <!-- FOOTER -->
   <footer class="evb-footer">
 
     <div class="evb-footer-topbar"></div>
@@ -5461,7 +5276,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="icon-google.webp" alt="Google Reviews" width="24" height="24" loading="lazy" decoding="async">
           </a>
         </div>
-        <!-- Google Preferred Source Button -->
         <div style="text-align: center; margin-top: 24px;">
           <div google-add-preferred-source-btn data-theme="dark"></div>
         </div>
@@ -5545,17 +5359,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </footer>
 
 
-  <!-- MOBILE STICKY BAR -->
-
   <script>
-    //  Mobile nav 
     function toggleMobNav() {
       const nav = document.getElementById('mobNav');
       nav.classList.toggle('hidden');
       document.body.style.overflow = nav.classList.contains('hidden') ? '' : 'hidden';
     }
 
-    //  Carousel — pause when tab is hidden to avoid drift
     let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-slide');
     const dotsEl  = document.getElementById('dots');
@@ -5582,7 +5392,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       else { carouselTimer = setInterval(() => { if (!document.hidden) moveSlide(1); }, 4000); }
     });
 
-    // Lazy-load the map iframe only when it scrolls into view
     (function() {
       var mapFrame = document.getElementById('storeMapFrame');
       if (!mapFrame) return;
@@ -5599,7 +5408,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     })();
 
-    //  Video Review Carousel 
     (function() {
       const track   = document.getElementById('vidTrack');
       const outer   = document.getElementById('vidOuter');
@@ -5612,7 +5420,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       let startX    = 0;
       let isDragging = false;
 
-      // Build dots
       cards.forEach((_, i) => {
         const d = document.createElement('button');
         d.className = 'vid-dot' + (i === 0 ? ' active' : '');
@@ -5622,7 +5429,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
 
       function getCardWidth() {
-        return cards[0].getBoundingClientRect().width + 20; // card + gap
+        return cards[0].getBoundingClientRect().width + 20;
       }
 
       function vidGoTo(n) {
@@ -5637,7 +5444,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       window.vidNext = () => vidGoTo(current < total - 1 ? current + 1 : 0);
       window.vidPrev = () => vidGoTo(current > 0 ? current - 1 : total - 1);
 
-      // Touch / mouse drag
       outer.addEventListener('mousedown',  e => { isDragging = true; startX = e.pageX; });
       outer.addEventListener('touchstart', e => { startX = e.touches[0].pageX; }, { passive: true });
       outer.addEventListener('mousemove',  e => { if (!isDragging) return; e.preventDefault(); });
@@ -5654,10 +5460,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       outer.addEventListener('mouseleave', () => { isDragging = false; });
     })();
 
-    //  Geolocation directions 
     const DEST_ADDR = '39+Avenue+A,+New+York,+NY+10009';
 
-    // Pause ticker animations when tab is not visible
     document.addEventListener('visibilitychange', () => {
       document.querySelectorAll('.evb-ticker-track, .ticker-track').forEach(t => {
         t.style.animationPlayState = document.hidden ? 'paused' : 'running';
@@ -5690,7 +5494,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-  <!--  Cookie Consent  -->
   <style>
     #evbCk {
       --evb-ck-mb: 0px;
@@ -5855,7 +5658,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       filter: brightness(1.05);
     }
 
-    /* Mobile: sit at the bottom edge */
     @media (max-width: 768px) {
       #evbCk {
         left: 14px;
@@ -5900,16 +5702,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .evb-ck-btn:active { transform: none; }
     }
 
-  /* ═══════════════════════════════════════════
-     GLOBAL MOBILE FIXES
-     ═══════════════════════════════════════════ */
-
-  /* Prevent any element from blowing past viewport */
   *, *::before, *::after { box-sizing: border-box; }
   html, body { overflow-x: hidden; max-width: 100%; }
   img { max-width: 100%; display: block; }
 
-  /* Images inside fixed-height containers must fill them */
   .bwb-media img,
   .carousel-slide img,
   .hero-card-media img { height: 100% !important; width: 100% !important; object-fit: cover !important; }
@@ -5917,7 +5713,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-  /* ── Sell hub section ── */
   @media (max-width: 768px) {
     .sh-actions {
       grid-template-columns: 1fr 1fr !important;
@@ -5939,7 +5734,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /* ── Hero section ── */
   @media (max-width: 768px) {
     .hero-cta-pair {
       display: grid !important;
@@ -5968,7 +5762,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     .hero-cards > * { flex: 1 1 calc(50% - 8px) !important; min-width: 0 !important; }
   }
 
-  /* ── Nav: hide CTA buttons on mobile, rely on hamburger drawer ── */
   @media (max-width: 767px) {
     .site-btn-sms,
     .site-btn-call {
@@ -5979,7 +5772,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /* ── Nav: compact Text + Call on tablet ── */
   @media (min-width: 768px) and (max-width: 1023px) {
     .site-nav-right {
       display: flex !important;
@@ -6036,19 +5828,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /* ── General section padding on small screens ── */
   @media (max-width: 540px) {
     section.px-6 { padding-left: 16px !important; padding-right: 16px !important; }
     section.lg\:px-20 { padding-left: 16px !important; padding-right: 16px !important; }
     .sh-inner { padding: 0 4px; }
   }
 
-  /* ── Carousel overflow guard ── */
   .carousel-track, .brand-carousel-track { min-width: 0; }
   .store-carousel { overflow: hidden; }
   .brand-carousel { max-width: 100%; overflow: hidden; }
 
-  /* ── Brands We Buy · Sell · Trade — force 2-up grid on phones ── */
   @media (max-width: 899px) {
     #what-we-buy,
     #what-we-buy .bwb-wrap,
@@ -6095,11 +5884,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /* ── Tables and iframes ── */
   iframe { max-width: 100% !important; }
   table { display: block; overflow-x: auto; max-width: 100%; }
 
-  /* ── Footer ── */
   @media (max-width: 600px) {
     .evb-footer-main {
       grid-template-columns: 1fr !important;
@@ -6112,25 +5899,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
   }
 
-  /* ── Section headings on mobile ── */
   @media (max-width: 640px) {
-    /* What We Buy & Store section headings */
     #what-we-buy h2.text-4xl,
     #store h2.text-4xl {
       font-size: 1.6rem !important;
       line-height: 1.15 !important;
     }
-    /* Store header row wraps cleanly */
     #store .flex.justify-between {
       flex-wrap: wrap;
       gap: 8px;
     }
-    /* What We Buy description */
     #what-we-buy .text-lg {
       font-size: 0.9rem !important;
       line-height: 1.55 !important;
     }
-    /* Product card grid gap */
     #bwbGrid {
       gap: 16px !important;
     }

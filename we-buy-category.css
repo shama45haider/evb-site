@@ -1,6 +1,3 @@
-/* East Village Buyers — Category Page Styles (we-buy-*.html) */
-
-/* ── Foundation ── */
 .cp-we-buy-page {
   font-family: 'Montserrat', sans-serif;
   color: #111;
@@ -19,13 +16,11 @@
 .cp-breadcrumb a { color: #f97316; text-decoration: none; }
 .cp-breadcrumb a:hover { text-decoration: underline; }
 
-/* ── Hero ── */
 .cp-page-hero {
   background: #111;
   border-bottom: 3px solid #f97316;
 }
 
-/* Banner image */
 .cp-hero-banner {
   line-height: 0;
 }
@@ -38,7 +33,6 @@
 }
 .cp-hero-img--desktop { display: none; }
 
-/* Body: title + buttons + hours */
 .cp-hero-body {
   padding: 28px 20px 28px;
 }
@@ -102,7 +96,6 @@
 }
 .cp-hero-hours strong { color: #f97316; }
 
-/* Hide old classes if any remain */
 .cp-page-hero-visual--mobile,
 .cp-page-hero-visual--desktop,
 .cp-page-hero-inner,
@@ -140,7 +133,6 @@
   .cp-hero-hours { text-align: left; }
 }
 
-/* ── Intro Block ── */
 .wb-block {
   padding: 56px 20px;
   background: #fff;
@@ -308,7 +300,6 @@
   .cp-storefront-wrap { flex: 0 0 320px; }
 }
 
-/* ── Metal Band (Category Sections) ── */
 .cp-metal-band {
   padding: 56px 20px;
   border-top: none;
@@ -453,7 +444,6 @@
   }
 }
 
-/* ── Brand Grid ── */
 .brand-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -537,7 +527,6 @@
   .brand-tile, .brand-tile::before, .brand-tile::after { transition: none; }
 }
 
-/* ── Inline FAQ (details/summary) ── */
 .cp-section-faq {
   margin-top: 28px;
   padding: 20px;
@@ -597,7 +586,6 @@
   margin: 0;
 }
 
-/* ── FAQ2 Section (Bottom FAQ) ── */
 .faq2-section {
   max-width: 800px;
   margin: 0 auto;
@@ -745,7 +733,6 @@
 }
 .faq2-a-inner a:hover { text-decoration: underline; }
 
-/* ── CTA Band ── */
 .evb-cta-band {
   background: linear-gradient(135deg, #fef7f0 0%, #fff5eb 100%);
   text-align: center;
@@ -815,7 +802,6 @@
 }
 .evb-cta-ghost:hover { border-color: #f97316; color: #f97316; background: rgba(249,115,22,0.05); }
 
-/* ── Directory (Sneakers) ── */
 .cp-directory-section {
   padding: 40px 0;
   max-width: 1100px;
@@ -895,7 +881,6 @@
   font-size: 14px;
 }
 
-/* ── Decorative Background Accents ── */
 .cp-accent-img {
   position: absolute;
   pointer-events: none;
@@ -916,7 +901,6 @@
   .cp-accent-4 { width: 130px; }
 }
 
-/* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   .faq2-a { transition: none; }
   .cp-btn-primary, .cp-btn-secondary, .evb-cta-solid, .evb-cta-ghost { transition: none; }

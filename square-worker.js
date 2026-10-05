@@ -1,80 +1,14 @@
-/**
- * East Village Buyers — Square store backend (Cloudflare Worker)
- * ===========================================================================
- *
- * Why this exists: eastvillagebuyers.com is a static site on GitHub Pages with
- * no server. The Square ACCESS TOKEN can never ship to the browser — anything
- * in /store/*.js is readable via view-source, and that token can move money.
- * This Worker holds the token as an encrypted secret and is the only thing
- * that ever talks to Square.
- *
- * It is also the only place that decides what an order costs. The browser's
- * totals are an estimate shown to the buyer; every price here is re-read from
- * the Square catalog, so a tampered request cannot change what gets charged.
- *
- * ── ROUTES ─────────────────────────────────────────────────────────────────
- *   GET  /health          quick sanity check, no Square call
- *   GET  /catalog         items + variations + images + inventory counts
- *   POST /quote           Square's exact total for the bag, nothing created
- *   POST /orders          create the Square Order, take payment, return receipt
- *   GET  /orders/:id      fetch a stored receipt (needs the ORDERS KV binding)
- *   POST /subscribe       email-signup popup: store the email, grant the
- *                         free-shipping-on-first-order perk (SUBSCRIBERS KV)
- *   POST /welcome-check   checkout asks whether an email still has the perk
- *   GET  /subscribers     staff panel list (Bearer PANEL_API_KEY)
- *   DELETE /subscribers/:email   staff panel removal
- *
- *   The signup routes work before Square is configured, so the popup can
- *   collect emails while the store is still "coming soon".
- *
- * ── DEPLOY (Cloudflare dashboard, no CLI needed) ───────────────────────────
- *  1. dash.cloudflare.com -> Workers & Pages -> Create -> Create Worker.
- *  2. Name it "evb-square", deploy the hello-world, then Edit Code and paste
- *     this whole file over it. Deploy.
- *  3. Settings -> Variables and Secrets, add:
- *       SQUARE_ACCESS_TOKEN   type Secret    (Square Dashboard -> Credentials)
- *       SQUARE_LOCATION_ID    type Text      (Square Dashboard -> Locations)
- *       SQUARE_ENVIRONMENT    type Text      "sandbox" or "production"
- *       CATALOG_SOURCE        type Text      optional: "panel" (default) sells
- *                             only items posted from the EVB panel; "all"
- *                             sells every item in the Square catalog
- *  4. Optional but recommended:
- *       Bindings -> KV Namespace -> variable name ORDERS
- *         Without it, everything still works except GET /orders/:id — the
- *         confirmation page then falls back to the copy in the buyer's browser.
- *       Bindings -> Rate Limiting -> variable name RATE_LIMITER
- *         e.g. 30 requests / 60s. Absent, the check is skipped (fails open).
- *  4b. Required for the email-signup popup:
- *       Bindings -> KV Namespace -> variable name SUBSCRIBERS
- *         Without it, /subscribe returns 503 and the popup stays hidden.
- *       Variables and Secrets -> PANEL_API_KEY, type Secret, 32+ characters.
- *         The staff panel sends it to read and remove signups; set the same
- *         value as EVB_WORKER_PANEL_KEY in the panel's Vercel environment.
- *  5. Copy the Worker URL and put it in /store/store-config.js as `apiBase`,
- *     along with your Application ID and Location ID.
- *
- * IMPORTANT: use SANDBOX credentials until you have placed a full test order.
- * Sandbox and production have separate tokens, locations and catalogs.
- * ===========================================================================
- */
-
 const ALLOWED_ORIGINS = new Set([
   'https://eastvillagebuyers.com',
   'https://www.eastvillagebuyers.com',
-  // Local development. Harmless in production: an attacker cannot make a
-  // victim's browser originate from localhost.
   'http://localhost:8123',
   'http://127.0.0.1:8123'
 ]);
 
 const SQUARE_VERSION = '2024-10-17';
 
-/* NYC combined state + city sales tax. Bullion is exempt; taxability comes
-   from each item's `is_taxable` flag in the Square catalog. */
 const TAX_PERCENTAGE = '8.875';
 
-/* Server-side promo codes. The browser copy in store-config.js is only for
-   showing the buyer a preview — these are the ones that actually apply. */
 const PROMO_CODES = {
   EVB10:    { type: 'percent',  value: 10 },
   WALKIN25: { type: 'fixed',    value: 2500, minSubtotal: 25000 },
@@ -88,10 +22,6 @@ const SHIPPING_RATES = {
 };
 
 const FREE_SHIPPING_THRESHOLD = 50000;
-
-/* ========================================================================= */
-/* Helpers                                                                    */
-/* ========================================================================= */
 
 function corsHeaders(origin) {
   return {
@@ -120,7 +50,6 @@ function squareBase(env) {
     : 'https://connect.squareupsandbox.com';
 }
 
-/** Call the Square API. Throws SquareError with Square's own message on failure. */
 async function square(env, path, method, body) {
   const res = await fetch(squareBase(env) + path, {
     method: method || 'GET',
@@ -135,7 +64,7 @@ async function square(env, path, method, body) {
 
   const text = await res.text();
   let data = {};
-  try { data = text ? JSON.parse(text) : {}; } catch (e) { /* non-JSON error body */ }
+  try { data = text ? JSON.parse(text) : {}; } catch (e) { }
 
   if (!res.ok) {
     const err = (data.errors && data.errors[0]) || {};
@@ -152,16 +81,6 @@ function money(amount, currency) {
   return { amount: Math.round(amount), currency: currency || 'USD' };
 }
 
-/* ========================================================================= */
-/* GET /catalog                                                               */
-/* ========================================================================= */
-
-/**
- * Items posted from the EVB panel carry an `evb_listing` custom attribute
- * (the panel's listing number). By default only those are sold online, so
- * anything that only exists for ringing up at the counter stays off the
- * website. Set the Worker variable CATALOG_SOURCE=all to show everything.
- */
 function isPanelListing(o) {
   const values = o.custom_attribute_values || {};
   return Object.keys(values).some(k => {
@@ -172,10 +91,6 @@ function isPanelListing(o) {
 }
 
 async function handleCatalog(env, origin) {
-  // ITEM pulls the products, IMAGE resolves image_ids to URLs. ListCatalog is
-  // paginated — follow the cursor, or everything past the first page (about
-  // a hundred objects, and every item brings its images) silently vanishes
-  // from the store.
   let all = [];
   let cursor = '';
   for (let page = 0; page < 50; page++) {
@@ -191,13 +106,10 @@ async function handleCatalog(env, origin) {
 
   const panelOnly = (env.CATALOG_SOURCE || 'panel') !== 'all';
   const items = all.filter(o => o.type === 'ITEM' && !o.is_deleted && (!panelOnly || isPanelListing(o)));
-  // Only the images those items use — no reason to ship the rest.
   const usedImages = new Set();
   items.forEach(o => ((o.item_data && o.item_data.image_ids) || []).forEach(id => usedImages.add(id)));
   const objects = items.concat(all.filter(o => o.type === 'IMAGE' && usedImages.has(o.id)));
 
-  // Fold live inventory onto each variation so the storefront can mark
-  // one-of-one pieces as sold the moment they go.
   const variationIds = [];
   objects.forEach(o => {
     if (o.type === 'ITEM' && o.item_data && o.item_data.variations) {
@@ -206,7 +118,6 @@ async function handleCatalog(env, origin) {
   });
 
   const counts = {};
-  // Square caps this batch at 1000 ids per call.
   for (let i = 0; i < variationIds.length; i += 500) {
     const slice = variationIds.slice(i, i + 500);
     if (!slice.length) break;
@@ -220,8 +131,6 @@ async function handleCatalog(env, origin) {
         counts[c.catalog_object_id] = (counts[c.catalog_object_id] || 0) + Number(c.quantity || 0);
       });
     } catch (e) {
-      // Inventory tracking may simply be off for these items. Treat that as
-      // "available" rather than failing the whole catalog request.
     }
   }
 
@@ -234,21 +143,10 @@ async function handleCatalog(env, origin) {
   });
 
   return json({ objects }, 200, origin, {
-    // Short edge cache: the catalog changes when something sells, so this
-    // trades a little staleness for a much faster storefront.
     'Cache-Control': 'public, max-age=60'
   });
 }
 
-/* ========================================================================= */
-/* POST /orders                                                               */
-/* ========================================================================= */
-
-/**
- * Build the Square Order from the CATALOG, not from the client's prices.
- * The client sends product/variation ids and quantities; everything monetary
- * is resolved server-side.
- */
 async function buildSquareOrder(env, payload) {
   const incoming = (payload.order && payload.order.lineItems) || [];
   if (!incoming.length) throw Object.assign(new Error('Your bag is empty.'), { status: 400 });
@@ -258,8 +156,6 @@ async function buildSquareOrder(env, payload) {
     throw Object.assign(new Error('One of the items is missing a variation id.'), { status: 400 });
   }
 
-  // Pull the authoritative variation objects, plus their parent items so we
-  // can read is_taxable.
   const batch = await square(env, '/v2/catalog/batch-retrieve', 'POST', {
     object_ids: ids,
     include_related_objects: true
@@ -291,12 +187,10 @@ async function buildSquareOrder(env, payload) {
       catalog_object_id: l.variationId,
       quantity: String(qty)
     };
-    // Only taxable lines get the tax applied — bullion is exempt.
     if (taxable) li.applied_taxes = [{ tax_uid: 'sales-tax' }];
     lineItems.push(li);
   });
 
-  /* --- discount --- */
   const discounts = [];
   const code = String((payload.order.totals && payload.order.totals.promoCode) || '').toUpperCase();
   const promo = PROMO_CODES[code];
@@ -304,8 +198,6 @@ async function buildSquareOrder(env, payload) {
 
   if (promo) {
     if (promo.minSubtotal && subtotal < promo.minSubtotal) {
-      // Silently drop a code that no longer qualifies rather than failing the
-      // order — the client will show the recomputed total on the receipt.
     } else if (promo.type === 'percent') {
       discounts.push({ uid: 'promo', name: code, percentage: String(promo.value), scope: 'ORDER' });
     } else if (promo.type === 'fixed') {
@@ -315,7 +207,6 @@ async function buildSquareOrder(env, payload) {
     }
   }
 
-  /* --- shipping --- */
   const shippingId = (payload.order.fulfillment && payload.order.fulfillment.shippingId) ||
     (payload.order.fulfillment && payload.order.fulfillment.type === 'PICKUP' ? 'pickup' : 'standard');
   const rate = SHIPPING_RATES[shippingId] || SHIPPING_RATES.pickup;
@@ -323,16 +214,12 @@ async function buildSquareOrder(env, payload) {
   let shippingAmount = rate.amount;
   if (shippingId === 'standard' && (freeShipping || subtotal >= FREE_SHIPPING_THRESHOLD)) shippingAmount = 0;
 
-  // Welcome perk from the email-signup popup: free standard shipping on the
-  // first order placed with the email they signed up with.
   const buyerEmail = normEmail(payload.order.customer && payload.order.customer.email);
   let welcomeEmail = null;
   if (shippingId === 'standard' && shippingAmount > 0 && env.SUBSCRIBERS && buyerEmail) {
     const sub = await getSubscriber(env, buyerEmail);
     if (sub && !sub.r) { shippingAmount = 0; welcomeEmail = buyerEmail; }
   }
-  // The checkout showed free shipping from /welcome-check; if the perk was
-  // used in the meantime, stop before charging a different total.
   const claimed = !!(payload.order.totals && payload.order.totals.welcomeShipping);
   if (claimed && shippingId === 'standard' && shippingAmount > 0) {
     throw Object.assign(new Error('The free-shipping welcome offer has already been used for this email. Go back to Delivery to see the updated total.'), { status: 409 });
@@ -346,7 +233,6 @@ async function buildSquareOrder(env, payload) {
     taxable: false
   }] : [];
 
-  /* --- fulfillment --- */
   const f = payload.order.fulfillment || {};
   const c = payload.order.customer || {};
   const displayName = ((c.firstName || '') + ' ' + (c.lastName || '')).trim();
@@ -404,17 +290,6 @@ async function buildSquareOrder(env, payload) {
   } };
 }
 
-/* ========================================================================= */
-/* POST /quote                                                                */
-/* ========================================================================= */
-
-/**
- * Price the bag exactly as POST /orders would charge it, without creating
- * anything: the same order, run through Square's CalculateOrder. Afterpay and
- * Cash App Pay have the buyer approve one exact amount before the charge, and
- * the checkout's own estimate can be a cent off Square's per-line tax rounding
- * — so the checkout asks here first, and shows this figure on the review step.
- */
 async function handleQuote(request, env, origin) {
   const payload = await request.json();
   if (!payload || !payload.order) return json({ error: 'Malformed request.' }, 400, origin);
@@ -441,8 +316,6 @@ async function handleCreateOrder(request, env, origin, ctx) {
     return json({ error: 'Malformed request.' }, 400, origin);
   }
 
-  // Replay guard. Square's own idempotency covers the payment; this also stops
-  // a duplicate ORDER being created if the browser retries mid-flight.
   if (env.ORDERS) {
     const seen = await env.ORDERS.get('idem:' + payload.idempotencyKey);
     if (seen) return json({ order: JSON.parse(seen) }, 200, origin);
@@ -465,7 +338,6 @@ async function handleCreateOrder(request, env, origin, ctx) {
     return json({ error: 'Missing payment token.' }, 400, origin);
   }
 
-  // Charge exactly what Square calculated. Never the client's figure.
   const paid = await square(env, '/v2/payments', 'POST', {
     idempotency_key: payload.idempotencyKey,
     source_id: payload.sourceId,
@@ -481,12 +353,9 @@ async function handleCreateOrder(request, env, origin, ctx) {
 
   const p = paid.payment || {};
   const card = (p.card_details && p.card_details.card) || {};
-  // The checkout names the method it paid with; only these known labels are
-  // kept, anything else is recorded as plain Square.
   const claimed = payload.order.payment && payload.order.payment.method;
   const via = ['Apple Pay', 'Google Pay', 'Cash App Pay', 'Afterpay'].indexOf(claimed) !== -1 ? claimed : 'Square';
 
-  // Spend the welcome perk only once money has actually moved.
   if (built.welcomeEmail && p.status === 'COMPLETED') {
     const sub = await getSubscriber(env, built.welcomeEmail);
     if (sub) {
@@ -501,15 +370,11 @@ async function handleCreateOrder(request, env, origin, ctx) {
     receiptUrl: p.receipt_url || null,
     demo: false,
     payment: {
-      // Cash App Pay and Afterpay have no card; the receipt names the method.
       brand: card.card_brand || (via === 'Square' ? 'Card' : via),
       last4: card.last_4 || null,
       method: via,
       status: p.status || null
     },
-    // Square's numbers are authoritative and replace the client estimate.
-    // Subtotal is the sum of each line's gross sales, which is what Square
-    // itself shows before discounts, shipping and tax.
     totals: {
       subtotal: (sqOrder.line_items || []).reduce(
         (n, li) => n + ((li.gross_sales_money && li.gross_sales_money.amount) || 0), 0),
@@ -519,8 +384,6 @@ async function handleCreateOrder(request, env, origin, ctx) {
       tax: (sqOrder.total_tax_money && sqOrder.total_tax_money.amount) || 0,
       total: total
     },
-    // Re-price the displayed line items from Square too, so the receipt can
-    // never show a different unit price than the one that was charged.
     lineItems: (payload.order.lineItems || []).map((l, i) => {
       const sq = (sqOrder.line_items || []).filter(x => x.uid === 'line-' + i)[0];
       if (!sq) return l;
@@ -534,16 +397,11 @@ async function handleCreateOrder(request, env, origin, ctx) {
   });
 
   if (env.ORDERS) {
-    // Receipts expire after a year; the Square dashboard is the permanent record.
     const ttl = { expirationTtl: 60 * 60 * 24 * 365 };
     await env.ORDERS.put('order:' + receipt.id, JSON.stringify(receipt), ttl);
     await env.ORDERS.put('idem:' + payload.idempotencyKey, JSON.stringify(receipt), ttl);
   }
 
-  // Tell the staff panel straight away, so what just sold comes off eBay /
-  // Instagram and shows as sold there. Fire-and-forget: the panel also checks
-  // Square every 10 minutes, so a missed call only delays it. The same shared
-  // secret the panel uses to read signups, in the other direction.
   if (p.status === 'COMPLETED' && env.PANEL_API_KEY) {
     const panel = (env.PANEL_URL || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
     const ping = fetch(panel + '/api/cron/square-sync', {
@@ -556,10 +414,6 @@ async function handleCreateOrder(request, env, origin, ctx) {
   return json({ order: receipt }, 200, origin);
 }
 
-/* ========================================================================= */
-/* GET /orders/:id                                                            */
-/* ========================================================================= */
-
 async function handleGetOrder(env, id, origin) {
   if (!env.ORDERS) {
     return json({ error: 'Order lookup is not configured.' }, 404, origin);
@@ -568,14 +422,6 @@ async function handleGetOrder(env, id, origin) {
   if (!raw) return json({ error: 'Order not found.' }, 404, origin);
   return json(JSON.parse(raw), 200, origin, { 'Cache-Control': 'private, no-store' });
 }
-
-/* ========================================================================= */
-/* Email signups (free shipping on the first order)                          */
-/* ========================================================================= */
-
-/* Each signup is one KV key, `sub:<email>`, with everything the admin list
-   needs in the key's metadata so listing never has to read values:
-     { e: email, t: signup ms, p: page path, r: ms the perk was used or 0 } */
 
 const RE_EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[a-z]{2,24}$/i;
 
@@ -590,7 +436,6 @@ async function getSubscriber(env, email) {
 
 async function handleSubscribe(request, env, origin) {
   const body = await request.json().catch(() => ({}));
-  // Honeypot: the popup has a hidden "website" field real visitors never fill.
   if (body.website) return json({ ok: true }, 200, origin);
 
   const email = normEmail(body.email);
@@ -611,14 +456,10 @@ async function handleWelcomeCheck(request, env, origin) {
   return json({ eligible: !!(sub && !sub.r) }, 200, origin, { 'Cache-Control': 'no-store' });
 }
 
-/** Admin = the staff panel (panel.eastvillagebuyers.com), which calls from its
-    server with `Authorization: Bearer <PANEL_API_KEY>`. The key lives only in
-    this Worker's secrets and the panel's server env, never in a browser. */
 async function isAdmin(request, env) {
   const key = env.PANEL_API_KEY || '';
   const auth = request.headers.get('Authorization') || '';
   if (key.length < 32 || !auth.startsWith('Bearer ')) return false;
-  // Compare digests so the check takes the same time however much matches.
   const enc = new TextEncoder();
   const [a, b] = await Promise.all([
     crypto.subtle.digest('SHA-256', enc.encode(auth.slice(7))),
@@ -654,10 +495,6 @@ async function handleDeleteSubscriber(env, email, origin) {
   return json({ ok: true }, 200, origin);
 }
 
-/* ========================================================================= */
-/* Router                                                                     */
-/* ========================================================================= */
-
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
@@ -668,8 +505,6 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
-    // Reject cross-origin calls from anywhere we did not authorise. Requests
-    // with no Origin header (curl, server-to-server) are allowed through.
     if (origin && !ALLOWED_ORIGINS.has(origin)) {
       return json({ error: 'Origin not allowed.' }, 403, origin);
     }
@@ -683,17 +518,14 @@ export default {
       }, 200, origin);
     }
 
-    // Rate limiting, when the binding is attached. Fails open by design:
-    // a missing binding should not take the store down.
     if (env.RATE_LIMITER) {
       const key = request.headers.get('CF-Connecting-IP') || 'anon';
       try {
         const { success } = await env.RATE_LIMITER.limit({ key });
         if (!success) return json({ error: 'Too many requests. Try again in a minute.' }, 429, origin);
-      } catch (e) { /* ignore and continue */ }
+      } catch (e) { }
     }
 
-    // Email signups do not need Square, so they are routed before that check.
     const subPath = path === '/subscribe' || path === '/welcome-check' || /^\/subscribers(\/|$)/.test(path);
     if (subPath) {
       if (!env.SUBSCRIBERS) {
@@ -735,8 +567,6 @@ export default {
       return json({ error: 'Not found.' }, 404, origin);
 
     } catch (err) {
-      // Square's card-decline messages are safe and useful to show the buyer.
-      // Anything else is logged and replaced with something generic.
       const declineCodes = [
         'CARD_DECLINED', 'CVV_FAILURE', 'ADDRESS_VERIFICATION_FAILURE',
         'INVALID_EXPIRATION', 'GENERIC_DECLINE', 'INSUFFICIENT_FUNDS',

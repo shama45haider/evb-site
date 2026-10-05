@@ -1,24 +1,3 @@
-/**
- * East Village Buyers — Catalog data layer
- * ---------------------------------------------------------------------------
- * Exposes window.EVB_CATALOG. Every store page calls EVB_CATALOG.load() and
- * awaits it; the promise resolves once products are available.
- *
- * Two sources, one shape:
- *   1. Square — when EVB_STORE_CONFIG.apiBase is set, GET {apiBase}/catalog
- *               returns Square CatalogObjects, which fromSquare() maps into the
- *               internal product shape below.
- *   2. Seed   — the inventory in this file. Used when Square is not configured,
- *               and as a fallback when the API call fails, so the storefront
- *               never renders empty.
- *
- * Internal product shape. Prices are ALWAYS integer cents, never floats:
- *   { id, slug, title, brand, category, condition, price, compareAt, images[],
- *     blurb, description, details[], variantLabel, variants[], taxable,
- *     featured, tags[], sku, squareItemId }
- * A variant is { id, label, price, stock, squareVariationId }. A null variant
- * price means "inherit the product price".
- */
 (function () {
   'use strict';
 
@@ -33,13 +12,6 @@
     { id: 'collectibles', label: 'Collectibles',   blurb: 'Sealed TCG, vinyl figures and diecast.' }
   ];
 
-  /* --- variant builders -------------------------------------------------- */
-
-  // sizes([['9', 1], ['9.5', 2]]) -> [{ id:'9', label:'US 9', stock:1 }, ...]
-  // A bare number is a US sneaker size and gets the prefix. Anything carrying
-  // its own unit or region ('20 in', 'EU 41', 'Medium') is left alone, and
-  // callers can pass prefix '' where the field label already says it
-  // (ring sizes, bracelet sizes).
   function sizes(spec, prefix) {
     if (prefix == null) prefix = 'US ';
     return spec.map(function (s) {
@@ -51,7 +23,6 @@
       };
     });
   }
-  // apparel([['M', 2], ['L', 1]])
   function apparel(spec) {
     return spec.map(function (s) {
       return {
@@ -60,14 +31,12 @@
       };
     });
   }
-  // Single-variant products: one-of-a-kind resale goods.
   function one(stock) {
     return [{ id: 'default', label: 'Default', price: null, stock: stock, squareVariationId: null }];
   }
 
   var PRODUCTS = [
 
-    /* ============================== SNEAKERS ============================== */
     {
       id: 'evb-sn-001', slug: 'air-jordan-1-retro-high-og-obsidian',
       title: 'Air Jordan 1 Retro High OG "Obsidian"', brand: 'Jordan', category: 'sneakers',
@@ -245,7 +214,6 @@
       taxable: true, featured: false, tags: ['hellstar', 'collab', 'deadstock'], sku: 'SN-HS-ADI', squareItemId: null
     },
 
-    /* =============================== WATCHES ============================== */
     {
       id: 'evb-wa-001', slug: 'audemars-piguet-royal-oak-offshore',
       title: 'Audemars Piguet Royal Oak Offshore', brand: 'Audemars Piguet', category: 'watches',
@@ -324,7 +292,6 @@
       taxable: true, featured: true, tags: ['grail', 'swiss', 'papers'], sku: 'WA-PP-LDY', squareItemId: null
     },
 
-    /* =============================== JEWELRY ============================== */
     {
       id: 'evb-jw-001', slug: '14k-gold-miami-cuban-link-chain',
       title: '14K Solid Gold Miami Cuban Link Chain', brand: 'Italian Gold', category: 'jewelry',
@@ -425,7 +392,6 @@
       taxable: true, featured: false, tags: ['chrome hearts', 'silver'], sku: 'JW-CH-DAG', squareItemId: null
     },
 
-    /* ============================ GOLD & BULLION ========================== */
     {
       id: 'evb-gd-001', slug: 'canadian-gold-maple-leaf-1oz',
       title: 'Canadian Gold Maple Leaf — 1 oz', brand: 'Royal Canadian Mint', category: 'gold',
@@ -482,7 +448,6 @@
       taxable: true, featured: true, tags: ['gold', 'coin', 'pendant'], sku: 'GD-PND-BZL', squareItemId: null
     },
 
-    /* ============================= STREETWEAR ============================= */
     {
       id: 'evb-st-001', slug: 'hellstar-graphic-hoodie',
       title: 'Hellstar Studios Graphic Hoodie', brand: 'Hellstar', category: 'streetwear',
@@ -594,7 +559,6 @@
       taxable: true, featured: false, tags: ['forever situated', 'nyc', 'deadstock'], sku: 'ST-FS-HOOD', squareItemId: null
     },
 
-    /* ============================== DESIGNER ============================== */
     {
       id: 'evb-dg-001', slug: 'louis-vuitton-monogram-speedy-bag',
       title: 'Louis Vuitton Monogram Speedy', brand: 'Louis Vuitton', category: 'designer',
@@ -629,7 +593,6 @@
       taxable: true, featured: false, tags: ['chrome hearts', 'silver', 'set'], sku: 'DG-CH-DTS', squareItemId: null
     },
 
-    /* ============================= ELECTRONICS ============================ */
     {
       id: 'evb-el-001', slug: 'apple-macbook-pro',
       title: 'Apple MacBook Pro', brand: 'Apple', category: 'electronics',
@@ -722,7 +685,6 @@
       taxable: true, featured: false, tags: ['camera', 'canon'], sku: 'EL-CN-G7X', squareItemId: null
     },
 
-    /* ============================ COLLECTIBLES ============================ */
     {
       id: 'evb-cl-001', slug: 'pokemon-booster-box-sealed',
       title: 'Pokémon Booster Box — Sealed', brand: 'Pokémon', category: 'collectibles',
@@ -791,15 +753,6 @@
     }
   ];
 
-  /* ======================================================================= */
-  /* Square adapter                                                          */
-  /* ======================================================================= */
-
-  /**
-   * Map the Worker's /catalog response into the internal shape.
-   * The Worker is expected to return { objects: [...] } straight from Square's
-   * ListCatalog / SearchCatalogObjects, with related IMAGE objects included.
-   */
   function fromSquare(payload) {
     var objects = (payload && payload.objects) || [];
     var images = {};
@@ -817,8 +770,6 @@
           id: v.id,
           label: vd.name || 'Default',
           price: typeof money.amount === 'number' ? money.amount : null,
-          // Square returns inventory separately; the Worker folds it in as
-          // `stock` on the variation. Absent means "in stock, unknown count".
           stock: typeof v.stock === 'number' ? v.stock : 1,
           squareVariationId: v.id
         };
@@ -827,7 +778,6 @@
       var imgs = (d.image_ids || []).map(function (id) { return images[id]; })
         .filter(Boolean);
 
-      // Custom attributes let Square carry the fields Square has no column for.
       var custom = {};
       Object.keys(o.custom_attribute_values || {}).forEach(function (k) {
         var cav = o.custom_attribute_values[k];
@@ -847,9 +797,6 @@
         compareAt: custom.compare_at ? Number(custom.compare_at) : null,
         images: imgs.length ? imgs : ['/evblogo.webp'],
         blurb: custom.blurb || '',
-        // `description` is deprecated in Square's API; items written with
-        // `description_html` (as the EVB panel does) carry the text in
-        // Square's server-made `description_plaintext` instead.
         description: d.description_plaintext || d.description || '',
         details: custom.details ? String(custom.details).split('|') : [],
         variantLabel: vars.length > 1 ? (custom.variant_label || 'Option') : null,
@@ -863,14 +810,9 @@
     });
   }
 
-  /* ======================================================================= */
-  /* Public API                                                              */
-  /* ======================================================================= */
-
   var state = { products: PRODUCTS, source: 'seed', loaded: null };
 
   function normalize(p) {
-    // Fill derived fields once so the rest of the app never recomputes them.
     p.variants = (p.variants && p.variants.length) ? p.variants : one(1);
     p.variants.forEach(function (v) { if (v.price == null) v.price = p.price; });
     p.stock = p.variants.reduce(function (n, v) { return n + (v.stock || 0); }, 0);
@@ -888,11 +830,6 @@
     get source() { return state.source; },
     get products() { return state.products; },
 
-    /**
-     * Resolve the catalog. Safe to call repeatedly — the work happens once.
-     * Never rejects: a Square failure falls back to the seed catalog so the
-     * storefront still renders.
-     */
     load: function () {
       if (state.loaded) return state.loaded;
 
@@ -936,7 +873,6 @@
       return state.products.filter(function (p) { return p.slug === slug; })[0] || null;
     },
 
-    // Accepts either an id or a slug — product URLs use the slug.
     find: function (key) {
       return API.bySlug(key) || API.byId(key);
     },
@@ -968,7 +904,6 @@
       });
     },
 
-    // Same category first, then anything sharing a tag. Never includes self.
     related: function (product, limit) {
       limit = limit || 4;
       if (!product) return [];

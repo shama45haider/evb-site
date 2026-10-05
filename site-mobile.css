@@ -1,6 +1,3 @@
-/* East Village Buyers — site-wide mobile & responsive media */
-
-/* ── Nav buttons: compact on tablet (768–1023px) ── */
 @media (min-width: 768px) and (max-width: 1023px) {
   .site-nav-right { gap: 6px !important; }
   .site-btn-sms,
@@ -11,18 +8,15 @@
   .site-btn-icon svg { width: 12px !important; height: 12px !important; }
 }
 
-/* ── Nav buttons: hidden on mobile, show only hamburger ── */
 @media (max-width: 767px) {
   .site-btn-sms,
   .site-btn-call { display: none !important; }
   .site-nav-right { gap: 0 !important; }
 }
 
-/* ── General button overflow protection ── */
 .site-btn-copy { min-width: 0; overflow: hidden; }
 .site-btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* ── Foundation ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
@@ -42,7 +36,6 @@ main, section, article, header, footer, nav, aside, div {
   min-width: 0;
 }
 
-/* ── Default media: scale down, never overflow ── */
 img, picture, video, canvas {
   max-width: 100%;
 }
@@ -51,7 +44,6 @@ img, video {
   height: auto;
 }
 
-/* Logos: preserve aspect, don't crop */
 .site-nav-logo img,
 .cp-logo-img,
 .evb-footer-logo img {
@@ -60,7 +52,6 @@ img, video {
   object-fit: contain;
 }
 
-/* Images inside media containers: cover, centered crop (no stretch) */
 .bwb-media img,
 .faq-card-media img,
 .carousel-slide img,
@@ -92,7 +83,6 @@ img, video {
   object-position: center;
 }
 
-/* Embeds & tables */
 iframe, embed, object {
   max-width: 100%;
 }
@@ -104,7 +94,6 @@ table {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Text: prevent overflow on narrow screens */
 p, li, h1, h2, h3, h4, h5, h6, span, a, td, th {
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -114,7 +103,6 @@ a, button, input, select, textarea, [role="button"] {
   touch-action: manipulation;
 }
 
-/* ── Full-bleed sections: prevent horizontal scroll on mobile ── */
 @media (max-width: 1023px) {
   .cp-page-divider,
   .cp-metal-band,
@@ -128,7 +116,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Carousels ── */
 .carousel-track,
 .brand-carousel-track,
 .vid-carousel-track {
@@ -164,7 +151,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Homepage: brands grid ── */
 @media (max-width: 899px) {
   #what-we-buy,
   #what-we-buy .bwb-wrap,
@@ -213,7 +199,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Homepage: hero ── */
 @media (max-width: 700px) {
   .hero-storefront-card img {
     height: clamp(180px, 48vw, 260px) !important;
@@ -249,7 +234,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Section padding ── */
 @media (max-width: 540px) {
   section.px-6,
   section.lg\:px-20,
@@ -263,7 +247,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Category pages ── */
 @media (max-width: 640px) {
   .cp-page-hero-visual img,
   .cp-storefront-img {
@@ -288,7 +271,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Blog ── */
 @media (max-width: 640px) {
   .blog-article-hero {
     height: clamp(180px, 52vw, 260px) !important;
@@ -315,7 +297,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Designer / watches / electronics cards ── */
 @media (max-width: 768px) {
   .elec-card-img {
     height: clamp(90px, 26vw, 120px) !important;
@@ -326,7 +307,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Sell hub (index) ── */
 @media (max-width: 768px) {
   .sh-actions {
     grid-template-columns: 1fr !important;
@@ -337,7 +317,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── FAQ (index) ── */
 @media (max-width: 860px) {
   .faq-card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -379,7 +358,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Footer ── */
 @media (max-width: 600px) {
   .evb-footer-main {
     grid-template-columns: 1fr !important;
@@ -393,7 +371,6 @@ a, button, input, select, textarea, [role="button"] {
   }
 }
 
-/* ── Fixed widgets: notched phones ── */
 @supports (padding: max(0px)) {
   .evb-assistant-fab {
     right: max(16px, env(safe-area-inset-right)) !important;

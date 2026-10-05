@@ -1,25 +1,15 @@
-/* ==========================================================================
-   East Village Buyers — Store
-   Matched to the existing site: cream/white surfaces, #111 type, #f97316
-   accent, chunky offset-shadow buttons, orange-tinted cards. Same tokens and
-   motifs as we-buy-category.css and the homepage. No dark surfaces.
-   ========================================================================== */
-
 :root {
-  /* Accent — identical to the rest of the site */
   --evb-orange: #f97316;
   --evb-orange-dark: #ea580c;
-  --evb-orange-deep: #c2410c;   /* the hard shadow under every primary button */
+  --evb-orange-deep: #c2410c;
   --evb-orange-soft: rgba(249, 115, 22, 0.08);
   --evb-orange-line: rgba(249, 115, 22, 0.35);
 
-  /* Type */
   --evb-ink: #111;
   --evb-body: #555;
   --evb-muted: #777;
   --evb-faint: #999;
 
-  /* Surfaces */
   --evb-cream: #f8f5f0;
   --evb-white: #fff;
   --evb-line: rgba(0, 0, 0, 0.1);
@@ -32,8 +22,6 @@
   --evb-radius-sm: 10px;
   --evb-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   --evb-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-  /* Wider than the site's 1180 content width. A browse grid alongside a
-     filter rail needs the room: at 1180 only three cards fit per row. */
   --evb-max: 1320px;
 }
 
@@ -51,11 +39,6 @@ body.evb-store-page {
 .evb-wrap { width: 100%; max-width: var(--evb-max); margin: 0 auto; padding: 0 20px; }
 @media (min-width: 768px) { .evb-wrap { padding: 0 40px; } }
 
-/* ---------- Buttons ------------------------------------------------------
-   The site's signature: a hard colour offset under the button that compresses
-   on press. Matches .wb-cta / .cp-btn-primary.
--------------------------------------------------------------------------- */
-
 .evb-btn {
   position: relative; overflow: hidden;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -66,7 +49,6 @@ body.evb-store-page {
   cursor: pointer; text-decoration: none; text-align: center; white-space: nowrap;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
-/* Light sweep on hover, same as .wb-cta::before */
 .evb-btn::before {
   content: ''; position: absolute; top: 0; left: -100%;
   width: 60px; height: 100%;
@@ -113,8 +95,6 @@ body.evb-store-page {
   .evb-btn:hover:not(:disabled) { transform: none; }
 }
 
-/* ---------- Eyebrow — the site's orange dash + caps label ---------------- */
-
 .evb-eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
@@ -125,10 +105,6 @@ body.evb-store-page {
   background: var(--evb-orange); border-radius: 1px; flex-shrink: 0;
 }
 
-/* ---------- Store sub-nav ------------------------------------------------ */
-
-/* Sticks BELOW the site nav, which is itself sticky at top:0. --evb-navh is
-   measured and set by store-core.js so this survives nav height changes. */
 .evb-storebar {
   background: #fff; border-bottom: 1px solid var(--evb-line);
   position: sticky; top: var(--evb-navh, 0px); z-index: 44;
@@ -177,8 +153,6 @@ body.evb-store-page {
 @media (max-width: 900px) { .evb-storebar-cats { display: none; } }
 @media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } }
 
-/* ---------- Sections ----------------------------------------------------- */
-
 .evb-section { padding: 52px 0; }
 .evb-section--tight { padding: 36px 0; }
 .evb-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 26px; flex-wrap: wrap; }
@@ -193,12 +167,6 @@ body.evb-store-page {
   border-bottom: 2px solid var(--evb-orange); padding-bottom: 3px; white-space: nowrap;
 }
 .evb-link-more:hover { color: var(--evb-ink); border-bottom-color: var(--evb-ink); }
-
-/* ---------- Store header --------------------------------------------------
-   States what is sold, where it came from and how to get it, with the
-   storefront and the live shop status as the visual anchor. Kept to roughly a
-   third of a screen so the grid is never far away.
--------------------------------------------------------------------------- */
 
 .evb-hero {
   background: #fff;
@@ -215,8 +183,6 @@ body.evb-store-page {
 .evb-hero-title {
   font-size: clamp(23px, 3vw, 31px); font-weight: 900; line-height: 1.14;
   letter-spacing: -0.02em; text-transform: uppercase; color: var(--evb-ink);
-  /* ~2 lines at this size. `ch` was far too tight here — 15ch is about
-     255px, which broke the title over four lines. */
   margin: 0 0 10px; max-width: 620px;
 }
 @media (max-width: 940px) { .evb-hero-title { max-width: none; } }
@@ -225,7 +191,6 @@ body.evb-store-page {
   margin: 0 0 18px; max-width: 54ch; font-weight: 500;
 }
 
-/* Facts as a plain inline run — figure over label, no boxes. */
 .evb-hero-facts {
   list-style: none; margin: 0 0 20px; padding: 16px 0;
   border-top: 1px solid var(--evb-line-soft); border-bottom: 1px solid var(--evb-line-soft);
@@ -241,20 +206,14 @@ body.evb-store-page {
   text-transform: uppercase; color: var(--evb-muted);
 }
 @media (max-width: 560px) {
-  /* A wrapping flex row left "Free / counter pickup" stranded on its own
-     line; a 2x2 grid keeps the four facts balanced. */
   .evb-hero-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; padding: 14px 0; margin-bottom: 16px; }
   .evb-hero-facts strong { font-size: 17px; }
 }
 
 .evb-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (max-width: 560px) {
-  /* Side by side rather than stacked — two full-width buttons cost ~60px of
-     the fold on a phone for no gain. */
   .evb-hero-actions .evb-btn { flex: 1; min-height: 46px; padding: 12px 10px; font-size: 10px; }
 }
-
-/* ---- storefront + live status card ---- */
 
 .evb-hero-card {
   border: 1px solid var(--evb-line); border-radius: 12px; overflow: hidden;
@@ -291,13 +250,9 @@ body.evb-store-page {
 @media (max-width: 560px) {
   .evb-hero-card { grid-template-columns: 1fr; }
   .evb-hero-card-img { aspect-ratio: 2.4 / 1; }
-  /* The fixed mobile bar already offers Text and Call, so this row is
-     duplicated effort on a phone. */
   .evb-hero-card-rows > div:last-child { display: none; }
   .evb-hero-card-body { padding: 11px 13px 13px; }
 }
-
-/* ---------- Departments --------------------------------------------------- */
 
 .evb-depts { background: var(--evb-cream); border-bottom: 3px solid var(--evb-orange); padding: 26px 0 28px; }
 .evb-depts-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
@@ -305,11 +260,6 @@ body.evb-store-page {
   font-size: 15px; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase;
   color: var(--evb-ink); margin: 0;
 }
-
-/* ---- department tiles: circular, label beneath -------------------------
-   The marketplace category-row pattern: the photo is the whole tile, the
-   name sits under it, and the whole row reads in one glance.
------------------------------------------------------------------------- */
 
 .evb-cats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; }
 @media (max-width: 1080px) { .evb-cats { grid-template-columns: repeat(4, 1fr); gap: 14px 10px; } }
@@ -357,15 +307,8 @@ body.evb-store-page {
   .evb-cat-media { max-width: 84px; }
   .evb-cat-name { font-size: 11px; }
   .evb-cat-meta { font-size: 10px; }
-  /* Four across leaves no room for the price; the count still fits and the
-     grid below shows prices anyway. */
   .evb-cat-from { display: none; }
 }
-
-/* ---- plain info tiles ("how we authenticate" band) ----------------------
-   Not links and not departments, so they carry their own class rather than
-   borrowing .evb-cat, whose structure they do not have.
------------------------------------------------------------------------- */
 
 .evb-notes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
 @media (max-width: 1000px) { .evb-notes { grid-template-columns: repeat(2, 1fr); } }
@@ -380,12 +323,6 @@ body.evb-store-page {
   border-bottom: 1.5px solid rgba(249,115,22,0.4);
 }
 .evb-note-blurb { font-size: 12.5px; color: var(--evb-body); line-height: 1.6; font-weight: 500; margin: 0; }
-
-/* ---------- Shop layout: filter rail + results ---------------------------
-   Marketplace structure — a persistent facet rail on desktop, a slide-in
-   panel on mobile. Colour is held back here so the product photos carry the
-   page; orange returns for actions and active states only.
--------------------------------------------------------------------------- */
 
 .evb-shop { display: grid; grid-template-columns: 228px 1fr; gap: 34px; align-items: start; }
 @media (max-width: 900px) { .evb-shop { grid-template-columns: 1fr; gap: 0; } }
@@ -426,10 +363,7 @@ body.evb-store-page {
 .evb-fopt-count { font-size: 11px; color: var(--evb-faint); font-weight: 500; font-variant-numeric: tabular-nums; }
 .evb-fopt.is-empty { opacity: 0.4; cursor: not-allowed; }
 .evb-fopt.is-empty:hover { background: none; }
-/* A checked facet reads as selected without shouting. */
 .evb-fopt:has(input:checked) { color: var(--evb-ink); font-weight: 700; }
-
-/* ---- results column ---- */
 
 .evb-results { min-width: 0; }
 .evb-results-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -449,7 +383,6 @@ body.evb-store-page {
 }
 @media (max-width: 900px) { .evb-filters-toggle { display: inline-flex; } }
 
-/* Search + sort controls in the results bar. */
 .evb-search { position: relative; flex: 1; min-width: 0; }
 .evb-search svg {
   position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
@@ -477,7 +410,6 @@ body.evb-store-page {
 .evb-select:focus { outline: none; border-color: var(--evb-orange); }
 @media (max-width: 620px) { .evb-select { max-width: 132px; } }
 
-/* Below this the three controls crush the search field, so it takes its own row. */
 @media (max-width: 620px) {
   .evb-results-bar { flex-wrap: wrap; }
   .evb-search { flex: 1 1 100%; order: -1; }
@@ -499,8 +431,6 @@ body.evb-store-page {
 .evb-activepill:hover span { color: var(--evb-orange); }
 
 .evb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-
-/* ---- mobile: rail becomes a slide-in panel ---- */
 
 .evb-filters-scrim {
   position: fixed; inset: 0; z-index: 9996; background: rgba(0,0,0,0.4);
@@ -524,16 +454,9 @@ body.evb-store-page {
 }
 @media (prefers-reduced-motion: reduce) { .evb-filters { transition: none; } }
 
-/* ---------- Product grid + card ------------------------------------------
-   Flat and dense. One badge at most, quiet type, price carrying a microlabel
-   the way a marketplace labels an ask.
--------------------------------------------------------------------------- */
-
 .evb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(206px, 1fr)); gap: 16px; }
 @media (max-width: 520px) { .evb-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
 
-/* The featured rail scrolls sideways on a phone rather than stacking five
-   full-width cards between the departments and the actual grid. */
 @media (max-width: 640px) {
   .evb-grid--rail {
     display: flex; gap: 10px; overflow-x: auto;
@@ -578,7 +501,6 @@ body.evb-store-page {
 .evb-card-brand { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--evb-faint); margin: 0 0 6px; }
 .evb-card-title {
   font-size: 13px; font-weight: 600; line-height: 1.45; color: var(--evb-ink); margin: 0 0 14px;
-  /* Two lines keeps every card in a row the same height. */
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   min-height: 2.9em;
 }
@@ -589,8 +511,6 @@ body.evb-store-page {
 .evb-card-price { font-size: 16px; font-weight: 800; color: var(--evb-ink); letter-spacing: -0.01em; }
 .evb-card-compare { font-size: 12px; color: #bbb; text-decoration: line-through; font-weight: 500; }
 .evb-card-sizes { font-size: 11px; color: var(--evb-faint); margin: 9px 0 0; font-weight: 500; }
-
-/* ---------- Empty / loading states --------------------------------------- */
 
 .evb-empty {
   text-align: center; padding: 64px 24px; background: #fff;
@@ -609,10 +529,6 @@ body.evb-store-page {
 }
 @keyframes evb-shimmer { to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .evb-skel { animation: none; } }
-
-/* ==========================================================================
-   Product detail
-   ========================================================================== */
 
 .evb-crumbs { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; padding: 18px 0 10px; font-size: 12px; font-weight: 600; color: var(--evb-faint); }
 .evb-crumbs a { color: var(--evb-orange); text-decoration: none; }
@@ -670,8 +586,6 @@ body.evb-store-page {
   color: var(--evb-ink); margin-bottom: 10px;
 }
 .evb-field-label .hint { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; color: var(--evb-muted); }
-/* Sizes as a grid, the way a sneaker marketplace shows a size run: every
-   option the same width, sold-out ones visible but struck through. */
 .evb-variants { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
 .evb-variant {
   font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 600;
@@ -729,10 +643,6 @@ body.evb-store-page {
 .evb-acc-panel ul { margin: 12px 0 0; padding-left: 18px; }
 .evb-acc-panel li { margin-bottom: 8px; }
 .evb-acc-panel li::marker { color: var(--evb-orange); }
-
-/* ==========================================================================
-   Cart
-   ========================================================================== */
 
 .evb-page-head { padding: 34px 0 24px; }
 .evb-page-title {
@@ -793,8 +703,6 @@ body.evb-store-page {
 .evb-notice--error { background: rgba(194,38,27,0.06); border: 1.5px solid rgba(194,38,27,0.28); color: var(--evb-red); }
 .evb-notice--ok    { background: rgba(21,128,61,0.07); border: 1.5px solid rgba(21,128,61,0.28); color: var(--evb-green); }
 
-/* ---------- Order summary ------------------------------------------------ */
-
 .evb-summary { position: sticky; top: calc(var(--evb-navh, 0px) + var(--evb-storebar-h, 0px) + 20px); }
 @media (max-width: 960px) { .evb-summary { position: static; } }
 .evb-sumrow { display: flex; justify-content: space-between; gap: 14px; font-size: 13px; font-weight: 600; color: var(--evb-body); padding: 9px 0; }
@@ -830,10 +738,6 @@ body.evb-store-page {
 .evb-summary-mini-name { font-size: 12.5px; font-weight: 700; margin: 0; line-height: 1.4; color: var(--evb-ink); }
 .evb-summary-mini-var { font-size: 11px; color: var(--evb-muted); margin: 3px 0 0; font-weight: 600; }
 .evb-summary-mini-price { margin-left: auto; font-size: 13px; font-weight: 800; white-space: nowrap; }
-
-/* ==========================================================================
-   Checkout
-   ========================================================================== */
 
 .evb-steps { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: wrap; }
 .evb-step { display: flex; align-items: center; gap: 9px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--evb-faint); }
@@ -915,10 +819,6 @@ body.evb-store-page {
 .evb-review-edit:hover { color: var(--evb-orange-dark); }
 .evb-review-value { font-size: 13.5px; line-height: 1.7; color: var(--evb-ink); margin: 0; font-weight: 600; }
 
-/* ==========================================================================
-   Receipt / order confirmation
-   ========================================================================== */
-
 .evb-receipt-hero { text-align: center; padding: 48px 0 30px; }
 .evb-receipt-check {
   width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 50%; display: grid; place-items: center;
@@ -962,10 +862,6 @@ body.evb-store-page {
 .evb-receipt-line-meta { font-size: 11.5px; color: var(--evb-muted); margin: 4px 0 0; font-weight: 600; }
 .evb-receipt-line-amt { font-size: 13.5px; font-weight: 900; white-space: nowrap; color: var(--evb-ink); }
 .evb-receipt-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 64px; }
-
-/* ==========================================================================
-   Mini cart drawer + toast
-   ========================================================================== */
 
 .evb-mini-overlay {
   position: fixed; inset: 0; z-index: 9998; background: rgba(0,0,0,0.45);
@@ -1034,8 +930,6 @@ body.evb-store-page {
 .evb-toast--ok { background: var(--evb-green); }
 @media (max-width: 768px) { .evb-toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } }
 
-/* ---------- Print: receipts ---------------------------------------------- */
-
 @media print {
   .site-topbar, .site-nav, .evb-storebar, .evb-footer, .evb-mini, .evb-mini-overlay,
   .evb-toast, .evb-receipt-actions, .evb-mobile-cta, #evbCk, [data-evb-assistant],
@@ -1045,12 +939,6 @@ body.evb-store-page {
   .evb-receipt-hero { padding: 0 0 20px; }
   a { text-decoration: none; color: #000; }
 }
-
-/* ==========================================================================
-   Coming soon — /store/ while the storefront is gated
-   Reuses the store header's composition so the launch is a continuation of
-   this page rather than a different-looking site.
-   ========================================================================== */
 
 .evb-soon { background: #fff; padding: 34px 0 0; }
 .evb-soon-grid {
@@ -1088,8 +976,6 @@ body.evb-store-page {
 .evb-soon-note a { color: var(--evb-orange-dark); font-weight: 700; text-decoration: none; }
 .evb-soon-note a:hover { text-decoration: underline; }
 
-/* ---- storefront + live status card ---- */
-
 .evb-soon-card {
   border: 1px solid var(--evb-line); border-radius: 12px; overflow: hidden;
   background: #fff; box-shadow: 0 6px 24px rgba(0,0,0,0.08);
@@ -1122,8 +1008,6 @@ body.evb-store-page {
   .evb-soon-card { grid-template-columns: 1fr; }
   .evb-soon-card-img { aspect-ratio: 2.4 / 1; }
 }
-
-/* ---- "we are buying" band ---- */
 
 .evb-soon-buy {
   display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;

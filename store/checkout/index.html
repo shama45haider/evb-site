@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
-/* Store gate — the storefront is not public while Square is being connected.
-   Reaching any store page sends you to the coming-soon page unless this
-   browser was unlocked with the staff preview password on /store/ (good for
-   14 days). The old ?preview=1 shortcut is gone — the password is the only
-   way in. Runs before render so there is no flash of the gated page, and
-   fails closed if storage is unavailable. Not a security boundary (this is a
-   static site); it keeps the unfinished store away from customers. */
 (function () {
   var ok = false;
   try { ok = Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) {}

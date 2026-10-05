@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- EVB-CONSENT-V2 : Consent Mode v2 defaults. MUST stay above Meta Pixel and GTM. -->
 <script>
 (function(w){
   w.dataLayer = w.dataLayer || [];
@@ -11,9 +10,6 @@
   var granted = false;
   try {
     var v = w.localStorage.getItem('evb_consent_v1');
-    // One-way migration from the legacy banner key. Only the unambiguous
-    // 'accepted' carries over; the older markup wrote '1' for BOTH accept
-    // and reject, so those users stay denied until they choose again.
     if (v === null && w.localStorage.getItem('evb_ck6') === 'accepted') {
       v = 'granted';
       w.localStorage.setItem('evb_consent_v1', 'granted');
@@ -40,8 +36,6 @@
   w.evbConsentGranted = granted;
 })(window);
 </script>
-<!-- /EVB-CONSENT-V2 -->
-<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -58,15 +52,12 @@ fbq('track', 'PageView');
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=869234452921811&ev=PageView&noscript=1"
 /></noscript>
-<!-- End Meta Pixel Code -->
 
-<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-MGZ7DGKM');</script>
-<!-- End Google Tag Manager -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Best Place to Sell Gold in NYC (2026): Every Option Compared | EVB</title>
   <meta name="description" content="Diamond District vs pawn shops vs mail-in vs neighborhood buyers — payouts, speed, and pressure compared honestly by a buyer with an obvious stake. Updated August 2026.">
@@ -206,20 +197,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .blog-article-body li::marker { color: #e8690a; }
     .blog-article-body strong { color: #0c0b0a; font-weight: 700; }
 
-    /* Neighborhood grid */
     .nbhd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 28px; }
     @media (max-width: 560px) { .nbhd-grid { grid-template-columns: 1fr; } }
     .nbhd-card { background: #faf8f5; border: 1px solid #ede9e3; border-radius: 12px; padding: 16px 18px; }
     .nbhd-card-title { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #e8690a; margin-bottom: 6px; }
     .nbhd-card-text { font-family: 'Inter', sans-serif; font-size: 13px; color: #5a5550; line-height: 1.6; }
 
-    /* Step list */
     .step-list { list-style: none; padding: 0; margin: 0 0 24px; counter-reset: steps; }
     .step-list li { counter-increment: steps; display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #f0ece6; font-family: 'Inter', sans-serif; font-size: 15px; color: #3a3530; line-height: 1.6; }
     .step-list li:last-child { border-bottom: none; }
     .step-list li::before { content: counter(steps); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #e8690a; color: #fff; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
 
-    /* FAQ */
     .blog-faq { margin: 8px 0 0; }
     .blog-faq-item { border: 1px solid #f0ece6; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
     .blog-faq-q { font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 700; color: #0c0b0a; padding: 16px 20px; background: #faf8f5; }
@@ -293,14 +281,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://eastvillagebuyers.com/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://eastvillagebuyers.com/blog/"}, {"@type": "ListItem", "position": 3, "name": "Best Place to Sell Gold in NYC (2026)", "item": "https://eastvillagebuyers.com/blog/sell-gold-for-cash-nyc-neighborhood-guide/"}]}
   </script>
-<!-- Google Preferred Sources Button -->
 <script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
 </head>
 <body>
-<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
   <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">·</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun 12:30–6 PM &nbsp;·&nbsp; Mon–Thu 12:30–6:30 PM &nbsp;·&nbsp; Fri 12:30–4 PM &nbsp;·&nbsp; Sat Closed</span></div></div>
   <header class="site-nav" id="evbNav">
@@ -618,7 +603,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <a href="https://youtube.com/@eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><img src="../../icon-youtube.webp" alt="YouTube" width="24" height="24" loading="lazy" decoding="async"></a>
           <a href="https://www.google.com/search?q=East+Village+Buyers+reviews" target="_blank" rel="noopener noreferrer" aria-label="Google Reviews"><img src="../../icon-google.webp" alt="Google Reviews" width="24" height="24" loading="lazy" decoding="async"></a>
         </div>
-        <!-- Google Preferred Source Button -->
         <div style="text-align: center; margin-top: 24px;">
           <div google-add-preferred-source-btn data-theme="dark"></div>
         </div>
@@ -682,7 +666,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <link rel="stylesheet" href="../../evb-assistant.css">
   <script src="../../evb-assistant.js" defer data-evb-assistant></script>
 
-<!-- Cookie Consent -->
 <style>
   #evbCk{--evb-ck-mb:0px;position:fixed;z-index:100000;font-family:'Montserrat',sans-serif;bottom:24px;right:24px;left:auto;width:min(400px,calc(100vw - 48px));opacity:0;transform:translateY(16px) scale(0.98);transition:opacity 0.4s cubic-bezier(0.22,1,0.36,1),transform 0.45s cubic-bezier(0.22,1,0.36,1);pointer-events:none}
   #evbCk.evb-show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}

@@ -27,26 +27,12 @@
 
   {% render 'meta-tags' %}
 
-  {%- comment -%}
-    Deliberately its own font pairing, distinct from eastvillagebuyers.com's
-    stack (Bebas Neue/Inter/Montserrat/DM Sans/Poppins/Roboto/Space Grotesk),
-    so the storefront reads as its own thing rather than pixel-matching the
-    marketing site.
-  {%- endcomment -%}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   {{ content_for_header }}
 
-  {%- comment -%}
-    Defaults are hardcoded as a fallback (via `default:`) so the palette
-    never silently disappears even if a theme setting comes back blank.
-    Neutrals are deliberately cooler than the main site's warm cream/ink,
-    so the storefront still carries the same accent orange but a
-    different backdrop mood. The accent colors are unchanged on purpose --
-    brand continuity.
-  {%- endcomment -%}
   <style>
     :root{
       --accent: {{ settings.color_accent | default: '#f97316' }};

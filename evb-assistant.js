@@ -1,24 +1,12 @@
-/**
- * East Village Buyers — Free keyword-based site assistant
- * No API required. All answers hand-written from site content.
- * Covers: gold, silver, diamonds, jewelry, watches, designer, sneakers,
- *         streetwear, vintage, process, payment, hours, location, ID, appraisal.
- */
 (function () {
   'use strict';
 
-  // ── Contact constants ─────────────────────────────────────────────────────
   const PHONE     = '917-608-8939';
   const ADDRESS   = '39 Avenue A, New York, NY 10009';
   const HOURS     = 'Sun 12:30–6 · Mon–Thu 12:30–6:30 · Fri 12:30–4 · Sat Closed';
   const PHONE_URL = 'tel:9176088939';
   const SMS_URL   = 'sms:9176088939';
 
-  // ── Groq AI proxy (optional) ──────────────────────────────────────────────
-  // Empty string = AI disabled, assistant runs on the local keyword-matching
-  // bot below only. Fill in with the deployed Cloudflare Worker URL from
-  // groq-worker.js (repo root) to turn on real AI answers. The Groq API key
-  // itself lives ONLY in that Worker's server-side secret -- never here.
   const GROQ_PROXY_URL = 'https://evbworker.shama45haider.workers.dev/';
   const GROQ_TIMEOUT_MS = 12000;
 
@@ -55,7 +43,6 @@
     return (text || '').toLowerCase().replace(/[^a-z0-9\s']/g, ' ').replace(/\s+/g, ' ').trim();
   }
 
-  // ── Suggestion chips ──────────────────────────────────────────────────────
   const SUGGESTIONS = [
     'Do you buy gold?',
     'How do I sell here?',
@@ -65,7 +52,6 @@
     'Where are you located?',
   ];
 
-  /** Guaranteed answers for suggestion chips + common phrasings */
   const CHIP_ANSWERS = (() => {
     const map = Object.create(null);
     const add = (phrases, html) => {
@@ -103,14 +89,8 @@
     return map;
   })();
 
-  // ── Knowledge base: each entry has keywords[] and a reply ────────────────
-  // Keywords are matched against the lowercased user message.
-  // First entry whose keywords ALL match (or score highest) wins.
-  // Format: { keywords: [], reply: 'HTML string', score bonus: used internally }
-
   const KB = [
 
-    // ── GREETINGS ────────────────────────────────────────────────────────────
     {
       id: 'greeting',
       keywords: [['hi','hey','hello','howdy','what\'s up','whats up','yo','hiya']],
@@ -124,7 +104,6 @@
       reply: `<p>Of course, happy to help! If anything else comes up, just ask. And if you're ready to bring something in, walk-ins are always welcome — or text us at <a href="${SMS_URL}">${PHONE}</a> first if you want to check something quickly.</p>`
     },
 
-    // ── HOURS & LOCATION ─────────────────────────────────────────────────────
     {
       id: 'hours',
       keywords: [['what are your hours','store hours','hours','hour','open','close','closing','when','time','schedule','sunday','monday','tuesday','wednesday','thursday','friday','saturday','weekend']],
@@ -140,7 +119,6 @@
 <p>Best way to get here is subway: L train to 1st Ave is the closest stop, or the 6 to Astor Place is a short walk. The M14 bus runs right on Avenue A too. Street parking in the area is kind of a nightmare, so the train is usually the move.</p>`
     },
 
-    // ── APPOINTMENT / WALK-IN ────────────────────────────────────────────────
     {
       id: 'appointment',
       keywords: [['appointment','walk in','walk-in','drop in','drop by','just show up','need to call']],
@@ -149,7 +127,6 @@
 <p>The only time it's worth a heads-up is if you've got a large estate or a big collection. In that case, texting photos to <a href="${SMS_URL}">${PHONE}</a> ahead of time helps us make sure we have enough time set aside for you. But for a regular visit, just show up.</p>`
     },
 
-    // ── APPRAISAL / COST / FEE ───────────────────────────────────────────────
     {
       id: 'appraisal',
       keywords: [['is the appraisal free','free appraisal','appraisal','appraise','evaluation','evaluate','cost','fee','charge','free','obligation','no pressure']],
@@ -157,7 +134,6 @@
       reply: `<p>It's completely free — no strings attached, no obligation at all. We test and weigh everything and give you a real offer on the spot. If you're not happy with the number, you just take your item and leave — no charge, no awkwardness. We only make money when you decide to sell.</p>`
     },
 
-    // ── HOW TO SELL / PROCESS ────────────────────────────────────────────────
     {
       id: 'how-to-sell',
       keywords: [['how do i sell','how to sell','sell here','how','sell','process','work','steps','what happens','procedure','selling','do i sell','start','begin','first time','visit']],
@@ -166,7 +142,6 @@
 <p>If you want to get a rough idea before coming in, you can also text photos to <a href="${SMS_URL}">${PHONE}</a> first.</p>`
     },
 
-    // ── WHAT DO I NEED / ID ──────────────────────────────────────────────────
     {
       id: 'what-to-bring',
       keywords: [['what do i need','what to bring','need to bring','need','bring','id','identification','photo id','driver','passport','requirements','require','documents']],
@@ -175,7 +150,6 @@
 <p>Beyond that, anything extra you have is a bonus but not required. GIA certificates for diamonds, box and papers for watches, the original receipt for designer bags, the OG box for sneakers — all of those can help the offer. But we evaluate items without them all the time, so don't let that stop you from coming in.</p>`
     },
 
-    // ── PAYMENT ──────────────────────────────────────────────────────────────
     {
       id: 'payment',
       keywords: [['pay','paid','payment','cash','check','how much','get money','payout','same day','instant']],
@@ -183,7 +157,6 @@
       reply: `<p>Same-day payment — most people walk out with cash in hand on the same visit. We pay cash for most transactions. For larger amounts, a check is also an option. Either way, you'll know the exact offer before you agree to anything, so there are no surprises.</p>`
     },
 
-    // ── GOLD ─────────────────────────────────────────────────────────────────
     {
       id: 'gold',
       keywords: [['gold','do you buy gold','buy gold','10k','14k','18k','24k','karat','yellow gold','white gold','rose gold','gold chain','gold ring','gold bracelet','gold necklace']],
@@ -192,7 +165,6 @@
 <p>We weigh and test everything right in front of you and base the offer on live spot prices, so it's completely transparent. Walk in anytime or text photos to <a href="${SMS_URL}">${PHONE}</a> first if you want a quick idea.</p>`
     },
 
-    // ── SILVER ───────────────────────────────────────────────────────────────
     {
       id: 'silver',
       keywords: [['silver','sterling','925','silver flatware','silverware','silver coin','silver bar','silver jewelry']],
@@ -200,7 +172,6 @@
       reply: `<p>Yes, we buy silver. Sterling silver (925), fine silver, and in some cases silver-plated items where the value is there. That includes flatware and serving sets, silver jewelry, coins, rounds, and bullion bars. Just bring it in — we test and weigh everything on the spot and the appraisal is free.</p>`
     },
 
-    // ── PLATINUM ─────────────────────────────────────────────────────────────
     {
       id: 'platinum',
       keywords: [['platinum','plat','pt950','pt900']],
@@ -208,7 +179,6 @@
       reply: `<p>Yes, we buy platinum — rings, settings, estate jewelry, all of it. We test purity right in front of you and make an offer based on current spot prices. Just walk in anytime during store hours.</p>`
     },
 
-    // ── DIAMONDS ─────────────────────────────────────────────────────────────
     {
       id: 'diamonds',
       keywords: [['diamond','diamonds','gia','engagement ring','gemstone','stone','sapphire','ruby','emerald','moissanite']],
@@ -217,7 +187,6 @@
 <p>We also buy sapphires, rubies, emeralds, and other fine stones — loose or mounted, both are fine. One thing to note: we don't buy moissanite or lab-grown stones as precious gems.</p>`
     },
 
-    // ── JEWELRY (GENERAL) ────────────────────────────────────────────────────
     {
       id: 'jewelry',
       keywords: [['jewelry','jewellery','jewel','ring','necklace','bracelet','earring','pendant','chain','pearl','pearls','cameo','turquoise','estate jewelry','vintage jewelry','broken jewelry','scrap']],
@@ -226,7 +195,6 @@
 <p>Everything gets a free evaluation with zero pressure to sell. Walk in or text photos to <a href="${SMS_URL}">${PHONE}</a> first if you want to check before making the trip.</p>`
     },
 
-    // ── WATCHES ──────────────────────────────────────────────────────────────
     {
       id: 'watches',
       keywords: [['watch','watches','rolex','omega','cartier','patek','audemars','tudor','breitling','tag heuer','panerai','iwc','seiko','g-shock','timepiece','wristwatch']],
@@ -235,7 +203,6 @@
 <p>Box and papers definitely help and can increase the offer, but they're not required. We verify serials and check the movement in-store. Honestly, the easiest first step is to text us a photo at <a href="${SMS_URL}">${PHONE}</a> — or just walk in.</p>`
     },
 
-    // ── DESIGNER HANDBAGS ────────────────────────────────────────────────────
     {
       id: 'designer-bags',
       keywords: [['bag','handbag','purse','louis vuitton','lv','chanel','hermes','hermès','gucci','prada','dior','fendi','saint laurent','ysl','bottega','celine','loewe','designer']],
@@ -244,7 +211,6 @@
 <p>The dust bag, box, and receipt are nice to have and can bump up the offer, but they're not required. We authenticate everything in-store. If you want a rough idea before making the trip, just text photos to <a href="${SMS_URL}">${PHONE}</a>.</p>`
     },
 
-    // ── SNEAKERS ─────────────────────────────────────────────────────────────
     {
       id: 'sneakers',
       keywords: [['sneaker','sneakers','shoes','jordan','nike','yeezy','dunk','air max','new balance','travis scott','off-white','fragment','deadstock','ds','footwear','kicks']],
@@ -253,7 +219,6 @@
 <p>If you have the OG box, bring it — it helps the offer. We use live market pricing, not the lowball numbers you'd get from a kiosk. Most sneaker visits are done in about 10 minutes. Walk in or text photos to <a href="${SMS_URL}">${PHONE}</a>.</p>`
     },
 
-    // ── STREETWEAR / VINTAGE ─────────────────────────────────────────────────
     {
       id: 'streetwear',
       keywords: [['streetwear','supreme','off-white','bape','palace','kith','fear of god','fog','chrome hearts','vintage','band tee','tour shirt','carhartt','workwear','90s','y2k','hype','hoodie','jacket']],
@@ -262,7 +227,6 @@
 <p>Condition matters a lot here, and we don't buy fast fashion or bulk clothing. If you're not sure whether something qualifies, just text photos to <a href="${SMS_URL}">${PHONE}</a> and we'll give you a quick answer before you make the trip.</p>`
     },
 
-    // ── ELECTRONICS ──────────────────────────────────────────────────────────
     {
       id: 'electronics',
       keywords: [['phone','iphone','ipad','tablet','macbook','laptop','camera','playstation','ps5','ps4','xbox','nintendo','console','electronics','airpods']],
@@ -271,7 +235,6 @@
 <p>Electronics pricing moves fast depending on the model and what we're actively buying, so the best first step is to <a href="${SMS_URL}">text us</a> the model name and a photo. We'll let you know right away if it's something we want and give you a rough number.</p>`
     },
 
-    // ── COINS ────────────────────────────────────────────────────────────────
     {
       id: 'coins',
       keywords: [['coin','coins','bullion','gold coin','silver coin','american eagle','krugerrand','numismatic','rare coin']],
@@ -279,7 +242,6 @@
       reply: `<p>Yes, we buy gold and silver coins — American Eagles, Krugerrands, Maple Leafs, silver rounds, and other bullion. Numismatic or rare collectible coins we evaluate case by case. Just bring whatever you have and we'll take a look — appraisal is always free.</p>`
     },
 
-    // ── BROKEN / DAMAGED ─────────────────────────────────────────────────────
     {
       id: 'broken',
       keywords: [['broken','damaged','scrap','single earring','bent','cracked','missing stone','incomplete','tangled']],
@@ -287,7 +249,6 @@
       reply: `<p>Broken stuff is totally fine — don't let that stop you from bringing it in. Broken chains, single earrings, bent rings, scrap gold, damaged watches — the metal and stone content still have real value regardless of condition. We evaluate based on what's actually there, not just how it looks. Bring it in and we'll tell you exactly what we'd offer.</p>`
     },
 
-    // ── ESTATE / INHERITED ───────────────────────────────────────────────────
     {
       id: 'estate',
       keywords: [['estate','inherited','inheritance','grandmother','grandfather','family','passed away','deceased','collection','lot','multiple items','moving','liquidation']],
@@ -296,7 +257,6 @@
 <p>For large collections it really helps to text photos to <a href="${SMS_URL}">${PHONE}</a> ahead of time so we can make sure we have enough time set aside. But walk-ins are welcome too.</p>`
     },
 
-    // ── HOW OFFERS ARE CALCULATED ────────────────────────────────────────────
     {
       id: 'how-valued',
       keywords: [['value','valued','worth','calculate','calculate','price','offer','much','rate','market','spot price','weigh','test','karat','purity']],
@@ -305,7 +265,6 @@
 <p>We can't give exact quotes over the phone, but texting photos to <a href="${SMS_URL}">${PHONE}</a> will get you a rough ballpark before you come in.</p>`
     },
 
-    // ── TEXT PHOTOS / QUOTE ──────────────────────────────────────────────────
     {
       id: 'text-photos',
       keywords: [['text','photo','picture','pic','send','quote online','remote','before i come','before coming','not sure']],
@@ -314,7 +273,6 @@
 <p>We can't give a firm number without seeing it in person and testing it, but the text-first approach definitely saves time and helps you plan before coming in.</p>`
     },
 
-    // ── CONSIGNMENT ──────────────────────────────────────────────────────────
     {
       id: 'consignment',
       keywords: [['consign','consignment','trade','trade in']],
@@ -322,7 +280,6 @@
       reply: `<p>Yes, we do both — outright purchase or consignment. Most people go with the instant cash offer since it's quick and simple. But consignment is an option if you'd rather wait and potentially get a higher number — we sell the item for you and pay you when it moves. When you come in, we can walk you through both so you can decide what makes more sense for your situation.</p>`
     },
 
-    // ── AUTHENTICITY / FAKE ──────────────────────────────────────────────────
     {
       id: 'authentication',
       keywords: [['authentic','authentication','fake','real','legit','genuine','replica','verify','serial number']],
@@ -331,7 +288,6 @@
 <p>If something doesn't pass authentication, we'll be straight with you about it. We won't make an offer on anything we can't verify.</p>`
     },
 
-    // ── REVIEWS / TRUST ───────────────────────────────────────────────────────
     {
       id: 'reviews',
       keywords: [['review','reviews','google','rating','stars','trust','legit','scam','reputation','real']],
@@ -339,7 +295,6 @@
       reply: `<p>We're at a 5.0 on Google with over 556 reviews — you can check them yourself before coming in. People pretty consistently mention the transparent pricing, no pressure experience, and getting paid the same day. We're a licensed NYC buyer (DCA #2070477) and have been in the East Village for years. Totally legitimate operation.</p>`
     },
 
-    // ── LICENSE / LEGAL ───────────────────────────────────────────────────────
     {
       id: 'license',
       keywords: [['license','licensed','legal','dca','regulated','law','nyc law','compliant']],
@@ -347,7 +302,6 @@
       reply: `<p>East Village Buyers is fully licensed under NYC DCA #2070477 (Vintage USA Inc, DBA East Village Buyers). We follow all New York City and State regulations for precious metal and secondhand purchases — ID verification, transaction documentation, all of it. Everything we do is completely above board.</p>`
     },
 
-    // ── CONTACT ───────────────────────────────────────────────────────────────
     {
       id: 'contact',
       keywords: [['contact','call','phone','number','reach','get in touch','talk to someone']],
@@ -356,7 +310,6 @@
 <p>Texting is honestly the quickest way to get a response — especially handy if you want to send photos of your item before making the trip.</p>`
     },
 
-    // ── WHAT DO YOU BUY (GENERAL) ─────────────────────────────────────────────
     {
       id: 'what-we-buy',
       keywords: [['what do you buy','what you buy','you guys buy','do you buy','categories','types','accept','take in','looking for']],
@@ -374,7 +327,6 @@
 <p>Not sure if your specific item qualifies? Just text a photo to <a href="${SMS_URL}">${PHONE}</a> and we'll tell you right away.</p>`
     },
 
-    // ── YES / NO / CAN I SELL ─────────────────────────────────────────────────
     {
       id: 'can-i-sell',
       keywords: [['can i','will you','do you take','accept','allowed','able to sell','sell my','sell this','sell a','sell an','looking to sell','want to sell','trying to sell']],
@@ -382,7 +334,6 @@
       reply: `<p>Most likely yes — we buy gold, jewelry, watches, designer bags, sneakers, streetwear, coins, and select electronics. Best thing to do is walk in for a free appraisal at ${ADDRESS}. If you're not sure whether we'd want it, just text a photo to <a href="${SMS_URL}">${PHONE}</a> first and we'll let you know quickly.</p>`
     },
 
-    // ── QUOTE / PRICE (no exact number) ─────────────────────────────────────
     {
       id: 'quote',
       keywords: [['quote','price','pricing','how much','offer','estimate','ballpark','worth','value my']],
@@ -390,7 +341,6 @@
       reply: `<p>The only way to get a real number is in person — we need to test and inspect the item to give you a firm offer. But if you want a quick sense before making the trip, text some photos to <a href="${SMS_URL}">${PHONE}</a> and we can give you a rough idea. Either way, the appraisal is always free.</p>`
     },
 
-    // ── TODAY / TOMORROW ──────────────────────────────────────────────────────
     {
       id: 'when-today',
       keywords: [['today','tomorrow','right now','open now','still open','come in now','this afternoon','this evening']],
@@ -398,7 +348,6 @@
       reply: `<p>Hours are Sun 12:30–6 PM, Mon–Thu 12:30–6:30 PM, Fri 12:30–4 PM, closed Saturdays. Walk-ins are always welcome, no appointment needed. If you're making a long trip, feel free to text <a href="${SMS_URL}">${PHONE}</a> first just to double-check we're open.</p>`
     },
 
-    // ── CATCH-ALL (always available) ──────────────────────────────────────────
     {
       id: 'default',
       keywords: [['buy','sell','item','stuff','help','question','about','shop','store','you','your','anything','something','info','information']],
@@ -409,7 +358,6 @@
 
   ];
 
-  // ── Unknown keyword error messages ────────────────────────────────────────
   const ERROR_MESSAGES = [
     `<p>Hmm, I'm not sure I caught that. Try asking about what we buy, our hours, how selling works, or anything else about the shop — I'll do my best to help.</p>`,
     `<p>That one's a little outside what I can answer. But I can help with stuff like selling gold, jewelry, sneakers, watches, designer items — just ask and I'll take a shot at it.</p>`,
@@ -420,7 +368,6 @@
     return ERROR_MESSAGES[Math.floor(Math.random() * ERROR_MESSAGES.length)];
   }
 
-  // ── Query expansion ───────────────────────────────────────────────────────
   const QUERY_ALIASES = [
     ['hrs', 'hours'], ['hr', 'hours'], ['loc', 'location'], ['addr', 'address'],
     ['appt', 'appointment'], ['appraisal', 'appraisal'], ['jewlery', 'jewelry'],
@@ -444,7 +391,6 @@
     return entry.keywords.flat();
   }
 
-  // ── Scoring (KB + site chunks) ────────────────────────────────────────────
   function scoreEntry(entry, rawQuery) {
     const q = expandQuery(rawQuery);
     const tokens = tokenize(rawQuery);
@@ -506,8 +452,6 @@
     return ranked[0]?.score >= 10 ? ranked[0] : null;
   }
 
-  // ── Advanced Matching System ──────────────────────────────────────────────
-  // Product type synonyms for better detection
   const PRODUCT_KEYWORDS = {
     jewelry: ['jewelry', 'gold', 'silver', 'diamond', 'diamonds', 'gemstone', 'platinum', 'coins', 'estate', 'ring', 'necklace', 'bracelet', 'pendant'],
     sneakers: ['sneaker', 'kicks', 'shoe', 'shoes', 'jordan', 'yeezy', 'nike', 'dunk', 'adidas', 'footwear', 'trainers'],
@@ -517,7 +461,6 @@
     streetwear: ['streetwear', 'vintage', 'hype', 'supreme', 'bape', 'apparel', 'clothing']
   };
 
-  // Keyword synonyms for better matching
   const KEYWORD_SYNONYMS = {
     'appraisal': ['appraise', 'evaluate', 'evaluation', 'assessment', 'check', 'value', 'worth'],
     'free': ['cost', 'fee', 'charge', 'obligation', 'complimentary'],
@@ -529,7 +472,6 @@
     'price': ['pricing', 'offer', 'value', 'worth', 'cost', 'amount']
   };
 
-  // Detect product type from query
   function detectProductType(query) {
     const lower = query.toLowerCase();
     for (const [type, keywords] of Object.entries(PRODUCT_KEYWORDS)) {
@@ -540,15 +482,12 @@
     return null;
   }
 
-  // Enhanced keyword scoring with synonyms (backward compatible)
   function scoreEntry(entry, query) {
     if (!entry) return 0;
     const queryTerms = normalize(query).split(/\s+/).filter(t => t.length > 2);
     let score = 0;
 
-    // If entry has keywords property, use it for matching
     if (entry.keywords && Array.isArray(entry.keywords)) {
-      // Flatten keyword array (can be array or array of arrays)
       let flatKeywords = [];
       entry.keywords.forEach(kw => {
         if (Array.isArray(kw)) {
@@ -558,22 +497,17 @@
         }
       });
 
-      // Check for exact phrase match (highest priority)
       if (normalize(flatKeywords.join(' ')).includes(normalize(query))) {
         score += 100;
       }
 
-      // Check each query term against flattened keywords
       queryTerms.forEach(term => {
-        // Direct match in keywords
         if (flatKeywords.some(kw => normalize(kw) === term)) {
           score += 40;
         }
-        // Partial match
         else if (flatKeywords.some(kw => normalize(kw).includes(term))) {
           score += 20;
         }
-        // Check synonyms
         else if (KEYWORD_SYNONYMS[term]) {
           KEYWORD_SYNONYMS[term].forEach(syn => {
             if (flatKeywords.some(kw => normalize(kw).includes(syn))) {
@@ -585,7 +519,6 @@
       return score;
     }
 
-    // Fallback: original scoring for entries without keywords
     const entryText = normalize((entry.reply || entry.text || '').toLowerCase());
     const entryKeywords = entryText.split(/\s+/);
 
@@ -603,22 +536,18 @@
       .sort((a, b) => b.score - a.score);
   }
 
-  // Check if top matches are ambiguous (too close in score)
   function isAmbiguousQuery(topMatches) {
     if (topMatches.length < 2) return false;
     const top = topMatches[0].score;
     const second = topMatches[1].score;
-    return top > 0 && (top - second) < (top * 0.15); // Within 15% is ambiguous
+    return top > 0 && (top - second) < (top * 0.15);
   }
 
-  // Generate follow-up question suggestions
   function generateFollowUp(topMatches, productType) {
     if (!topMatches || topMatches.length < 2) return null;
 
-    // Only generate follow-ups if we have quality matches but ambiguity
     if (topMatches[0].score < 10) return null;
 
-    // Simple heuristic: if query is very short and we have multiple matches, ask for clarification
     return `I found multiple relevant answers. Can you tell me more about what you're asking?`;
   }
 
@@ -631,7 +560,6 @@
     return null;
   }
 
-  /** Keep chat replies readable — include lists when present */
   function toSimpleAnswer(html) {
     const parts = html.match(/<p>[\s\S]*?<\/p>/g);
     const list = html.match(/<ol[\s\S]*?<\/ol>|<ul[\s\S]*?<\/ul>/);
@@ -669,7 +597,6 @@
     const kbBest = kbRanked[0];
     const siteHit = searchKnowledge(query);
 
-    // KB answers beat random site FAQ snippets
     if (kbBest && kbBest.score >= 18) {
       return toSimpleAnswer(kbBest.entry.reply);
     }
@@ -698,21 +625,17 @@
       return formatKnowledgeHit(siteHit);
     }
 
-    // No match found - show friendly error message
     return toSimpleAnswer(getRandomErrorMessage() + `<p style="margin-top:1em;font-size:0.9em;color:#666;">Or call/text <a href="${SMS_URL}">${PHONE}</a> — we're here to help!</p>`);
   }
 
-  // ── Escape HTML ───────────────────────────────────────────────────────────
   function escapeHtml(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  // ── Build SVG icon (no external dependency) ───────────────────────────────
   function buildIconSvg() {
     return '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="evb-asst-icon-svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 3 .97 4.29L2 22l6.18-.99C9.58 22.6 10.73 23 12 23c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18c-1.08 0-2.1-.2-3.08-.56l-.22-.1-2.29.37.38-2.29-.1-.22C4.2 14.1 4 13.08 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z" fill="currentColor"/></svg>';
   }
 
-  // ── Build UI ──────────────────────────────────────────────────────────────
   const HIDE_KEY = 'evb_asst_minimized_v1';
   const POS_KEY  = 'evb_asst_pos_v1';
 
@@ -759,7 +682,6 @@
 
     document.body.appendChild(root);
 
-    // ── Restore last dragged position (if any) for this session ─────────────
     try {
       const savedPos = JSON.parse(sessionStorage.getItem(POS_KEY) || 'null');
       if (savedPos && typeof savedPos.right === 'number' && typeof savedPos.bottom === 'number') {
@@ -768,12 +690,8 @@
         root.style.setProperty('left', 'auto', 'important');
         root.style.setProperty('top', 'auto', 'important');
       }
-    } catch (_) { /* ignore malformed storage */ }
+    } catch (_) { }
 
-    // ── Close / reopen ─────────────────────────────────────────────────────
-    // "Close" hides the main toggle and panel but leaves a small on-brand
-    // button so the visitor can always get back in during this tab's
-    // session -- closing should never be a dead end with no way back.
     const restoreBtn = root.querySelector('.evb-asst-restore');
 
     function closeWidget() {
@@ -792,7 +710,6 @@
       closeWidget();
     });
 
-    // ── Keep the widget fully on-screen ──────────────────────────────────────
     function keepInViewport() {
       const rect = root.getBoundingClientRect();
       const margin = 8;
@@ -810,7 +727,6 @@
       root.style.setProperty('top', 'auto', 'important');
     }
 
-    // ── Draggable (mouse + touch via Pointer Events) ─────────────────────────
     function makeDraggable(handleEl) {
       let dragging = false;
       let moved = false;
@@ -819,11 +735,6 @@
 
       function onPointerDown(e) {
         if (e.button !== undefined && e.button !== 0 && e.pointerType === 'mouse') return;
-        // Never start a drag from an interactive child of the handle (e.g. the
-        // close button inside the panel header). setPointerCapture() below would
-        // retarget the click to the handle and the button would never fire.
-        // The handle itself may be a button (the toggle), so only bail when the
-        // interactive element is a descendant, not the handle.
         const interactive = e.target.closest && e.target.closest('button, a, input, textarea, select');
         if (interactive && interactive !== handleEl) return;
         dragging = true;
@@ -835,7 +746,7 @@
         startRight = window.innerWidth - rect.right;
         startBottom = window.innerHeight - rect.bottom;
         root.classList.add('evb-asst-root--dragging');
-        try { handleEl.setPointerCapture(pointerId); } catch (_) { /* noop */ }
+        try { handleEl.setPointerCapture(pointerId); } catch (_) { }
       }
 
       function onPointerMove(e) {
@@ -861,7 +772,7 @@
         if (!dragging || e.pointerId !== pointerId) return;
         dragging = false;
         root.classList.remove('evb-asst-root--dragging');
-        try { handleEl.releasePointerCapture(pointerId); } catch (_) { /* noop */ }
+        try { handleEl.releasePointerCapture(pointerId); } catch (_) { }
         if (moved) {
           keepInViewport();
           const right = parseFloat(getComputedStyle(root).right) || 0;
@@ -906,7 +817,7 @@
 
     let greeted = false;
     let conversationHistory = [];
-    let aiHistory = []; // {role: 'user'|'assistant', content} pairs, sent to Groq for context
+    let aiHistory = [];
     let detectedProductType = null;
 
     function openPanel() {
@@ -958,10 +869,8 @@
     function answerLocally(text, typing) {
       typing.remove();
 
-      // Get top matches for potential follow-up detection
       const topMatches = rankKb(text).slice(0, 3);
 
-      // Check if query is ambiguous
       if (isAmbiguousQuery(topMatches)) {
         const followUp = generateFollowUp(topMatches, detectedProductType);
         if (followUp) {
@@ -989,13 +898,11 @@
       sendBtn.disabled = true;
       addUserMessage(text);
 
-      // Detect product type from query
       const productType = detectProductType(text);
       if (productType && !detectedProductType) {
         detectedProductType = productType;
       }
 
-      // Store in conversation history
       conversationHistory.push({ user: text, type: productType });
       aiHistory.push({ role: 'user', content: text });
 
@@ -1011,7 +918,6 @@
             sendBtn.disabled = false;
             input.focus();
           } else {
-            // Groq unavailable/errored/timed out -- fall back to the local bot
             answerLocally(text, typing);
           }
         });
@@ -1024,10 +930,8 @@
     function renderContextAwareChips(topMatches) {
       chipsEl.innerHTML = '';
 
-      // Show related suggestions based on detected product type
       const suggestions = [];
 
-      // If we detected a product type, suggest product-specific questions
       if (detectedProductType) {
         const relevant = [
           'What\'s the condition needed?',
@@ -1038,11 +942,9 @@
         ];
         suggestions.push(...relevant.slice(0, 3));
       } else {
-        // Default suggestions
         suggestions.push(...SUGGESTIONS);
       }
 
-      // Render up to 6 suggestions
       suggestions.slice(0, 6).forEach(s => {
         const b = document.createElement('button');
         b.type = 'button';

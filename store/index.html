@@ -112,8 +112,6 @@
   </div>
 </div>
 
-<!-- Store sub-nav -->
-
 <main class="evb-soon">
   <div class="evb-wrap evb-soon-grid">
 
@@ -181,8 +179,6 @@
       </div>
     </div>
   </div>
-  <!-- Staff preview. The storefront stays hidden from customers until it is
-       connected to Square; this lets the shop look at it in the meantime. -->
   <div class="evb-wrap">
     <details class="evb-staff" id="evbStaff">
       <summary>Staff preview</summary>
@@ -282,9 +278,6 @@
 <script>
 (function () {
   'use strict';
-  // Shop hours in the shop's own timezone, so a visitor elsewhere is told
-  // whether the counter is open in New York, not where they are.
-  // Index 0 is Sunday; Saturday is closed.
   var HOURS = [
     { open: 12.5, close: 18 }, { open: 12.5, close: 18.5 }, { open: 12.5, close: 18.5 },
     { open: 12.5, close: 18.5 }, { open: 12.5, close: 18.5 }, { open: 12.5, close: 18 }, null
@@ -301,7 +294,6 @@
     try { return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })); }
     catch (e) { return new Date(); }
   }
-  // One-off closures (holidays etc.) come from site-nav.js, which loads first.
   function ymd(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
@@ -315,7 +307,7 @@
     var now = shopNow();
     var hour = now.getHours() + now.getMinutes() / 60;
     var today = hoursOn(now);
-    var closedToday = !today && HOURS[now.getDay()];   // a normally-open day we are shut
+    var closedToday = !today && HOURS[now.getDay()];
     var t = document.getElementById('storeStatusText');
     var w = document.getElementById('storeStatus');
     if (!t) return;
@@ -329,8 +321,6 @@
       t.textContent = 'Closed · opens today at ' + clockLabel(today.open);
       return;
     }
-    // Walk forward by calendar date rather than weekday, so a closure on a
-    // specific date is skipped instead of being announced as the next opening.
     for (var i = 1; i <= 14; i++) {
       var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
       var h = hoursOn(d);
@@ -360,9 +350,6 @@
   .evb-staff-msg { margin-top: 8px; color: #c2261b; font-weight: 600; }
 </style>
 <script>
-/* Staff preview unlock. The page holds only a salted SHA-256 of the password,
-   never the password. Unlocks this browser for 14 days (see the gate at the
-   top of every /store/ page). */
 (function () {
   var HASH = 'f53f79dc2f3989e665cd9d99f27b7e6d91f22b05830557a9256e8c957c19c0a5';
   var DAYS = 14;
@@ -411,7 +398,6 @@
   });
 
   render();
-  // Opened straight from a link to it: show the form rather than a closed toggle.
   if (location.hash === '#staff') document.getElementById('evbStaff').open = true;
 })();
 </script>

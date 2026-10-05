@@ -1,28 +1,14 @@
-/* East Village Buyers — email-signup popup
-   ---------------------------------------------------------------------------
-   "Enter your email, get free shipping on your first order." A welcome for
-   the online store: site-nav.js loads it on /store pages only, and it opens
-   shortly after the visitor lands (once; dismissing snoozes it 14 days).
-
-   Emails go to the store Worker (POST /subscribe, see /square-worker.js),
-   which keeps the signup list (GET /subscribers) and applies the
-   free shipping at checkout. The Worker URL is `apiBase` in
-   /store/store-config.js — until that is filled in there is nowhere to keep
-   an email, so the popup stays hidden. Add ?signup-preview to any URL to see
-   it anyway (nothing is sent in preview).
---------------------------------------------------------------------------- */
 (function () {
   'use strict';
 
-  var STATE_KEY = 'evb_signup_state';   // 'joined' | 'dismissed:<ms>'
-  var EMAIL_KEY = 'evb_signup_email';   // read by the checkout in demo mode
+  var STATE_KEY = 'evb_signup_state';
+  var EMAIL_KEY = 'evb_signup_email';
   var SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
   var DELAY_MS = 1500;
 
   var PATH = location.pathname;
   var PREVIEW = /[?&]signup-preview\b/.test(location.search);
 
-  // Store pages only, and never in the middle of a checkout or on a receipt.
   if (!PREVIEW && !/^\/store(\/|$)/.test(PATH)) return;
   if (/^\/store\/(checkout|order)\b/.test(PATH)) return;
   if (document.querySelector('.p404-ad')) return;
@@ -42,7 +28,6 @@
     return c && c.apiBase ? String(c.apiBase).replace(/\/$/, '') : '';
   }
 
-  /* store-config.js is only on store pages; elsewhere, fetch it for apiBase. */
   function loadConfig(cb) {
     if (window.EVB_STORE_CONFIG) return cb();
     var s = document.createElement('script');
@@ -51,17 +36,13 @@
     document.head.appendChild(s);
   }
 
-  /* offsetParent is always null for position:fixed, so check the box itself. */
   function shown(el) {
     if (!el || !el.getClientRects().length) return false;
     var cs = getComputedStyle(el);
     return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
   }
 
-  /** Another dialog (cookie banner, closure notice, homepage What's New) is on screen. */
   function otherDialogOpen() {
-    // The cookie banner is judged by what is on screen, not evb_consent_v1:
-    // older banner markup decides visibility from its own key.
     return !!document.getElementById('evbClosure') ||
       shown(document.getElementById('wnWrap')) ||
       shown(document.getElementById('evbCk'));
@@ -141,7 +122,6 @@
   function open() {
     if (!root) build();
     lastFocus = document.activeElement;
-    // Next frame so the entrance transition runs.
     requestAnimationFrame(function () {
       root.classList.add('is-open');
       document.documentElement.classList.add('evbs-lock');
@@ -210,7 +190,6 @@
     var fired = false;
     function fire() {
       if (fired) return;
-      // Wait for other dialogs to be answered rather than stacking on them.
       if (otherDialogOpen()) return setTimeout(fire, 2000);
       fired = true;
       open();

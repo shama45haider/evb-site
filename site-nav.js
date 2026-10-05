@@ -89,19 +89,6 @@ function toggleNav() { toggleEvbNav(); }
   }
 })();
 
-/* ---------------------------------------------------------------------------
-   Consent Mode v2 — update on banner choice
-   Defaults are set inline in <head> (see EVB-CONSENT-V2) because they must
-   run before GTM. This half only handles the user's click.
-
-   Uses delegated capture-phase listeners rather than wrapping window.evbCk,
-   because that function is assigned AFTER an early return that fires on any
-   repeat visit -- so on returning visitors it does not exist to wrap.
-
-   Two banner markups exist. The older one (11 pages) writes the same value
-   for both buttons, so accept and reject are indistinguishable in storage.
-   Keying off which button was clicked resolves that without touching markup.
---------------------------------------------------------------------------- */
 (function () {
   'use strict';
 
@@ -128,7 +115,6 @@ function toggleNav() { toggleEvbNav(); }
     window.evbConsentGranted = granted;
   }
 
-  // Capture phase: the banner's own inline handlers hide/remove the node.
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
@@ -137,18 +123,6 @@ function toggleNav() { toggleEvbNav(); }
   }, true);
 })();
 
-/* ---------------------------------------------------------------------------
-   GA4 conversion events -> dataLayer
-
-   Every conversion on this site is an outbound protocol click (tel:, sms:,
-   maps). There are no forms, so there is no thank-you page to measure and
-   everything has to be click-based.
-
-   All listeners are delegated on document: 162 of the CTAs carry no class at
-   all, and the chat assistant injects ~26 more tel:/sms: links at runtime.
-   Nothing here calls preventDefault or does async work before navigation,
-   so tel:/sms: handoff to the OS is unaffected.
---------------------------------------------------------------------------- */
 (function () {
   'use strict';
 
@@ -169,9 +143,6 @@ function toggleNav() { toggleEvbNav(); }
     window.dataLayer.push(o);
   }
 
-  // Anchors wrap nested block-level spans with no whitespace between them,
-  // so textContent yields "Send a TextGet a Quote Fast". innerText respects
-  // those boundaries and inserts breaks; textContent is the fallback.
   function textOf(el) {
     var t = el.getAttribute('aria-label');
     if (!t) t = ('innerText' in el ? el.innerText : el.textContent) || '';
@@ -179,7 +150,6 @@ function toggleNav() { toggleEvbNav(); }
     return t.length > 100 ? t.slice(0, 100) : t;
   }
 
-  /* -- where on the page the CTA lives ------------------------------------ */
   var POS = [
     ['.evb-mobile-cta-btn', 'sticky'],
     ['.site-topbar-item', 'topbar'],
@@ -198,7 +168,6 @@ function toggleNav() { toggleEvbNav(); }
     for (var i = 0; i < POS.length; i++) {
       try { if (a.matches(POS[i][0])) return POS[i][1]; } catch (e) {}
     }
-    // container fallbacks for the unclassed links (footer list, FAQ prose)
     if (a.closest('.evb-mobile-cta')) return 'sticky';
     if (a.closest('.site-mob-drawer')) return 'mobile_drawer';
     if (a.closest('.evb-asst-root')) return 'chat';
@@ -212,9 +181,6 @@ function toggleNav() { toggleEvbNav(); }
     return 'inline';
   }
 
-  /* -- link classification ------------------------------------------------- */
-  // Five directions formats: two runtime-only ones (geo:, maps.apple.com) are
-  // emitted by getDirectionsUrl() above based on user agent.
   var RE_DIRECTIONS = /^(geo:|https?:\/\/(maps\.app\.goo\.gl|maps\.google\.|www\.google\.[a-z.]+\/maps|maps\.apple\.com))/i;
   var RE_REVIEWS = /google\.[a-z.]+\/search\?q=[^"]*review/i;
   var NETWORKS = [
@@ -255,9 +221,6 @@ function toggleNav() { toggleEvbNav(); }
     }
   }, false);
 
-  /* -- chat assistant ------------------------------------------------------ */
-  // The launcher click is drag-suppressed inside evb-assistant.js, so a click
-  // listener would over-count drags. Watch the open class instead.
   var chatMsgIndex = 0;
 
   function watchChat(root) {
@@ -289,8 +252,6 @@ function toggleNav() { toggleEvbNav(); }
     push('evb_chat_message_sent', p);
   }
 
-  // Capture phase: submitQuery() clears the input before a bubbling listener
-  // would see it, and the Enter path never fires a submit event at all.
   document.addEventListener('submit', function (e) {
     var f = e.target;
     if (!f || !f.classList || !f.classList.contains('evb-asst-foot')) return;
@@ -304,7 +265,6 @@ function toggleNav() { toggleEvbNav(); }
     chatSent(t);
   }, true);
 
-  // Suggestion chips bypass the input entirely.
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
@@ -318,7 +278,6 @@ function toggleNav() { toggleEvbNav(); }
     });
   }, false);
 
-  /* -- scroll depth, money pages only -------------------------------------- */
   if (PAGE_TYPE === 'money_page') {
     var marks = [25, 50, 75, 100];
     var hit = {};
@@ -340,9 +299,6 @@ function toggleNav() { toggleEvbNav(); }
       if (hit[100]) window.removeEventListener('scroll', onScroll);
     }
 
-    // Throttled with setTimeout rather than requestAnimationFrame: this is a
-    // coarse four-bucket measurement, not a per-frame animation, and rAF is
-    // suspended entirely while a tab is hidden.
     function onScroll() {
       if (ticking) return;
       ticking = true;
@@ -354,25 +310,13 @@ function toggleNav() { toggleEvbNav(); }
 })();
 
 
-/* ---------------------------------------------------------------------------
-   One-off closure notice
-   Site-wide popup announcing a day the shop is closed outside its normal
-   weekly hours. Everything about it lives in CLOSURE below: change the date
-   and copy there, and it switches itself off after `showUntil`, so nothing
-   needs removing afterwards.
-
-   Also publishes window.EVB_CLOSED_DATES, which the live Open/Closed badge on
-   /store/ reads so it never says "Open now" on a day the shop is shut.
-   This script must load before that badge's script (it does on every page).
---------------------------------------------------------------------------- */
 (function () {
   'use strict';
 
   var CLOSURE = {
-    date: '2026-09-13',                         // YYYY-MM-DD, New York time
+    date: '2026-09-13',
     title: 'Closed Sunday, September 13',
     body: 'The shop at 39 Avenue A will be closed all day Sunday. We are closed Saturdays as usual, so we reopen Monday, September 14 at 12:30 PM.',
-    // Monday 14 Sep 00:00 in New York. September is EDT, UTC-4.
     showUntil: Date.UTC(2026, 8, 14, 4, 0, 0)
   };
 
@@ -386,8 +330,6 @@ function toggleNav() { toggleEvbNav(); }
   function build() {
     if (document.getElementById('evbClosure')) return;
 
-    // While this is up, hold back the homepage "What's New" popup so a
-    // visitor never gets two modals stacked on top of each other. An
     // !important rule beats the inline display that popup sets on a timer.
     var hold = document.createElement('style');
     hold.id = 'evbClosureHold';
@@ -444,7 +386,6 @@ function toggleNav() { toggleEvbNav(); }
           '<p class="evb-cl-note">Questions? Text <a href="sms:9176088939">917-608-8939</a></p>' +
         '</div>' +
       '</div>';
-    // Copy goes in as text, never as markup.
     wrap.querySelector('#evbClosureTitle').textContent = CLOSURE.title;
     wrap.querySelector('#evbClosureText').textContent = CLOSURE.body;
     document.body.appendChild(wrap);
@@ -461,7 +402,6 @@ function toggleNav() { toggleEvbNav(); }
     }
     function onKey(e) {
       if (e.key === 'Escape') { close(); return; }
-      // Keep Tab inside the dialog while it is open.
       if (e.key === 'Tab') {
         var f = wrap.querySelectorAll('button, a[href]');
         var first = f[0], last = f[f.length - 1];
@@ -475,7 +415,6 @@ function toggleNav() { toggleEvbNav(); }
     wrap.addEventListener('click', function (e) { if (e.target === wrap) close(); });
     document.addEventListener('keydown', onKey);
 
-    // Next frame so the fade-in transition actually runs.
     setTimeout(function () { wrap.classList.add('is-in'); ok.focus(); }, 30);
   }
 
@@ -484,11 +423,6 @@ function toggleNav() { toggleEvbNav(); }
   else start();
 })();
 
-/* ---------------------------------------------------------------------------
-   Email-signup popup (free shipping on the first order). A welcome for the
-   online store, so only /store pages load it; ?signup-preview loads it
-   anywhere for checking the design.
---------------------------------------------------------------------------- */
 (function () {
   if (!/^\/store(\/|$)/.test(location.pathname) && !/[?&]signup-preview\b/.test(location.search)) return;
   var s = document.createElement('script');
@@ -497,10 +431,6 @@ function toggleNav() { toggleEvbNav(); }
   document.head.appendChild(s);
 })();
 
-/* ---------------------------------------------------------------------------
-   Halloween touches (cobwebs, a spider, two pumpkins). Stops loading at
-   midnight Nov 1 New York time, so it removes itself.
---------------------------------------------------------------------------- */
 (function () {
   if (Date.now() >= Date.UTC(2026, 10, 1, 4, 0, 0)) return;
   var s = document.createElement('script');

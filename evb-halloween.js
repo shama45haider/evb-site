@@ -1,28 +1,13 @@
-/* East Village Buyers — Halloween touches (October only)
-   ---------------------------------------------------------------------------
-   Loaded by site-nav.js until Nov 1, then never fetched again, so nothing has
-   to be undone by hand. Purely decorative: faint corner cobwebs, one small
-   spider, and two little pumpkins in the existing top bar and footer. Every
-   piece is aria-hidden and pointer-events:none, and nothing on the page is
-   moved, recoloured or covered beyond a faint corner line.
-
-   Delete this file and its loader in site-nav.js to remove it early.
---------------------------------------------------------------------------- */
 (function () {
   'use strict';
 
   if (document.getElementById('evbh-style')) return;
 
-  /* ---- SVG pieces ------------------------------------------------------ */
-
-  /** A quarter cobweb anchored in the top-right corner of a 100x100 box:
-      spokes fanning down-left, joined by threads that sag toward the corner. */
   function cobweb() {
     var spokes = [0, 22.5, 45, 67.5, 90];
     var rings = [20, 37, 54, 71, 88];
     var rad = Math.PI / 180;
     var pt = function (r, a) {
-      // a=0 runs along the top edge (left), a=90 straight down the side.
       return [100 - r * Math.cos(a * rad), r * Math.sin(a * rad)];
     };
     var d = '';
@@ -63,18 +48,13 @@
       '<circle cx="12" cy="8.2" r="2.4" fill="#3a322b"/>' +
     '</svg>';
 
-  /* ---- Styles ---------------------------------------------------------- */
-
   var css =
     '.evbh{position:absolute;pointer-events:none;color:#8a7f74;}' +
     '.evbh svg{display:block;width:100%;height:100%;}' +
 
-    /* Corner webs under the header: they scroll away with the page and sit
-       below the sticky nav (z 50), so they never cover it. */
     '.evbh-web-tr{top:0;right:0;width:118px;height:118px;opacity:.32;z-index:40;}' +
     '.evbh-web-tl{top:0;left:0;width:84px;height:84px;opacity:.24;z-index:40;transform:scaleX(-1);}' +
 
-    /* The spider hangs from the top-right web on a thread and sways a little. */
     '.evbh-spider{top:0;right:46px;width:16px;z-index:40;transform-origin:50% 0;}' +
     '.evbh-spider i{display:block;width:1px;height:58px;margin:0 auto;background:linear-gradient(#8a7f74,rgba(138,127,116,.35));}' +
     '.evbh-spider svg{width:16px;height:15px;margin-top:-1px;opacity:.85;}' +
@@ -83,11 +63,9 @@
       '@keyframes evbhSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(4px)}}' +
     '}' +
 
-    /* Footer corners, behind the footer content (which sits at z 2). */
     '.evb-footer .evbh-foot-tl{top:0;left:0;width:96px;height:96px;opacity:.2;z-index:1;transform:scaleX(-1);}' +
     '.evb-footer .evbh-foot-br{bottom:0;right:0;width:110px;height:110px;opacity:.2;z-index:1;transform:rotate(180deg);}' +
 
-    /* Pumpkins: a white one in the orange top bar, an orange one by the ©. */
     '.evbh-pk{display:inline-block;flex-shrink:0;vertical-align:-3px;}' +
     '.evbh-pk-top{width:18px;height:17px;margin-right:4px;--evbh-body:#fff;--evbh-rib:#f3b07a;--evbh-stem:#fff;--evbh-leaf:#ffe2c9;}' +
     '.evbh-pk-foot{width:15px;height:14px;margin-right:6px;--evbh-body:#e8690a;--evbh-rib:#b84f06;--evbh-stem:#6b4f2a;--evbh-leaf:#7a8b4a;}' +
@@ -99,8 +77,6 @@
       '.evb-footer .evbh-foot-tl,.evb-footer .evbh-foot-br{width:70px;height:70px;}' +
     '}' +
     '@media print{.evbh,.evbh-pk{display:none!important;}}';
-
-  /* ---- Placement ------------------------------------------------------- */
 
   function el(cls, html) {
     var d = document.createElement('div');
@@ -118,10 +94,6 @@
 
     var web = cobweb();
 
-    // Top corners: just below the header, positioned in page coordinates so
-    // they scroll away naturally instead of following the visitor.
-    // Measured from the top bar, not the nav: the nav is sticky, so its
-    // on-screen position follows the scroll and would drag the webs with it.
     var bar0 = document.querySelector('.site-topbar');
     var nav = document.querySelector('.site-nav');
     var top = document.createElement('div');
@@ -139,14 +111,12 @@
     window.addEventListener('resize', place, { passive: true });
     window.addEventListener('load', place);
 
-    // Footer corners.
     var foot = document.querySelector('.evb-footer');
     if (foot) {
       foot.appendChild(el('evbh-foot-tl', web));
       foot.appendChild(el('evbh-foot-br', web));
     }
 
-    // Pumpkins in what is already there.
     var bar = document.querySelector('.site-topbar-inner');
     if (bar) bar.insertAdjacentHTML('afterbegin', pumpkin('evbh-pk evbh-pk-top'));
     var copy = document.querySelector('.evb-footer-copy');

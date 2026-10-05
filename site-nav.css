@@ -148,7 +148,6 @@
 }
 .site-nav-drop-link:hover { background: #fff3ea; color: #e8690a; }
 
-/* Mobile "What We Buy" expandable section */
 .site-mob-drop { border-bottom: 1px solid #f2f2f2; }
 .site-mob-link--drop {
   cursor: pointer;
@@ -338,7 +337,6 @@
 .site-mob-btn-sms { background: #f5f5f5; color: #3a3a3a; }
 .site-mob-btn-sms:hover { background: #eaeaea; }
 
-/* ── Persistent mobile Call/Text sticky bar (site-wide) ── */
 .evb-mobile-cta { display: none; }
 @media (max-width: 760px) {
   body.evb-has-mobile-cta { padding-bottom: 68px; }
@@ -388,12 +386,6 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
-   "Store" nav button — the storefront lives at /store/ on this site now
-   (it used to be an external Shopify store at store.eastvillagebuyers.com).
-   Styled as a pill so it reads as the primary action rather than one more
-   text link. Lives here, not in store.css, because every page shows it.
---------------------------------------------------------------------------- */
 .site-nav-link--store {
   align-self: center;
   padding: 9px 20px;
@@ -414,6 +406,4 @@
 }
 .site-nav-link--store:active { transform: translateY(0); }
 
-/* The drawer already gives every link an orange dot, so the Store entry is
-   distinguished by weight and colour instead of a competing marker. */
 .site-mob-link--store { color: #e8690a; font-weight: 800; }

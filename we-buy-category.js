@@ -1,8 +1,6 @@
-/* East Village Buyers — Category Page Interactivity */
 (function () {
   'use strict';
 
-  // FAQ2 accordion (button-driven expand/collapse)
   function initFAQ2() {
     var buttons = document.querySelectorAll('.faq2-q');
     buttons.forEach(function (btn) {
@@ -21,7 +19,6 @@
     });
   }
 
-  // Brand directory search filter (sneakers page)
   function initDirectorySearch() {
     var input = document.getElementById('dirSearch');
     var list = document.getElementById('dirList');
@@ -54,7 +51,6 @@
     });
   }
 
-  // Smooth scroll for anchor links within category pages
   function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(function (link) {
       link.addEventListener('click', function (e) {
@@ -68,7 +64,6 @@
     });
   }
 
-  // Init on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

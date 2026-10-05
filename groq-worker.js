@@ -1,39 +1,9 @@
-/**
- * East Village Buyers — Groq chat proxy (Cloudflare Worker)
- *
- * Why this exists: eastvillagebuyers.com is a static site with no backend.
- * The Groq API key can NOT go in evb-assistant.js -- any string in that file
- * ships to every visitor's browser and can be read via view-source. This
- * Worker holds the key server-side (as an encrypted secret) and is the only
- * thing that ever talks to Groq. The site's JS calls this Worker instead.
- *
- * ── Deploy (Cloudflare dashboard, no CLI needed) ────────────────────────
- * 1. dash.cloudflare.com -> Workers & Pages -> Create -> Create Worker.
- * 2. Name it (e.g. "evb-assistant-proxy"), deploy the default hello-world.
- * 3. Edit Code -> replace everything with this file's contents -> Deploy.
- * 4. Settings -> Variables and Secrets -> Add -> name it GROQ_API_KEY,
- *    type "Secret", paste your Groq key -> Save and deploy.
- * 5. Copy the worker's URL (https://evb-assistant-proxy.<you>.workers.dev)
- *    and give it to Claude, or paste it into GROQ_PROXY_URL at the top of
- *    evb-assistant.js yourself.
- *
- * ── Rate limiting (recommended, stops spam/abuse from burning Groq quota) ─
- * 6. Settings -> Bindings -> Add -> "Rate Limiting".
- *    Variable name: RATE_LIMITER. Limit: 10 requests per 60 seconds
- *    (or whatever you prefer) -> Save and deploy.
- *    Without this binding attached, the code below just skips the check --
- *    it fails open, not closed, so deploying without it is still safe.
- *
- * That's it -- no KV, no D1, no other bindings required.
- */
-
 const ALLOWED_ORIGINS = new Set([
   'https://eastvillagebuyers.com',
   'https://www.eastvillagebuyers.com',
   'https://store.eastvillagebuyers.com',
 ]);
 
-// Keep this in sync with the business facts in evb-assistant.js.
 const SYSTEM_PROMPT = `You are the site assistant for East Village Buyers, a buy-and-sell shop at 39 Avenue A, New York, NY 10009 (phone/text: 917-608-8939). Hours: Sun 12:30-6 PM, Mon-Thu 12:30-6:30 PM, Fri 12:30-4 PM, closed Saturdays.
 
 We buy and sell: gold (10K-24K, any condition including broken/scrap), silver, diamonds, fine jewelry, luxury watches (Rolex, Omega, Cartier, etc.), designer handbags and accessories, streetwear, sneakers, electronics (iPhones, AirPods, MacBooks, PS5, cameras), and collectibles.
@@ -68,8 +38,6 @@ export default {
       });
     }
 
-    // Fails open (skips the check) if the RATE_LIMITER binding isn't attached,
-    // so this is safe to deploy before or after adding it in Settings > Bindings.
     if (env.RATE_LIMITER) {
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const { success } = await env.RATE_LIMITER.limit({ key: ip });

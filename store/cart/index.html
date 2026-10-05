@@ -5,13 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
-/* Store gate — the storefront is not public while Square is being connected.
-   Reaching any store page sends you to the coming-soon page unless this
-   browser was unlocked with the staff preview password on /store/ (good for
-   14 days). The old ?preview=1 shortcut is gone — the password is the only
-   way in. Runs before render so there is no flash of the gated page, and
-   fails closed if storage is unavailable. Not a security boundary (this is a
-   static site); it keeps the unfinished store away from customers. */
 (function () {
   var ok = false;
   try { ok = Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) {}
@@ -296,7 +289,6 @@
       return;
     }
 
-    // Pickup is the default quote on this page; checkout lets them change it.
     var t = S.totals({ shippingId: 'pickup', promoCode: promoCode });
 
     host.innerHTML = noticeFor(reconcileNotes) +
@@ -374,7 +366,6 @@
   function renderRelated() {
     var lines = S.cart.lines;
     if (!lines.length) {
-      // An empty bag gets featured stock rather than nothing to look at.
       var feat = C.products.filter(function (p) { return p.featured && p.stock > 0; }).slice(0, 4);
       if (!feat.length) return;
       document.getElementById('relatedSection').hidden = false;
@@ -398,7 +389,6 @@
 
   S.mountCartUI('/');
 
-  // The cart page owns the full re-render; the mini cart's own sync still runs.
   window.addEventListener('evb:cart-change', function () { render(); renderRelated(); });
   window.addEventListener('evb:cart-external', function () { render(); renderRelated(); });
 

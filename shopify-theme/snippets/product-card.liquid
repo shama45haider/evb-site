@@ -1,8 +1,3 @@
-{%- comment -%}
-  Usage: {% render 'product-card', product: product %}
-  Matches the Dawn-style card UX: image carousel, color swatches, and
-  a quick "Add" button that adds to cart without leaving the grid.
-{%- endcomment -%}
 {%- liquid
   assign color_option_index = -1
   for opt in product.options_with_values
@@ -78,7 +73,6 @@
     </div>
   </div>
 
-  {% comment %} Variant map so the quick-add / swatch JS can resolve the right variant id without a page load. {% endcomment %}
   <script type="application/json" data-card-variants>
     {{ product.variants | json }}
   </script>
