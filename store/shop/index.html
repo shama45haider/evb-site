@@ -171,56 +171,11 @@
   </div>
 </div>
 
-<!-- Hero -->
-<!-- Departments — the page opener now that the hero is gone, so it carries
-     the h1, the shop's context, and the stock facts. -->
-<!-- Store header. States plainly what is sold, where it comes from, and how
-     to get it, with the live shop status alongside the storefront. -->
-<section class="evb-hero">
-  <div class="evb-wrap evb-hero-grid">
-
-    <div class="evb-hero-main">
-      <p class="evb-eyebrow">East Village Buyers &middot; 39 Avenue A, NYC</p>
-      <h1 class="evb-hero-title">Shop authenticated gold, watches, sneakers &amp; streetwear</h1>
-      <p class="evb-hero-sub">Every item was bought over our counter and verified in-house before it was listed. Buy it online, then pick it up the same day at the shop or have it shipped insured.</p>
-
-      <ul class="evb-hero-facts">
-        <li><strong id="statItems">&mdash;</strong><span>items in stock</span></li>
-        <li><strong id="statCats">&mdash;</strong><span>departments</span></li>
-        <li><strong id="statPrice">&mdash;</strong><span>lowest price</span></li>
-        <li><strong>Free</strong><span>counter pickup</span></li>
-      </ul>
-
-      <div class="evb-hero-actions">
-        <a href="#shop" class="evb-btn evb-btn--primary">Browse everything</a>
-        <a href="#how" class="evb-btn evb-btn--ghost">How we authenticate</a>
-      </div>
-    </div>
-
-    <aside class="evb-hero-card">
-      <img src="/evbstorefront.webp" alt="The East Village Buyers storefront at 39 Avenue A, New York"
-           width="1600" height="1125" class="evb-hero-card-img" fetchpriority="high" decoding="async">
-      <div class="evb-hero-card-body">
-        <p class="evb-hero-status" id="storeStatus">
-          <span class="evb-hero-status-dot" aria-hidden="true"></span>
-          <span id="storeStatusText">Checking store hours&hellip;</span>
-        </p>
-        <dl class="evb-hero-card-rows">
-          <div><dt>Address</dt><dd><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">39 Avenue A, New York, NY 10009</a></dd></div>
-          <div><dt>Hours</dt><dd>Sun&ndash;Fri from 12:30 PM &middot; Closed Saturdays</dd></div>
-          <div><dt>Questions</dt><dd><a href="sms:9176088939">Text 917-608-8939</a></dd></div>
-        </dl>
-      </div>
-    </aside>
-
-  </div>
-</section>
-
-<!-- Departments -->
+<!-- Departments — the page opens here, so it carries the h1. -->
 <section class="evb-depts">
   <div class="evb-wrap">
     <div class="evb-depts-head">
-      <h2 class="evb-depts-title">Shop by department</h2>
+      <h1 class="evb-depts-title">Shop by department</h1>
       <a href="#shop" class="evb-link-more">See everything</a>
     </div>
     <div class="evb-cats" id="catTiles"></div>
@@ -634,17 +589,6 @@
 
   function renderStatic() {
     var counts = countBy(C.products, function (p) { return p.category; });
-    var inStock = C.products.filter(function (p) { return p.stock > 0; });
-
-    // Headline stock facts, derived rather than hard-coded so they stay true
-    // as inventory turns over.
-    el('statItems').textContent = inStock.length;
-    el('statCats').textContent = C.categories.filter(function (c) {
-      return inStock.some(function (p) { return p.category === c.id; });
-    }).length;
-    el('statPrice').textContent = inStock.length
-      ? S.money(inStock.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity))
-      : '—';
 
     els.catTiles.innerHTML = C.categories.map(function (c) {
       var items = C.byCategory(c.id).filter(function (p) { return p.stock > 0; });
