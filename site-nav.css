@@ -407,3 +407,15 @@
 .site-nav-link--store:active { transform: translateY(0); }
 
 .site-mob-link--store { color: #e8690a; font-weight: 800; }
+
+@media (min-width: 1024px) {
+  .site-nav-inner { gap: 16px; }
+  .site-nav-phone { display: none; }
+  .site-nav-link { white-space: nowrap; }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .site-nav-inner { padding: 0 24px; }
+  .site-nav-logo img { height: 32px; }
+  .site-nav-link:not(.site-nav-link--store) { padding: 0 10px; }
+  .site-nav-link--store { padding: 9px 16px; margin: 0 4px; }
+}
