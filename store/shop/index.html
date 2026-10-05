@@ -571,9 +571,9 @@
     els.grid.innerHTML = list.length
       ? '<div class="evb-grid">' + list.map(function (p) { return S.productCard(p, '/'); }).join('') + '</div>'
       : '<div class="evb-empty">' +
-          '<p class="evb-empty-title">No matches</p>' +
-          '<p class="evb-empty-sub">Inventory turns over fast and nearly everything is one-of-one. Text a photo of what you are after to 917-608-8939 and we will tell you if it is in the back.</p>' +
-          '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text 917-608-8939</a>' +
+          '<p class="evb-empty-title">No items found</p>' +
+          '<p class="evb-empty-sub">Our inventory changes daily and most pieces are one of a kind, so not everything is listed online. Send us a photo of the item you are looking for and our team will check our in-store stock for you.</p>' +
+          '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text us at 917-608-8939</a>' +
         '</div>';
 
     els.q.value = state.q;
