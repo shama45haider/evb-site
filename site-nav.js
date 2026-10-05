@@ -434,7 +434,7 @@ function toggleNav() { toggleEvbNav(); }
 (function () {
   if (Date.now() >= Date.UTC(2026, 10, 1, 4, 0, 0)) return;
   var s = document.createElement('script');
-  s.src = '/evb-halloween.js?v=1';
+  s.src = '/evb-halloween.js?v=2';
   s.defer = true;
   document.head.appendChild(s);
 })();
