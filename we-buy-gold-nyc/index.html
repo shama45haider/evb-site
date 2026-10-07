@@ -334,7 +334,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       "name": "How much is my gold worth right now?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It comes down to weight in grams, karat purity and the live spot price. Divide spot by 31.1035 for the per-gram price of pure gold, multiply by the purity, then by the weight. The live price table and estimator on this page run that math with today's spot price. For an exact number, bring the piece in and we'll weigh and test it."
+        "text": "It comes down to weight in grams, karat purity and the live spot price. Divide spot by 31.1035 for the per-gram price of pure gold, multiply by the purity, then by the weight. Our gold price per gram calculator runs that math with today's spot price. For an exact number, bring the piece in and we'll weigh and test it."
       }
     },
     {
@@ -342,7 +342,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       "name": "What is 14K gold worth per gram?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "14K gold is 58.3% pure, so it's worth about 58.3% of the per-gram spot price of pure gold. That percentage never changes, but the dollar figure moves with the market every day. The table on this page shows today's number."
+        "text": "14K gold is 58.3% pure, so it's worth about 58.3% of the per-gram spot price of pure gold. That percentage never changes, but the dollar figure moves with the market every day. Our per-gram calculator shows today's number."
       }
     },
     {
@@ -593,52 +593,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .gp-also a { display:inline-flex; padding:7px 14px; border-radius:999px; background:var(--gp-cream); border:1px solid rgba(0,0,0,0.07); color:var(--gp-ink); font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; text-decoration:none; transition:border-color 0.2s, color 0.2s; }
   .gp-also a:hover { border-color:var(--gp-or); color:var(--gp-or-d); }
 
-  .gp-price { background:var(--gp-cream); }
-  .gp-formula { display:flex; flex-wrap:wrap; align-items:stretch; justify-content:center; gap:8px; margin:0 auto 32px; max-width:940px; }
-  .gp-f { flex:1 1 140px; display:flex; flex-direction:column; justify-content:center; padding:14px 16px; border-radius:12px; background:#fff; border:1px solid var(--gp-line); text-align:center; }
-  .gp-f b { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; color:var(--gp-ink); }
-  .gp-f span { font-family:'Poppins',sans-serif; font-size:11.5px; color:var(--gp-soft); margin-top:2px; }
-  .gp-f--res { background:var(--gp-tint); border-color:rgba(249,115,22,0.35); }
-  .gp-f--res b { color:var(--gp-or-dd); }
-  .gp-op { display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:20px; font-weight:900; color:var(--gp-or); padding:0 2px; }
-  @media(max-width:700px) { .gp-f { flex:1 1 calc(50% - 28px); padding:12px; } .gp-op { font-size:17px; } .gp-op--eq { flex-basis:100%; height:12px; } }
-  .gp-price-grid { display:grid; gap:20px; align-items:start; }
-  @media(min-width:900px) { .gp-price-grid { grid-template-columns:1.1fr 0.9fr; gap:28px; } }
-  .gp-ktable-card { background:#fff; border-radius:16px; border:1px solid var(--gp-line); overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-  .gp .gp-ktable { display:table; width:100%; border-collapse:collapse; font-family:'Poppins',sans-serif; font-size:14px; overflow:visible; }
-  .gp-ktable caption { caption-side:top; text-align:left; padding:16px 20px 12px; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:800; color:var(--gp-ink); }
-  .gp-ktable thead th { background:var(--gp-tint); color:var(--gp-or-dd); font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; text-align:left; padding:11px 20px; border-top:1px solid rgba(249,115,22,0.18); border-bottom:1px solid rgba(249,115,22,0.18); }
-  .gp-ktable tbody th, .gp-ktable td { padding:13px 20px; border-top:1px solid var(--gp-line); text-align:left; color:var(--gp-muted); }
-  .gp-ktable tbody tr:first-child th, .gp-ktable tbody tr:first-child td { border-top:none; }
-  .gp-ktable tbody th { font-family:'Montserrat',sans-serif; font-weight:900; font-size:14.5px; color:var(--gp-ink); }
-  .gp-ktable .gp-kv { font-family:'Montserrat',sans-serif; font-weight:800; color:var(--gp-or-dd); font-variant-numeric:tabular-nums; text-align:right; }
-  .gp-ktable thead th:last-child { text-align:right; }
-  @media(max-width:480px) { .gp-ktable thead th, .gp-ktable tbody th, .gp-ktable td { padding:11px 12px; } .gp-ktable { font-size:13px; } .gp-ktable caption { padding:14px 14px 10px; } }
-  .gp-note { margin:0; padding:13px 20px 16px; font-family:'Poppins',sans-serif; font-size:12px; line-height:1.6; color:var(--gp-soft); border-top:1px solid var(--gp-line); background:#fcfaf7; }
-
-  .gp-est { border-radius:16px; padding:22px 22px 20px; background:#fff; border:1.5px solid rgba(249,115,22,0.3); box-shadow:0 6px 24px rgba(249,115,22,0.08); }
-  .gp-est h3 { font-family:'Montserrat',sans-serif; font-size:17px; font-weight:900; margin:0 0 4px; color:var(--gp-ink); }
-  .gp-est > p { font-family:'Poppins',sans-serif; font-size:13px; color:var(--gp-soft); margin:0 0 18px; }
-  .gp-est-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .gp-est-field { display:flex; flex-direction:column; gap:6px; }
-  .gp-est-field--wide { grid-column:1 / -1; }
-  @media(max-width:440px) { .gp-est-fields { grid-template-columns:1fr; } }
-  .gp-est-field label { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--gp-soft); }
-  .gp-est-field select, .gp-est-field input { width:100%; min-height:46px; padding:10px 14px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.12); background:#fff; color:var(--gp-ink); font-family:'Montserrat',sans-serif; font-size:16px; font-weight:700; -webkit-appearance:none; appearance:none; }
-  .gp-est-field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ea580c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; background-size:16px; padding-right:38px; }
-  .gp-est-field input:focus, .gp-est-field select:focus { border-color:var(--gp-or); }
-  .gp-est-hint { font-family:'Poppins',sans-serif; font-size:11px; color:var(--gp-soft); }
-  .gp-est-out { margin:18px 0 0; padding:16px 18px; border-radius:12px; background:var(--gp-tint); border:1px solid rgba(249,115,22,0.25); }
-  .gp-est-out-label { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--gp-or-dd); }
-  .gp-est-val { display:block; font-family:'Montserrat',sans-serif; font-size:clamp(26px,4vw,32px); font-weight:900; line-height:1.15; margin:3px 0; color:var(--gp-ink); font-variant-numeric:tabular-nums; }
-  .gp-est-sub { font-family:'Poppins',sans-serif; font-size:12.5px; color:var(--gp-muted); }
-  .gp-est-actions { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 0; }
-  .gp-est-actions .gp-btn { flex:1 1 170px; min-height:48px; }
-  .gp-est-disc { margin:12px 0 0; font-family:'Poppins',sans-serif; font-size:11px; line-height:1.55; color:var(--gp-soft); }
-  .gp-est-disc a { color:var(--gp-or-d); font-weight:600; text-decoration:none; }
-
-  .gp-how { background:#fff; }
-  .gp-badge { display:inline-flex; align-items:center; gap:7px; margin:14px 0 0; padding:7px 13px; border-radius:999px; background:var(--gp-tint); border:1px solid rgba(249,115,22,0.22); font-family:'Poppins',sans-serif; font-size:12px; font-weight:600; color:#b45309; }
+  .gp-how { background:var(--gp-cream); }
+  .gp-badge { display:inline-flex; align-items:center; gap:7px; margin:14px 0 0; padding:7px 13px; border-radius:999px; background:#fff; border:1px solid rgba(249,115,22,0.22); font-family:'Poppins',sans-serif; font-size:12px; font-weight:600; color:#b45309; }
   .gp-badge svg { width:14px; height:14px; }
   .gp-steps { list-style:none; margin:0; padding:0; display:grid; gap:16px; grid-template-columns:1fr; }
   @media(min-width:600px) { .gp-steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
@@ -661,83 +617,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .gp-step h3 { font-size:15px; margin-bottom:4px; }
     .gp-step p { font-size:12.5px; line-height:1.55; }
   }
-
-  .gp-why { background:var(--gp-cream); }
-  .gp-why-grid { display:grid; gap:30px; align-items:center; }
-  @media(min-width:900px) { .gp-why-grid { grid-template-columns:0.9fr 1.1fr; gap:52px; } }
-  .gp-why-photo { position:relative; margin:0 0 20px; }
-  .gp-why-photo-main { border-radius:16px; overflow:hidden; aspect-ratio:4 / 3.2; background:#efe7dc; box-shadow:0 8px 32px rgba(0,0,0,0.1); border:1px solid rgba(249,115,22,0.15); }
-  .gp-why-photo-main img { width:100%; height:100%; object-fit:cover; display:block; }
-  .gp-why-photo-inset { position:absolute; right:-8px; bottom:-20px; width:38%; aspect-ratio:1; border-radius:14px; overflow:hidden; border:4px solid #fff; box-shadow:0 10px 28px rgba(0,0,0,0.14); }
-  .gp-why-photo-inset img { width:100%; height:100%; object-fit:cover; display:block; }
-  .gp-why-photo figcaption { position:absolute; left:12px; top:12px; }
-  .gp-checks { list-style:none; margin:20px 0 0; padding:0; display:grid; gap:14px; }
-  @media(min-width:600px) { .gp-checks { grid-template-columns:1fr 1fr; gap:16px 20px; } }
-  .gp-checks li { display:flex; gap:11px; align-items:flex-start; }
-  .gp-check { width:24px; height:24px; flex-shrink:0; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--gp-or); color:#fff; margin-top:1px; }
-  .gp-check svg { width:13px; height:13px; }
-  .gp-checks b { display:block; font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; color:var(--gp-ink); margin:0 0 2px; }
-  .gp-checks li div > span { display:block; font-family:'Poppins',sans-serif; font-size:13px; line-height:1.6; color:var(--gp-muted); }
-
-  .gp-reviews { margin:48px 0 0; display:grid; gap:14px; }
-  @media(min-width:900px) { .gp-reviews { grid-template-columns:auto 1fr 1fr; align-items:stretch; gap:16px; } }
-  .gp-rating { display:flex; flex-direction:column; justify-content:center; gap:3px; padding:20px 26px; border-radius:14px; background:#fff; border:1.5px solid rgba(249,115,22,0.3); color:var(--gp-ink); text-decoration:none; transition:transform 0.2s, border-color 0.2s; }
-  .gp-rating:hover { transform:translateY(-2px); border-color:var(--gp-or); }
-  .gp-rating-num { font-family:'Montserrat',sans-serif; font-size:34px; font-weight:900; line-height:1; }
-  .gp-rating .gp-stars { font-size:15px; }
-  .gp-rating small { font-family:'Poppins',sans-serif; font-size:12px; color:var(--gp-soft); }
-  .gp-rating small b { color:var(--gp-or-d); font-weight:600; }
-  .gp-quote { margin:0; padding:20px 22px; border-radius:14px; background:#fff; border:1px solid var(--gp-line); display:flex; flex-direction:column; justify-content:space-between; gap:10px; }
-  .gp-quote p { margin:0; font-family:'Montserrat',sans-serif; font-size:15px; font-weight:700; line-height:1.45; color:var(--gp-ink); }
-  .gp-quote p::before { content:'\201C'; display:block; font-family:Georgia,serif; font-size:38px; line-height:0.6; color:var(--gp-or); margin:10px 0 4px; }
-  .gp-quote footer { font-family:'Poppins',sans-serif; font-size:12px; color:var(--gp-soft); }
-  .gp-quote footer .gp-stars { margin-right:6px; }
-
-  .gp-compare-sec { background:#fff; }
-  .gp-cmp-wrap { border-radius:16px; overflow:hidden; border:1px solid var(--gp-line); background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.04); }
-  .gp .gp-cmp { display:table; width:100%; border-collapse:collapse; font-family:'Poppins',sans-serif; font-size:13.5px; overflow:visible; }
-  .gp-cmp th, .gp-cmp td { padding:15px 18px; text-align:left; vertical-align:top; border-top:1px solid var(--gp-line); line-height:1.55; }
-  .gp-cmp thead th { border-top:none; background:var(--gp-cream); color:var(--gp-ink); font-family:'Montserrat',sans-serif; font-size:10.5px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; }
-  .gp-cmp thead th.gp-cmp-us { background:var(--gp-or); color:#fff; }
-  .gp-cmp tbody th { font-family:'Montserrat',sans-serif; font-weight:800; font-size:13.5px; color:var(--gp-ink); width:22%; }
-  .gp-cmp td.gp-cmp-us { background:var(--gp-tint); color:var(--gp-ink); font-weight:600; }
-  .gp-cmp td { color:var(--gp-muted); }
-  .gp-yes { display:inline-flex; width:18px; height:18px; margin-right:6px; border-radius:50%; align-items:center; justify-content:center; vertical-align:-3px; font-size:11px; font-weight:900; background:var(--gp-or); color:#fff; }
-  @media(max-width:760px) {
-    .gp .gp-cmp, .gp-cmp thead, .gp-cmp tbody, .gp-cmp tr, .gp-cmp th, .gp-cmp td { display:block; width:100%; }
-    .gp-cmp thead { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
-    .gp-cmp tbody tr { padding:14px 16px 16px; border-top:1px solid rgba(0,0,0,0.08); }
-    .gp-cmp tbody tr:first-child { border-top:none; }
-    .gp-cmp tbody th { width:100%; padding:0 0 8px; border:none; font-size:14.5px; }
-    .gp-cmp td { padding:8px 10px; border:none; border-radius:10px; }
-    .gp-cmp td::before { content:attr(data-label); display:block; font-family:'Montserrat',sans-serif; font-size:9.5px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--gp-soft); margin-bottom:2px; }
-    .gp-cmp td.gp-cmp-us::before { color:var(--gp-or-dd); }
-  }
-  .gp-cmp-foot { margin:18px 0 0; font-family:'Poppins',sans-serif; font-size:13.5px; line-height:1.7; color:var(--gp-muted); text-align:center; }
-  .gp-cmp-foot a { color:var(--gp-or-d); font-weight:600; text-decoration:none; }
-  .gp-cmp-foot a:hover { text-decoration:underline; }
-
-  .gp-visit { background:var(--gp-cream); }
-  .gp-visit-grid { display:grid; gap:26px; align-items:stretch; }
-  @media(min-width:900px) { .gp-visit-grid { grid-template-columns:1fr 1fr; gap:40px; } }
-  .gp-visit-photo { position:relative; margin:0; border-radius:16px; overflow:hidden; min-height:240px; background:#efe7dc; box-shadow:0 8px 32px rgba(0,0,0,0.1); border:1px solid rgba(249,115,22,0.15); }
-  .gp-visit-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
-  .gp-visit-photo figcaption { position:absolute; left:12px; bottom:12px; right:12px; max-width:340px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,0.95); color:var(--gp-ink); font-family:'Montserrat',sans-serif; font-size:13.5px; font-weight:800; box-shadow:0 4px 16px rgba(0,0,0,0.1); }
-  .gp-visit-photo figcaption span { display:block; font-family:'Poppins',sans-serif; font-size:12px; font-weight:400; color:var(--gp-muted); margin-top:1px; }
-  .gp-info-list { list-style:none; margin:18px 0 0; padding:0; display:grid; gap:14px; }
-  .gp-info-list > li { display:flex; gap:13px; align-items:flex-start; }
-  .gp-info-ic { width:38px; height:38px; flex-shrink:0; border-radius:11px; display:flex; align-items:center; justify-content:center; background:#fff; color:var(--gp-or-d); border:1px solid rgba(249,115,22,0.18); }
-  .gp-info-ic svg { width:18px; height:18px; }
-  .gp-info-list h3 { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:var(--gp-ink); margin:2px 0 4px; }
-  .gp-info-list p { font-family:'Poppins',sans-serif; font-size:13.5px; line-height:1.6; color:var(--gp-muted); margin:0; }
-  .gp-info-list p a { color:var(--gp-or-d); font-weight:600; text-decoration:none; }
-  .gp-hours { display:grid; grid-template-columns:auto auto; justify-content:start; gap:3px 18px; margin:0; font-family:'Poppins',sans-serif; font-size:13.5px; color:var(--gp-muted); }
-  .gp-hours dt { color:var(--gp-ink); font-weight:600; }
-  .gp-hours dd { margin:0; font-variant-numeric:tabular-nums; }
-  .gp-hours .gp-closed { color:#b91c1c; font-weight:600; }
-  .gp-visit-cta { display:flex; flex-wrap:wrap; gap:10px; margin:22px 0 0; }
-  .gp-visit-cta .gp-btn { flex:1 1 190px; }
-  .gp-areas { margin:18px 0 0; font-family:'Poppins',sans-serif; font-size:13px; line-height:1.65; color:var(--gp-soft); }
 
   .gp-guides { background:#fff; }
   .gp-guide-grid { display:grid; gap:12px; grid-template-columns:1fr; }
@@ -899,7 +778,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="gp-spot-head"><span class="gp-live" aria-hidden="true"></span><span id="gpSpotLabel">Gold spot</span></span>
           <span class="gp-spot-price" id="gpSpotPrice">&mdash;</span>
           <span class="gp-spot-rows"><span>24K <b id="gpSpot24">&mdash;</b>/g</span><span>14K <b id="gpSpot14">&mdash;</b>/g</span></span>
-          <span class="gp-spot-foot" id="gpSpotFoot"><a href="#gold-price">All karats</a></span>
+          <span class="gp-spot-foot" id="gpSpotFoot"><a href="../gold-price-per-gram/">Per-gram calculator</a></span>
         </div>
       </div>
     </div>
@@ -1013,79 +892,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 
-  <section class="gp-sec gp-price" id="gold-price" aria-labelledby="gp-price-h">
-    <div class="gp-wrap">
-      <div class="gp-sec-head gp-sec-head--center">
-        <p class="gp-kicker">Gold Prices Today</p>
-        <h2 class="gp-h2" id="gp-price-h">How Much Is My Gold Worth? Today's Gold Price per Gram</h2>
-        <p class="gp-sub">Every honest gold offer starts from the same three numbers: weight, purity and the live spot price. Here's the math, run with today's market price when this page loads.</p>
-      </div>
-
-      <div class="gp-formula" aria-label="Gold melt value formula">
-        <div class="gp-f"><b>Weight</b><span>in grams</span></div>
-        <span class="gp-op" aria-hidden="true">&times;</span>
-        <div class="gp-f"><b>Purity</b><span>karat percentage</span></div>
-        <span class="gp-op" aria-hidden="true">&times;</span>
-        <div class="gp-f"><b>Spot &divide; 31.1035</b><span>pure gold per gram</span></div>
-        <span class="gp-op gp-op--eq" aria-hidden="true">=</span>
-        <div class="gp-f gp-f--res"><b>Melt value</b><span>where every offer starts</span></div>
-      </div>
-
-      <div class="gp-price-grid">
-        <div class="gp-ktable-card">
-          <table class="gp-ktable">
-            <caption>Gold value per gram by karat</caption>
-            <thead><tr><th scope="col">Karat</th><th scope="col">Purity</th><th scope="col">Stamp</th><th scope="col">Melt / gram</th></tr></thead>
-            <tbody>
-            <tr><th scope="row">24K</th><td>99.9%</td><td>999</td><td class="gp-kv" data-gp-k="24">&mdash;</td></tr>
-            <tr><th scope="row">22K</th><td>91.7%</td><td>916</td><td class="gp-kv" data-gp-k="22">&mdash;</td></tr>
-            <tr><th scope="row">18K</th><td>75.0%</td><td>750</td><td class="gp-kv" data-gp-k="18">&mdash;</td></tr>
-            <tr><th scope="row">14K</th><td>58.3%</td><td>585</td><td class="gp-kv" data-gp-k="14">&mdash;</td></tr>
-            <tr><th scope="row">10K</th><td>41.7%</td><td>417</td><td class="gp-kv" data-gp-k="10">&mdash;</td></tr>
-            </tbody>
-          </table>
-          <p class="gp-note" id="gpTableNote">Melt value is what the pure gold in a piece is worth on the market. It is the starting point for a buyer's offer, not the offer itself. Your number depends on the exact weight and tested purity.</p>
-        </div>
-
-        <div class="gp-est" id="estimate">
-          <h3>Estimate Your Gold's Melt Value</h3>
-          <p>Pick a karat, enter the weight, and see what the gold inside is worth today.</p>
-          <div class="gp-est-fields">
-            <div class="gp-est-field">
-              <label for="gpEstKarat">Karat</label>
-              <select id="gpEstKarat">
-                <option value="10">10K (41.7%)</option>
-                <option value="14" selected>14K (58.3%)</option>
-                <option value="18">18K (75.0%)</option>
-                <option value="22">22K (91.7%)</option>
-                <option value="24">24K (99.9%)</option>
-              </select>
-            </div>
-            <div class="gp-est-field">
-              <label for="gpEstWeight">Weight (grams)</label>
-              <input type="number" id="gpEstWeight" value="10" min="0" step="0.1" inputmode="decimal">
-            </div>
-            <div class="gp-est-field gp-est-field--wide">
-              <label for="gpEstSpot">Gold spot price ($ per troy oz)</label>
-              <input type="number" id="gpEstSpot" min="0" step="1" inputmode="decimal" placeholder="Enter today's spot price">
-              <span class="gp-est-hint" id="gpEstHint">Loading the live spot price&hellip;</span>
-            </div>
-          </div>
-          <div class="gp-est-out" aria-live="polite">
-            <span class="gp-est-out-label">Estimated melt value</span>
-            <span class="gp-est-val" id="gpEstOut">&mdash;</span>
-            <span class="gp-est-sub" id="gpEstSub">Enter a weight in grams</span>
-          </div>
-          <div class="gp-est-actions">
-            <a href="sms:9176088939" class="gp-btn gp-btn-primary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Get a Real Offer</a>
-            <a href="../gold-price-per-gram/" class="gp-btn gp-btn-light">Full Calculator</a>
-          </div>
-          <p class="gp-est-disc">An estimate of melt value only. The full <a href="../gold-price-per-gram/">gold price per gram calculator</a> also handles pennyweight and troy ounces.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="gp-sec gp-how" id="how-it-works" aria-labelledby="gp-how-h">
     <div class="gp-wrap">
       <div class="gp-sec-head gp-sec-head--center">
@@ -1112,99 +918,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="gp-step-body"><h3>Weigh, Price &amp; Pay</h3><p>We weigh in grams on a scale facing you, show you the math against live spot, and pay you before you leave.</p></div>
         </li>
       </ol>
-    </div>
-  </section>
-
-  <section class="gp-sec gp-why" id="why-us" aria-labelledby="gp-why-h">
-    <div class="gp-wrap">
-      <div class="gp-why-grid">
-        <figure class="gp-why-photo">
-          <div class="gp-why-photo-main"><img src="../east-village-buyers-jewelry-counter.webp" alt="Gold and silver jewelry display counter inside East Village Buyers on Avenue A" width="960" height="540" loading="lazy" decoding="async"></div>
-          <div class="gp-why-photo-inset"><img src="../sell-gold-coins-nyc-indian-head-eagle.webp" alt="1914 Indian Head ten dollar gold eagle coin set in a gold bezel pendant" width="720" height="720" loading="lazy" decoding="async"></div>
-          <figcaption class="gp-chip">Our counter on Avenue A</figcaption>
-        </figure>
-        <div>
-          <p class="gp-kicker">Why East Village Buyers</p>
-          <h2 class="gp-h2" id="gp-why-h">Why New Yorkers Sell Their Gold Here</h2>
-          <p class="gp-sub">Most people who walk in have never sold gold before. We walk you through every piece out loud, so you know exactly how we reached your number before you decide anything.</p>
-          <ul class="gp-checks">
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Your gold never leaves your sight</b><span>Testing and weighing happen at the counter, facing you. Nothing goes in the back.</span></div></li>
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>You see the math</b><span>Weight, purity and live spot, laid out so you can check our number or compare it anywhere.</span></div></li>
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Same-day cash</b><span>Accept the offer and you're paid before you leave. No mail-in kits, no waiting on a check.</span></div></li>
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>No pressure</b><span>Take our number, get other offers, and come back if ours is the one you want.</span></div></li>
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Free testing</b><span>Not sure if it's solid, filled or plated? We'll test it free whether or not you sell.</span></div></li>
-            <li><span class="gp-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span><div><b>Licensed and local</b><span>NYC DCA license #2070477, with a real storefront on Avenue A you can walk back into.</span></div></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="gp-reviews">
-        <a class="gp-rating" href="../reviews/">
-          <span class="gp-rating-num">4.8</span>
-          <span class="gp-stars" aria-label="4.8 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <small>562 Google reviews &middot; <b>Read them</b></small>
-        </a>
-        <blockquote class="gp-quote">
-          <p>Very respectable people with everything for the best prices.</p>
-          <footer><span class="gp-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>B Smoove, Google review</footer>
-        </blockquote>
-        <blockquote class="gp-quote">
-          <p>Gabriel the owner is a very humble and rational dealmaker.</p>
-          <footer><span class="gp-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>Elian Hilario, Google review</footer>
-        </blockquote>
-      </div>
-    </div>
-  </section>
-
-  <section class="gp-sec gp-compare-sec" id="compare" aria-labelledby="gp-cmp-h">
-    <div class="gp-wrap">
-      <div class="gp-sec-head gp-sec-head--center">
-        <p class="gp-kicker">Compare Your Options</p>
-        <h2 class="gp-h2" id="gp-cmp-h">Where to Sell Gold in NYC: Walk-In vs. Mail-In vs. Online</h2>
-        <p class="gp-sub">There's more than one way to sell gold. The biggest difference is when your gold leaves your hands and who controls the testing.</p>
-      </div>
-      <div class="gp-cmp-wrap">
-        <table class="gp-cmp">
-          <thead><tr><th scope="col"><span class="gp-sr">Question</span></th><th scope="col" class="gp-cmp-us">East Village Buyers</th><th scope="col">Mail-in gold buyers</th><th scope="col">Online marketplaces</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Where your gold is tested</th><td class="gp-cmp-us" data-label="East Village Buyers"><span class="gp-yes" aria-hidden="true">&#10003;</span>At the counter, in front of you</td><td data-label="Mail-in gold buyers">At their facility, after you ship it</td><td data-label="Online marketplaces">By the buyer, after it's delivered</td></tr>
-            <tr><th scope="row">When you get paid</th><td class="gp-cmp-us" data-label="East Village Buyers"><span class="gp-yes" aria-hidden="true">&#10003;</span>Same day, before you leave</td><td data-label="Mail-in gold buyers">After it arrives and is processed</td><td data-label="Online marketplaces">After delivery, fees and any return window</td></tr>
-            <tr><th scope="row">When your gold leaves your hands</th><td class="gp-cmp-us" data-label="East Village Buyers"><span class="gp-yes" aria-hidden="true">&#10003;</span>Only after you accept the offer</td><td data-label="Mail-in gold buyers">Before you know the price</td><td data-label="Online marketplaces">Before the sale is final</td></tr>
-            <tr><th scope="row">If you don't like the offer</th><td class="gp-cmp-us" data-label="East Village Buyers"><span class="gp-yes" aria-hidden="true">&#10003;</span>Walk out with your gold</td><td data-label="Mail-in gold buyers">Ask for it back and wait for the return</td><td data-label="Online marketplaces">Relist it or handle a return</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="gp-cmp-foot">Thinking about mailing gold? Read <a href="../blog/gold-dealer-bankruptcy-mail-in-risk-nyc/">why you should never mail your valuables away</a>, or see <a href="../blog/sell-gold-for-cash-nyc-neighborhood-guide/">every NYC option compared, including the Diamond District</a>.</p>
-    </div>
-  </section>
-
-  <section class="gp-sec gp-visit" id="visit" aria-labelledby="gp-visit-h">
-    <div class="gp-wrap gp-visit-grid">
-      <figure class="gp-visit-photo">
-        <img src="../east-village-buyers-storefront-39-avenue-a.webp" alt="East Village Buyers storefront at 39 Avenue A in Manhattan's East Village" width="960" height="675" loading="lazy" decoding="async">
-        <figcaption>East Village Buyers<span>39 Avenue A, between East 2nd &amp; East 3rd Streets</span></figcaption>
-      </figure>
-      <div class="gp-visit-info">
-        <p class="gp-kicker">Visit Us</p>
-        <h2 class="gp-h2" id="gp-visit-h">Sell Gold Near You at 39 Avenue A, East Village</h2>
-        <ul class="gp-info-list">
-          <li><span class="gp-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span><div><h3>Address</h3><p><a href="https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z" target="_blank" rel="noopener noreferrer">39 Avenue A, New York, NY 10009</a><br>Between East 2nd and East 3rd Streets, Manhattan</p></div></li>
-          <li><span class="gp-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span><div><h3>Hours</h3>
-            <dl class="gp-hours">
-              <dt>Sunday</dt><dd>12:30 &ndash; 6:00 PM</dd>
-              <dt>Mon &ndash; Thu</dt><dd>12:30 &ndash; 6:30 PM</dd>
-              <dt>Friday</dt><dd>12:30 &ndash; 4:00 PM</dd>
-              <dt>Saturday</dt><dd class="gp-closed">Closed</dd>
-            </dl></div></li>
-          <li><span class="gp-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2-3M15 21l2-3M9 14h.01M15 14h.01"/></svg></span><div><h3>Getting here</h3><p>The F train to 2nd Avenue and the 6 to Astor Place are both a short walk.</p></div></li>
-          <li><span class="gp-info-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M14 10h4M14 14h4M5 16c.6-1.2 1.7-2 3-2s2.4.8 3 2"/></svg></span><div><h3>What to bring</h3><p>A valid government-issued photo ID (required by New York law) and your gold, in any condition. No receipts needed. Boxes and papers help for designer pieces. Bringing a large collection? <a href="sms:9176088939">Text photos ahead</a>.</p></div></li>
-        </ul>
-        <div class="gp-visit-cta">
-          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=East+Village+Buyers+39+Avenue+A+New+York+NY+10009" class="gp-btn gp-btn-primary" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Get Directions</a>
-          <a href="tel:9176088939" class="gp-btn gp-btn-light"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>917-608-8939</a>
-        </div>
-        <p class="gp-areas">A short walk from the Lower East Side, Alphabet City, NoHo, Greenwich Village and Gramercy, and an easy subway ride from Brooklyn, Queens and the Bronx.</p>
-      </div>
     </div>
   </section>
 
@@ -1261,6 +974,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <nav class="gp-more-links" aria-label="More gold guides">
         <a href="../gold-price-per-gram/">Gold price per gram calculator</a>
+        <a href="../blog/gold-dealer-bankruptcy-mail-in-risk-nyc/">Why not to mail your gold</a>
         <a href="../blog/why-gold-prices-fluctuate-nyc/">Why gold prices move</a>
         <a href="../blog/should-i-save-or-sell-my-gold-in-2026/">Save or sell in 2026?</a>
         <a href="../blog/how-much-are-gold-earrings-worth/">Gold earring values</a>
@@ -1281,8 +995,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <details class="gp-faq-item"><summary>Where can I sell gold in NYC?</summary><div class="gp-faq-ans">Bring it to East Village Buyers at 39 Avenue A, between East 2nd and East 3rd Streets in Manhattan's East Village. Walk in during store hours, we test and weigh your gold at the counter in front of you, and you're paid in cash the same day. The F train to 2nd Avenue and the 6 to Astor Place are both a short walk.</div></details>
       <details class="gp-faq-item"><summary>Where can I sell gold near me for cash today?</summary><div class="gp-faq-ans">If you're anywhere in Manhattan, Brooklyn, Queens or the Bronx, you can bring gold to our counter at 39 Avenue A and leave with cash the same visit. No appointment, no mailing anything away, and no waiting on a check to clear.</div></details>
       <details class="gp-faq-item"><summary>Where is the best place to sell gold jewelry in Manhattan?</summary><div class="gp-faq-ans">Look for a licensed dealer who tests your gold in front of you and prices against the live spot price rather than a fixed in-house rate. We do both, and we're licensed under NYC DCA #2070477. You're welcome to get other offers first and come back.</div></details>
-      <details class="gp-faq-item"><summary>How much is my gold worth right now?</summary><div class="gp-faq-ans">It comes down to weight in grams, karat purity and the live spot price. Divide spot by 31.1035 for the per-gram price of pure gold, multiply by the purity, then by the weight. The <a href="#gold-price">live price table and estimator</a> on this page run that math with today's spot price. For an exact number, bring the piece in and we'll weigh and test it.</div></details>
-      <details class="gp-faq-item"><summary>What is 14K gold worth per gram?</summary><div class="gp-faq-ans">14K gold is 58.3% pure, so it's worth about 58.3% of the per-gram spot price of pure gold. That percentage never changes, but the dollar figure moves with the market every day. The <a href="#gold-price">table on this page</a> shows today's number.</div></details>
+      <details class="gp-faq-item"><summary>How much is my gold worth right now?</summary><div class="gp-faq-ans">It comes down to weight in grams, karat purity and the live spot price. Divide spot by 31.1035 for the per-gram price of pure gold, multiply by the purity, then by the weight. Our <a href="../gold-price-per-gram/">gold price per gram calculator</a> runs that math with today's spot price. For an exact number, bring the piece in and we'll weigh and test it.</div></details>
+      <details class="gp-faq-item"><summary>What is 14K gold worth per gram?</summary><div class="gp-faq-ans">14K gold is 58.3% pure, so it's worth about 58.3% of the per-gram spot price of pure gold. That percentage never changes, but the dollar figure moves with the market every day. Our <a href="../gold-price-per-gram/">per-gram calculator</a> shows today's number.</div></details>
       <details class="gp-faq-item"><summary>What do gold stamps like 585, 750 and 916 mean?</summary><div class="gp-faq-ans">They're purity marks in parts per thousand: 417 is 10K, 585 is 14K, 750 is 18K, 916 is 22K and 999 is 24K. GF, GP, HGE and RGP mean gold-filled or plated, not solid gold. A stamp is a starting point, so we always confirm it with a test. More in our <a href="../blog/gold-jewelry-stamps-meaning/">gold stamps guide</a>.</div></details>
       <details class="gp-faq-item"><summary>How much do you pay compared to melt value?</summary><div class="gp-faq-ans">Our offer starts from melt value (weight times purity times live spot) less a margin that covers refining and market risk, and we show you each number at the counter so you can compare. Designer, signed and collectible pieces can be priced above melt.</div></details>
       <details class="gp-faq-item"><summary>Do you test my gold in front of me?</summary><div class="gp-faq-ans">Every time, no exceptions. We run an acid test and an electronic reading right at the counter so you can watch the whole process before we talk numbers.</div></details>
@@ -1306,33 +1020,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 (function(){
   var GPT = 31.1035;
-  var PURITY = {10:0.417, 14:0.583, 18:0.750, 22:0.917, 24:0.999};
   function $(id){ return document.getElementById(id); }
-  var spot = $('gpEstSpot'), karat = $('gpEstKarat'), weight = $('gpEstWeight');
-  var out = $('gpEstOut'), sub = $('gpEstSub'), hint = $('gpEstHint');
   function usd(n){ return n.toLocaleString('en-US', {style:'currency', currency:'USD', minimumFractionDigits:2, maximumFractionDigits:2}); }
-  function round2(n){ return Math.round(n * 100) / 100; }
-  function calc(){
-    var sp = parseFloat(spot.value) || 0;
-    var perGram = sp / GPT;
-    var cells = document.querySelectorAll('[data-gp-k]');
-    for (var i = 0; i < cells.length; i++) {
-      cells[i].textContent = sp ? usd(perGram * PURITY[cells[i].getAttribute('data-gp-k')]) : '—';
-    }
-    var k = parseInt(karat.value, 10);
-    var w = parseFloat(weight.value) || 0;
-    out.textContent = (sp && w) ? usd(perGram * PURITY[k] * w) : '—';
-    sub.textContent = w ? (round2(w) + ' g of ' + k + 'K ≈ ' + round2(w * PURITY[k]) + ' g of pure gold') : 'Enter a weight in grams';
-  }
-  [spot, karat, weight].forEach(function(el){ el.addEventListener('input', calc); el.addEventListener('change', calc); });
-  calc();
-
   var card = $('gpSpot');
   function offline(){
     card.classList.add('is-off');
     $('gpSpotPrice').textContent = 'Live price unavailable';
     $('gpSpotFoot').innerHTML = '<a href="sms:9176088939">Text us for today’s price</a>';
-    hint.textContent = 'Live price unavailable right now. Enter today’s spot price to run the math.';
   }
   try {
     fetch('https://api.gold-api.com/price/XAU').then(function(r){ return r.json(); }).then(function(d){
@@ -1342,12 +1036,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       card.classList.add('is-live');
       $('gpSpotLabel').textContent = 'Live spot · ' + t + ' ET';
       $('gpSpotPrice').innerHTML = usd(p) + '<small>/oz</small>';
-      $('gpSpot24').textContent = usd(p / GPT * PURITY[24]);
-      $('gpSpot14').textContent = usd(p / GPT * PURITY[14]);
-      spot.value = round2(p);
-      hint.textContent = 'Live spot loaded at ' + t + ' ET. Edit it to test a different price.';
-      $('gpTableNote').textContent = 'Based on a live gold spot price of ' + usd(p) + ' per troy ounce at ' + t + ' ET. Melt value is what the pure gold in a piece is worth on the market. It is the starting point for a buyer’s offer, not the offer itself.';
-      calc();
+      $('gpSpot24').textContent = usd(p / GPT * 0.999);
+      $('gpSpot14').textContent = usd(p / GPT * 0.583);
     }).catch(offline);
   } catch (e) { offline(); }
 })();
