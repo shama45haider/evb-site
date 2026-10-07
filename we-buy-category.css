@@ -906,3 +906,29 @@
   .cp-btn-primary, .cp-btn-secondary, .evb-cta-solid, .evb-cta-ghost { transition: none; }
   .cp-metal-band-photo, .cp-metal-band-photo img { transition: none; }
 }
+
+.cp-gal { margin: 0 -20px; padding: 56px 20px; background: #fff; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
+@media (min-width: 768px) { .cp-gal { padding: 64px 40px; } }
+.cp-gal--cream { background: #f8f5f0; }
+.cp-gal-wrap { max-width: 1100px; margin: 0 auto; }
+.cp-gal-head { text-align: center; max-width: 640px; margin: 0 auto 28px; }
+.cp-gal-head .cp-eyebrow { justify-content: center; }
+.cp-gal-head h2 { font-family: 'Montserrat', sans-serif; font-size: clamp(22px, 4vw, 30px); font-weight: 900; color: #111; margin: 0 0 10px; }
+.cp-gal-head p:not(.cp-eyebrow) { font-size: 14px; line-height: 1.7; color: #666; margin: 0; }
+.cp-gal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+@media (min-width: 768px) { .cp-gal-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+.cp-gal-card { position: relative; margin: 0; background: #fff; border: 1px solid #ece8e2; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.cp-gal-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.10); border-color: rgba(249,115,22,0.35); }
+.cp-gal-img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: #f1ece5; }
+.cp-gal-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.45s ease; }
+.cp-gal-card:hover .cp-gal-img img { transform: scale(1.04); }
+.cp-gal-pill { position: absolute; top: 10px; left: 10px; font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #111; background: rgba(255,255,255,0.92); border-radius: 999px; padding: 5px 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.cp-gal-card figcaption { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 3px; }
+.cp-gal-brand { font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #f97316; }
+.cp-gal-name { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.35; color: #111; }
+@media (max-width: 480px) { .cp-gal-card figcaption { padding: 10px 12px 12px; } .cp-gal-name { font-size: 12.5px; } }
+.cp-gal-foot { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+.cp-gal-foot .wb-cta { flex: 0 1 280px; }
+@media (prefers-reduced-motion: reduce) {
+  .cp-gal-card, .cp-gal-img img { transition: none; }
+}
