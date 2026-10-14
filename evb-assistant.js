@@ -10,6 +10,17 @@
   const GROQ_PROXY_URL = 'https://evbworker.shama45haider.workers.dev/';
   const GROQ_TIMEOUT_MS = 12000;
 
+  let chatSid = '';
+  function getChatSid() {
+    if (chatSid) return chatSid;
+    try { chatSid = sessionStorage.getItem('evb_chat_sid') || ''; } catch {}
+    if (!chatSid) {
+      chatSid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+      try { sessionStorage.setItem('evb_chat_sid', chatSid); } catch {}
+    }
+    return chatSid;
+  }
+
   async function askGroq(message, history) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), GROQ_TIMEOUT_MS);
@@ -17,7 +28,7 @@
       const res = await fetch(GROQ_PROXY_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, history }),
+        body: JSON.stringify({ message, history, page: location.pathname, sid: getChatSid() }),
         signal: controller.signal,
       });
       if (!res.ok) return null;

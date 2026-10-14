@@ -1,3 +1,5 @@
+const MODEL = 'openai/gpt-oss-120b';
+
 const ALLOWED_ORIGINS = new Set([
   'https://eastvillagebuyers.com',
   'https://www.eastvillagebuyers.com',
@@ -12,6 +14,22 @@ How it works: walk in any time during hours, no appointment needed. We test/auth
 
 Answer naturally and conversationally, like a helpful person who works at the shop -- not like a corporate FAQ bot. Keep answers short (2-4 sentences unless more detail is genuinely needed). Never invent prices, specific dollar offers, or policies not stated here. If asked something you don't know, say so honestly and suggest texting a photo to 917-608-8939 for a real answer. Never mention that you are an AI model, and don't discuss anything unrelated to East Village Buyers, buying/selling, or the categories above.`;
 
+function logChat(env, ctx, request, entry) {
+  if (!env.CHAT_LOG) return;
+  const cf = request.cf || {};
+  const timeNy = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  });
+  const task = env.CHAT_LOG
+    .prepare('INSERT INTO chats (time_ny, convo, turn, page, city, country, question, reply, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)')
+    .bind(timeNy, entry.convo, entry.turn, entry.page, cf.city || null, cf.country || null, entry.question, entry.reply || null, entry.status)
+    .run()
+    .catch((err) => console.error('Chat log failed:', err && err.message));
+  ctx.waitUntil(task);
+}
+
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.has(origin) ? origin : '';
   return {
@@ -23,7 +41,7 @@ function corsHeaders(origin) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
     const headers = corsHeaders(origin);
 
@@ -67,7 +85,8 @@ export default {
     }
 
     const message = String(body.message || '').slice(0, 1000);
-    const history = Array.isArray(body.history) ? body.history.slice(-6) : [];
+    const fullHistory = Array.isArray(body.history) ? body.history : [];
+    const history = fullHistory.slice(-6);
 
     if (!message.trim()) {
       return new Response(JSON.stringify({ error: 'Empty message' }), {
@@ -76,7 +95,18 @@ export default {
       });
     }
 
+    const sid = String(body.sid || '');
+    const page = String(body.page || '');
+    const logEntry = {
+      convo: /^[A-Za-z0-9-]{8,40}$/.test(sid) ? sid : null,
+      turn: Math.min(fullHistory.filter((h) => h && h.role === 'user').length + 1, 999),
+      page: page.startsWith('/') ? page.slice(0, 200) : null,
+      question: message,
+    };
+    const log = (status, reply) => logChat(env, ctx, request, { ...logEntry, status, reply });
+
     if (!env.GROQ_API_KEY) {
+      log('not_configured');
       return new Response(JSON.stringify({ error: 'Server not configured' }), {
         status: 500,
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -103,13 +133,17 @@ export default {
           Authorization: `Bearer ${env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: MODEL,
           messages,
           temperature: 0.6,
-          max_tokens: 350,
+          reasoning_effort: 'low',
+          include_reasoning: false,
+          max_completion_tokens: 1024,
         }),
       });
-    } catch {
+    } catch (err) {
+      console.error('Groq request failed:', err && err.message);
+      log('request_failed');
       return new Response(JSON.stringify({ error: 'Upstream request failed' }), {
         status: 502,
         headers: { ...headers, 'Content-Type': 'application/json' },
@@ -117,7 +151,14 @@ export default {
     }
 
     if (!groqRes.ok) {
-      return new Response(JSON.stringify({ error: 'Upstream error' }), {
+      let detail = '';
+      try {
+        const errBody = await groqRes.json();
+        detail = String(errBody?.error?.message || '').slice(0, 300);
+      } catch {}
+      console.error('Groq error', groqRes.status, detail);
+      log('groq_error_' + groqRes.status);
+      return new Response(JSON.stringify({ error: 'Upstream error', status: groqRes.status, detail }), {
         status: 502,
         headers: { ...headers, 'Content-Type': 'application/json' },
       });
@@ -127,12 +168,14 @@ export default {
     const reply = data?.choices?.[0]?.message?.content?.trim();
 
     if (!reply) {
+      log('empty_reply');
       return new Response(JSON.stringify({ error: 'Empty upstream response' }), {
         status: 502,
         headers: { ...headers, 'Content-Type': 'application/json' },
       });
     }
 
+    log('ok', reply);
     return new Response(JSON.stringify({ reply }), {
       status: 200,
       headers: { ...headers, 'Content-Type': 'application/json' },
