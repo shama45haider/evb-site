@@ -4499,8 +4499,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
     </div>
     <script>
-    // The panel (Website → Highlights) sets where this button goes and can
-    // switch it off. If the panel can't be reached, the link above stays.
+    // The panel (Website → Highlights) sets what this button says, where it
+    // goes, and can switch it off. If the panel can't be reached, the words
+    // and link above stay.
     (function () {
       var box = document.getElementById('evbHighlights');
       var link = box && box.querySelector('a');
@@ -4512,6 +4513,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (!b) return;
           if (b.enabled === false) { box.hidden = true; return; }
           if (typeof b.url === 'string' && /^https:\/\/[^\s"'<>]+$/i.test(b.url)) link.href = b.url;
+          // Set as text, never HTML. A blank small line hides it.
+          var label = link.querySelector('.evb-hl-label');
+          var note = link.querySelector('.evb-hl-sub');
+          if (label && typeof b.label === 'string' && b.label) label.textContent = b.label.slice(0, 40);
+          if (note && typeof b.note === 'string') {
+            note.textContent = b.note.slice(0, 80);
+            note.hidden = !b.note;
+          }
         })
         .catch(function () {});
     })();
