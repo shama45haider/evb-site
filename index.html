@@ -700,6 +700,104 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     .hero-reviews-panel { display: none; }
     .hero-reviews-compact { display: none; }
 
+    /* Highlights button, right above the Google reviews bar. Its link and
+       on/off come from the panel (Website → Highlights). */
+    .evb-hl {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 28px;
+      margin-top: -18px;
+    }
+    .evb-hl[hidden] { display: none; }
+    .evb-hl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 100%;
+      padding: 7px 20px 7px 7px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      color: #111;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .evb-hl-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(249,115,22,0.45);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+    }
+    .evb-hl-btn:focus-visible { outline: 3px solid #f97316; outline-offset: 3px; }
+    .evb-hl-ring {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      border-radius: 50%;
+    }
+    .evb-hl-ring::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 200deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5, #feda75);
+      animation: evbHlSpin 8s linear infinite;
+    }
+    .evb-hl-ring-in {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      color: #d62976;
+    }
+    .evb-hl-ring-in svg { width: 22px; height: 22px; }
+    .evb-hl-copy {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      text-align: left;
+      line-height: 1.15;
+    }
+    .evb-hl-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #111;
+    }
+    .evb-hl-sub {
+      margin-top: 3px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      color: #777;
+    }
+    .evb-hl-go {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #f97316;
+      transition: transform 0.2s ease;
+    }
+    .evb-hl-btn:hover .evb-hl-go { transform: translateX(3px); }
+    @keyframes evbHlSpin { to { transform: rotate(360deg); } }
+    @media (max-width: 768px) {
+      .evb-hl { padding: 0 16px 22px; margin-top: -14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .evb-hl-ring::before { animation: none; }
+      .evb-hl-btn, .evb-hl-go { transition: none; }
+    }
+
     .gts {
       display: flex;
       align-items: center;
@@ -4381,6 +4479,43 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
     </div>
+
+    <div class="evb-hl" id="evbHighlights">
+      <a href="https://www.instagram.com/eastvillagebuyers/" target="_blank" rel="noopener noreferrer" class="evb-hl-btn">
+        <span class="evb-hl-ring" aria-hidden="true">
+          <span class="evb-hl-ring-in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </span>
+        </span>
+        <span class="evb-hl-copy">
+          <span class="evb-hl-label">Highlights</span>
+          <span class="evb-hl-sub">Our Instagram story highlights</span>
+        </span>
+        <svg class="evb-hl-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <script>
+    // The panel (Website → Highlights) sets where this button goes and can
+    // switch it off. If the panel can't be reached, the link above stays.
+    (function () {
+      var box = document.getElementById('evbHighlights');
+      var link = box && box.querySelector('a');
+      if (!link || !window.fetch) return;
+      fetch('https://panel.eastvillagebuyers.com/api/site-buttons', { credentials: 'omit' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          var b = data && data.buttons && data.buttons.highlights;
+          if (!b) return;
+          if (b.enabled === false) { box.hidden = true; return; }
+          if (typeof b.url === 'string' && /^https:\/\/[^\s"'<>]+$/i.test(b.url)) link.href = b.url;
+        })
+        .catch(function () {});
+    })();
+    </script>
 
   </section>
 
