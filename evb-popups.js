@@ -90,24 +90,62 @@
     w.dataLayer.push({ event: name, popup_id: p.id, popup_title: p.title, page_path: PATH });
   }
 
+  // A dark card: the picture on the left (on top on a phone), the message on
+  // the right, the title's last word in orange, one big button, "Not now",
+  // and the shop's address underneath.
   var CSS =
     '.evbp{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:20px;visibility:hidden;pointer-events:none}' +
     '.evbp.is-open{visibility:visible;pointer-events:auto}' +
     'html.evbp-lock{overflow:hidden}' +
-    '.evbp-backdrop{position:absolute;inset:0;background:rgba(12,11,10,.62);opacity:0;transition:opacity .25s ease}' +
+    '.evbp-backdrop{position:absolute;inset:0;background:rgba(8,7,6,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);opacity:0;transition:opacity .3s ease}' +
     '.evbp.is-open .evbp-backdrop{opacity:1}' +
-    '.evbp-card{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 40px);overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.45),0 0 0 4px #f97316;opacity:0;transform:translateY(18px) scale(.94);transition:opacity .3s ease,transform .4s cubic-bezier(.2,1.3,.4,1)}' +
+    '.evbp-card{position:relative;display:flex;flex-direction:column;width:100%;max-width:440px;max-height:calc(100vh - 40px);overflow:hidden;background:#100f0e;color:#fff;border-radius:22px;' +
+      'box-shadow:0 40px 110px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08),0 0 70px rgba(249,115,22,.22);' +
+      'opacity:0;transform:translateY(26px) scale(.95);transition:opacity .35s ease,transform .5s cubic-bezier(.2,1.25,.35,1)}' +
     '.evbp.is-open .evbp-card{opacity:1;transform:none}' +
-    '@media (prefers-reduced-motion:reduce){.evbp-card,.evbp-backdrop{transition:none}}' +
-    '.evbp-x{position:absolute;top:8px;right:10px;z-index:2;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(255,255,255,.9);color:#3a3632;font-size:24px;line-height:1;cursor:pointer}' +
-    '.evbp-x:hover{background:#f3efe9;color:#0c0b0a}' +
-    '.evbp-img{display:block;width:100%;max-height:260px;object-fit:cover;background:#0c0b0a}' +
-    '.evbp-body{padding:28px 26px 24px;font-family:"Inter",sans-serif}' +
-    '.evbp-title{margin:0 34px 10px 0;font-family:"Montserrat",sans-serif;font-size:clamp(22px,4vw,28px);font-weight:900;line-height:1.08;letter-spacing:-.03em;text-transform:uppercase;color:#0c0b0a}' +
-    '.evbp-text{margin:0;font-size:15px;line-height:1.6;color:#5a5550;white-space:pre-line}' +
-    '.evbp-btn{display:flex;width:100%;box-sizing:border-box;align-items:center;justify-content:center;margin-top:18px;padding:14px 20px;border:0;border-radius:10px;background:#e8690a;color:#fff;font:800 12px "Montserrat",sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 0 #b84f06;cursor:pointer;transition:transform .15s,box-shadow .15s}' +
-    '.evbp-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #b84f06;color:#fff}' +
-    '.evbp-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #b84f06}';
+    '.evbp-media{position:relative;flex-shrink:0;height:min(36vh,calc(100vw - 40px));background:#0c0b0a;overflow:hidden}' +
+    '.evbp-img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.04);transition:transform 6s ease-out}' +
+    '.evbp.is-open .evbp-img{transform:scale(1)}' +
+    '.evbp-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,15,14,0) 62%,#100f0e 100%);pointer-events:none}' +
+    '.evbp-body{position:relative;display:flex;flex-direction:column;min-height:0;overflow:auto;padding:24px 24px 18px;font-family:"Inter",sans-serif}' +
+    '.evbp-eyebrow{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;margin:0 0 14px;padding:6px 12px 6px 10px;border:1px solid rgba(249,115,22,.4);border-radius:999px;background:rgba(249,115,22,.12);' +
+      'color:#fb923c;font:800 10px/1 "Montserrat",sans-serif;letter-spacing:.18em;text-transform:uppercase}' +
+    '.evbp-eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:#f97316;animation:evbpPulse 2s infinite}' +
+    '@keyframes evbpPulse{0%{box-shadow:0 0 0 0 rgba(249,115,22,.7)}70%{box-shadow:0 0 0 8px rgba(249,115,22,0)}100%{box-shadow:0 0 0 0 rgba(249,115,22,0)}}' +
+    '.evbp-title{margin:0 0 12px;font-family:"Montserrat",sans-serif;font-size:clamp(26px,7.4vw,34px);font-weight:900;line-height:1;letter-spacing:-.035em;text-transform:uppercase;color:#fff}' +
+    '.evbp-title em{font-style:normal;color:#f97316;background:linear-gradient(90deg,#fb923c,#f97316 55%,#fbbf24);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}' +
+    '.evbp-text{margin:0;font-size:15px;line-height:1.62;color:#c4bdb5;white-space:pre-line}' +
+    '.evbp-btn{position:relative;display:flex;gap:10px;width:100%;box-sizing:border-box;align-items:center;justify-content:center;margin-top:22px;padding:16px 20px;overflow:hidden;border:0;border-radius:12px;' +
+      'background:linear-gradient(135deg,#fb923c,#f97316 45%,#ea580c);color:#fff;font:800 13px "Montserrat",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;' +
+      'box-shadow:0 12px 30px rgba(249,115,22,.38),inset 0 1px 0 rgba(255,255,255,.3);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}' +
+    '.evbp-btn:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(249,115,22,.5),inset 0 1px 0 rgba(255,255,255,.3);color:#fff}' +
+    '.evbp-btn:active{transform:translateY(1px)}' +
+    '.evbp-btn svg{width:18px;height:18px;flex-shrink:0}' +
+    '.evbp-btn:after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:evbpShine 3.8s ease-in-out 1.2s infinite}' +
+    '@keyframes evbpShine{0%{left:-60%}35%,100%{left:130%}}' +
+    '.evbp-later{align-self:center;margin-top:10px;padding:6px 10px;border:0;background:none;color:#8f877e;font:600 12.5px "Inter",sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:3px}' +
+    '.evbp-later:hover{color:#fff}' +
+    '.evbp-foot{display:flex;align-items:center;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);color:#8f877e;font:600 11.5px "Inter",sans-serif;letter-spacing:.01em}' +
+    '.evbp-foot svg{width:14px;height:14px;flex-shrink:0;color:#f97316}' +
+    '.evbp-x{position:absolute;top:12px;right:12px;z-index:3;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.18);border-radius:50%;' +
+      'background:rgba(16,15,14,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-size:22px;line-height:1;cursor:pointer;transition:background .15s,transform .15s}' +
+    '.evbp-x:hover{background:#f97316;transform:rotate(90deg)}' +
+    '.evbp-x:focus-visible,.evbp-btn:focus-visible,.evbp-later:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}' +
+    // Side by side on a computer: a square picture beside the message.
+    '@media (min-width:760px){' +
+      '.evbp-card.has-img{flex-direction:row;max-width:860px}' +
+      '.evbp-card.has-img .evbp-media{width:430px;height:auto;min-height:430px}' +
+      '.evbp-card.has-img .evbp-media:after{background:linear-gradient(90deg,rgba(16,15,14,0) 70%,#100f0e 100%)}' +
+      '.evbp-card.has-img .evbp-body{flex:1;justify-content:center;padding:38px 36px 26px}' +
+      '.evbp-card:not(.has-img){max-width:480px}' +
+      '.evbp-body{padding:38px 34px 24px}' +
+      '.evbp-title{font-size:clamp(30px,3.4vw,40px)}' +
+    '}' +
+    '@media (prefers-reduced-motion:reduce){.evbp-card,.evbp-backdrop,.evbp-img{transition:none}.evbp-btn:after,.evbp-eyebrow:before{animation:none}}';
+
+  var ICON_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>';
+  var ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+  var ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>';
 
   var root, lastFocus, current;
 
@@ -139,23 +177,42 @@
     card.appendChild(x);
 
     if (p.image) {
+      card.className += ' has-img';
+      var media = el('div', 'evbp-media');
       var img = el('img', 'evbp-img');
       img.src = p.image;
       img.alt = '';
       img.decoding = 'async';
-      card.appendChild(img);
+      media.appendChild(img);
+      card.appendChild(media);
     }
 
     var body = el('div', 'evbp-body');
-    var title = el('h2', 'evbp-title', p.title);
+    body.appendChild(el('p', 'evbp-eyebrow', 'East Village Buyers'));
+
+    // The title's last word in orange ("We Buy Top DESIGNER"). Text nodes
+    // only, never HTML.
+    var title = el('h2', 'evbp-title');
     title.id = 'evbpTitle';
+    var words = String(p.title).trim().split(/\s+/);
+    if (words.length > 1) {
+      var last = words.pop();
+      title.appendChild(document.createTextNode(words.join(' ') + ' '));
+      title.appendChild(el('em', '', last));
+    } else {
+      title.textContent = p.title;
+    }
     body.appendChild(title);
     if (p.body) body.appendChild(el('p', 'evbp-text', p.body));
 
     var href = safeLink(p.buttonUrl);
     if (p.buttonLabel && href) {
-      var btn = el('a', 'evbp-btn', p.buttonLabel);
+      var btn = el('a', 'evbp-btn');
       btn.href = href;
+      // Icons are fixed markup; the label is set as text.
+      btn.innerHTML = /^tel:/i.test(href) ? ICON_PHONE : '';
+      btn.appendChild(el('span', '', p.buttonLabel));
+      if (!/^tel:/i.test(href)) btn.insertAdjacentHTML('beforeend', ICON_ARROW);
       if (/^https?:/i.test(href) && href.indexOf(location.origin) !== 0) {
         btn.target = '_blank';
         btn.rel = 'noopener';
@@ -166,6 +223,17 @@
       });
       body.appendChild(btn);
     }
+
+    var later = el('button', 'evbp-later', 'Not now');
+    later.type = 'button';
+    later.setAttribute('data-close', '');
+    body.appendChild(later);
+
+    var foot = el('p', 'evbp-foot');
+    foot.innerHTML = ICON_PIN;
+    foot.appendChild(el('span', '', '39 Avenue A · East Village, NYC'));
+    body.appendChild(foot);
+
     card.appendChild(body);
 
     root.appendChild(backdrop);
