@@ -490,6 +490,89 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <style>
+  .cg-guides { padding:48px 20px; background:#fff; }
+  .cg-inner { max-width:1100px; margin:0 auto; }
+  .cg-head { text-align:center; margin-bottom:28px; }
+  .cg-kicker { margin:0 0 8px; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; letter-spacing:0.2em; text-transform:uppercase; color:#f97316; }
+  .cg-head h2 { font-family:'Montserrat',sans-serif; font-size:clamp(20px,4vw,28px); font-weight:900; line-height:1.2; margin:0 0 6px; color:#111; }
+  .cg-head p { font-size:13px; color:#888; margin:0; }
+  .cg-grid { display:grid; gap:12px; grid-template-columns:1fr; }
+  @media(min-width:640px) { .cg-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media(min-width:900px) { .cg-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; } }
+  .cg-card { display:flex; gap:14px; align-items:center; padding:12px; border-radius:14px; background:#fff; border:1px solid rgba(0,0,0,0.07); text-decoration:none; transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+  .cg-card:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,0.07); border-color:rgba(249,115,22,0.3); }
+  .cg-card-img { width:84px; height:84px; flex-shrink:0; border-radius:10px; overflow:hidden; background:#f2ede6; }
+  .cg-card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .cg-card-body { display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .cg-card-title { font-family:'Montserrat',sans-serif; font-size:13.5px; font-weight:800; line-height:1.35; color:#111; }
+  .cg-card:hover .cg-card-title { color:#ea580c; }
+  .cg-card-desc { font-family:'Inter',sans-serif; font-size:12px; line-height:1.5; color:#8a8078; }
+  .cg-more { margin:24px 0 0; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+  .cg-more a { display:inline-flex; padding:7px 14px; border-radius:999px; background:#f8f5f0; border:1px solid rgba(0,0,0,0.07); color:#111; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; text-decoration:none; transition:border-color 0.2s, color 0.2s; }
+  .cg-more a:hover { border-color:#f97316; color:#ea580c; }
+</style>
+
+<section class="cg-guides" id="guides" aria-labelledby="cg-guides-h">
+  <div class="cg-inner">
+    <div class="cg-head">
+      <p class="cg-kicker">Learn Before You Sell</p>
+      <h2 id="cg-guides-h">Sneaker Selling Guides From Our Counter</h2>
+      <p>Straight answers to the questions we hear every day at our Avenue A counter.</p>
+    </div>
+    <div class="cg-grid">
+      <a class="cg-card evb-cc" href="../blog/sell-jordans-nyc/">
+        <span class="cg-card-img"><img src="../blog-img-jordans.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">How to Sell Jordans in NYC</span>
+          <span class="cg-card-desc">What your pairs are actually worth, and why.</span>
+        </span>
+      </a>
+      <a class="cg-card evb-cc" href="../blog/how-sneaker-box-condition-and-accessories-affect-resale-value/">
+        <span class="cg-card-img"><img src="../blog-how-sneaker-box-condition-and-accessories-affect-resale-value-hero.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">How Box Condition &amp; Accessories Affect Value</span>
+          <span class="cg-card-desc">Original box, extra laces and tags: what they add.</span>
+        </span>
+      </a>
+      <a class="cg-card evb-cc" href="../blog/how-outsole-yellowing-affects-sneaker-resale-value/">
+        <span class="cg-card-img"><img src="../blog-how-outsole-yellowing-affects-sneaker-resale-value-hero.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">How Outsole Yellowing Affects Resale Value</span>
+          <span class="cg-card-desc">When yellowed soles matter, and when they don’t.</span>
+        </span>
+      </a>
+      <a class="cg-card evb-cc" href="../blog/travis-scott-sneakers-resale-nyc/">
+        <span class="cg-card-img"><img src="../blog-img-travis.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">Travis Scott Sneakers Resale Guide</span>
+          <span class="cg-card-desc">Which collabs still pay top dollar.</span>
+        </span>
+      </a>
+      <a class="cg-card evb-cc" href="../blog/hype-vs-luxury-sneakers-resale-nyc/">
+        <span class="cg-card-img"><img src="../jordan-1-high-obsidian-unc.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">Hype vs. Luxury: Which Sneakers Hold Value</span>
+          <span class="cg-card-desc">Jordans and Dunks vs. Dior and Gucci on resale.</span>
+        </span>
+      </a>
+      <a class="cg-card evb-cc" href="../blog/will-kobe-sneakers-keep-their-resale-value-what-you-should-know/">
+        <span class="cg-card-img"><img src="../blog-will-kobe-sneakers-keep-their-resale-value-what-you-should-know-hero.webp" alt="" width="84" height="84" loading="lazy" decoding="async"></span>
+        <span class="cg-card-body">
+          <span class="cg-card-title">Will Kobe Sneakers Keep Their Resale Value?</span>
+          <span class="cg-card-desc">What’s driving Kobe prices and what to expect.</span>
+        </span>
+      </a>
+    </div>
+    <nav class="cg-more" aria-label="More sneaker guides">
+      <a href="../blog/designer-sneakers-resale-value-nyc/">Designer sneaker values</a>
+      <a href="../blog/iconic-jordan-retro-colorways-nyc/">Iconic Jordan colorways</a>
+      <a href="../blog/jordan-collabs-fragment-levis-clot-nyc/">Jordan collabs beyond Travis</a>
+      <a href="../blog/hellstar-adidas-collab-resale-value/">Hellstar x Adidas resale</a>
+    </nav>
+  </div>
+</section>
+
+<style>
   .sw-faq { padding:48px 20px; background:#f8f5f0; }
   .sw-faq-inner { max-width:1000px; margin:0 auto; }
   .sw-faq-head { text-align:center; margin-bottom:32px; }
