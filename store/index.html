@@ -4,16 +4,40 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Online Store Coming Soon | East Village Buyers</title>
-<meta name="description" content="The East Village Buyers online store is coming soon. Until then, visit us at 39 Avenue A, New York, or text 917-608-8939 to ask about authenticated gold, watches, sneakers, streetwear and designer pieces.">
+<title>Shop Authenticated Luxury, Sneakers &amp; Gold | East Village Buyers</title>
+<meta name="description" content="Shop authenticated sneakers, luxury watches, solid gold jewelry, streetwear, designer bags and electronics from East Village Buyers. Every item verified in-house at 39 Avenue A, NYC.">
 <link rel="canonical" href="https://eastvillagebuyers.com/store/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Online Store Coming Soon | East Village Buyers">
-<meta property="og:description" content="Buy authenticated gold, watches, sneakers and streetwear online, collect at 39 Avenue A. Launching soon.">
+<meta property="og:title" content="Shop Authenticated Luxury, Sneakers &amp; Gold | East Village Buyers">
+<meta property="og:description" content="Every item authenticated in-house at 39 Avenue A. Sneakers, watches, gold, streetwear, designer and electronics.">
 <meta property="og:url" content="https://eastvillagebuyers.com/store/">
 <meta property="og:image" content="https://eastvillagebuyers.com/evbstorefront.webp">
 <meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "East Village Buyers Store",
+  "description": "Authenticated sneakers, watches, gold, jewelry, streetwear, designer goods and electronics.",
+  "url": "https://eastvillagebuyers.com/store/",
+  "isPartOf": { "@type": "WebSite", "name": "East Village Buyers", "url": "https://eastvillagebuyers.com/" },
+  "provider": {
+    "@type": "Store",
+    "name": "East Village Buyers",
+    "telephone": "+1-917-608-8939",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "39 Avenue A",
+      "addressLocality": "New York",
+      "addressRegion": "NY",
+      "postalCode": "10009",
+      "addressCountry": "US"
+    }
+  }
+}
+</script>
 
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -40,7 +64,7 @@
     </a>
     <nav class="site-nav-links" aria-label="Main navigation">
       <a href="/" class="site-nav-link">Home</a>
-      <a href="/store/" class="site-nav-link site-nav-link--store is-active" aria-current="page">Store</a>
+      <a href="/store/" class="site-nav-link site-nav-link--store is-active">Store</a>
       <a href="/about/" class="site-nav-link">About</a>
       <a href="/blog/" class="site-nav-link">Blog</a>
       <div class="site-nav-drop">
@@ -112,91 +136,151 @@
   </div>
 </div>
 
-<main class="evb-soon">
-  <div class="evb-wrap evb-soon-grid">
-
-    <div class="evb-soon-main">
-      <p class="evb-eyebrow">East Village Buyers &middot; 39 Avenue A, NYC</p>
-      <h1 class="evb-soon-title">The online store is coming soon</h1>
-      <p class="evb-soon-sub">We are building a shop for the authenticated gold, watches, sneakers, streetwear and designer pieces that come across our counter — so you can buy online and collect at 39 Avenue A the same day, or have it shipped insured.</p>
-
-      <ul class="evb-soon-list">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.4 9.4 8 10 4.6-.6 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
-          <span><strong>Everything authenticated in-house.</strong> XRF and acid for metals, movement timing for watches, stitch and stamp checks for the rest.</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
-          <span><strong>Free same-day pickup</strong> at the counter, or insured shipping with signature on delivery.</span>
-        </li>
-      </ul>
-
-      <div class="evb-soon-cta">
-        <a href="sms:9176088939" class="evb-btn evb-btn--primary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Text us what you want
-        </a>
-        <a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer" class="evb-btn evb-btn--ghost">See what just came in</a>
-      </div>
-
-      <p class="evb-soon-note">Looking for something specific? Text a photo or a model name to <a href="sms:9176088939">917-608-8939</a> and we will tell you if it is on the shelf — most of what we carry is one-of-one and sells in person first.</p>
+<div class="evb-storebar">
+  <div class="evb-wrap evb-storebar-inner">
+    <a href="/store/" class="evb-storebar-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+      Store
+    </a>
+    <nav class="evb-storebar-cats" id="storeBarCats" aria-label="Shop by category"></nav>
+    <div class="evb-storebar-actions">
+      <button type="button" class="evb-cartbtn" data-cart-open aria-label="Open shopping bag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="evb-cartbtn-label">Bag</span>
+        <span class="evb-cartbtn-count is-empty" data-cart-count>0</span>
+      </button>
     </div>
-
-    <aside class="evb-soon-card">
-      <img src="/evbstorefront.webp" alt="The East Village Buyers storefront at 39 Avenue A, New York"
-           width="1600" height="1125" class="evb-soon-card-img" fetchpriority="high" decoding="async">
-      <div class="evb-soon-card-body">
-        <p class="evb-soon-status" id="storeStatus">
-          <span class="evb-soon-status-dot" aria-hidden="true"></span>
-          <span id="storeStatusText">Checking store hours&hellip;</span>
-        </p>
-        <dl class="evb-soon-rows">
-          <div><dt>Address</dt><dd><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">39 Avenue A, New York, NY 10009</a></dd></div>
-          <div><dt>Hours</dt><dd>Sun&ndash;Fri from 12:30 PM &middot; Closed Saturdays</dd></div>
-          <div><dt>Call or text</dt><dd><a href="tel:9176088939">917-608-8939</a></dd></div>
-        </dl>
-      </div>
-    </aside>
-
   </div>
+</div>
 
+<section class="evb-depts">
   <div class="evb-wrap">
-    <div class="evb-soon-buy">
+    <div class="evb-depts-head">
+      <h1 class="evb-depts-title">Shop by department</h1>
+      <a href="#shop" class="evb-link-more">See everything</a>
+    </div>
+    <div class="evb-cats" id="catTiles"></div>
+  </div>
+</section>
+
+<section class="evb-section evb-section--tight" id="featuredSection" hidden>
+  <div class="evb-wrap">
+    <div class="evb-section-head">
       <div>
-        <p class="evb-eyebrow">In the meantime</p>
-        <h2 class="evb-soon-h2">We are buying every day the shop is open</h2>
-        <p class="evb-soon-sub">Walk in with what you have and get a cash offer on the spot — no appointment, no obligation.</p>
+        <p class="evb-eyebrow">Just in</p>
+        <h2 class="evb-h2">Featured this week</h2>
+        <p class="evb-sub">The pieces we would keep for ourselves if the shop were not a business.</p>
       </div>
-      <div class="evb-soon-buy-links">
-        <a href="/we-buy-gold-nyc/">Gold</a>
-        <a href="/we-buy-jewelry-nyc/">Jewelry</a>
-        <a href="/we-buy-watches-nyc/">Watches</a>
-        <a href="/we-buy-sneakers-nyc/">Sneakers</a>
-        <a href="/we-buy-streetwear-nyc/">Streetwear</a>
-        <a href="/we-buy-designer-nyc/">Designer</a>
-        <a href="/we-buy-electronics-nyc/">Electronics</a>
-        <a href="/we-buy-collectibles-nyc/">Collectibles</a>
+      <a href="#shop" class="evb-link-more">See all</a>
+    </div>
+    <div class="evb-grid evb-grid--rail" id="featuredGrid"></div>
+  </div>
+</section>
+
+<section class="evb-section" id="shop">
+  <div class="evb-wrap">
+    <div class="evb-section-head">
+      <div>
+        <p class="evb-eyebrow">The floor</p>
+        <h2 class="evb-h2">Everything in stock</h2>
+      </div>
+    </div>
+
+    <div class="evb-shop">
+
+      <aside class="evb-filters" id="filterRail" aria-label="Filter products">
+        <div class="evb-filters-head">
+          <p class="evb-filters-title">Filters</p>
+          <button type="button" class="evb-filters-clear" id="clearFilters" hidden>Clear all</button>
+          <button type="button" class="evb-filters-close" id="closeFilters" aria-label="Close filters">&times;</button>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Category</p>
+          <div class="evb-fopts" id="fCategory"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Condition</p>
+          <div class="evb-fopts" id="fCondition"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Price</p>
+          <div class="evb-fopts" id="fPrice"></div>
+        </div>
+
+        <div class="evb-fgroup">
+          <p class="evb-fgroup-title">Brand</p>
+          <div class="evb-fopts evb-fopts--scroll" id="fBrand"></div>
+        </div>
+      </aside>
+      <div class="evb-filters-scrim" id="filterScrim"></div>
+
+      <div class="evb-results">
+        <div class="evb-results-bar">
+          <label class="evb-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="q" placeholder="Search brand, model or category&hellip;" aria-label="Search products" autocomplete="off">
+          </label>
+          <button type="button" class="evb-filters-toggle" id="openFilters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+            Filters<span id="filterBadge" hidden></span>
+          </button>
+          <select class="evb-select" id="sort" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to high</option>
+            <option value="price-desc">Price: High to low</option>
+            <option value="name">Name: A&ndash;Z</option>
+            <option value="brand">Brand: A&ndash;Z</option>
+          </select>
+        </div>
+
+        <div class="evb-results-meta">
+          <span class="evb-toolbar-count" id="resultCount"></span>
+          <div class="evb-active" id="activeFilters"></div>
+        </div>
+
+        <div id="gridHost">
+          <div class="evb-skeleton-grid" id="skeleton">
+            <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
+            <div class="evb-skel"></div><div class="evb-skel"></div><div class="evb-skel"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</section>
+
+<section class="evb-section" id="how" style="background:#fff;border-top:3px solid var(--evb-orange);border-bottom:3px solid var(--evb-orange)">
   <div class="evb-wrap">
-    <details class="evb-staff" id="evbStaff">
-      <summary>Staff preview</summary>
-      <div id="evbStaffOpen" class="evb-staff-open" hidden>
-        <a href="/store/shop/" class="evb-btn evb-btn--primary evb-btn--sm">Open the store preview</a>
-        <button type="button" id="evbStaffLock" class="evb-btn evb-btn--ghost evb-btn--sm">Lock it again</button>
+    <div class="evb-section-head">
+      <div>
+        <p class="evb-eyebrow">Why you can trust the listing</p>
+        <h2 class="evb-h2">Authentication is the whole business</h2>
+        <p class="evb-sub">We buy for cash across the counter. That only works if we are right about what something is — so the same testing that protects us on the buy protects you on the sale.</p>
       </div>
-      <form id="evbStaffForm" class="evb-staff-form" autocomplete="off">
-        <label for="evbStaffPw" class="evb-staff-label">Password</label>
-        <div class="evb-staff-row">
-          <input id="evbStaffPw" type="password" class="evb-input" autocomplete="current-password" required>
-          <button type="submit" class="evb-btn evb-btn--primary evb-btn--sm">Open the store</button>
-        </div>
-        <p id="evbStaffMsg" class="evb-staff-msg" role="alert" hidden></p>
-      </form>
-    </details>
+    </div>
+    <div class="evb-notes">
+      <div class="evb-note">
+        <p class="evb-note-name">Metals</p>
+        <p class="evb-note-blurb">XRF analyzer and acid testing on every piece. Gold and silver are weighed in front of you and priced against live spot.</p>
+      </div>
+      <div class="evb-note">
+        <p class="evb-note-name">Watches</p>
+        <p class="evb-note-blurb">Movement timed on a machine, caseback opened where appropriate, serials and papers checked against reference data.</p>
+      </div>
+      <div class="evb-note">
+        <p class="evb-note-name">Sneakers &amp; streetwear</p>
+        <p class="evb-note-blurb">Stitch density, tagging, box labels and materials. The tells that fakes get wrong are the ones we look at first.</p>
+      </div>
+      <div class="evb-note">
+        <p class="evb-note-name">Electronics</p>
+        <p class="evb-note-blurb">Wiped to factory, Activation Lock removed, IMEI checked against the carrier blacklist before anything is listed.</p>
+      </div>
+    </div>
   </div>
-</main>
+</section>
 
 <footer class="evb-footer">
   <div class="evb-footer-topbar"></div>
@@ -232,14 +316,14 @@
     <div class="evb-footer-col">
       <p class="footer-heading" role="heading" aria-level="2">Shop</p>
       <ul>
-        <li><a href="/store/shop/?c=sneakers">Sneakers</a></li>
-        <li><a href="/store/shop/?c=watches">Watches</a></li>
-        <li><a href="/store/shop/?c=jewelry">Jewelry</a></li>
-        <li><a href="/store/shop/?c=gold">Gold &amp; Bullion</a></li>
-        <li><a href="/store/shop/?c=streetwear">Streetwear</a></li>
-        <li><a href="/store/shop/?c=designer">Designer</a></li>
-        <li><a href="/store/shop/?c=electronics">Electronics</a></li>
-        <li><a href="/store/shop/?c=collectibles">Collectibles</a></li>
+        <li><a href="/store/?c=sneakers">Sneakers</a></li>
+        <li><a href="/store/?c=watches">Watches</a></li>
+        <li><a href="/store/?c=jewelry">Jewelry</a></li>
+        <li><a href="/store/?c=gold">Gold &amp; Bullion</a></li>
+        <li><a href="/store/?c=streetwear">Streetwear</a></li>
+        <li><a href="/store/?c=designer">Designer</a></li>
+        <li><a href="/store/?c=electronics">Electronics</a></li>
+        <li><a href="/store/?c=collectibles">Collectibles</a></li>
       </ul>
     </div>
     <div class="evb-footer-col">
@@ -275,14 +359,316 @@
 </footer>
 
 <script src="/site-nav.js?v=20261005"></script>
+<script src="/store/store-config.js?v=1.9.3"></script>
+<script src="/store/store-catalog.js?v=1.9.0"></script>
+<script src="/store/store-core.js?v=1.9.0"></script>
 <script>
 (function () {
   'use strict';
-  var HOURS = [
-    { open: 12.5, close: 18 }, { open: 12.5, close: 18.5 }, { open: 12.5, close: 18.5 },
-    { open: 12.5, close: 18.5 }, { open: 12.5, close: 18.5 }, { open: 12.5, close: 18 }, null
+  var S = window.EVB_STORE, C = window.EVB_CATALOG;
+
+  var el = function (id) { return document.getElementById(id); };
+  var els = {
+    catTiles: el('catTiles'), barCats: el('storeBarCats'),
+    grid: el('gridHost'), featured: el('featuredGrid'), featuredSection: el('featuredSection'),
+    q: el('q'), sort: el('sort'), count: el('resultCount'), active: el('activeFilters'),
+    fCategory: el('fCategory'), fCondition: el('fCondition'), fPrice: el('fPrice'), fBrand: el('fBrand'),
+    rail: el('filterRail'), scrim: el('filterScrim'),
+    clear: el('clearFilters'), badge: el('filterBadge')
+  };
+
+  var CONDITIONS = [
+    { id: 'new',      label: 'Deadstock / Sealed' },
+    { id: 'preowned', label: 'Pre-owned' },
+    { id: 'bullion',  label: 'Bullion' }
   ];
-  var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  var PRICES = [
+    { id: 'u250',   label: 'Under $250',       min: 0,      max: 25000 },
+    { id: '250-1k', label: '$250 to $1,000',   min: 25000,  max: 100000 },
+    { id: '1k-5k',  label: '$1,000 to $5,000', min: 100000, max: 500000 },
+    { id: 'o5k',    label: '$5,000+',          min: 500000, max: Infinity }
+  ];
+
+  var state = { cat: 'all', q: '', sort: 'featured', brands: [], conds: [], prices: [] };
+
+  function readUrl() {
+    var p = new URLSearchParams(location.search);
+    state.cat = p.get('c') || 'all';
+    state.q = p.get('q') || '';
+    state.sort = p.get('sort') || 'featured';
+    state.brands = (p.get('brand') || '').split(',').filter(Boolean);
+    state.conds = (p.get('cond') || '').split(',').filter(Boolean);
+    state.prices = (p.get('price') || '').split(',').filter(Boolean);
+  }
+
+  function writeUrl(push) {
+    var p = new URLSearchParams();
+    if (state.cat && state.cat !== 'all') p.set('c', state.cat);
+    if (state.q) p.set('q', state.q);
+    if (state.sort !== 'featured') p.set('sort', state.sort);
+    if (state.brands.length) p.set('brand', state.brands.join(','));
+    if (state.conds.length) p.set('cond', state.conds.join(','));
+    if (state.prices.length) p.set('price', state.prices.join(','));
+    var qs = p.toString();
+    var url = location.pathname + (qs ? '?' + qs : '') + '#shop';
+    if (push) history.pushState(null, '', url); else history.replaceState(null, '', url);
+  }
+
+  function toggle(list, value) {
+    var i = list.indexOf(value);
+    if (i === -1) list.push(value); else list.splice(i, 1);
+    return list;
+  }
+
+  function activeCount() {
+    return state.brands.length + state.conds.length + state.prices.length +
+      (state.cat !== 'all' ? 1 : 0) + (state.q ? 1 : 0);
+  }
+
+  function filtered(skip) {
+    var list = state.q ? C.search(state.q) : C.products.slice();
+    if (skip !== 'cat' && state.cat !== 'all') {
+      list = list.filter(function (p) { return p.category === state.cat; });
+    }
+    if (skip !== 'brand' && state.brands.length) {
+      list = list.filter(function (p) { return state.brands.indexOf(p.brand) !== -1; });
+    }
+    if (skip !== 'cond' && state.conds.length) {
+      list = list.filter(function (p) { return state.conds.indexOf(S.conditionGroup(p.condition)) !== -1; });
+    }
+    if (skip !== 'price' && state.prices.length) {
+      list = list.filter(function (p) {
+        return state.prices.some(function (id) {
+          var b = PRICES.filter(function (x) { return x.id === id; })[0];
+          return b && p.price >= b.min && p.price < b.max;
+        });
+      });
+    }
+    return list;
+  }
+
+  function countBy(list, fn) {
+    var m = {};
+    list.forEach(function (p) { var k = fn(p); if (k != null) m[k] = (m[k] || 0) + 1; });
+    return m;
+  }
+
+  function opt(kind, value, label, count, checked, type) {
+    return '<label class="evb-fopt' + (count ? '' : ' is-empty') + '">' +
+      '<input type="' + (type || 'checkbox') + '" name="f-' + kind + '" value="' + S.attr(value) + '"' +
+        (checked ? ' checked' : '') + (count ? '' : ' disabled') + '>' +
+      '<span class="evb-fopt-label">' + S.esc(label) + '</span>' +
+      '<span class="evb-fopt-count">' + count + '</span>' +
+    '</label>';
+  }
+
+  function renderFilters() {
+    var catList = filtered('cat');
+    var byCat = countBy(catList, function (p) { return p.category; });
+    els.fCategory.innerHTML =
+      opt('cat', 'all', 'All categories', catList.length, state.cat === 'all', 'radio') +
+      C.categories.map(function (c) {
+        return opt('cat', c.id, c.label, byCat[c.id] || 0, state.cat === c.id, 'radio');
+      }).join('');
+
+    var byCond = countBy(filtered('cond'), function (p) { return S.conditionGroup(p.condition); });
+    els.fCondition.innerHTML = CONDITIONS.map(function (c) {
+      return opt('cond', c.id, c.label, byCond[c.id] || 0, state.conds.indexOf(c.id) !== -1);
+    }).join('');
+
+    var priceList = filtered('price');
+    els.fPrice.innerHTML = PRICES.map(function (b) {
+      var n = priceList.filter(function (p) { return p.price >= b.min && p.price < b.max; }).length;
+      return opt('price', b.id, b.label, n, state.prices.indexOf(b.id) !== -1);
+    }).join('');
+
+    var byBrand = countBy(filtered('brand'), function (p) { return p.brand; });
+    els.fBrand.innerHTML = C.brands()
+      .sort(function (a, b) { return (byBrand[b] || 0) - (byBrand[a] || 0) || a.localeCompare(b); })
+      .map(function (b) { return opt('brand', b, b, byBrand[b] || 0, state.brands.indexOf(b) !== -1); })
+      .join('');
+
+    var n = activeCount();
+    els.clear.hidden = n === 0;
+    els.badge.hidden = n === 0;
+    els.badge.textContent = n;
+  }
+
+  function renderActive() {
+    var pills = [];
+    if (state.cat !== 'all') pills.push({ k: 'cat', v: state.cat, label: C.categoryLabel(state.cat) });
+    state.conds.forEach(function (id) {
+      var c = CONDITIONS.filter(function (x) { return x.id === id; })[0];
+      if (c) pills.push({ k: 'cond', v: id, label: c.label });
+    });
+    state.prices.forEach(function (id) {
+      var b = PRICES.filter(function (x) { return x.id === id; })[0];
+      if (b) pills.push({ k: 'price', v: id, label: b.label });
+    });
+    state.brands.forEach(function (b) { pills.push({ k: 'brand', v: b, label: b }); });
+    if (state.q) pills.push({ k: 'q', v: state.q, label: '“' + state.q + '”' });
+
+    els.active.innerHTML = pills.map(function (p) {
+      return '<button type="button" class="evb-activepill" data-k="' + S.attr(p.k) + '" data-v="' + S.attr(p.v) + '">' +
+        S.esc(p.label) + '<span aria-hidden="true">&times;</span></button>';
+    }).join('');
+  }
+
+  function apply(push) {
+    var list = filtered();
+
+    var sorters = {
+      'price-asc':  function (a, b) { return a.price - b.price; },
+      'price-desc': function (a, b) { return b.price - a.price; },
+      'name':       function (a, b) { return a.title.localeCompare(b.title); },
+      'brand':      function (a, b) { return (a.brand || '').localeCompare(b.brand || '') || a.title.localeCompare(b.title); },
+      'featured':   function (a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || b.price - a.price; }
+    };
+    var cmp = sorters[state.sort] || sorters.featured;
+    list.sort(function (a, b) {
+      return (a.stock > 0 ? 0 : 1) - (b.stock > 0 ? 0 : 1) || cmp(a, b);
+    });
+
+    els.count.textContent = list.length + (list.length === 1 ? ' result' : ' results');
+
+    els.grid.innerHTML = list.length
+      ? '<div class="evb-grid">' + list.map(function (p) { return S.productCard(p, '/'); }).join('') + '</div>'
+      : C.source === 'offline'
+      ? '<div class="evb-empty">' +
+          '<p class="evb-empty-title">The shop is not loading right now</p>' +
+          '<p class="evb-empty-sub">Try again in a minute. If it keeps happening, text or call us and we will tell you what is on the floor and take your order by phone.</p>' +
+          '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text us at 917-608-8939</a>' +
+        '</div>'
+      : '<div class="evb-empty">' +
+          '<p class="evb-empty-title">No items found</p>' +
+          '<p class="evb-empty-sub">Our inventory changes daily and most pieces are one of a kind, so not everything is listed online. Send us a photo of the item you are looking for and our team will check our in-store stock for you.</p>' +
+          '<a class="evb-btn evb-btn--primary" href="sms:9176088939">Text us at 917-608-8939</a>' +
+        '</div>';
+
+    els.q.value = state.q;
+    els.sort.value = state.sort;
+    renderFilters();
+    renderActive();
+    writeUrl(push);
+
+    document.querySelectorAll('.evb-storebar-cat').forEach(function (a) {
+      a.classList.toggle('is-active', a.getAttribute('data-cat') === state.cat);
+    });
+  }
+
+  function renderStatic() {
+    var counts = countBy(C.products, function (p) { return p.category; });
+
+    els.catTiles.innerHTML = C.categories.map(function (c) {
+      var items = C.byCategory(c.id).filter(function (p) { return p.stock > 0; });
+      var n = counts[c.id] || 0;
+
+      var lead = items.filter(function (p) { return p.featured; })[0] ||
+        items.slice().sort(function (a, b) { return b.price - a.price; })[0];
+
+      var from = items.length
+        ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
+
+      var meta = '<span class="evb-cat-n">' + n + (n === 1 ? ' item' : ' items') + '</span>' +
+        (from != null ? '<span class="evb-cat-from"> · from ' +
+          S.esc(S.money(from).replace(/\.00$/, '')) + '</span>' : '');
+
+      return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '"' +
+          ' title="' + S.attr(c.blurb) + '">' +
+        '<span class="evb-cat-media">' +
+          (lead ? '<img src="' + S.attr(lead.images[0]) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
+        '</span>' +
+        '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
+        '<span class="evb-cat-meta">' + meta + '</span>' +
+      '</a>';
+    }).join('');
+
+    els.barCats.innerHTML = '<a class="evb-storebar-cat" href="?c=all#shop" data-cat="all">All</a>' +
+      C.categories.map(function (c) {
+        return '<a class="evb-storebar-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '">' +
+          S.esc(c.label) + '</a>';
+      }).join('');
+
+    var feat = C.products.filter(function (p) { return p.featured && p.stock > 0; }).slice(0, 5);
+    if (feat.length) {
+      els.featuredSection.hidden = false;
+      els.featured.innerHTML = feat.map(function (p) { return S.productCard(p, '/'); }).join('');
+    }
+  }
+
+  function openRail() {
+    els.rail.classList.add('is-open');
+    els.scrim.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeRail() {
+    els.rail.classList.remove('is-open');
+    els.scrim.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  els.rail.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t.name || t.name.indexOf('f-') !== 0) return;
+    var kind = t.name.slice(2);
+    if (kind === 'cat') state.cat = t.value;
+    else if (kind === 'cond') toggle(state.conds, t.value);
+    else if (kind === 'price') toggle(state.prices, t.value);
+    else if (kind === 'brand') toggle(state.brands, t.value);
+    apply(true);
+  });
+
+  els.active.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-k]');
+    if (!b) return;
+    var k = b.getAttribute('data-k'), v = b.getAttribute('data-v');
+    if (k === 'cat') state.cat = 'all';
+    else if (k === 'q') state.q = '';
+    else if (k === 'cond') toggle(state.conds, v);
+    else if (k === 'price') toggle(state.prices, v);
+    else if (k === 'brand') toggle(state.brands, v);
+    apply(true);
+  });
+
+  els.clear.addEventListener('click', function () {
+    state.cat = 'all'; state.q = ''; state.brands = []; state.conds = []; state.prices = [];
+    apply(true);
+  });
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-cat]');
+    if (!a) return;
+    e.preventDefault();
+    state.cat = a.getAttribute('data-cat');
+    apply(true);
+    el('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  var qTimer = null;
+  els.q.addEventListener('input', function () {
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function () { state.q = els.q.value.trim(); apply(false); }, 180);
+  });
+  els.sort.addEventListener('change', function () { state.sort = els.sort.value; apply(true); });
+
+  el('openFilters').addEventListener('click', openRail);
+  el('closeFilters').addEventListener('click', closeRail);
+  els.scrim.addEventListener('click', closeRail);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeRail(); });
+
+  window.addEventListener('popstate', function () { readUrl(); apply(false); });
+
+  var HOURS = [
+    { open: 12.5, close: 18 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 18.5 },
+    { open: 12.5, close: 16 },
+    null
+  ];
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   function clockLabel(h) {
     var hh = Math.floor(h), mm = Math.round((h - hh) * 60);
@@ -290,10 +676,15 @@
     var disp = hh % 12 === 0 ? 12 : hh % 12;
     return disp + (mm ? ':' + String(mm).padStart(2, '0') : '') + ' ' + ampm;
   }
+
   function shopNow() {
-    try { return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })); }
-    catch (e) { return new Date(); }
+    try {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    } catch (e) {
+      return new Date();
+    }
   }
+
   function ymd(d) {
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
       String(d.getDate()).padStart(2, '0');
@@ -303,104 +694,50 @@
     return closed.indexOf(ymd(d)) !== -1 ? null : HOURS[d.getDay()];
   }
 
-  function render() {
+  function renderStatus() {
     var now = shopNow();
     var hour = now.getHours() + now.getMinutes() / 60;
     var today = hoursOn(now);
     var closedToday = !today && HOURS[now.getDay()];
-    var t = document.getElementById('storeStatusText');
-    var w = document.getElementById('storeStatus');
-    if (!t) return;
+    var elText = el('storeStatusText'), elWrap = el('storeStatus');
+    if (!elText) return;
+
     if (today && hour >= today.open && hour < today.close) {
-      w.classList.add('is-open');
-      t.textContent = 'Open now · until ' + clockLabel(today.close);
+      elWrap.classList.add('is-open');
+      elText.textContent = 'Open now · until ' + clockLabel(today.close);
       return;
     }
-    w.classList.remove('is-open');
+
+    elWrap.classList.remove('is-open');
     if (today && hour < today.open) {
-      t.textContent = 'Closed · opens today at ' + clockLabel(today.open);
+      elText.textContent = 'Closed · opens today at ' + clockLabel(today.open);
       return;
     }
     for (var i = 1; i <= 14; i++) {
       var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
       var h = hoursOn(d);
       if (h) {
-        t.textContent = (closedToday ? 'Closed today' : 'Closed') + ' · opens ' +
+        elText.textContent = (closedToday ? 'Closed today' : 'Closed') + ' · opens ' +
           (i === 1 ? 'tomorrow' : DAYS[d.getDay()]) + ' at ' + clockLabel(h.open);
         return;
       }
     }
   }
-  render();
-  setInterval(render, 60000);
+
+  S.mountCartUI('/');
+  readUrl();
+  renderStatus();
+  setInterval(renderStatus, 60000);
+
+  C.load().then(function () {
+    renderStatic();
+    apply(false);
+    if (location.hash === '#shop') el('shop').scrollIntoView({ block: 'start' });
+  });
 })();
 </script>
 
 <link rel="stylesheet" href="/evb-assistant.css">
-<style>
-  .evb-staff { margin: 8px 0 28px; font-size: 13px; color: var(--evb-muted, #6b6b6b); }
-  .evb-staff summary { cursor: pointer; width: max-content; font-weight: 600; opacity: .75; }
-  .evb-staff summary:hover { opacity: 1; }
-  .evb-staff-form, .evb-staff-open { margin-top: 12px; max-width: 420px; }
-  .evb-staff-open { display: flex; flex-wrap: wrap; gap: 8px; }
-  .evb-staff-open[hidden], .evb-staff-form[hidden], .evb-staff-msg[hidden] { display: none; }
-  .evb-staff-label { display: block; margin-bottom: 6px; font-weight: 600; }
-  .evb-staff-row { display: flex; gap: 8px; }
-  .evb-staff-row .evb-input { flex: 1; min-width: 0; }
-  .evb-staff-msg { margin-top: 8px; color: #c2261b; font-weight: 600; }
-</style>
-<script>
-(function () {
-  var HASH = 'f53f79dc2f3989e665cd9d99f27b7e6d91f22b05830557a9256e8c957c19c0a5';
-  var DAYS = 14;
-  var form = document.getElementById('evbStaffForm');
-  var input = document.getElementById('evbStaffPw');
-  var msg = document.getElementById('evbStaffMsg');
-  var open = document.getElementById('evbStaffOpen');
-  var lock = document.getElementById('evbStaffLock');
-  if (!form) return;
-
-  function unlocked() {
-    try { return Number(localStorage.getItem('evb_store_preview_until') || 0) > Date.now(); } catch (e) { return false; }
-  }
-  function render() {
-    var on = unlocked();
-    open.hidden = !on;
-    form.hidden = on;
-  }
-  function say(text) { msg.textContent = text; msg.hidden = false; }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (!window.crypto || !crypto.subtle || !window.TextEncoder) {
-      say('This browser can\u2019t check the password \u2014 try Chrome or Safari.');
-      return;
-    }
-    crypto.subtle.digest('SHA-256', new TextEncoder().encode('evb-store-preview:' + input.value)).then(function (buf) {
-      var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) {
-        return ('0' + b.toString(16)).slice(-2);
-      }).join('');
-      if (hex !== HASH) {
-        input.value = '';
-        say('That password isn\u2019t right.');
-        return;
-      }
-      try { localStorage.setItem('evb_store_preview_until', String(Date.now() + DAYS * 864e5)); } catch (err) {}
-      try { sessionStorage.setItem('evb_store_preview', '1'); } catch (err) {}
-      location.href = '/store/shop/';
-    });
-  });
-
-  lock.addEventListener('click', function () {
-    try { localStorage.removeItem('evb_store_preview_until'); } catch (e) {}
-    try { sessionStorage.removeItem('evb_store_preview'); } catch (e) {}
-    render();
-  });
-
-  render();
-  if (location.hash === '#staff') document.getElementById('evbStaff').open = true;
-})();
-</script>
 <script src="/evb-assistant.js?v=20261005" defer data-evb-assistant></script>
 <script src="/site-analytics.js?v=1" defer></script>
 <script src="/evb-popups.js?v=3" defer></script>

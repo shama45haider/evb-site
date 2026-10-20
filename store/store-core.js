@@ -122,6 +122,7 @@
     clear: function () { lines = []; persist(); },
 
     reconcile: function () {
+      if (window.EVB_CATALOG.source === 'offline') return [];
       var changes = [];
       var kept = [];
       lines.forEach(function (l) {

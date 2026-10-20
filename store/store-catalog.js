@@ -850,15 +850,14 @@
         })
         .then(function (json) {
           var mapped = fromSquare(json).map(normalize);
-          if (!mapped.length) throw new Error('Catalog returned no items');
           state.products = mapped;
           state.source = 'square';
           return mapped;
         })
         .catch(function (err) {
-          if (window.console) console.warn('[EVB Store] Square catalog unavailable, using local catalog.', err);
-          state.products = PRODUCTS.map(normalize);
-          state.source = 'seed';
+          if (window.console) console.warn('[EVB Store] Square catalog unavailable.', err);
+          state.products = [];
+          state.source = 'offline';
           return state.products;
         });
 
