@@ -4,7 +4,8 @@
   var STATE_KEY = 'evb_signup_state';
   var EMAIL_KEY = 'evb_signup_email';
   var SNOOZE_MS = 14 * 24 * 60 * 60 * 1000;
-  var DELAY_MS = 1500;
+  var DELAY_MS = 20000;
+  var SCROLL_SHARE = 0.35;
 
   var PATH = location.pathname;
   var PREVIEW = /[?&]signup-preview\b/.test(location.search);
@@ -45,7 +46,8 @@
   function otherDialogOpen() {
     return !!document.getElementById('evbClosure') ||
       shown(document.getElementById('wnWrap')) ||
-      shown(document.getElementById('evbCk'));
+      shown(document.getElementById('evbCk')) ||
+      !!document.querySelector('.evbp.is-open');
   }
 
   function push(name, extra) {
@@ -55,88 +57,70 @@
     window.dataLayer.push(o);
   }
 
-  var root, lastFocus;
+  var root;
 
   function build() {
     var css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/evb-signup.css?v=2';
+    css.href = '/evb-signup.css?v=3';
     document.head.appendChild(css);
 
-    root = document.createElement('div');
+    root = document.createElement('section');
     root.className = 'evbs';
+    root.setAttribute('aria-label', 'Free shipping offer');
     root.innerHTML =
-      '<div class="evbs-backdrop" data-close></div>' +
-      '<div class="evbs-card" role="dialog" aria-modal="true" aria-labelledby="evbsTitle" aria-describedby="evbsSub">' +
-        '<button type="button" class="evbs-x" data-close aria-label="Close">&times;</button>' +
-        '<div class="evbs-media" aria-hidden="true">' +
-          '<img src="/evbstorefront.webp" alt="" decoding="async">' +
-          '<span class="evbs-stamp"><b>Free</b>Shipping</span>' +
-        '</div>' +
-        '<div class="evbs-body">' +
-          '<div class="evbs-form-view">' +
-            '<p class="evbs-kicker">Welcome offer</p>' +
-            '<h2 class="evbs-title" id="evbsTitle">Free shipping on your <em>first order</em></h2>' +
-            '<p class="evbs-sub" id="evbsSub">Enter your email and we\'ll attach free standard shipping to it. Just check out with the same email.</p>' +
-            '<form class="evbs-form" novalidate>' +
-              '<label class="evbs-label" for="evbsEmail">Email address</label>' +
+      '<button type="button" class="evbs-x" data-close aria-label="Close">&times;</button>' +
+      '<div class="evbs-body">' +
+        '<div class="evbs-form-view">' +
+          '<p class="evbs-kicker">Welcome offer</p>' +
+          '<p class="evbs-title">Free shipping on your <em>first order</em></p>' +
+          '<button type="button" class="evbs-btn evbs-get" aria-expanded="false">Get it</button>' +
+          '<p class="evbs-sub">Enter your email and we\'ll attach free standard shipping to it. Just check out with the same email.</p>' +
+          '<form class="evbs-form" novalidate>' +
+            '<label class="evbs-label" for="evbsEmail">Email address</label>' +
+            '<div class="evbs-row">' +
               '<input class="evbs-input" id="evbsEmail" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>' +
-              '<input class="evbs-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-              '<p class="evbs-err" role="alert"></p>' +
-              '<button type="submit" class="evbs-btn">Unlock free shipping</button>' +
-            '</form>' +
-            '<button type="button" class="evbs-skip" data-close>No thanks</button>' +
-            '<p class="evbs-fine">Applies to standard shipping on your first online order. We only email about the store and offers.</p>' +
-          '</div>' +
-          '<div class="evbs-done-view" hidden>' +
-            '<p class="evbs-kicker">You\'re in</p>' +
-            '<h2 class="evbs-title">Free shipping is <em>saved</em></h2>' +
-            '<p class="evbs-sub">It\'s linked to <strong class="evbs-done-email"></strong>. Use that email at checkout and standard shipping is on us.</p>' +
-            '<button type="button" class="evbs-btn" data-close>Keep browsing</button>' +
-          '</div>' +
+              '<button type="submit" class="evbs-btn">Unlock</button>' +
+            '</div>' +
+            '<input class="evbs-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+            '<p class="evbs-err" role="alert"></p>' +
+          '</form>' +
+          '<p class="evbs-fine">Applies to standard shipping on your first online order. We only email about the store and offers.</p>' +
+        '</div>' +
+        '<div class="evbs-done-view" hidden>' +
+          '<p class="evbs-kicker">You\'re in</p>' +
+          '<p class="evbs-title">Free shipping is <em>saved</em></p>' +
+          '<p class="evbs-sub">It\'s linked to <strong class="evbs-done-email"></strong>. Use that email at checkout and standard shipping is on us.</p>' +
         '</div>' +
       '</div>';
     document.body.appendChild(root);
 
     root.addEventListener('click', function (e) {
       if (e.target.closest('[data-close]')) close(true);
+      if (e.target.closest('.evbs-get')) expand();
     });
     root.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') close(true);
-      if (e.key === 'Tab') trapTab(e);
     });
     root.querySelector('.evbs-form').addEventListener('submit', submit);
   }
 
-  function trapTab(e) {
-    var f = Array.prototype.filter.call(
-      root.querySelectorAll('button, a[href], input:not(.evbs-hp)'),
-      function (el) { return el.offsetParent !== null; }
-    );
-    if (!f.length) return;
-    var first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  function expand() {
+    root.classList.add('is-expanded');
+    root.querySelector('.evbs-get').setAttribute('aria-expanded', 'true');
+    root.querySelector('#evbsEmail').focus({ preventScroll: true });
   }
 
   function open() {
     if (!root) build();
-    lastFocus = document.activeElement;
-    requestAnimationFrame(function () {
-      root.classList.add('is-open');
-      document.documentElement.classList.add('evbs-lock');
-      var input = root.querySelector('#evbsEmail');
-      setTimeout(function () { input.focus({ preventScroll: true }); }, 250);
-    });
+    requestAnimationFrame(function () { root.classList.add('is-open'); });
     push('signup_popup_view');
   }
 
   function close(dismissed) {
     if (!root || !root.classList.contains('is-open')) return;
     root.classList.remove('is-open');
-    document.documentElement.classList.remove('evbs-lock');
     if (dismissed && !PREVIEW && get(STATE_KEY) !== 'joined') set(STATE_KEY, 'dismissed:' + Date.now());
-    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
   }
 
   function submit(e) {
@@ -177,12 +161,12 @@
       root.querySelector('.evbs-done-email').textContent = email;
       root.querySelector('.evbs-form-view').hidden = true;
       root.querySelector('.evbs-done-view').hidden = false;
-      root.querySelector('.evbs-done-view .evbs-btn').focus({ preventScroll: true });
       push('email_signup', { signup_source: 'popup' });
+      setTimeout(function () { close(false); }, 8000);
     }).catch(function (x) {
       err.textContent = x.message || 'Something went wrong. Please try again.';
       btn.disabled = false;
-      btn.textContent = 'Unlock free shipping';
+      btn.textContent = 'Unlock';
     });
   }
 
@@ -192,9 +176,17 @@
       if (fired) return;
       if (otherDialogOpen()) return setTimeout(fire, 2000);
       fired = true;
+      window.removeEventListener('scroll', onScroll);
       open();
     }
-    setTimeout(fire, PREVIEW ? 600 : DELAY_MS);
+    function onScroll() {
+      var doc = document.documentElement;
+      var room = doc.scrollHeight - window.innerHeight;
+      if (room > 0 && window.scrollY / room >= SCROLL_SHARE) fire();
+    }
+    if (PREVIEW) return setTimeout(fire, 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(fire, DELAY_MS);
   }
 
   function start() {

@@ -426,7 +426,7 @@ function toggleNav() { toggleEvbNav(); }
 (function () {
   if (!/^\/store(\/|$)/.test(location.pathname) && !/[?&]signup-preview\b/.test(location.search)) return;
   var s = document.createElement('script');
-  s.src = '/evb-signup.js?v=5';
+  s.src = '/evb-signup.js?v=6';
   s.defer = true;
   document.head.appendChild(s);
 })();
