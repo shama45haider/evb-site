@@ -430,6 +430,21 @@ async function handleCreateOrder(request, env, origin, ctx) {
     await env.ORDERS.put('idem:' + payload.idempotencyKey, JSON.stringify(receipt), ttl);
   }
 
+  // Confirmation email with the order-status link. Never allowed to fail the
+  // order: the card has already been charged by this point.
+  if (p.status === 'COMPLETED') {
+    const mail = sendOrderEmail(env, receipt)
+      .then(result => markEmailed(env, receipt, result))
+      .catch(err => console.error('[evb-square] confirmation email', receipt.id, err.message));
+    if (ctx && typeof ctx.waitUntil === 'function') {
+      // Tell the page what to claim without making the buyer wait on Resend.
+      receipt.emailStatus = env.RESEND_API_KEY ? 'queued' : 'not-configured';
+      ctx.waitUntil(mail);
+    } else {
+      await mail;
+    }
+  }
+
   if (p.status === 'COMPLETED' && env.PANEL_API_KEY) {
     const panel = (env.PANEL_URL || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
     const ping = fetch(panel + '/api/cron/square-sync', {
@@ -523,6 +538,234 @@ async function handleDeleteSubscriber(env, email, origin) {
   return json({ ok: true }, 200, origin);
 }
 
+/* ===========================================================================
+   Order confirmation email
+   ---------------------------------------------------------------------------
+   Sends the buyer a confirmation carrying the link to their order status page,
+   the same page the receipt screen shows. Sent through Resend.
+
+   Setup (one time):
+     1. resend.com -> add and verify the domain eastvillagebuyers.com
+     2. Worker -> Settings -> Variables and Secrets:
+          RESEND_API_KEY   type Secret   (starts re_...)
+          ORDER_FROM       type Text     optional, defaults below
+          ORDER_BCC        type Text     optional, a copy to the shop
+
+   Until RESEND_API_KEY is set, nothing is sent and orders still complete
+   normally. Sending never blocks or fails a paid order: the money has already
+   moved, so a mail outage must not turn a successful payment into an error.
+=========================================================================== */
+
+const MAIL_FROM_DEFAULT = 'East Village Buyers <orders@eastvillagebuyers.com>';
+const SITE_URL = 'https://eastvillagebuyers.com';
+
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function fmtMoney(cents) {
+  const n = Math.abs(Math.round(Number(cents) || 0)) / 100;
+  return (Number(cents) < 0 ? '-' : '') + '$' +
+    n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function orderUrl(order) {
+  return SITE_URL + '/store/order/?id=' + encodeURIComponent(order.id);
+}
+
+/** Plain-text part, so the mail is readable anywhere and scores better on spam. */
+function orderEmailText(order) {
+  const t = order.totals || {};
+  const pickup = order.fulfillment && order.fulfillment.type === 'PICKUP';
+  const lines = (order.lineItems || []).map(
+    l => '  - ' + l.name + (l.variant ? ' (' + l.variant + ')' : '') +
+         '  x' + l.quantity + '  ' + fmtMoney(l.total));
+
+  return [
+    'Thanks ' + ((order.customer && order.customer.firstName) || '') + ' - we have your order.',
+    '',
+    'Order ' + order.id,
+    'Track it here: ' + orderUrl(order),
+    '',
+    'Items:',
+    lines.join('\n'),
+    '',
+    'Subtotal  ' + fmtMoney(t.subtotal),
+    (t.discount ? 'Discount  -' + fmtMoney(t.discount) : null),
+    (pickup ? 'Pickup    Free' : 'Shipping  ' + (t.shipping ? fmtMoney(t.shipping) : 'Free')),
+    'Tax       ' + fmtMoney(t.tax),
+    'Total     ' + fmtMoney(t.total),
+    '',
+    pickup
+      ? 'Collect at 39 Avenue A, New York, NY 10009. We will email you when it is ready. Bring photo ID matching the name on the order.'
+      : 'We will send tracking as soon as it ships. Shipments are insured and need a signature.',
+    '',
+    'Questions? Call or text 917-608-8939.',
+    'East Village Buyers - 39 Avenue A, New York, NY 10009'
+  ].filter(Boolean).join('\n');
+}
+
+function orderEmailHtml(order) {
+  const t = order.totals || {};
+  const pickup = order.fulfillment && order.fulfillment.type === 'PICKUP';
+  const url = orderUrl(order);
+
+  const rows = (order.lineItems || []).map(l => `
+    <tr>
+      <td style="padding:10px 0;border-bottom:1px solid #eee;font:14px -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#111">
+        ${esc(l.name)}${l.variant ? `<span style="color:#777"> &middot; ${esc(l.variant)}</span>` : ''}
+        <span style="color:#777"> &times;${esc(l.quantity)}</span>
+      </td>
+      <td align="right" style="padding:10px 0;border-bottom:1px solid #eee;font:600 14px -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#111;white-space:nowrap">
+        ${fmtMoney(l.total)}
+      </td>
+    </tr>`).join('');
+
+  const totalRow = (label, value, strong) => `
+    <tr>
+      <td style="padding:4px 0;font:${strong ? '800 15px' : '14px'} -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:${strong ? '#111' : '#555'}">${esc(label)}</td>
+      <td align="right" style="padding:4px 0;font:${strong ? '800 15px' : '14px'} -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#111;white-space:nowrap">${esc(value)}</td>
+    </tr>`;
+
+  const addr = (!pickup && order.fulfillment && order.fulfillment.address) || null;
+
+  return `<!doctype html><html><body style="margin:0;background:#f8f5f0;padding:24px 12px">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e7e1d8;border-radius:12px;overflow:hidden">
+    <tr><td style="height:5px;background:#f97316"></td></tr>
+    <tr><td style="padding:26px 26px 0">
+      <p style="margin:0 0 6px;font:800 10px -apple-system,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#f97316">Order confirmed</p>
+      <h1 style="margin:0 0 10px;font:900 22px -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#111;letter-spacing:-.02em">Thanks${order.customer && order.customer.firstName ? ', ' + esc(order.customer.firstName) : ''}.</h1>
+      <p style="margin:0 0 20px;font:15px/1.6 -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#555">
+        We have your order. Use the link below any time to check its status.
+      </p>
+      <p style="margin:0 0 22px">
+        <a href="${esc(url)}" style="display:inline-block;background:#f97316;color:#fff;text-decoration:none;font:800 12px -apple-system,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:14px 24px;border-radius:9px">Track your order</a>
+      </p>
+      <p style="margin:0 0 22px;font:13px/1.6 -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#777">
+        Order <strong style="color:#111">${esc(order.id)}</strong><br>
+        <a href="${esc(url)}" style="color:#ea580c;word-break:break-all">${esc(url)}</a>
+      </p>
+    </td></tr>
+    <tr><td style="padding:0 26px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px">
+        ${totalRow('Subtotal', fmtMoney(t.subtotal))}
+        ${t.discount ? totalRow('Discount' + (t.promoCode ? ' (' + t.promoCode + ')' : ''), '-' + fmtMoney(t.discount)) : ''}
+        ${totalRow(pickup ? 'In-store pickup' : 'Shipping', t.shipping ? fmtMoney(t.shipping) : 'Free')}
+        ${totalRow('Sales tax', fmtMoney(t.tax))}
+        ${totalRow('Total paid', fmtMoney(t.total), true)}
+      </table>
+    </td></tr>
+    <tr><td style="padding:22px 26px 26px">
+      <div style="background:#f8f5f0;border-radius:9px;padding:16px">
+        <p style="margin:0 0 6px;font:800 10px -apple-system,Segoe UI,Roboto,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#777">${pickup ? 'Collection' : 'Shipping to'}</p>
+        <p style="margin:0;font:14px/1.6 -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#111">
+          ${pickup
+            ? '39 Avenue A, New York, NY 10009<br><span style="color:#555">We will email you when it is ready. Bring photo ID matching the name on the order.</span>'
+            : (addr ? [addr.name, addr.line1, addr.line2, (addr.city || '') + ', ' + (addr.region || '') + ' ' + (addr.postal || '')]
+                        .filter(Boolean).map(esc).join('<br>') +
+                      '<br><span style="color:#555">Tracking follows as soon as it ships. Insured, signature on delivery.</span>'
+                    : '<span style="color:#555">Tracking follows as soon as it ships.</span>')}
+        </p>
+      </div>
+      <p style="margin:18px 0 0;font:13px/1.6 -apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#777">
+        Questions? Call or text <a href="tel:9176088939" style="color:#ea580c;text-decoration:none">917-608-8939</a>.<br>
+        East Village Buyers &middot; 39 Avenue A, New York, NY 10009
+      </p>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+/**
+ * Send the confirmation. Resolves to a short status string rather than
+ * throwing, because every caller is on a path where the payment already
+ * succeeded and must not be rolled back by a mail problem.
+ */
+async function sendOrderEmail(env, order) {
+  const to = order.customer && order.customer.email;
+  if (!to) return 'no-address';
+  if (!env.RESEND_API_KEY) return 'not-configured';
+
+  const body = {
+    from: env.ORDER_FROM || MAIL_FROM_DEFAULT,
+    to: [to],
+    subject: 'Order ' + order.id + ' confirmed - East Village Buyers',
+    html: orderEmailHtml(order),
+    text: orderEmailText(order),
+    reply_to: 'info@eastvillagebuyers.com'
+  };
+  if (env.ORDER_BCC) body.bcc = [env.ORDER_BCC];
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + env.RESEND_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      console.error('[evb-square] order email failed', order.id, res.status, detail.slice(0, 300));
+      return 'failed';
+    }
+    return 'sent';
+  } catch (err) {
+    console.error('[evb-square] order email error', order.id, err.message);
+    return 'failed';
+  }
+}
+
+/**
+ * Record on the stored order whether the mail went out, so the receipt page
+ * only claims an email is coming when one actually is, and so a later resend
+ * can tell which orders were missed.
+ */
+async function markEmailed(env, order, result) {
+  order.emailStatus = result;
+  order.emailedAt = result === 'sent' ? new Date().toISOString() : null;
+  if (env.ORDERS) {
+    try {
+      await env.ORDERS.put('order:' + order.id, JSON.stringify(order),
+        { expirationTtl: 60 * 60 * 24 * 365 });
+    } catch (err) {
+      console.error('[evb-square] could not record email status', order.id, err.message);
+    }
+  }
+  return order;
+}
+
+/**
+ * POST /orders/:id/resend  — re-send the confirmation for an order that
+ * already exists. Authenticated with the panel key, so it cannot be used to
+ * mail someone repeatedly from the open internet. Used to reach the customers
+ * who ordered before confirmation emails existed.
+ */
+async function handleResendOrderEmail(request, env, id, origin) {
+  const auth = request.headers.get('Authorization') || '';
+  if (!env.PANEL_API_KEY || auth !== 'Bearer ' + env.PANEL_API_KEY) {
+    return json({ error: 'Not authorized.' }, 401, origin);
+  }
+  if (!env.ORDERS) return json({ error: 'Order lookup is not configured.' }, 404, origin);
+
+  const raw = await env.ORDERS.get('order:' + id);
+  if (!raw) return json({ error: 'Order not found.' }, 404, origin);
+
+  const order = JSON.parse(raw);
+  const result = await sendOrderEmail(env, order);
+  await markEmailed(env, order, result);
+  return json({
+    id: order.id,
+    to: order.customer && order.customer.email,
+    emailStatus: result,
+    trackUrl: orderUrl(order)
+  }, result === 'sent' ? 200 : 502, origin);
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
@@ -542,7 +785,8 @@ export default {
         ok: true,
         environment: env.SQUARE_ENVIRONMENT || 'sandbox',
         configured: !!(env.SQUARE_ACCESS_TOKEN && env.SQUARE_LOCATION_ID),
-        ordersKv: !!env.ORDERS
+        ordersKv: !!env.ORDERS,
+        email: !!env.RESEND_API_KEY
       }, 200, origin);
     }
 
@@ -591,6 +835,10 @@ export default {
       const m = /^\/orders\/([A-Za-z0-9._-]{1,64})$/.exec(path);
       if (request.method === 'GET' && m) {
         return await handleGetOrder(env, m[1], origin);
+      }
+      const rs = /^\/orders\/([A-Za-z0-9._-]{1,64})\/resend$/.exec(path);
+      if (request.method === 'POST' && rs) {
+        return await handleResendOrderEmail(request, env, rs[1], origin);
       }
       return json({ error: 'Not found.' }, 404, origin);
 
