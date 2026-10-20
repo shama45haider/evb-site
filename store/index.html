@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.8.1">
+<link rel="stylesheet" href="/store/store.css?v=1.8.2">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -360,7 +360,7 @@
 
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.3"></script>
-<script src="/store/store-catalog.js?v=1.9.0"></script>
+<script src="/store/store-catalog.js?v=1.9.1"></script>
 <script src="/store/store-core.js?v=1.9.0"></script>
 <script>
 (function () {
@@ -570,6 +570,11 @@
       var from = items.length
         ? items.reduce(function (m, p) { return Math.min(m, p.price); }, Infinity) : null;
 
+      var img = lead ? '<img src="' + S.attr(lead.images[0]) + '"' +
+          (c.image ? ' onerror="this.onerror=null;this.src=\'' + S.attr(c.image) + '\';' +
+            (c.cover ? 'this.className=\'is-cover\'' : '') + '"' : '') :
+        c.image ? '<img src="' + S.attr(c.image) + '"' + (c.cover ? ' class="is-cover"' : '') : '';
+
       var meta = '<span class="evb-cat-n">' + n + (n === 1 ? ' item' : ' items') + '</span>' +
         (from != null ? '<span class="evb-cat-from"> · from ' +
           S.esc(S.money(from).replace(/\.00$/, '')) + '</span>' : '');
@@ -577,7 +582,7 @@
       return '<a class="evb-cat" href="?c=' + encodeURIComponent(c.id) + '#shop" data-cat="' + S.attr(c.id) + '"' +
           ' title="' + S.attr(c.blurb) + '">' +
         '<span class="evb-cat-media">' +
-          (lead ? '<img src="' + S.attr(lead.images[0]) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
+          (img ? img + ' alt="" aria-hidden="true" loading="lazy" decoding="async">' : '') +
         '</span>' +
         '<span class="evb-cat-name">' + S.esc(c.label) + '</span>' +
         '<span class="evb-cat-meta">' + meta + '</span>' +

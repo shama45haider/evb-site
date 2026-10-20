@@ -282,6 +282,7 @@ body.evb-store-page {
   width: 100%; height: 100%; object-fit: contain; display: block;
   padding: 15%; transition: transform 0.28s ease;
 }
+.evb-cat-media img.is-cover { object-fit: cover; padding: 0; }
 .evb-cat:hover .evb-cat-media {
   border-color: var(--evb-orange);
   box-shadow: 0 6px 18px rgba(249,115,22,0.22);

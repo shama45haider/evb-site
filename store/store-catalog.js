@@ -2,14 +2,24 @@
   'use strict';
 
   var CATEGORIES = [
-    { id: 'sneakers',     label: 'Sneakers',       blurb: 'Deadstock and lightly worn pairs, legit-checked in house.' },
-    { id: 'watches',      label: 'Watches',        blurb: 'Swiss and Japanese references, movements tested and running.' },
-    { id: 'jewelry',      label: 'Jewelry',        blurb: 'Solid gold, sterling silver and signed designer pieces.' },
-    { id: 'gold',         label: 'Gold & Bullion', blurb: 'Coins and bars priced against the live spot market.' },
-    { id: 'streetwear',   label: 'Streetwear',     blurb: 'Chrome Hearts, Hellstar, MATTYBOY and NYC labels.' },
-    { id: 'designer',     label: 'Designer',       blurb: 'Handbags, small leather goods and accessories.' },
-    { id: 'electronics',  label: 'Electronics',    blurb: 'Apple, Sony and console hardware, wiped and tested.' },
-    { id: 'collectibles', label: 'Collectibles',   blurb: 'Sealed TCG, vinyl figures and diecast.' }
+    // image is the department tile's photo when the department has nothing in stock;
+    // cover marks full-frame photos (fill the circle) vs cut-outs (shown whole).
+    { id: 'sneakers',     label: 'Sneakers',       blurb: 'Deadstock and lightly worn pairs, legit-checked in house.',
+      image: '/air-jordan-1-high-chicago.webp', cover: true },
+    { id: 'watches',      label: 'Watches',        blurb: 'Swiss and Japanese references, movements tested and running.',
+      image: '/watch-tag-heuer-formula-1-green-dial.webp', cover: true },
+    { id: 'jewelry',      label: 'Jewelry',        blurb: 'Solid gold, sterling silver and signed designer pieces.',
+      image: '/diamond-tennis-bracelet.webp', cover: true },
+    { id: 'gold',         label: 'Gold & Bullion', blurb: 'Coins and bars priced against the live spot market.',
+      image: '/goldcoincanada.webp' },
+    { id: 'streetwear',   label: 'Streetwear',     blurb: 'Chrome Hearts, Hellstar, MATTYBOY and NYC labels.',
+      image: '/streetwear-main.webp', cover: true },
+    { id: 'designer',     label: 'Designer',       blurb: 'Handbags, small leather goods and accessories.',
+      image: '/lvhandbag.webp' },
+    { id: 'electronics',  label: 'Electronics',    blurb: 'Apple, Sony and console hardware, wiped and tested.',
+      image: '/ps5.webp' },
+    { id: 'collectibles', label: 'Collectibles',   blurb: 'Sealed TCG, vinyl figures and diecast.',
+      image: '/pokemon-booster-box.webp' }
   ];
 
   function sizes(spec, prefix) {
