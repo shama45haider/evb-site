@@ -1028,3 +1028,6 @@ body.evb-store-page {
 .evb-soon-buy-links a:hover {
   border-color: var(--evb-orange); color: var(--evb-orange-dark); transform: translateY(-1px);
 }
+
+div.evbs { display: none !important; }
+html.evbs-lock { overflow: visible !important; }
