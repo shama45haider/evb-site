@@ -147,6 +147,32 @@ async function handleCatalog(env, origin) {
   });
 }
 
+async function checkStock(env, incoming, variations, items) {
+  const tracked = incoming.filter(l => {
+    const v = variations[l.variationId];
+    return v && v.item_variation_data && v.item_variation_data.track_inventory;
+  });
+  if (!tracked.length) return;
+
+  const inv = await square(env, '/v2/inventory/counts/batch-retrieve', 'POST', {
+    catalog_object_ids: tracked.map(l => l.variationId),
+    location_ids: [env.SQUARE_LOCATION_ID],
+    states: ['IN_STOCK']
+  });
+  const counts = {};
+  (inv.counts || []).forEach(c => {
+    counts[c.catalog_object_id] = (counts[c.catalog_object_id] || 0) + Number(c.quantity || 0);
+  });
+
+  tracked.forEach(l => {
+    const qty = Math.max(1, parseInt(l.quantity, 10) || 1);
+    if ((counts[l.variationId] || 0) >= qty) return;
+    const parent = items[variations[l.variationId].item_variation_data.item_id];
+    const name = (parent && parent.item_data && parent.item_data.name) || 'An item in your bag';
+    throw Object.assign(new Error(name + ' just sold. Remove it from your bag to check out. Nothing was charged.'), { status: 409 });
+  });
+}
+
 async function buildSquareOrder(env, payload) {
   const incoming = (payload.order && payload.order.lineItems) || [];
   if (!incoming.length) throw Object.assign(new Error('Your bag is empty.'), { status: 400 });
@@ -166,6 +192,8 @@ async function buildSquareOrder(env, payload) {
 
   const items = {};
   (batch.related_objects || []).forEach(o => { if (o.type === 'ITEM') items[o.id] = o; });
+
+  await checkStock(env, incoming, variations, items);
 
   const lineItems = [];
   let subtotal = 0;
