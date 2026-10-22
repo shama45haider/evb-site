@@ -128,7 +128,7 @@ body.evb-store-page {
 }
 .evb-storebar-cat:hover { background: var(--evb-orange-soft); color: var(--evb-orange-dark); }
 .evb-storebar-cat.is-active { background: var(--evb-orange); color: #fff; }
-.evb-storebar-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.evb-storebar-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
 .evb-cartbtn {
   position: relative; display: inline-flex; align-items: center; gap: 9px;
@@ -150,21 +150,37 @@ body.evb-store-page {
 }
 .evb-cartbtn-count.is-empty { background: rgba(255,255,255,0.28); color: #fff; }
 
-/* EVB Rewards (/account/) — a quiet pill beside the orange Bag button. */
+/* Sign in (/account/): a white pill the same height as the orange Bag, so
+   the two read as a pair: Bag is the loud one. A round avatar leads it, soft
+   orange until hovered (or on /account/), then solid; once signed in it's
+   dark with the member's initial and the pill says My account
+   (site-nav.js). The only way into accounts from the site, so it's on the
+   Online Store pages only. */
 .evb-acctbtn {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; gap: 9px; height: 42px; box-sizing: border-box;
+  padding: 0 16px 0 6px; border-radius: 21px;
+  background: #fff; border: 1px solid var(--evb-line); box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800;
-  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
-  color: var(--evb-ink); background: #fff;
-  border: 1.5px solid var(--evb-line); border-radius: 20px; padding: 9.5px 15px;
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
+  color: var(--evb-ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
-.evb-acctbtn svg { width: 15px; height: 15px; color: var(--evb-orange); }
-.evb-acctbtn:hover, .evb-acctbtn.is-active { border-color: var(--evb-orange); color: var(--evb-orange-dark); }
-.evb-acctbtn:hover { transform: translateY(-2px); }
+.evb-acctbtn-avatar {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  background: var(--evb-orange-soft); color: var(--evb-orange-deep);
+  font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.evb-acctbtn-avatar svg { width: 15px; height: 15px; }
+.evb-acctbtn:hover { border-color: rgba(0,0,0,0.18); box-shadow: 0 6px 16px rgba(0,0,0,0.08); transform: translateY(-1px); }
+.evb-acctbtn:hover .evb-acctbtn-avatar,
+.evb-acctbtn.is-active .evb-acctbtn-avatar { background: var(--evb-orange); color: #fff; }
+.evb-acctbtn:focus-visible { outline: 2px solid var(--evb-orange); outline-offset: 2px; }
+.evb-acctbtn.is-signed-in .evb-acctbtn-avatar,
+.evb-acctbtn.is-signed-in:hover .evb-acctbtn-avatar { background: var(--evb-ink); color: #fff; }
 
 @media (max-width: 900px) { .evb-storebar-cats { display: none; } }
-@media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } .evb-acctbtn { padding: 9.5px 12px; } }
+@media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } .evb-acctbtn { padding: 0 13px 0 6px; } }
 
 .evb-section { padding: 52px 0; }
 .evb-section--tight { padding: 36px 0; }
@@ -1065,7 +1081,6 @@ html.evbs-lock { overflow: visible !important; }
 @media (max-width: 560px) { .evb-rewards-nudge .evb-btn { width: 100%; } }
 @media print { .evb-rewards-nudge { display: none; } }
 
-/* Until EVB Rewards launches (EVB_REWARDS_OPEN in site-nav.js), nothing
-   links to /account/. Hidden by default so there's no flash before JS. */
-html:not(.evb-rewards-open) .evb-acctbtn,
+/* Until EVB Rewards launches (EVB_REWARDS_OPEN in site-nav.js) receipts
+   don't offer points. Hidden by default so there's no flash before JS. */
 html:not(.evb-rewards-open) .evb-rewards-nudge { display: none !important; }

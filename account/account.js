@@ -610,7 +610,7 @@
     bindHistory(history, me);
     document.getElementById('acctSignOut').addEventListener('click', function () {
       if (!sb) return renderEmail();
-      sb.auth.signOut().then(function () { renderEmail(); }, function () { renderEmail(); });
+      sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
     bindDetails(me);
   }
@@ -914,7 +914,7 @@
 
     document.getElementById('acctSignOut').addEventListener('click', function () {
       if (!sb) return renderEmail();
-      sb.auth.signOut().then(function () { renderEmail(); }, function () { renderEmail(); });
+      sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
     bindDetails(me);
   }
@@ -939,8 +939,19 @@
     document.getElementById('acctRetry').addEventListener('click', function () { if (sb) loadMe(); else location.reload(); });
     document.getElementById('acctOut').addEventListener('click', function () {
       if (!sb) return location.reload();
-      sb.auth.signOut().then(function () { renderEmail(); }, function () { renderEmail(); });
+      sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
+  }
+
+  // The store bar's Sign in shows the member's initial (site-nav.js).
+  function rememberMember(me) {
+    var name = String((me && (me.fullName || me.email)) || '').trim();
+    try { localStorage.setItem('evb_member_initial', name ? name.charAt(0).toUpperCase() : ''); } catch (e) {}
+    if (window.evbRefreshAccountButton) window.evbRefreshAccountButton();
+  }
+  function forgetMember() {
+    try { localStorage.removeItem('evb_member_initial'); } catch (e) {}
+    if (window.evbRefreshAccountButton) window.evbRefreshAccountButton();
   }
 
   function loadMe() {
@@ -949,7 +960,7 @@
       if (res.error) {
         var m = res.error.message || '';
         if (/JWT|not signed in|Confirm your email/i.test(m) || res.error.code === '28000' || res.status === 401) {
-          sb.auth.signOut().then(function () { renderEmail(); }, function () { renderEmail(); });
+          sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
           return;
         }
         if (/Could not find the function|does not exist/i.test(m)) {
@@ -958,6 +969,7 @@
         return renderProblem(friendly(res.error));
       }
       var me = res.data;
+      rememberMember(me);
       if (!me.fullName) renderWelcome(me);
       else if (me.locked) renderLocked(me);
       else renderDash(me);

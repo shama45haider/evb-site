@@ -442,12 +442,12 @@ function toggleNav() { toggleEvbNav(); }
 // EVB Rewards: a Rewards link beside Store in both navs. Added here rather
 // than in each page's header markup so all 128 pages get it at once.
 //
-// EVB_REWARDS_OPEN is the launch switch. While false, nothing on the site
-// points to /account/ — no nav link, no store-bar button, no "claim your
-// points" box on receipts (store.css hides those unless <html> has
-// .evb-rewards-open) — and the account page reads as members-only. People
-// already given an account can still sign in at /account/. The real lock
-// is Supabase's "Allow new users to sign up", which stays off until launch.
+// EVB_REWARDS_OPEN is the launch switch for the site's Rewards marketing.
+// While false there's no Rewards link in the navs and no "claim your
+// points" box on receipts (store.css hides it unless <html> has
+// .evb-rewards-open). Accounts themselves are reached from the store bar's
+// Sign in, and what an account shows is decided in the database (panel
+// migration 0072, store_settings.rewards_open).
 var EVB_REWARDS_OPEN = false;
 (function () {
   if (!EVB_REWARDS_OPEN) return;
@@ -479,49 +479,35 @@ var EVB_REWARDS_OPEN = false;
   else add();
 })();
 
-// Sign in: a button at the right end of the nav bar and in the phone menu,
-// on every page. Unlike the Rewards link above it shows before launch too —
-// it's how invited members get to /account/. "My account" once signed in
-// (supabase-js keeps the session under 'evb-account', account.js).
+// Sign in lives in the store bar (.evb-acctbtn), on the Online Store pages
+// and /account/ only, not in the site-wide nav. Once signed in it reads "My
+// account", with the member's initial in the avatar (account.js keeps it
+// under 'evb_member_initial'; supabase-js keeps the session under
+// 'evb-account'). account.js calls evbRefreshAccountButton() when someone
+// signs in or out.
 (function () {
-  function signedIn() {
-    try { return !!localStorage.getItem('evb-account'); } catch (e) { return false; }
-  }
-  var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+  var ICON = null;
+  function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
-  function add() {
-    if (document.querySelector('[data-evb-login]')) return;
-    var label = signedIn() ? 'My account' : 'Sign in';
-    var here = /^\/account(\/|$)/.test(location.pathname);
-
-    var right = document.querySelector('.site-nav-right');
-    if (right) {
-      var a = document.createElement('a');
-      a.href = '/account/';
-      a.className = 'site-nav-login' + (here ? ' is-active' : '');
-      a.setAttribute('data-evb-login', '');
-      a.setAttribute('aria-label', label);
-      a.title = label;
-      a.innerHTML = '<span class="site-nav-login-icon">' + ICON + '</span><span class="site-nav-login-label">' + label + '</span>';
-      var ham = right.querySelector('.site-ham');
-      right.insertBefore(a, ham || null);
-      // Send a Text shrinks to its icon on narrow desktops (site-nav.css);
-      // keep its name for screen readers.
-      var sms = right.querySelector('.site-btn-sms');
-      if (sms && !sms.hasAttribute('aria-label')) sms.setAttribute('aria-label', 'Send a text');
-    }
-
-    var foot = document.querySelector('.site-mob-footer');
-    if (foot) {
-      var m = document.createElement('a');
-      m.href = '/account/';
-      m.className = 'site-mob-btn site-mob-btn-login';
-      m.setAttribute('data-evb-login', '');
-      m.innerHTML = ICON + label;
-      var addr = foot.querySelector('.site-mob-addr');
-      foot.insertBefore(m, addr ? addr.nextSibling : foot.firstChild);
+  function refresh() {
+    var signedIn = !!get('evb-account');
+    var initial = signedIn ? (get('evb_member_initial') || '').slice(0, 1) : '';
+    var btns = document.querySelectorAll('.evb-acctbtn');
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      var label = b.querySelector('.evb-acctbtn-label');
+      var avatar = b.querySelector('.evb-acctbtn-avatar');
+      if (avatar && ICON === null) ICON = avatar.innerHTML;
+      b.classList.toggle('is-signed-in', signedIn);
+      if (label) label.textContent = signedIn ? 'My account' : 'Sign in';
+      if (avatar) {
+        if (initial) avatar.textContent = initial;
+        else if (ICON !== null) avatar.innerHTML = ICON;
+      }
+      b.setAttribute('aria-label', signedIn ? 'My account' : 'Sign in');
     }
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add);
-  else add();
+  window.evbRefreshAccountButton = refresh;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refresh);
+  else refresh();
 })();
