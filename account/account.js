@@ -163,10 +163,18 @@
     });
   }
 
+  // Before launch (EVB_REWARDS_OPEN false in site-nav.js) only accounts that
+  // already exist get a code. Anyone else is saved as a request for the
+  // panel's Members → Requests (0071) and told they're on the list.
+  function closed() { return window.EVB_REWARDS_OPEN === false; }
+
   function sendCode(email, btn, errEl) {
-    if (!sb) return renderCode(email);
+    if (!sb) return closed() ? renderRequested(email) : renderCode(email);
     setBusy(btn, true, 'Sending…');
-    sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } }).then(function (res) {
+    sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: !closed() } }).then(function (res) {
+      if (res.error && closed() && /signups? not allowed|signup.*disabled|not found/i.test(res.error.message || '')) {
+        return requestAccess(email, btn, errEl);
+      }
       setBusy(btn, false, 'Email me a code');
       if (res.error) { if (errEl) errEl.textContent = friendly(res.error); return; }
       ss(PENDING_KEY, JSON.stringify({ email: email, sentAt: Date.now() }));
@@ -176,6 +184,37 @@
       setBusy(btn, false, 'Email me a code');
       if (errEl) errEl.textContent = friendly(e);
     });
+  }
+
+  function requestAccess(email, btn, errEl) {
+    sb.rpc('request_member_access', { p_email: email, p_page: location.pathname }).then(function (res) {
+      setBusy(btn, false, 'Email me a code');
+      if (res.error) {
+        if (errEl) errEl.textContent = /full email/i.test(res.error.message || '') ? res.error.message : friendly(res.error);
+        return;
+      }
+      push('account_access_requested', {});
+      renderRequested(email);
+    }, function (e) {
+      setBusy(btn, false, 'Email me a code');
+      if (errEl) errEl.textContent = friendly(e);
+    });
+  }
+
+  function renderRequested(email) {
+    stopResendTimer();
+    render(
+      '<div class="acct-hero">' + heroIntro() +
+        '<div class="acct-card acct-fade">' +
+          '<div class="acct-welcome-badge">' + ICON.clock + '</div>' +
+          '<h2 class="acct-card-title">You’re on the list</h2>' +
+          '<p class="acct-card-sub">We’ve saved <b>' + esc(email) + '</b>. EVB Rewards is opening to a few customers at a time — we’ll email you as soon as your account is ready.</p>' +
+          '<a class="evb-btn evb-btn--primary acct-btn" href="/store/">Browse the store</a>' +
+          '<div class="acct-links"><button type="button" class="acct-link" id="acctBack">Use a different email</button></div>' +
+        '</div>' +
+      '</div>'
+    );
+    document.getElementById('acctBack').addEventListener('click', function () { renderEmail(''); });
   }
 
   function renderCode(email, error) {
@@ -266,7 +305,7 @@
     resend.addEventListener('click', function () {
       if (!sb) return startResendTimer(resend, RESEND_SECONDS);
       resend.disabled = true;
-      sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } }).then(function (res) {
+      sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: !closed() } }).then(function (res) {
         if (res.error) { err.textContent = friendly(res.error); resend.disabled = false; return; }
         ss(PENDING_KEY, JSON.stringify({ email: email, sentAt: Date.now() }));
         err.textContent = '';
@@ -907,6 +946,7 @@
     if (mode === 'welcome') return previewAfterCode();
     if (mode === 'empty') return previewAfterProfile('Pat Rivera');
     if (mode === 'signin') return renderEmail();
+    if (mode === 'requested') return renderRequested('pat@example.com');
     renderDash(SAMPLE, { preview: true });
   }
 
