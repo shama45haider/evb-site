@@ -95,7 +95,7 @@
   /* Supabase's messages are written for developers; these are for customers. */
   function friendly(err) {
     var m = String((err && (err.message || err.error_description)) || err || '');
-    if (/signups? not allowed|signup.*disabled/i.test(m)) return 'Accounts are opening very soon. Check back shortly!';
+    if (/signups? not allowed|signup.*disabled/i.test(m)) return 'There’s no account for that email yet. EVB Rewards opens to everyone very soon!';
     if (/rate limit|only request this after|too many/i.test(m)) {
       var s = /after (\d+) seconds?/.exec(m);
       return s ? 'Please wait ' + s[1] + ' seconds, then try again.' : 'Too many tries. Please wait a minute and try again.';
@@ -130,8 +130,11 @@
     render(
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
-          '<h2 class="acct-card-title">Sign in or join free</h2>' +
-          '<p class="acct-card-sub">Enter your email. We’ll send you a code — new here? That’s all it takes to make your account.</p>' +
+          (window.EVB_REWARDS_OPEN === false
+            ? '<h2 class="acct-card-title">Member sign in</h2>' +
+              '<p class="acct-card-sub">EVB Rewards opens to everyone soon. If you already have an account, enter your email and we’ll send you a code.</p>'
+            : '<h2 class="acct-card-title">Sign in or join free</h2>' +
+              '<p class="acct-card-sub">Enter your email. We’ll send you a code — new here? That’s all it takes to make your account.</p>') +
           '<form id="acctEmailForm" novalidate>' +
             '<label class="acct-label" for="acctEmail">Email address</label>' +
             '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
@@ -484,14 +487,16 @@
         '</header>' +
 
         '<section class="acct-points acct-rise" style="--d:60ms" aria-label="Your points">' +
-          '<span class="acct-points-mark" aria-hidden="true">' + ICON.sparkle + '</span>' +
-          '<div class="acct-points-top">' +
-            '<span class="acct-points-label">' + ICON.star + 'Points</span>' +
-            (ready ? '<span class="acct-points-ready">' + money(ready * rules.rewardCents) + ' ready to use</span>' : '') +
+          '<div class="acct-points-main">' +
+            '<span class="acct-points-label">' + ICON.star + 'Your points</span>' +
+            '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
+            (ready ? '<span class="acct-points-ready">' + ICON.gift + money(ready * rules.rewardCents) + ' ready to use</span>' : '') +
+            '<p class="acct-points-sub"><b>' + num(toGo) + ' points</b> to your next ' + money(rules.rewardCents) + '</p>' +
           '</div>' +
-          '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
-          '<div class="acct-bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + rules.rewardPoints + '" aria-valuenow="' + into + '" aria-label="Points toward your next reward"><i data-pct="' + pct + '"></i></div>' +
-          '<div class="acct-points-foot"><span>' + num(toGo) + ' points to your next ' + money(rules.rewardCents) + '</span><span>' + num(rules.rewardPoints) + ' = ' + money(rules.rewardCents) + '</span></div>' +
+          '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + rules.rewardPoints + '" aria-valuenow="' + into + '" aria-label="Points toward your next reward">' +
+            '<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="acct-ring-track" cx="60" cy="60" r="52"/><circle class="acct-ring-fill" cx="60" cy="60" r="52" pathLength="100" data-pct="' + pct + '"/></svg>' +
+            '<span class="acct-ring-text"><b>' + money(rules.rewardCents) + '</b><small>' + num(into) + ' / ' + num(rules.rewardPoints) + '</small></span>' +
+          '</div>' +
         '</section>' +
 
         '<a class="acct-visit acct-rise" style="--d:100ms" href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">' +
@@ -541,8 +546,8 @@
     );
 
     countUp(host.querySelectorAll('[data-count]'));
-    var bar = host.querySelector('.acct-bar i');
-    if (bar) setTimeout(function () { bar.style.width = bar.dataset.pct + '%'; }, 250);
+    var ring = host.querySelector('.acct-ring-fill');
+    if (ring) setTimeout(function () { ring.style.strokeDashoffset = String(100 - Number(ring.dataset.pct)); }, 250);
 
     bindHistory(history, me);
     document.getElementById('acctSignOut').addEventListener('click', function () {

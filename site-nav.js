@@ -441,7 +441,17 @@ function toggleNav() { toggleEvbNav(); }
 
 // EVB Rewards: a Rewards link beside Store in both navs. Added here rather
 // than in each page's header markup so all 128 pages get it at once.
+//
+// EVB_REWARDS_OPEN is the launch switch. While false, nothing on the site
+// points to /account/ — no nav link, no store-bar button, no "claim your
+// points" box on receipts (store.css hides those unless <html> has
+// .evb-rewards-open) — and the account page reads as members-only. People
+// already given an account can still sign in at /account/. The real lock
+// is Supabase's "Allow new users to sign up", which stays off until launch.
+var EVB_REWARDS_OPEN = false;
 (function () {
+  if (!EVB_REWARDS_OPEN) return;
+  document.documentElement.classList.add('evb-rewards-open');
   function add() {
     if (document.querySelector('[data-evb-rewards-link]')) return;
     var here = /^\/account(\/|$)/.test(location.pathname);

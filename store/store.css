@@ -1064,3 +1064,8 @@ html.evbs-lock { overflow: visible !important; }
 .evb-rewards-nudge-sub strong { color: #fff; font-weight: 600; word-break: break-all; }
 @media (max-width: 560px) { .evb-rewards-nudge .evb-btn { width: 100%; } }
 @media print { .evb-rewards-nudge { display: none; } }
+
+/* Until EVB Rewards launches (EVB_REWARDS_OPEN in site-nav.js), nothing
+   links to /account/. Hidden by default so there's no flash before JS. */
+html:not(.evb-rewards-open) .evb-acctbtn,
+html:not(.evb-rewards-open) .evb-rewards-nudge { display: none !important; }

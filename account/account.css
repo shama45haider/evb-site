@@ -154,22 +154,46 @@
 }
 .acct-textbtn:hover { color: var(--evb-ink); }
 
-/* Balance */
-.acct-points { background: #0f0f0f; color: #fff; border-radius: 20px; padding: 26px 26px 22px; }
-@media (min-width: 600px) { .acct-points { padding: 32px 34px 26px; } }
-.acct-points-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 28px; }
-.acct-points-label { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: rgba(255,255,255,0.55); }
-.acct-points-ready {
-  font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: #0f0f0f;
-  background: var(--evb-orange); padding: 6px 12px; border-radius: 99px; white-space: nowrap;
+/* Balance: a light card. The number on the left, a ring on the right that
+   fills toward the next reward. */
+.acct-points {
+  display: flex; align-items: center; gap: 20px;
+  background: #fff; border: 1px solid var(--evb-line-soft); border-radius: 20px;
+  padding: 24px 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
+@media (min-width: 600px) { .acct-points { padding: 30px 32px; gap: 28px; } }
+.acct-points-main { flex: 1; min-width: 0; }
+.acct-points-label { display: inline-flex; align-items: center; gap: 7px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; color: var(--evb-muted); }
+.acct-points-label svg { width: 15px; height: 15px; color: var(--evb-orange); }
 .acct-points-num {
-  margin: 8px 0 0; font-family: 'Montserrat', sans-serif; font-weight: 800;
-  font-size: clamp(54px, 13vw, 72px); line-height: 1; letter-spacing: -0.035em;
+  margin: 6px 0 0; font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--evb-ink);
+  font-size: clamp(46px, 12vw, 64px); line-height: 1; letter-spacing: -0.035em;
 }
-.acct-bar { margin-top: 26px; height: 4px; border-radius: 99px; background: rgba(255,255,255,0.12); overflow: hidden; }
-.acct-bar i { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--evb-orange); transition: width 1.2s cubic-bezier(.2,.7,.2,1); }
-.acct-points-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font-family: 'Inter', sans-serif; font-size: 12.5px; color: rgba(255,255,255,0.55); }
+.acct-points-ready {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+  font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+  color: var(--evb-orange-deep); background: var(--evb-orange-soft);
+  padding: 6px 11px 6px 9px; border-radius: 99px;
+}
+.acct-points-ready svg { width: 14px; height: 14px; }
+.acct-points-sub { margin: 12px 0 0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; color: var(--evb-muted); }
+.acct-points-sub b { color: var(--evb-ink); font-weight: 600; }
+
+.acct-ring { position: relative; flex-shrink: 0; width: 112px; height: 112px; }
+@media (min-width: 600px) { .acct-ring { width: 128px; height: 128px; } }
+.acct-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.acct-ring circle { fill: none; stroke-width: 7; }
+.acct-ring-track { stroke: var(--evb-cream); }
+.acct-ring-fill {
+  stroke: var(--evb-orange); stroke-linecap: round;
+  stroke-dasharray: 100; stroke-dashoffset: 100;
+  transition: stroke-dashoffset 1.3s cubic-bezier(.2,.7,.2,1);
+}
+.acct-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.acct-ring-text b { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800; color: var(--evb-ink); letter-spacing: -0.02em; }
+.acct-ring-text small { margin-top: 1px; font-family: 'Inter', sans-serif; font-size: 11px; color: var(--evb-faint); }
+@media (max-width: 380px) { .acct-ring { width: 92px; height: 92px; } .acct-ring-text b { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) { .acct-ring-fill { transition: none; } }
 
 .acct-tip { margin: 14px 8px 0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.55; color: var(--evb-muted); text-align: center; }
 .acct-tip a { color: var(--evb-ink); font-weight: 600; white-space: nowrap; text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -357,14 +381,6 @@
 
 
 /* ---------------------------------------------------------------- icons and images */
-
-/* Points card: a faint outline mark in the corner, a star by the label. */
-.acct-points { position: relative; overflow: hidden; }
-.acct-points > *:not(.acct-points-mark) { position: relative; }
-.acct-points-mark { position: absolute; right: -28px; bottom: -34px; width: 190px; height: 190px; color: #fff; opacity: 0.05; pointer-events: none; }
-.acct-points-mark svg { width: 100%; height: 100%; stroke-width: 1; }
-.acct-points-label { display: inline-flex; align-items: center; gap: 7px; }
-.acct-points-label svg { width: 15px; height: 15px; color: var(--evb-orange); }
 
 /* Visit the shop: the storefront, small and quiet. */
 .acct-visit {
