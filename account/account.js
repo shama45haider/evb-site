@@ -144,7 +144,8 @@
         '<ul class="acct-perks">' +
           perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.', 4) +
           perk(ICON.truck, 'Free shipping at ' + FREE_SHIP + ' points', FREE_SHIP + ' points ships an online order free; ' + FREE_EXPRESS + ' ships it express.', 5) +
-          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 6) +
+          perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
+          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 7) +
         '</ul>' +
       '</div>';
   }
@@ -1043,7 +1044,7 @@
       body =
         '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
         '<h1 class="acct-ob-title">Take a photo of your ID</h1>' +
-        '<p class="acct-ob-sub">Driver\u2019s license, state ID or passport.</p>' +
+        '<p class="acct-ob-sub">Driver\u2019s license, state ID or passport. Once it\u2019s on file, you won\u2019t need to bring it when you sell to us.</p>' +
         '<div class="acct-ob-match">' +
           '<span>The name on your ID has to match</span>' +
           '<b>' + esc(me.fullName || '') + '</b>' +
