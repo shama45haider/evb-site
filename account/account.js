@@ -530,12 +530,19 @@
         '<header class="acct-dash-head acct-rise">' +
           '<div>' +
             '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
+            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
+              '<span>Hi, <em class="acct-hi-name">' + esc(firstName(me.fullName) || 'there') +
+                '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
+              '</em></span></h1>' +
           '</div>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
 
         '<section class="acct-points acct-rise" style="--d:60ms" aria-label="Your points">' +
+          '<span class="acct-points-deco" aria-hidden="true">' +
+            '<span class="acct-pd acct-pd--a"></span><span class="acct-pd acct-pd--b"></span>' +
+            '<span class="acct-pd-spark">' + ICON.sparkle + '</span>' +
+          '</span>' +
           '<div class="acct-points-main">' +
             '<span class="acct-points-label">' + ICON.star + 'Your points</span>' +
             '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
@@ -558,7 +565,8 @@
           '<span class="acct-visit-go" aria-hidden="true">' + ICON.arrow + '</span>' +
         '</a>' +
 
-        (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' + live.join('') + '</section>' : '') +
+        (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' +
+          '<p class="acct-live-head" aria-hidden="true"><span class="acct-live-pulse"></span>Happening now</p>' + live.join('') + '</section>' : '') +
 
         '<section class="acct-stats acct-rise" style="--d:180ms">' +
           stat(ICON.bag, 'Bought from us', sum.bought, true) +
@@ -582,9 +590,9 @@
         '<section class="acct-section acct-rise" style="--d:260ms">' +
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>How it works</h2>' +
           '<ol class="acct-steps">' +
-            '<li><span class="acct-step-icon">' + ICON.bag + '</span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.truck + '</span><b>Ship free</b><span>' + num(ship) + ' points is free shipping on an online order; ' + num(express) + ' is free express.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Use</b><span>Text or call us when you order online and we\u2019ll take the shipping off.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.bag + '<em aria-hidden="true">1</em></span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 you spend with us, online or in the shop.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.truck + '<em aria-hidden="true">2</em></span><b>Ship free</b><span>' + num(ship) + ' points is free shipping on an online order; ' + num(express) + ' is free express.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">3</em></span><b>Use</b><span>Text or call us when you order online and we\u2019ll take the shipping off.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -594,7 +602,8 @@
       '</div>'
     );
 
-    countUp(host.querySelectorAll('[data-count]'));
+    revealOnScroll(host, function (el) { countUp(el.querySelectorAll('[data-count]')); });
+    countUp(host.querySelectorAll('.acct-rise:not(.is-waiting) [data-count]'));
     var ring = host.querySelector('.acct-ring-fill');
     if (ring) setTimeout(function () { ring.style.strokeDashoffset = String(100 - Number(ring.dataset.pct)); }, 250);
 
@@ -804,6 +813,29 @@
       '</div>';
     }
     return html;
+  }
+
+  /* Sections below the fold wait to rise in until they scroll into view,
+     rather than playing on load where nobody sees them. onShow runs as each
+     one appears (its numbers count up then). Nothing waits under reduced
+     motion or without IntersectionObserver. */
+  function revealOnScroll(root, onShow) {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        en.target.classList.remove('is-waiting');
+        onShow(en.target);
+      });
+    }, { rootMargin: '0px 0px -6% 0px' });
+    Array.prototype.forEach.call(root.querySelectorAll('.acct-rise'), function (el) {
+      if (el.getBoundingClientRect().top < window.innerHeight) return;
+      el.style.setProperty('--d', '0ms');
+      el.classList.add('is-waiting');
+      io.observe(el);
+    });
   }
 
   /* Numbers ease up from zero the first time they show. */
@@ -1212,7 +1244,10 @@
         '<header class="acct-dash-head acct-rise">' +
           '<div>' +
             '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
+            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
+              '<span>Hi, <em class="acct-hi-name">' + esc(firstName(me.fullName) || 'there') +
+                '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
+              '</em></span></h1>' +
           '</div>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
