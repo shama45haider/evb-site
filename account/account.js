@@ -79,6 +79,12 @@
     calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
     layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>',
+    camera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>',
+    image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5L5 20"/></svg>',
+    idcard: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><circle cx="8.5" cy="11" r="2.2"/><path d="M5.5 16c.6-1.6 1.7-2.4 3-2.4s2.4.8 3 2.4"/><path d="M14 10h5M14 13h4"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     sliders: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
   };
 
@@ -106,7 +112,7 @@
     }
     if (/expired|invalid|otp/i.test(m)) return 'That code didn’t work. Check the newest email from us, or send a new code.';
     if (/fetch|network|load failed/i.test(m)) return 'We couldn’t reach our server. Check your connection and try again.';
-    if (/Enter your name|phone number/i.test(m)) return m;
+    if (/Enter your name|phone number|can.t be changed/i.test(m)) return m;
     return 'Something went wrong. Please try again, or call us at ' + biz.phone + '.';
   }
 
@@ -363,33 +369,7 @@
     } catch (e) { return null; }
   }
 
-  /* ------------------------------------------------------------ welcome */
-
-  function renderWelcome(me, error) {
-    render(
-      '<div class="acct-hero">' + heroIntro() +
-        '<div class="acct-card acct-fade">' +
-          '<div class="acct-welcome-badge">' + ICON.star + '</div>' +
-          '<h2 class="acct-card-title">You’re in! One last thing.</h2>' +
-          '<p class="acct-card-sub">What should we call you? This is the name we’ll look for at the counter.</p>' +
-          '<form id="acctWelcome" novalidate>' +
-            '<div class="acct-field">' +
-              '<label class="acct-label" for="acctName">Your name</label>' +
-              '<input class="acct-input" id="acctName" autocomplete="name" maxlength="120" required autofocus value="' + esc(me.fullName || '') + '">' +
-            '</div>' +
-            '<div class="acct-field">' +
-              '<label class="acct-label" for="acctPhone">Phone <small>(optional)</small></label>' +
-              '<input class="acct-input" id="acctPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="917-555-0100" value="' + esc(me.phone || '') + '">' +
-            '</div>' +
-            '<label class="acct-check"><input type="checkbox" id="acctOptIn"' + (me.marketingOptIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
-            '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
-            '<button class="evb-btn evb-btn--primary acct-btn" type="submit">Continue</button>' +
-          '</form>' +
-        '</div>' +
-      '</div>'
-    );
-    bindProfileForm('acctWelcome', 'Continue', function () { push('account_profile_done', {}); });
-  }
+  /* ------------------------------------------------------------ profile form */
 
   function bindProfileForm(formId, label, after) {
     var form = document.getElementById(formId);
@@ -539,7 +519,7 @@
         '<header class="acct-dash-head acct-rise">' +
           '<div>' +
             '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi">Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
+            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
           '</div>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
@@ -608,6 +588,7 @@
     if (ring) setTimeout(function () { ring.style.strokeDashoffset = String(100 - Number(ring.dataset.pct)); }, 250);
 
     bindHistory(history, me);
+    fillAvatar(me);
     document.getElementById('acctSignOut').addEventListener('click', function () {
       if (!sb) return renderEmail();
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
@@ -834,6 +815,21 @@
     });
   }
 
+  function idLabel(status) {
+    return status === 'verified' ? 'Verified' : status === 'submitted' ? 'Sent — we’re checking it'
+      : status === 'rejected' ? 'Needs a new photo' : 'Not sent';
+  }
+
+  // A rejected ID gets a box at the top with a way to send a new one.
+  function idNotice(me) {
+    if (me.idStatus !== 'rejected') return '';
+    return '<section class="acct-idnotice acct-rise">' +
+      '<span class="acct-idnotice-icon" aria-hidden="true">' + ICON.idcard + '</span>' +
+      '<div><b>We couldn\u2019t accept your ID</b><span>' + esc(me.idNote ? me.idNote + '. ' : '') + 'Please send a new photo so we can turn on your Rewards.</span></div>' +
+      '<button type="button" class="acct-small-btn" data-resend-id>Send a new photo</button>' +
+    '</section>';
+  }
+
   function detailsView(me) {
     function dt(icon, label) { return '<dt><i aria-hidden="true">' + icon + '</i>' + label + '</dt>'; }
     return '<h2 class="acct-section-title"><span><i aria-hidden="true">' + ICON.user + '</i>Your details</span> <button type="button" class="acct-textbtn" id="acctEdit">Edit</button></h2>' +
@@ -842,6 +838,8 @@
         '<div>' + dt(ICON.mail, 'Email') + '<dd>' + esc(me.email) + '</dd></div>' +
         '<div>' + dt(ICON.phone, 'Phone') + '<dd>' + esc(me.phone || '\u2014') + '</dd></div>' +
         '<div>' + dt(ICON.bell, 'New-arrival emails') + '<dd>' + (me.marketingOptIn ? 'On' : 'Off') + '</dd></div>' +
+        (me.dateOfBirth ? '<div>' + dt(ICON.calendar, 'Date of birth') + '<dd>' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</dd></div>' : '') +
+        '<div>' + dt(ICON.shield, 'Photo ID') + '<dd>' + esc(idLabel(me.idStatus)) + '</dd></div>' +
         '<div>' + dt(ICON.calendar, 'Member since') + '<dd>' + esc(date(me.joinedAt)) + '</dd></div>' +
       '</dl>';
   }
@@ -853,7 +851,10 @@
         '<h2 class="acct-section-title">Edit your details</h2>' +
         '<form id="acctEditForm" novalidate>' +
           '<div class="acct-field"><label class="acct-label" for="acctName">Name</label>' +
-            '<input class="acct-input" id="acctName" autocomplete="name" maxlength="120" value="' + esc(me.fullName || '') + '"></div>' +
+            '<input class="acct-input" id="acctName" autocomplete="name" maxlength="120" value="' + esc(me.fullName || '') + '"' +
+              (me.idStatus === 'verified' ? ' readonly aria-describedby="acctNameLock"' : '') + '>' +
+            (me.idStatus === 'verified' ? '<p class="acct-field-note" id="acctNameLock">Matches your verified ID. Call us to change it.</p>' : '') +
+          '</div>' +
           '<div class="acct-field"><label class="acct-label" for="acctPhone">Phone <small>(optional)</small></label>' +
             '<input class="acct-input" id="acctPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" value="' + esc(me.phone || '') + '"></div>' +
           '<label class="acct-check"><input type="checkbox" id="acctOptIn"' + (me.marketingOptIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
@@ -867,6 +868,322 @@
         bindDetails(me);
       });
       bindProfileForm('acctEditForm', 'Save');
+    });
+  }
+
+  /* ------------------------------------------------------------ sign-up steps */
+
+  // After the emailed code, a new member goes through: profile photo
+  // (optional), name, date of birth, a photo of their ID, done. Each step
+  // saves on its own (panel migration 0073), so leaving halfway resumes at
+  // the first step still missing. On phones it's full screen.
+  //
+  // Photos are shrunk and re-encoded as JPEG in the browser before upload:
+  // smaller files, and the phone's location data doesn't go with them.
+
+  var OB_STEPS = ['photo', 'name', 'birth', 'id', 'done'];
+  var OB_SKIP_PHOTO = 'evb_ob_skip_photo';
+
+  function obFirstStep(me) {
+    if (!me.avatarPath && !ss(OB_SKIP_PHOTO) && !me.fullName) return 'photo';
+    if (!me.fullName) return 'name';
+    if (!me.dateOfBirth) return 'birth';
+    if (!me.idStatus || me.idStatus === 'none') return 'id';
+    return 'done';
+  }
+
+  function ageFrom(iso) {
+    var d = new Date(iso + 'T12:00:00');
+    if (isNaN(d)) return null;
+    var now = new Date();
+    var a = now.getFullYear() - d.getFullYear();
+    if (now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) a--;
+    return a;
+  }
+
+  function isoDaysAgo(years) {
+    var d = new Date();
+    d.setFullYear(d.getFullYear() - years);
+    return d.toISOString().slice(0, 10);
+  }
+
+  // A photo from the camera or library → a JPEG no bigger than maxSide.
+  function prepareImage(file, maxSide, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file || !/^image\//.test(file.type || 'image/')) return reject(new Error('That file isn’t a photo.'));
+      if (file.size > 30 * 1024 * 1024) return reject(new Error('That photo is too big. Try another.'));
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+        var w = Math.round(img.naturalWidth * scale), h = Math.round(img.naturalHeight * scale);
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (blob) {
+          if (blob) resolve(blob); else reject(new Error('Couldn’t read that photo. Try another.'));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Couldn’t read that photo. Try another.')); };
+      img.src = url;
+    });
+  }
+
+  function randomName() {
+    var a = new Uint8Array(12);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+
+  // Upload to '<user id>/<random>.jpg' in a private bucket; resolves the path.
+  function uploadPhoto(bucket, blob) {
+    return sb.auth.getSession().then(function (res) {
+      var user = res.data && res.data.session && res.data.session.user;
+      if (!user) throw new Error('Your sign-in expired. Please sign in again.');
+      var path = user.id + '/' + randomName() + '.jpg';
+      return sb.storage.from(bucket).upload(path, blob, { contentType: 'image/jpeg', upsert: false }).then(function (r) {
+        if (r.error) throw r.error;
+        return path;
+      });
+    });
+  }
+
+  function rpc(name, args) {
+    return sb.rpc(name, args).then(function (r) { if (r.error) throw r.error; return r.data; });
+  }
+
+  function startOnboarding(me, opts) {
+    opts = opts || {};
+    var state = { me: me, step: opts.step || obFirstStep(me), dir: 'next', only: !!opts.only, optIn: !!me.marketingOptIn };
+    document.documentElement.classList.add('acct-ob-open');
+    obRender(state);
+  }
+
+  function endOnboarding() {
+    document.documentElement.classList.remove('acct-ob-open');
+  }
+
+  function obRender(state) {
+    var step = state.step;
+    var steps = OB_STEPS.slice(0, 4);
+    var at = steps.indexOf(step);
+    var me = state.me;
+    var body = '';
+
+    if (step === 'photo') {
+      body =
+        '<p class="acct-ob-eyebrow">Your profile</p>' +
+        '<h1 class="acct-ob-title">Add a profile photo</h1>' +
+        '<p class="acct-ob-sub">So we know it’s you when you come in. You can skip this.</p>' +
+        '<div class="acct-ob-avatar" id="obAvatar">' + ICON.user + '</div>' +
+        '<div class="acct-ob-pickers">' +
+          '<label class="acct-ob-pick">' + ICON.camera + '<span>Take a selfie</span><input type="file" accept="image/*" capture="user" data-pick></label>' +
+          '<label class="acct-ob-pick">' + ICON.image + '<span>Choose a photo</span><input type="file" accept="image/*" data-pick></label>' +
+        '</div>';
+    } else if (step === 'name') {
+      body =
+        '<p class="acct-ob-eyebrow">About you</p>' +
+        '<h1 class="acct-ob-title">What’s your name?</h1>' +
+        '<p class="acct-ob-sub">The name on your ID, so we can match it at the counter.</p>' +
+        '<label class="acct-label" for="obName">Full name</label>' +
+        '<input class="acct-input acct-ob-input" id="obName" autocomplete="name" autocapitalize="words" maxlength="120" placeholder="First and last name" value="' + esc(me.fullName || '') + '">';
+    } else if (step === 'birth') {
+      body =
+        '<p class="acct-ob-eyebrow">About you</p>' +
+        '<h1 class="acct-ob-title">When’s your birthday?</h1>' +
+        '<p class="acct-ob-sub">We use it to match your ID.</p>' +
+        '<label class="acct-label" for="obBirth">Date of birth</label>' +
+        '<input class="acct-input acct-ob-input" id="obBirth" type="date" autocomplete="bday" min="' + isoDaysAgo(120) + '" max="' + isoDaysAgo(13) + '" value="' + esc(me.dateOfBirth || '') + '">' +
+        '<p class="acct-ob-age" id="obAge" aria-live="polite"></p>';
+    } else if (step === 'id') {
+      body =
+        '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
+        '<h1 class="acct-ob-title">Take a photo of your ID</h1>' +
+        '<p class="acct-ob-sub">Driver\u2019s license, state ID or passport.</p>' +
+        '<div class="acct-ob-match">' +
+          '<span>The name on your ID has to match</span>' +
+          '<b>' + esc(me.fullName || '') + '</b>' +
+          '<button type="button" class="acct-link" id="obFixName">Not the name on your ID? Change it</button>' +
+        '</div>' +
+        '<div class="acct-ob-idframe" id="obIdFrame">' +
+          '<span class="acct-ob-corner acct-ob-corner--tl"></span><span class="acct-ob-corner acct-ob-corner--tr"></span>' +
+          '<span class="acct-ob-corner acct-ob-corner--bl"></span><span class="acct-ob-corner acct-ob-corner--br"></span>' +
+          '<span class="acct-ob-idhint">' + ICON.idcard + '<b>Fit the whole ID in the frame</b></span>' +
+        '</div>' +
+        '<ul class="acct-ob-tips"><li>All four corners showing</li><li>No glare, nothing covering it</li><li>Name and photo easy to read</li></ul>' +
+        '<div class="acct-ob-pickers">' +
+          '<label class="acct-ob-pick acct-ob-pick--main">' + ICON.camera + '<span>Take a photo</span><input type="file" accept="image/*" capture="environment" data-pick></label>' +
+          '<label class="acct-ob-pick">' + ICON.image + '<span>Upload a photo</span><input type="file" accept="image/*" data-pick></label>' +
+        '</div>' +
+        '<p class="acct-ob-private">' + ICON.key + 'Kept private. Only East Village Buyers managers can see it, and it’s only used to confirm who you are.</p>';
+    } else {
+      body =
+        '<div class="acct-ob-done">' +
+          '<span class="acct-ob-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></span>' +
+          '<h1 class="acct-ob-title">You’re all set' + (me.fullName ? ', ' + esc(firstName(me.fullName)) : '') + '</h1>' +
+          '<p class="acct-ob-sub">We’ll check your ID and let you know when your Rewards are on.</p>' +
+          '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
+        '</div>';
+    }
+
+    var primary = step === 'photo' ? 'Continue' : step === 'id' ? 'Send my ID' : step === 'done' ? 'Go to my account' : 'Continue';
+    var canBack = !state.only && at > 0 && step !== 'done';
+
+    render(
+      '<div class="acct-ob" role="dialog" aria-modal="true" aria-label="Set up your account">' +
+        '<div class="acct-ob-top">' +
+          (canBack ? '<button type="button" class="acct-ob-back" id="obBack" aria-label="Back">' + ICON.back + '</button>'
+            : state.only ? '<button type="button" class="acct-ob-back" id="obClose" aria-label="Close">' + ICON.close + '</button>'
+            : '<span class="acct-ob-back-space"></span>') +
+          (step !== 'done' && !state.only
+            ? '<div class="acct-ob-progress" aria-label="Step ' + (at + 1) + ' of 4">' + steps.map(function (s, i) {
+                return '<span class="' + (i < at ? 'is-done' : i === at ? 'is-now' : '') + '"></span>';
+              }).join('') + '</div><span class="acct-ob-count">' + (at + 1) + '/4</span>'
+            : '<span></span><span></span>') +
+        '</div>' +
+        '<form class="acct-ob-body acct-ob-in-' + state.dir + '" id="obForm" novalidate>' +
+          body +
+          '<p class="acct-error" id="obErr" role="alert"></p>' +
+          '<div class="acct-ob-actions">' +
+            '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit" id="obNext">' + primary + '</button>' +
+            (step === 'photo' ? '<button type="button" class="acct-link acct-ob-skip" id="obSkip">Skip for now</button>' : '') +
+          '</div>' +
+        '</form>' +
+      '</div>'
+    );
+
+    var form = document.getElementById('obForm');
+    var err = document.getElementById('obErr');
+    var next = document.getElementById('obNext');
+    var picked = null;
+
+    function go(step, dir) { state.step = step; state.dir = dir || 'next'; obRender(state); }
+    function after() {
+      if (state.only) { endOnboarding(); return loadMe(); }
+      go(OB_STEPS[OB_STEPS.indexOf(state.step) + 1]);
+    }
+    function fail(e) {
+      setBusy(next, false, primary);
+      err.textContent = /Enter your|real date|didn.t upload|ID\.|too big|isn.t a photo|read that photo|expired|can.t be changed/i.test((e && e.message) || '')
+        ? e.message : friendly(e);
+    }
+
+    var back = document.getElementById('obBack');
+    if (back) back.addEventListener('click', function () { go(OB_STEPS[at - 1], 'back'); });
+    var close = document.getElementById('obClose');
+    if (close) close.addEventListener('click', function () {
+      endOnboarding();
+      if (!sb) return renderLocked(me, { preview: true });
+      loadMe();
+    });
+
+    // Photo pickers: preview straight away, upload on Continue.
+    Array.prototype.forEach.call(form.querySelectorAll('[data-pick]'), function (input) {
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        input.value = '';
+        if (!file) return;
+        err.textContent = '';
+        var max = step === 'photo' ? 640 : 2000;
+        prepareImage(file, max, step === 'photo' ? 0.85 : 0.9).then(function (blob) {
+          picked = blob;
+          var url = URL.createObjectURL(blob);
+          if (step === 'photo') {
+            var box = document.getElementById('obAvatar');
+            box.innerHTML = '<img src="' + url + '" alt="Your profile photo">';
+            box.classList.add('is-set');
+          } else {
+            var frame = document.getElementById('obIdFrame');
+            frame.classList.add('is-set');
+            frame.querySelector('.acct-ob-idhint').outerHTML = '<img class="acct-ob-idimg" src="' + url + '" alt="Your ID">';
+            form.querySelector('.acct-ob-pick--main span').textContent = 'Retake';
+          }
+        }, function (e) { err.textContent = e.message; });
+      });
+    });
+
+    if (step === 'birth') {
+      var birth = document.getElementById('obBirth');
+      var ageOut = document.getElementById('obAge');
+      var showAge = function () {
+        var a = birth.value ? ageFrom(birth.value) : null;
+        ageOut.textContent = a !== null && a >= 0 && a < 130 ? 'You’re ' + a + '.' : '';
+      };
+      birth.addEventListener('input', showAge);
+      showAge();
+    }
+
+    // From the ID step: fix the name, then come back through the steps.
+    var fixName = document.getElementById('obFixName');
+    if (fixName) fixName.addEventListener('click', function () { state.only = false; go('name', 'back'); });
+
+    var skip = document.getElementById('obSkip');
+    if (skip) skip.addEventListener('click', function () { ss(OB_SKIP_PHOTO, '1'); go('name'); });
+
+    var focusEl = form.querySelector('.acct-ob-input');
+    if (focusEl && window.matchMedia('(min-width: 700px)').matches) focusEl.focus();
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      err.textContent = '';
+
+      if (step === 'photo') {
+        if (!picked) { if (me.avatarPath) return after(); err.textContent = 'Take or choose a photo, or skip for now.'; return; }
+        if (!sb) return after();
+        setBusy(next, true, 'Uploading…');
+        return uploadPhoto('member-avatars', picked)
+          .then(function (path) { return rpc('member_set_avatar', { p_path: path }).then(function () { me.avatarPath = path; }); })
+          .then(after, fail);
+      }
+      if (step === 'name') {
+        var name = document.getElementById('obName').value.trim();
+        if (!/\S+\s+\S+/.test(name)) { err.textContent = 'Enter your first and last name.'; return; }
+        if (!sb) { me.fullName = name; return after(); }
+        setBusy(next, true, 'Saving…');
+        return rpc('member_set_name', { p_full_name: name }).catch(function (e) {
+          // Before panel migration 0073 there's no member_set_name: save the
+          // name the older way, keeping their phone and email choice.
+          if (!/Could not find the function|does not exist/i.test((e && e.message) || '')) throw e;
+          return rpc('member_update_profile', { p_full_name: name, p_phone: me.phone || null, p_marketing_opt_in: !!me.marketingOptIn });
+        }).then(function () { me.fullName = name; after(); }, fail);
+      }
+      if (step === 'birth') {
+        var v = document.getElementById('obBirth').value;
+        var a = v ? ageFrom(v) : null;
+        if (a === null || a < 13 || a > 120) { err.textContent = 'Enter your real date of birth.'; return; }
+        if (!sb) { me.dateOfBirth = v; return after(); }
+        setBusy(next, true, 'Saving…');
+        return rpc('member_set_birth_date', { p_date_of_birth: v }).then(function () { me.dateOfBirth = v; after(); }, fail);
+      }
+      if (step === 'id') {
+        if (!picked) { err.textContent = 'Take or upload a photo of your ID first.'; return; }
+        if (!sb) { me.idStatus = 'submitted'; return after(); }
+        setBusy(next, true, 'Sending…');
+        return uploadPhoto('member-ids', picked)
+          .then(function (path) { return rpc('member_submit_id', { p_path: path }); })
+          .then(function () { me.idStatus = 'submitted'; push('account_id_sent', {}); after(); }, fail);
+      }
+      // done
+      var optIn = document.getElementById('obOptIn').checked;
+      if (!sb) { endOnboarding(); me.onboarded = true; return closed() ? renderLocked(me, { preview: true }) : renderDash(me, { preview: true }); }
+      setBusy(next, true, 'One moment…');
+      rpc('member_finish_onboarding', { p_marketing_opt_in: optIn }).then(function () {
+        ss(OB_SKIP_PHOTO, null);
+        push('account_onboarded', {});
+        endOnboarding();
+        loadMe();
+      }, fail);
+    });
+  }
+
+  // The member's photo in the dashboard header, through a short-lived link
+  // (the bucket is private).
+  function fillAvatar(me) {
+    var box = host.querySelector('[data-avatar]');
+    if (!box || !me.avatarPath || !sb) return;
+    sb.storage.from('member-avatars').createSignedUrl(me.avatarPath, 3600).then(function (r) {
+      if (r.data && r.data.signedUrl) box.innerHTML = '<img src="' + esc(r.data.signedUrl) + '" alt="">';
     });
   }
 
@@ -884,11 +1201,12 @@
         '<header class="acct-dash-head acct-rise">' +
           '<div>' +
             '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi">Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
+            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
           '</div>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
 
+        idNotice(me) +
         '<section class="acct-locked acct-rise" style="--d:60ms">' +
           '<span class="acct-locked-icon" aria-hidden="true">' + ICON.clock + '</span>' +
           '<div>' +
@@ -916,7 +1234,14 @@
       if (!sb) return renderEmail();
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
+    bindIdNotice(me);
+    fillAvatar(me);
     bindDetails(me);
+  }
+
+  function bindIdNotice(me) {
+    var b = host.querySelector('[data-resend-id]');
+    if (b) b.addEventListener('click', function () { startOnboarding(me, { step: 'id', only: true }); });
   }
 
   /* ------------------------------------------------------------ data */
@@ -970,7 +1295,10 @@
       }
       var me = res.data;
       rememberMember(me);
-      if (!me.fullName) renderWelcome(me);
+      // onboarded is false only once panel migration 0073 is live; before that
+      // it's missing and the sign-up steps have nothing to save to.
+      if (me.onboarded === false) startOnboarding(me);
+      else if (!me.fullName) startOnboarding(me, { step: 'name', only: true });
       else if (me.locked) renderLocked(me);
       else renderDash(me);
     }, function (e) { renderProblem(friendly(e)); });
@@ -983,6 +1311,7 @@
   var SAMPLE = {
     memberNumber: 'M1024', email: 'pat@example.com', fullName: 'Pat Rivera', phone: '917-555-0100',
     marketingOptIn: true, joinedAt: '2026-06-02T15:00:00Z',
+    dateOfBirth: '1994-05-17', idStatus: 'submitted', onboarded: true, avatarPath: null,
     balance: 1265, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
     rules: { pointsPerDollar: 1, rewardPoints: 500, rewardCents: 2500, lookbackDays: 30 },
     purchases: [], activity: [],
@@ -1016,7 +1345,11 @@
     ]
   };
 
-  function previewAfterCode() { renderWelcome({ fullName: '', phone: '', marketingOptIn: false }); }
+  function previewAfterCode() {
+    var me = JSON.parse(JSON.stringify(SAMPLE));
+    me.fullName = ''; me.avatarPath = null; me.dateOfBirth = null; me.idStatus = 'none'; me.onboarded = false;
+    startOnboarding(me);
+  }
   function previewAfterProfile(name) {
     var me = JSON.parse(JSON.stringify(SAMPLE));
     if (closed()) { me.fullName = name; return renderLocked(me, { preview: true }); }
@@ -1031,6 +1364,8 @@
     if (mode === 'signin') return renderEmail();
     if (mode === 'requested') return renderRequested('pat@example.com');
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
+    if (mode === 'signup') return previewAfterCode();
+    if (mode === 'rejected') { var r = JSON.parse(JSON.stringify(SAMPLE)); r.idStatus = 'rejected'; r.idNote = 'The name doesn’t match your account'; return renderLocked(r, { preview: true }); }
     renderDash(SAMPLE, { preview: true });
   }
 

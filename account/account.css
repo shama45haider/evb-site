@@ -593,3 +593,159 @@
 .acct-title { margin-bottom: 28px; }
 /* On phones the site's chat bubble sits bottom-left; keep the tag clear of it. */
 @media (max-width: 599px) { .acct-float--off { left: auto; right: 26px; } }
+
+/* ---------------------------------------------------------------- sign-up steps */
+
+/* Photo, name, birthday, ID, done — one question per screen. On phones the
+   steps take the whole screen (over the site's header, chat bubble and
+   bottom buttons) with the button at the thumb; on bigger screens they're a
+   card in the page. Flat colors only, like the rest of the account page. */
+.acct-ob {
+  max-width: 520px; margin: 0 auto; background: #fff; border-radius: 24px;
+  border: 1px solid var(--evb-line-soft); box-shadow: var(--evb-shadow-lg);
+  padding: 22px 32px 30px; position: relative; overflow: hidden;
+}
+.acct-ob::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--evb-orange); }
+
+.acct-ob-top { display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 12px; min-height: 40px; }
+.acct-ob-back, .acct-ob-back-space { width: 40px; height: 40px; }
+.acct-ob-back {
+  display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--evb-line); background: #fff;
+  color: var(--evb-ink); cursor: pointer; transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.acct-ob-back:hover { border-color: var(--evb-ink); transform: translateX(-2px); }
+.acct-ob-back svg { width: 18px; height: 18px; }
+.acct-ob-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.acct-ob-progress span { height: 4px; border-radius: 99px; background: var(--evb-cream); position: relative; overflow: hidden; }
+.acct-ob-progress span::after { content: ''; position: absolute; inset: 0; background: var(--evb-orange); transform: scaleX(0); transform-origin: left; transition: transform 0.5s cubic-bezier(.2,.7,.2,1); }
+.acct-ob-progress span.is-done::after, .acct-ob-progress span.is-now::after { transform: scaleX(1); }
+.acct-ob-progress span.is-now::after { animation: acct-bar 0.6s cubic-bezier(.2,.7,.2,1) both; }
+.acct-ob-count { justify-self: end; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--evb-faint); font-variant-numeric: tabular-nums; }
+
+.acct-ob-body { padding-top: 26px; }
+.acct-ob-in-next { animation: acct-ob-next 0.45s cubic-bezier(.2,.7,.2,1) both; }
+.acct-ob-in-back { animation: acct-ob-back 0.45s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes acct-ob-next { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes acct-ob-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+
+.acct-ob-eyebrow { margin: 0 0 8px; font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--evb-orange-deep); }
+.acct-ob-title { margin: 0 0 8px; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(26px, 6.4vw, 32px); line-height: 1.1; letter-spacing: -0.025em; color: var(--evb-ink); }
+.acct-ob-sub { margin: 0 0 24px; font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.55; color: var(--evb-muted); }
+.acct-ob-input { font-size: 17px; min-height: 58px; }
+.acct-ob-age { min-height: 22px; margin: 10px 0 0; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: var(--evb-orange-deep); }
+
+/* Profile photo */
+.acct-ob-avatar {
+  width: 132px; height: 132px; margin: 4px auto 24px; border-radius: 50%; overflow: hidden;
+  display: grid; place-items: center; background: var(--evb-orange-soft); color: var(--evb-orange-dark);
+  border: 3px solid #fff; box-shadow: 0 0 0 1.5px var(--evb-orange-line), 0 10px 26px rgba(0,0,0,0.08);
+}
+.acct-ob-avatar svg { width: 52px; height: 52px; stroke-width: 1.4; }
+.acct-ob-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.acct-ob-avatar.is-set { animation: acct-badge 0.5s cubic-bezier(.2,1.5,.4,1) both; box-shadow: 0 0 0 2px var(--evb-orange), 0 10px 26px rgba(0,0,0,0.1); }
+
+/* Camera / library pickers: big, thumb-sized tiles */
+.acct-ob-pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.acct-ob-pick {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 92px; padding: 14px 10px; border-radius: 16px; cursor: pointer; text-align: center;
+  background: #fff; border: 1.5px solid var(--evb-line);
+  font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--evb-ink);
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.acct-ob-pick svg { width: 24px; height: 24px; color: var(--evb-orange); }
+.acct-ob-pick:hover { border-color: var(--evb-ink); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+.acct-ob-pick:focus-within { outline: 2px solid var(--evb-orange); outline-offset: 2px; }
+.acct-ob-pick input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.acct-ob-pick--main { background: var(--evb-orange-soft); border-color: var(--evb-orange-line); }
+
+/* ID frame: a card-shaped window with corner marks */
+.acct-ob-idframe {
+  position: relative; aspect-ratio: 1.586; margin: 0 0 16px; border-radius: 18px;
+  background: var(--evb-cream); display: grid; place-items: center; overflow: hidden;
+}
+.acct-ob-idframe.is-set { background: #111; }
+.acct-ob-idimg { width: 100%; height: 100%; object-fit: contain; display: block; animation: acct-rise 0.4s ease both; }
+.acct-ob-idhint { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--evb-muted); font-family: 'Inter', sans-serif; font-size: 13.5px; }
+.acct-ob-idhint svg { width: 46px; height: 46px; color: var(--evb-orange); stroke-width: 1.4; animation: acct-twinkle-soft 2.6s ease-in-out infinite; }
+.acct-ob-idhint b { font-weight: 600; color: var(--evb-ink); }
+@keyframes acct-twinkle-soft { 0%, 100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.06); opacity: 1; } }
+.acct-ob-corner { position: absolute; width: 26px; height: 26px; border: 3px solid var(--evb-orange); z-index: 1; pointer-events: none; }
+.acct-ob-corner--tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; border-radius: 8px 0 0 0; }
+.acct-ob-corner--tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; border-radius: 0 8px 0 0; }
+.acct-ob-corner--bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; border-radius: 0 0 0 8px; }
+.acct-ob-corner--br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; border-radius: 0 0 8px 0; }
+.acct-ob-tips { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 6px; }
+.acct-ob-tips li { position: relative; padding-left: 22px; font-family: 'Inter', sans-serif; font-size: 13.5px; color: var(--evb-body); }
+.acct-ob-tips li::before { content: ''; position: absolute; left: 3px; top: 5px; width: 9px; height: 5px; border-left: 2px solid var(--evb-green); border-bottom: 2px solid var(--evb-green); transform: rotate(-45deg); }
+.acct-ob-private { display: flex; gap: 8px; align-items: flex-start; margin: 16px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5; color: var(--evb-muted); }
+.acct-ob-private svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; color: var(--evb-green); }
+
+.acct-ob-actions { margin-top: 22px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.acct-ob-actions .acct-btn { margin-top: 0; min-height: 56px; font-size: 12.5px; }
+.acct-ob-skip { color: var(--evb-muted); text-decoration: none; padding: 12px; }
+
+/* Done */
+.acct-ob-done { text-align: center; padding-top: 6px; }
+.acct-ob-done .acct-check { justify-content: center; text-align: left; margin: 0 auto; max-width: 340px; }
+.acct-ob-check { display: block; width: 84px; height: 84px; margin: 0 auto 20px; }
+.acct-ob-check svg { width: 100%; height: 100%; }
+.acct-ob-check circle { fill: var(--evb-orange-soft); stroke: var(--evb-orange); stroke-width: 2.5; stroke-dasharray: 160; animation: acct-ob-circle 0.7s ease-out both; }
+.acct-ob-check path { fill: none; stroke: var(--evb-orange-deep); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; animation: acct-ob-tick 0.45s 0.55s ease-out both; }
+@keyframes acct-ob-circle { from { stroke-dashoffset: 160; } to { stroke-dashoffset: 0; } }
+@keyframes acct-ob-tick { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+
+/* Phones: the steps take the whole screen; the button sits at the bottom. */
+@media (max-width: 699px) {
+  html.acct-ob-open, html.acct-ob-open body { overflow: hidden; }
+  .acct-ob {
+    position: fixed; inset: 0; z-index: 2147483000; max-width: none; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+    display: flex; flex-direction: column;
+    padding: calc(14px + env(safe-area-inset-top)) 20px calc(16px + env(safe-area-inset-bottom));
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  .acct-ob::before { display: none; }
+  .acct-ob-body { flex: 1; display: flex; flex-direction: column; padding-top: 28px; }
+  .acct-ob-actions { margin-top: auto; padding-top: 22px; }
+  .acct-ob-done { margin: auto 0; }
+}
+
+/* Header photo on the account page */
+.acct-hi { display: flex; align-items: center; gap: 14px; }
+.acct-hi-avatar {
+  flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; overflow: hidden;
+  display: grid; place-items: center; background: var(--evb-ink); color: #fff;
+  font-size: 18px; letter-spacing: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--evb-orange-line);
+}
+.acct-hi-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* A rejected ID */
+.acct-idnotice {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; padding: 16px 18px;
+  background: #fff; border: 1px solid rgba(194,38,27,0.25); border-radius: 16px;
+}
+.acct-idnotice-icon { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(194,38,27,0.07); color: var(--evb-red); }
+.acct-idnotice-icon svg { width: 20px; height: 20px; }
+.acct-idnotice div { flex: 1; min-width: 180px; font-family: 'Inter', sans-serif; }
+.acct-idnotice b { display: block; font-size: 14.5px; color: var(--evb-ink); }
+.acct-idnotice span { font-size: 13px; color: var(--evb-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .acct-ob-in-next, .acct-ob-in-back, .acct-ob-avatar.is-set, .acct-ob-idimg, .acct-ob-idhint svg,
+  .acct-ob-check circle, .acct-ob-check path, .acct-ob-progress span.is-now::after { animation: none; }
+  .acct-ob-progress span::after, .acct-ob-pick, .acct-ob-back { transition: none; }
+}
+
+/* ID step: the name the ID has to match (0073). */
+.acct-ob-match {
+  display: flex; flex-direction: column; gap: 2px; margin: -8px 0 18px; padding: 12px 14px;
+  border-radius: 12px; background: var(--evb-orange-soft); border: 1px solid var(--evb-orange-line);
+  font-family: 'Inter', sans-serif;
+}
+.acct-ob-match span { font-size: 12.5px; color: var(--evb-body); }
+.acct-ob-match b { font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--evb-ink); overflow-wrap: anywhere; }
+.acct-ob-match .acct-link { align-self: flex-start; margin-top: 4px; padding: 0; font-size: 12.5px; }
+
+/* "Your details": the name, locked to a verified ID. */
+.acct-input[readonly] { background: var(--evb-cream); color: var(--evb-muted); cursor: not-allowed; }
+.acct-field-note { margin: 6px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--evb-muted); }
