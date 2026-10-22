@@ -15,6 +15,10 @@
   if (!host) return;
 
   var PENDING_KEY = 'evb_acct_pending';
+  // Where the email's sign-in link comes back to, if the template sends a
+  // link instead of (or as well as) the code. Supabase only honours it when
+  // it's listed under Authentication → URL Configuration → Redirect URLs.
+  var ACCOUNT_URL = location.origin + '/account/';
   var HANDOFF_KEY = 'evb_acct_email';
   var RESEND_SECONDS = 60;
 
@@ -130,11 +134,8 @@
     render(
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
-          (window.EVB_REWARDS_OPEN === false
-            ? '<h2 class="acct-card-title">Member sign in</h2>' +
-              '<p class="acct-card-sub">EVB Rewards opens to everyone soon. If you already have an account, enter your email and we’ll send you a code.</p>'
-            : '<h2 class="acct-card-title">Sign in or join free</h2>' +
-              '<p class="acct-card-sub">Enter your email. We’ll send you a code — new here? That’s all it takes to make your account.</p>') +
+          '<h2 class="acct-card-title">Sign in or create your account</h2>' +
+          '<p class="acct-card-sub">Enter your email and we’ll send you a 6-digit code. New here? That’s all it takes to make your free account.</p>' +
           '<form id="acctEmailForm" novalidate>' +
             '<label class="acct-label" for="acctEmail">Email address</label>' +
             '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
@@ -163,16 +164,16 @@
     });
   }
 
-  // Before launch (EVB_REWARDS_OPEN false in site-nav.js) only accounts that
-  // already exist get a code. Anyone else is saved as a request for the
-  // panel's Members → Requests (0071) and told they're on the list.
+  // Anyone can make an account; what it unlocks is decided by member_me
+  // (panel 0072). If Supabase's sign-up switch is still off, a new email is
+  // saved as a request for Members → Requests (0071) instead of an error.
   function closed() { return window.EVB_REWARDS_OPEN === false; }
 
   function sendCode(email, btn, errEl) {
-    if (!sb) return closed() ? renderRequested(email) : renderCode(email);
+    if (!sb) return renderCode(email);
     setBusy(btn, true, 'Sending…');
-    sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: !closed() } }).then(function (res) {
-      if (res.error && closed() && /signups? not allowed|signup.*disabled|not found/i.test(res.error.message || '')) {
+    sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true, emailRedirectTo: ACCOUNT_URL } }).then(function (res) {
+      if (res.error && /signups? not allowed|signup.*disabled/i.test(res.error.message || '')) {
         return requestAccess(email, btn, errEl);
       }
       setBusy(btn, false, 'Email me a code');
@@ -224,7 +225,7 @@
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card acct-fade">' +
           '<h2 class="acct-card-title">Check your email</h2>' +
-          '<p class="acct-card-sub">We sent a 6-digit code to <b>' + esc(email) + '</b>. It can take a minute — check spam too.</p>' +
+          '<p class="acct-card-sub">We sent a 6-digit code to <b>' + esc(email) + '</b>. Type it below, or tap the link in the email. It can take a minute — check spam too.</p>' +
           '<form id="acctCodeForm" novalidate>' +
             '<label class="acct-label" for="acctCode">Your code</label>' +
             '<div class="acct-code" id="acctCodeWrap">' + boxes +
@@ -305,7 +306,7 @@
     resend.addEventListener('click', function () {
       if (!sb) return startResendTimer(resend, RESEND_SECONDS);
       resend.disabled = true;
-      sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: !closed() } }).then(function (res) {
+      sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true, emailRedirectTo: ACCOUNT_URL } }).then(function (res) {
         if (res.error) { err.textContent = friendly(res.error); resend.disabled = false; return; }
         ss(PENDING_KEY, JSON.stringify({ email: email, sentAt: Date.now() }));
         err.textContent = '';
@@ -364,12 +365,12 @@
             '</div>' +
             '<label class="acct-check"><input type="checkbox" id="acctOptIn"' + (me.marketingOptIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
             '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
-            '<button class="evb-btn evb-btn--primary acct-btn" type="submit">See my rewards</button>' +
+            '<button class="evb-btn evb-btn--primary acct-btn" type="submit">Continue</button>' +
           '</form>' +
         '</div>' +
       '</div>'
     );
-    bindProfileForm('acctWelcome', 'See my rewards', function () { push('account_profile_done', {}); });
+    bindProfileForm('acctWelcome', 'Continue', function () { push('account_profile_done', {}); });
   }
 
   function bindProfileForm(formId, label, after) {
@@ -851,6 +852,55 @@
     });
   }
 
+  /* ------------------------------------------------------------ locked */
+
+  // An account made before EVB Rewards opens to them (panel migration 0072):
+  // member_me sends back only their profile, so this is all there is to show
+  // — who they are, that they're in, what's coming, and their details.
+  function renderLocked(me, opts) {
+    opts = opts || {};
+    render(
+      '<div class="acct-dash">' +
+        (opts.preview ? '<span class="acct-preview-tag acct-rise">Preview · sample data</span>' : '') +
+
+        '<header class="acct-dash-head acct-rise">' +
+          '<div>' +
+            '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
+            '<h1 class="acct-hi">Hi, ' + esc(firstName(me.fullName) || 'there') + '</h1>' +
+          '</div>' +
+          '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
+        '</header>' +
+
+        '<section class="acct-locked acct-rise" style="--d:60ms">' +
+          '<span class="acct-locked-icon" aria-hidden="true">' + ICON.clock + '</span>' +
+          '<div>' +
+            '<h2 class="acct-locked-title">You’re in. Rewards opens soon.</h2>' +
+            '<p class="acct-locked-text">Your account is all set. Points, your full history with us and your rewards switch on soon — we’ll email <b>' + esc(me.email) + '</b> the moment they do.</p>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="acct-section acct-rise" style="--d:120ms">' +
+          '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>What’s coming</h2>' +
+          '<ol class="acct-steps">' +
+            '<li><span class="acct-step-icon">' + ICON.star + '</span><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Rewards</b><span>Every 500 points is $25 off.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.clock + '</span><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
+          '</ol>' +
+        '</section>' +
+
+        '<section class="acct-section acct-rise" style="--d:180ms" id="acctDetails">' + detailsView(me) + '</section>' +
+
+        '<p class="acct-foot-note">Questions? Call <a href="' + esc(biz.phoneHref) + '">' + esc(biz.phone) + '</a> or email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>' +
+      '</div>'
+    );
+
+    document.getElementById('acctSignOut').addEventListener('click', function () {
+      if (!sb) return renderEmail();
+      sb.auth.signOut().then(function () { renderEmail(); }, function () { renderEmail(); });
+    });
+    bindDetails(me);
+  }
+
   /* ------------------------------------------------------------ data */
 
   function renderLoading() {
@@ -890,7 +940,9 @@
         return renderProblem(friendly(res.error));
       }
       var me = res.data;
-      if (!me.fullName) renderWelcome(me); else renderDash(me);
+      if (!me.fullName) renderWelcome(me);
+      else if (me.locked) renderLocked(me);
+      else renderDash(me);
     }, function (e) { renderProblem(friendly(e)); });
   }
 
@@ -937,6 +989,7 @@
   function previewAfterCode() { renderWelcome({ fullName: '', phone: '', marketingOptIn: false }); }
   function previewAfterProfile(name) {
     var me = JSON.parse(JSON.stringify(SAMPLE));
+    if (closed()) { me.fullName = name; return renderLocked(me, { preview: true }); }
     me.fullName = name; me.balance = 0; me.history = [];
     renderDash(me, { preview: true });
   }
@@ -947,6 +1000,7 @@
     if (mode === 'empty') return previewAfterProfile('Pat Rivera');
     if (mode === 'signin') return renderEmail();
     if (mode === 'requested') return renderRequested('pat@example.com');
+    if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     renderDash(SAMPLE, { preview: true });
   }
 
@@ -960,11 +1014,23 @@
   }
 
   sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'evb-account' }
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'evb-account' }
   });
 
+  // A sign-in link that failed comes back as #error=…&error_description=…
+  var linkError = /[#&]error_description=([^&]+)/.exec(location.hash);
+  if (linkError) history.replaceState(null, '', location.pathname + location.search);
+
   sb.auth.getSession().then(function (res) {
-    if (res.data && res.data.session) return loadMe();
+    if (res.data && res.data.session) {
+      ss(PENDING_KEY, null);
+      if (/access_token=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+      return loadMe();
+    }
+    if (linkError) {
+      ss(PENDING_KEY, null);
+      return renderEmail('', 'That sign-in link has expired or was already used. Enter your email for a new code.');
+    }
     var pending = parsePending();
     if (pending) return renderCode(pending.email);
     var handoff = ss(HANDOFF_KEY);

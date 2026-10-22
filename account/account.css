@@ -461,3 +461,23 @@
   .acct-steps li { display: grid; grid-template-columns: 36px 1fr; column-gap: 14px; align-items: start; }
   .acct-step-icon { grid-row: span 2; margin-bottom: 0; }
 }
+
+/* ---------------------------------------------------------------- locked */
+
+/* An account Rewards hasn't opened to yet (panel 0072): one light card in
+   the points card's place. */
+.acct-locked {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: #fff; border: 1px solid var(--evb-line-soft); border-radius: 20px;
+  padding: 24px 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+@media (min-width: 600px) { .acct-locked { padding: 30px 32px; gap: 22px; } }
+.acct-locked-icon {
+  flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--evb-orange-soft); color: var(--evb-orange-dark);
+}
+.acct-locked-icon svg { width: 22px; height: 22px; }
+.acct-locked-title { margin: 2px 0 6px; font-family: 'Montserrat', sans-serif; font-size: clamp(18px, 4.6vw, 22px); font-weight: 800; letter-spacing: -0.02em; color: var(--evb-ink); }
+.acct-locked-text { margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; color: var(--evb-muted); }
+.acct-locked-text b { color: var(--evb-ink); font-weight: 600; overflow-wrap: anywhere; }
+.acct-locked + .acct-section { margin-top: 22px; }
