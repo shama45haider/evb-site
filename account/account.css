@@ -495,14 +495,15 @@
 .acct-intro { position: relative; }
 .acct-deco { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .acct-intro > *:not(.acct-deco) { position: relative; z-index: 1; }
-.acct-ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(249,115,22,0.16); }
-.acct-ring--a { width: 240px; height: 240px; left: -110px; top: -80px; animation: acct-drift 16s ease-in-out infinite alternate; }
-.acct-ring--b { width: 84px; height: 84px; right: 4%; top: -18px; border-style: dashed; border-color: rgba(249,115,22,0.3); animation: acct-spin 45s linear infinite; }
+/* "orb", not "ring": .acct-ring is the points ring on the account page. */
+.acct-orb { position: absolute; border-radius: 50%; border: 1.5px solid rgba(249,115,22,0.16); }
+.acct-orb--a { width: 240px; height: 240px; left: -110px; top: -80px; animation: acct-drift 16s ease-in-out infinite alternate; }
+.acct-orb--b { width: 84px; height: 84px; right: 4%; top: -18px; border-style: dashed; border-color: rgba(249,115,22,0.3); animation: acct-spin 45s linear infinite; }
 .acct-spark { position: absolute; color: var(--evb-orange); animation: acct-twinkle 3.4s ease-in-out infinite; }
 .acct-spark svg { display: block; width: 100%; height: 100%; }
 .acct-spark--a { width: 22px; height: 22px; right: 10%; top: 86px; }
 .acct-spark--b { width: 14px; height: 14px; left: -24px; top: 58%; animation-delay: 1.6s; }
-@media (max-width: 899px) { .acct-ring--a { left: -150px; } .acct-spark--b { left: auto; right: 2%; top: auto; bottom: -6px; } }
+@media (max-width: 899px) { .acct-orb--a { left: -150px; } .acct-spark--b { left: auto; right: 2%; top: auto; bottom: -6px; } }
 
 /* Headline: "Get rewarded." gets a hand-drawn underline. */
 .acct-word { display: inline-block; }
@@ -584,7 +585,7 @@
 @keyframes acct-twinkle { 0%, 100% { opacity: 0.3; transform: scale(0.8) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(20deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .acct-ring, .acct-spark, .acct-card::after, .acct-float,
+  .acct-orb, .acct-spark, .acct-card::after, .acct-float,
   .acct-code-box.is-filled, .acct-welcome-badge, .acct-welcome-badge svg, .acct-locked-icon::after,
   .acct-steps .acct-step-icon, .acct-intro--play .acct-word,
   .acct-intro--play .acct-lede, .acct-intro--play .acct-perk, .acct-intro--play .acct-squiggle path { animation: none; }
@@ -749,3 +750,8 @@
 /* "Your details": the name, locked to a verified ID. */
 .acct-input[readonly] { background: var(--evb-cream); color: var(--evb-muted); cursor: not-allowed; }
 .acct-field-note { margin: 6px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--evb-muted); }
+
+/* Points ring: a truck over "Free" / "Express" (points buy free shipping, 0074). */
+.acct-ring-text i { display: grid; place-items: center; color: var(--evb-orange); margin-bottom: 2px; }
+.acct-ring-text i svg { width: 18px; height: 18px; }
+.acct-ring-text b { font-size: 17px; }

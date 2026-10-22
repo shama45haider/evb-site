@@ -23,6 +23,9 @@
   var RESEND_SECONDS = 60;
 
   var cfg = window.EVB_ACCOUNT_CONFIG || {};
+  // Points buy free shipping (panel migration 0074). member_me sends the
+  // real numbers in rules; these are for the signed-out pages and previews.
+  var FREE_SHIP = 250, FREE_EXPRESS = 600;
   var store = window.EVB_STORE_CONFIG || {};
   var biz = store.business || { phone: '917-608-8939', phoneHref: 'tel:9176088939', email: 'info@eastvillagebuyers.com' };
   var sb = null;
@@ -128,8 +131,8 @@
     return '' +
       '<div class="acct-intro' + (play ? ' acct-intro--play' : '') + '">' +
         '<span class="acct-deco" aria-hidden="true">' +
-          '<span class="acct-ring acct-ring--a"></span>' +
-          '<span class="acct-ring acct-ring--b"></span>' +
+          '<span class="acct-orb acct-orb--a"></span>' +
+          '<span class="acct-orb acct-orb--b"></span>' +
           '<span class="acct-spark acct-spark--a">' + ICON.sparkle + '</span>' +
           '<span class="acct-spark acct-spark--b">' + ICON.sparkle + '</span>' +
         '</span>' +
@@ -137,10 +140,10 @@
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
           '</em></h1>' +
-        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> you spend — online or in the shop on Avenue A. Every <strong>500 points is $25 off.</strong></p>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> you spend — online or in the shop on Avenue A. Every <strong>' + FREE_SHIP + ' points ships an order free.</strong></p>' +
         '<ul class="acct-perks">' +
           perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.', 4) +
-          perk(ICON.gift, '$25 off for every 500 points', 'Use them in the shop, or call us to put them toward an online order.', 5) +
+          perk(ICON.truck, 'Free shipping at ' + FREE_SHIP + ' points', FREE_SHIP + ' points ships an online order free; ' + FREE_EXPRESS + ' ships it express.', 5) +
           perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 6) +
         '</ul>' +
       '</div>';
@@ -155,7 +158,7 @@
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card-stage">' +
           '<span class="acct-float acct-float--pts" aria-hidden="true">' + ICON.star + '+450 pts</span>' +
-          '<span class="acct-float acct-float--off" aria-hidden="true">' + ICON.gift + '$25 off</span>' +
+          '<span class="acct-float acct-float--off" aria-hidden="true">' + ICON.truck + 'Free shipping</span>' +
           '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
             '<h2 class="acct-card-title">Sign in or create your account</h2>' +
             '<p class="acct-card-sub">Enter your email and we’ll send you a sign-in code. New here? That’s all it takes to make your free account.</p>' +
@@ -500,12 +503,20 @@
 
   function renderDash(me, opts) {
     opts = opts || {};
-    var rules = me.rules || { pointsPerDollar: 1, rewardPoints: 500, rewardCents: 2500 };
+    var rules = me.rules || { pointsPerDollar: 1 };
+    var ship = rules.freeShippingPoints || FREE_SHIP;
+    var express = rules.freeExpressPoints || FREE_EXPRESS;
     var bal = Math.max(Number(me.balance) || 0, 0);
-    var ready = Math.floor(bal / rules.rewardPoints);
-    var into = bal % rules.rewardPoints;
-    var toGo = rules.rewardPoints - into;
-    var pct = Math.round((into / rules.rewardPoints) * 100);
+    // The ring fills toward free shipping, then on toward free express.
+    var goal = bal < ship ? ship : express;
+    var into = Math.min(bal, goal);
+    var pct = Math.round((into / goal) * 100);
+    var ready = bal >= express ? 'Free express shipping ready' : bal >= ship ? 'Free shipping ready' : '';
+    var pointsLine = bal < ship
+      ? '<b>' + num(ship - bal) + ' points</b> to free shipping'
+      : bal < express
+        ? 'Text us when you order online and we\u2019ll ship it free. <b>' + num(express - bal) + ' more</b> for free express.'
+        : 'Text us when you order online and we\u2019ll ship it express, free.';
     var history = me.history || [];
     var sum = totals(history);
 
@@ -528,19 +539,19 @@
           '<div class="acct-points-main">' +
             '<span class="acct-points-label">' + ICON.star + 'Your points</span>' +
             '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
-            (ready ? '<span class="acct-points-ready">' + ICON.gift + money(ready * rules.rewardCents) + ' ready to use</span>' : '') +
-            '<p class="acct-points-sub"><b>' + num(toGo) + ' points</b> to your next ' + money(rules.rewardCents) + '</p>' +
+            (ready ? '<span class="acct-points-ready">' + ICON.truck + ready + '</span>' : '') +
+            '<p class="acct-points-sub">' + pointsLine + '</p>' +
           '</div>' +
-          '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + rules.rewardPoints + '" aria-valuenow="' + into + '" aria-label="Points toward your next reward">' +
+          '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + into + '" aria-label="Points toward ' + (goal === ship ? 'free shipping' : 'free express shipping') + '">' +
             '<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="acct-ring-track" cx="60" cy="60" r="52"/><circle class="acct-ring-fill" cx="60" cy="60" r="52" pathLength="100" data-pct="' + pct + '"/></svg>' +
-            '<span class="acct-ring-text"><b>' + money(rules.rewardCents) + '</b><small>' + num(into) + ' / ' + num(rules.rewardPoints) + '</small></span>' +
+            '<span class="acct-ring-text"><i aria-hidden="true">' + ICON.truck + '</i><b>' + (goal === ship ? 'Free' : 'Express') + '</b><small>' + num(into) + ' / ' + num(goal) + '</small></span>' +
           '</div>' +
         '</section>' +
 
         '<a class="acct-visit acct-rise" style="--d:100ms" href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">' +
           '<img class="acct-visit-img" src="/east-village-buyers-storefront-39-avenue-a.webp" alt="The East Village Buyers storefront at 39 Avenue A" loading="lazy" width="960" height="675">' +
           '<span class="acct-visit-text">' +
-            '<b>' + (ready ? 'Use your ' + money(ready * rules.rewardCents) + ' in the shop' : 'Earn in the shop too') + '</b>' +
+            '<b>Earn in the shop too</b>' +
             '<span>Give us your name or member number <strong>' + esc(me.memberNumber) + '</strong> at the counter.</span>' +
             '<span class="acct-visit-addr">' + ICON.pin + '39 Avenue A, East Village</span>' +
           '</span>' +
@@ -572,8 +583,8 @@
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>How it works</h2>' +
           '<ol class="acct-steps">' +
             '<li><span class="acct-step-icon">' + ICON.bag + '</span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.layers + '</span><b>Collect</b><span>Every ' + num(rules.rewardPoints) + ' points is ' + money(rules.rewardCents) + ' off.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Use</b><span>At the counter, or call us for an online order.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.truck + '</span><b>Ship free</b><span>' + num(ship) + ' points is free shipping on an online order; ' + num(express) + ' is free express.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Use</b><span>Text or call us when you order online and we\u2019ll take the shipping off.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -1219,7 +1230,7 @@
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>What’s coming</h2>' +
           '<ol class="acct-steps">' +
             '<li><span class="acct-step-icon">' + ICON.star + '</span><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Rewards</b><span>Every 500 points is $25 off.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.truck + '</span><b>Free shipping</b><span>' + FREE_SHIP + ' points ships an online order free.</span></li>' +
             '<li><span class="acct-step-icon">' + ICON.clock + '</span><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
           '</ol>' +
         '</section>' +
@@ -1312,8 +1323,8 @@
     memberNumber: 'M1024', email: 'pat@example.com', fullName: 'Pat Rivera', phone: '917-555-0100',
     marketingOptIn: true, joinedAt: '2026-06-02T15:00:00Z',
     dateOfBirth: '1994-05-17', idStatus: 'submitted', onboarded: true, avatarPath: null,
-    balance: 1265, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
-    rules: { pointsPerDollar: 1, rewardPoints: 500, rewardCents: 2500, lookbackDays: 30 },
+    balance: 410, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
+    rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, freeExpressPoints: 600 },
     purchases: [], activity: [],
     history: [
       { kind: 'online', reference: 'EVB-261019-7QX2', occurredAt: daysAgo(3), status: 'shipped', fulfillment: 'ship', shipService: 'Express shipping',
