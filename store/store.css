@@ -1050,13 +1050,9 @@ html.evbs-lock { overflow: visible !important; }
 .evb-rewards-nudge {
   max-width: 720px; margin: 0 auto 22px; padding: 18px 20px;
   display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  background: linear-gradient(150deg, #1d1d1d, #0b0b0b); color: #fff;
+  background: #0f0f0f; color: #fff;
   border-radius: var(--evb-radius); box-shadow: var(--evb-shadow-lg);
   position: relative; overflow: hidden;
-}
-.evb-rewards-nudge::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(90% 120% at 100% 0%, rgba(249,115,22,0.45), transparent 55%);
 }
 .evb-rewards-nudge > * { position: relative; }
 .evb-rewards-nudge-pts { text-align: center; flex-shrink: 0; }
