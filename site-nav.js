@@ -478,3 +478,50 @@ var EVB_REWARDS_OPEN = false;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add);
   else add();
 })();
+
+// Sign in: a button at the right end of the nav bar and in the phone menu,
+// on every page. Unlike the Rewards link above it shows before launch too —
+// it's how invited members get to /account/. "My account" once signed in
+// (supabase-js keeps the session under 'evb-account', account.js).
+(function () {
+  function signedIn() {
+    try { return !!localStorage.getItem('evb-account'); } catch (e) { return false; }
+  }
+  var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>';
+
+  function add() {
+    if (document.querySelector('[data-evb-login]')) return;
+    var label = signedIn() ? 'My account' : 'Sign in';
+    var here = /^\/account(\/|$)/.test(location.pathname);
+
+    var right = document.querySelector('.site-nav-right');
+    if (right) {
+      var a = document.createElement('a');
+      a.href = '/account/';
+      a.className = 'site-nav-login' + (here ? ' is-active' : '');
+      a.setAttribute('data-evb-login', '');
+      a.setAttribute('aria-label', label);
+      a.title = label;
+      a.innerHTML = '<span class="site-nav-login-icon">' + ICON + '</span><span class="site-nav-login-label">' + label + '</span>';
+      var ham = right.querySelector('.site-ham');
+      right.insertBefore(a, ham || null);
+      // Send a Text shrinks to its icon on narrow desktops (site-nav.css);
+      // keep its name for screen readers.
+      var sms = right.querySelector('.site-btn-sms');
+      if (sms && !sms.hasAttribute('aria-label')) sms.setAttribute('aria-label', 'Send a text');
+    }
+
+    var foot = document.querySelector('.site-mob-footer');
+    if (foot) {
+      var m = document.createElement('a');
+      m.href = '/account/';
+      m.className = 'site-mob-btn site-mob-btn-login';
+      m.setAttribute('data-evb-login', '');
+      m.innerHTML = ICON + label;
+      var addr = foot.querySelector('.site-mob-addr');
+      foot.insertBefore(m, addr ? addr.nextSibling : foot.firstChild);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add);
+  else add();
+})();

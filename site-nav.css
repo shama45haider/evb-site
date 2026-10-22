@@ -419,3 +419,39 @@
   .site-nav-link:not(.site-nav-link--store) { padding: 0 10px; }
   .site-nav-link--store { padding: 9px 16px; margin: 0 4px; }
 }
+
+/* Sign in (site-nav.js): white like Send a Text, at the right end of the
+   bar. Its label shows only on tablets (768–1023px), where the page links
+   are in the menu. On phones and desktops it's the icon: the desktop bar is
+   capped at 1180px, and a label there squeezes What We Buy into Send a
+   Text. */
+.site-nav-login {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 0 14px 0 8px; box-sizing: border-box;
+  background: #fff; border: 1.5px solid rgba(0,0,0,0.11); border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.04em;
+  color: #111; text-decoration: none; white-space: nowrap;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.site-nav-login:hover, .site-nav-login.is-active { border-color: #e8690a; }
+.site-nav-login:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,105,10,0.12); }
+.site-nav-login-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; background: rgba(232,105,10,0.1); color: #e8690a; flex-shrink: 0; }
+.site-nav-login-icon svg { width: 14px; height: 14px; }
+@media (max-width: 767px), (min-width: 1024px) {
+  .site-nav-login { width: 44px; padding: 0; justify-content: center; }
+  .site-nav-login-label { display: none; }
+}
+/* Where the page links and the buttons share the bar most tightly, Send a
+   Text goes to its icon too, so What We Buy keeps its width. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .site-btn-sms { padding: 0; width: 44px; justify-content: center; }
+  .site-btn-sms .site-btn-copy { display: none; }
+}
+
+/* Under 375px the 250px logo, this and the menu button don't fit in one
+   row; the menu has Sign in too. */
+@media (max-width: 374px) { .site-nav-login { display: none; } }
+
+.site-mob-btn-login { background: #fff; color: #111; border: 1.5px solid rgba(0,0,0,0.11); }
+.site-mob-btn-login:hover { border-color: #e8690a; }
