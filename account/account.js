@@ -145,7 +145,8 @@
           perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.', 4) +
           perk(ICON.truck, 'Free shipping at ' + FREE_SHIP + ' points', FREE_SHIP + ' points ships an online order free; ' + FREE_EXPRESS + ' ships it express.', 5) +
           perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
-          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 7) +
+          perk(ICON.gift, 'Members-only perks', 'Exclusive deals, members-only giveaways and raffles, and more.', 7) +
+          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 8) +
         '</ul>' +
       '</div>';
   }
