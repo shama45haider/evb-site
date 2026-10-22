@@ -150,8 +150,21 @@ body.evb-store-page {
 }
 .evb-cartbtn-count.is-empty { background: rgba(255,255,255,0.28); color: #fff; }
 
+/* EVB Rewards (/account/) — a quiet pill beside the orange Bag button. */
+.evb-acctbtn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+  color: var(--evb-ink); background: #fff;
+  border: 1.5px solid var(--evb-line); border-radius: 20px; padding: 9.5px 15px;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.evb-acctbtn svg { width: 15px; height: 15px; color: var(--evb-orange); }
+.evb-acctbtn:hover, .evb-acctbtn.is-active { border-color: var(--evb-orange); color: var(--evb-orange-dark); }
+.evb-acctbtn:hover { transform: translateY(-2px); }
+
 @media (max-width: 900px) { .evb-storebar-cats { display: none; } }
-@media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } }
+@media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } .evb-acctbtn { padding: 9.5px 12px; } }
 
 .evb-section { padding: 52px 0; }
 .evb-section--tight { padding: 36px 0; }
@@ -1032,3 +1045,26 @@ body.evb-store-page {
 
 div.evbs { display: none !important; }
 html.evbs-lock { overflow: visible !important; }
+
+/* EVB Rewards nudge on the order confirmation */
+.evb-rewards-nudge {
+  max-width: 720px; margin: 0 auto 22px; padding: 18px 20px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: linear-gradient(150deg, #1d1d1d, #0b0b0b); color: #fff;
+  border-radius: var(--evb-radius); box-shadow: var(--evb-shadow-lg);
+  position: relative; overflow: hidden;
+}
+.evb-rewards-nudge::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(90% 120% at 100% 0%, rgba(249,115,22,0.45), transparent 55%);
+}
+.evb-rewards-nudge > * { position: relative; }
+.evb-rewards-nudge-pts { text-align: center; flex-shrink: 0; }
+.evb-rewards-nudge-pts strong { display: block; font-size: 30px; font-weight: 900; line-height: 1; color: #fff; }
+.evb-rewards-nudge-pts span { font-size: 9.5px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--evb-orange); }
+.evb-rewards-nudge-copy { flex: 1; min-width: 200px; }
+.evb-rewards-nudge-title { margin: 0 0 4px; font-size: 15px; font-weight: 900; }
+.evb-rewards-nudge-sub { margin: 0; font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+.evb-rewards-nudge-sub strong { color: #fff; font-weight: 600; word-break: break-all; }
+@media (max-width: 560px) { .evb-rewards-nudge .evb-btn { width: 100%; } }
+@media print { .evb-rewards-nudge { display: none; } }

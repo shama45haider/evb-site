@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.8.2">
+<link rel="stylesheet" href="/store/store.css?v=1.8.3">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -114,6 +114,10 @@
     </a>
     <div style="flex:1"></div>
     <div class="evb-storebar-actions">
+      <a href="/account/" class="evb-acctbtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span class="evb-acctbtn-label">Rewards</span>
+      </a>
       <button type="button" class="evb-cartbtn" data-cart-open aria-label="Open shopping bag">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="evb-cartbtn-label">Bag</span>
@@ -232,6 +236,21 @@
       ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   }
 
+  // EVB Rewards (/account/): this order earns points once they join with the
+  // same email, if they do within 30 days (rewards_rules in the panel's 0069).
+  function rewardsNudge(o, t) {
+    var points = Math.floor(((t.subtotal || 0) - (t.discount || 0)) / 100);
+    if (o.demo || points <= 0 || !o.customer || !o.customer.email) return '';
+    return '<div class="evb-rewards-nudge">' +
+      '<div class="evb-rewards-nudge-pts"><strong>+' + points.toLocaleString('en-US') + '</strong><span>points</span></div>' +
+      '<div class="evb-rewards-nudge-copy">' +
+        '<p class="evb-rewards-nudge-title">Claim your points for this order</p>' +
+        '<p class="evb-rewards-nudge-sub">Join EVB Rewards free with <strong>' + S.esc(o.customer.email) + '</strong> and this order counts. Every 500 points is $25 off.</p>' +
+      '</div>' +
+      '<a class="evb-btn evb-btn--primary" href="/account/" data-rewards-join>Join free</a>' +
+    '</div>';
+  }
+
   function render(o) {
     var pickup = o.fulfillment && o.fulfillment.type === 'PICKUP';
     var t = o.totals || {};
@@ -276,6 +295,8 @@
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-5M12 8v.01"/></svg>' +
           '<span><strong>Demo order.</strong> Square is not connected yet, so no payment was taken and no email was sent. ' +
           'This receipt is stored in this browser only.</span></div>' : '') +
+
+        rewardsNudge(o, t) +
 
         '<div class="evb-receipt">' +
           '<div class="evb-receipt-head">' +
@@ -355,6 +376,11 @@
       '</div>';
 
     document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+    var join = host.querySelector('[data-rewards-join]');
+    if (join) join.addEventListener('click', function () {
+      try { sessionStorage.setItem('evb_acct_email', o.customer.email); } catch (e) {}
+    });
+
     document.title = 'Order ' + o.id + ' | East Village Buyers';
   }
 

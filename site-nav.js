@@ -438,3 +438,33 @@ function toggleNav() { toggleEvbNav(); }
   s.defer = true;
   document.head.appendChild(s);
 })();
+
+// EVB Rewards: a Rewards link beside Store in both navs. Added here rather
+// than in each page's header markup so all 128 pages get it at once.
+(function () {
+  function add() {
+    if (document.querySelector('[data-evb-rewards-link]')) return;
+    var here = /^\/account(\/|$)/.test(location.pathname);
+    var store = document.querySelector('.site-nav-links .site-nav-link--store');
+    if (store) {
+      var a = document.createElement('a');
+      a.href = '/account/';
+      a.className = 'site-nav-link' + (here ? ' is-active' : '');
+      a.textContent = 'Rewards';
+      a.setAttribute('data-evb-rewards-link', '');
+      store.parentNode.insertBefore(a, store.nextSibling);
+    }
+    var mob = document.querySelector('.site-mob-links .site-mob-link--store');
+    if (mob) {
+      var m = document.createElement('a');
+      m.href = '/account/';
+      m.className = 'site-mob-link';
+      m.textContent = 'Rewards';
+      m.setAttribute('data-evb-rewards-link', '');
+      m.addEventListener('click', function () { toggleEvbNav(); });
+      mob.parentNode.insertBefore(m, mob.nextSibling);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add);
+  else add();
+})();
