@@ -112,37 +112,55 @@
 
   /* ------------------------------------------------------------ signed out */
 
+  // The intro plays its entrance once; the code, welcome and on-the-list
+  // steps redraw it, and replaying it every step would be noise.
+  var introPlayed = false;
+
   function heroIntro() {
+    var play = !introPlayed;
+    introPlayed = true;
     return '' +
-      '<div class="acct-intro acct-fade">' +
-        '<p class="evb-eyebrow">EVB Rewards</p>' +
-        '<h1 class="acct-title">Shop with us. <em>Get rewarded.</em></h1>' +
-        '<p class="acct-lede">Earn <strong>1 point for every $1</strong> you spend — online or in the shop on Avenue A. Every <strong>500 points is $25 off.</strong></p>' +
+      '<div class="acct-intro' + (play ? ' acct-intro--play' : '') + '">' +
+        '<span class="acct-deco" aria-hidden="true">' +
+          '<span class="acct-ring acct-ring--a"></span>' +
+          '<span class="acct-ring acct-ring--b"></span>' +
+          '<span class="acct-spark acct-spark--a">' + ICON.sparkle + '</span>' +
+          '<span class="acct-spark acct-spark--b">' + ICON.sparkle + '</span>' +
+        '</span>' +
+        '<h1 class="acct-title"><span class="acct-word" style="--i:1">Shop with us.</span> ' +
+          '<em class="acct-word" style="--i:2">Get rewarded.' +
+            '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
+          '</em></h1>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> you spend — online or in the shop on Avenue A. Every <strong>500 points is $25 off.</strong></p>' +
         '<ul class="acct-perks">' +
-          perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.') +
-          perk(ICON.gift, '$25 off for every 500 points', 'Use them in the shop, or call us to put them toward an online order.') +
-          perk(ICON.key, 'No password to remember', 'We email you a 6-digit code each time you sign in.') +
+          perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.', 4) +
+          perk(ICON.gift, '$25 off for every 500 points', 'Use them in the shop, or call us to put them toward an online order.', 5) +
+          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 6) +
         '</ul>' +
       '</div>';
   }
-  function perk(icon, title, text) {
-    return '<li class="acct-perk"><span class="acct-perk-icon">' + icon + '</span><div><b>' + title + '</b><span>' + text + '</span></div></li>';
+  function perk(icon, title, text, i) {
+    return '<li class="acct-perk" style="--i:' + i + '"><span class="acct-perk-icon">' + icon + '</span><div><b>' + title + '</b><span>' + text + '</span></div></li>';
   }
 
   function renderEmail(prefill, error) {
     stopResendTimer();
     render(
       '<div class="acct-hero">' + heroIntro() +
-        '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
-          '<h2 class="acct-card-title">Sign in or create your account</h2>' +
-          '<p class="acct-card-sub">Enter your email and we’ll send you a 6-digit code. New here? That’s all it takes to make your free account.</p>' +
-          '<form id="acctEmailForm" novalidate>' +
-            '<label class="acct-label" for="acctEmail">Email address</label>' +
-            '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
-            '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
-            '<button class="evb-btn evb-btn--primary acct-btn" type="submit">Email me a code</button>' +
-          '</form>' +
-          '<p class="acct-fine">Use the email you shop with — orders from the last 30 days count too. By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
+        '<div class="acct-card-stage">' +
+          '<span class="acct-float acct-float--pts" aria-hidden="true">' + ICON.star + '+450 pts</span>' +
+          '<span class="acct-float acct-float--off" aria-hidden="true">' + ICON.gift + '$25 off</span>' +
+          '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
+            '<h2 class="acct-card-title">Sign in or create your account</h2>' +
+            '<p class="acct-card-sub">Enter your email and we’ll send you a sign-in code. New here? That’s all it takes to make your free account.</p>' +
+            '<form id="acctEmailForm" novalidate>' +
+              '<label class="acct-label" for="acctEmail">Email address</label>' +
+              '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
+              '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
+              '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit">Email me a code</button>' +
+            '</form>' +
+            '<p class="acct-fine">Use the email you shop with — orders from the last 30 days count too. By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
+          '</div>' +
         '</div>' +
       '</div>'
     );
@@ -225,14 +243,14 @@
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card acct-fade">' +
           '<h2 class="acct-card-title">Check your email</h2>' +
-          '<p class="acct-card-sub">We sent a 6-digit code to <b>' + esc(email) + '</b>. Type it below, or tap the link in the email. It can take a minute — check spam too.</p>' +
+          '<p class="acct-card-sub">We sent a sign-in code to <b>' + esc(email) + '</b>. Type it below, or tap the link in the email. It can take a minute — check spam too.</p>' +
           '<form id="acctCodeForm" novalidate>' +
             '<label class="acct-label" for="acctCode">Your code</label>' +
             '<div class="acct-code" id="acctCodeWrap">' + boxes +
               '<input class="acct-code-input" id="acctCode" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" aria-describedby="acctErr" autofocus>' +
             '</div>' +
             '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
-            '<button class="evb-btn evb-btn--primary acct-btn" type="submit">Sign in</button>' +
+            '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit">Sign in</button>' +
           '</form>' +
           '<div class="acct-links">' +
             '<button type="button" class="acct-link" id="acctBack">Use a different email</button>' +
@@ -271,7 +289,7 @@
 
     function verify() {
       var code = input.value;
-      if (code.length !== 6) { err.textContent = 'Enter all 6 digits.'; input.focus(); return; }
+      if (code.length !== 6) { err.textContent = 'Enter all 6 digits of the code.'; input.focus(); return; }
       if (!sb) return previewAfterCode();
       var btn = form.querySelector('button');
       setBusy(btn, true, 'Signing in…');
