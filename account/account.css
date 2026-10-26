@@ -178,6 +178,37 @@
 .acct-points-ready svg { width: 14px; height: 14px; }
 .acct-points-sub { margin: 12px 0 0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; color: var(--evb-muted); }
 .acct-points-sub b { color: var(--evb-ink); font-weight: 600; }
+/* "Your points expire on Dec 25" (panel 0077). Warm once it's close. */
+.acct-points-expire {
+  display: flex; align-items: flex-start; gap: 7px; margin: 12px 0 0;
+  font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5; color: var(--evb-muted);
+}
+.acct-points-expire svg { flex-shrink: 0; width: 14px; height: 14px; margin-top: 2px; color: var(--evb-faint); }
+.acct-points-expire b { color: var(--evb-ink); font-weight: 600; }
+.acct-points-expire.is-soon { color: var(--evb-red); }
+.acct-points-expire.is-soon svg, .acct-points-expire.is-soon b { color: var(--evb-red); }
+
+/* The prize ladder under the balance: what's ready, and how far the rest are. */
+.acct-prizes {
+  margin-top: 12px; background: #fff; border: 1px solid var(--evb-line-soft); border-radius: 20px;
+  padding: 18px 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.acct-prizes-head {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px 7px; margin: 0 0 12px;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--evb-ink);
+}
+.acct-prizes-head svg { width: 15px; height: 15px; color: var(--evb-orange); }
+.acct-prizes-head small { font-weight: 400; color: var(--evb-faint); }
+.acct-prize-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 600px) { .acct-prize-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.acct-prize {
+  display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--evb-line-soft); font-family: 'Inter', sans-serif;
+}
+.acct-prize b { font-size: 13px; font-weight: 600; color: var(--evb-ink); line-height: 1.3; }
+.acct-prize span { font-size: 12px; color: var(--evb-faint); }
+.acct-prize.is-ready { border-color: var(--evb-orange); background: var(--evb-orange-soft); }
+.acct-prize.is-ready span { color: var(--evb-orange-deep); font-weight: 600; }
 
 .acct-ring { position: relative; flex-shrink: 0; width: 112px; height: 112px; }
 @media (min-width: 600px) { .acct-ring { width: 128px; height: 128px; } }

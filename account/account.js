@@ -29,9 +29,19 @@
   // Where to go once signed in and set up: checkout sends people here first
   // (?next=/store/checkout/). Kept for the tab, across the emailed-code step.
   var NEXT_KEY = 'evb_acct_next';
-  // Points buy free shipping (panel migration 0074). member_me sends the
-  // real numbers in rules; these are for the signed-out pages and previews.
-  var FREE_SHIP = 250, FREE_EXPRESS = 600;
+  // What points buy (panel migration 0077): one prize per order, $20 off at
+  // most, and points lapse 60 days after the member's last visit or order.
+  // member_me sends the real ones in rules; these are for the signed-out
+  // pages, previews, and a panel that hasn't run 0077 yet.
+  var PRIZES = [
+    { code: 'off_5', label: '$5 off an order', short: '$5 off', points: 100 },
+    { code: 'off_10', label: '$10 off an order', short: '$10 off', points: 200 },
+    { code: 'free_shipping', label: 'Free standard shipping', short: 'Free ship', points: 250 },
+    { code: 'off_20', label: '$20 off an order', short: '$20 off', points: 400 }
+  ];
+  var EXPIRE_DAYS = 60;
+  // Points this close to lapsing get the warning colour.
+  var EXPIRE_SOON_DAYS = 14;
   var store = window.EVB_STORE_CONFIG || {};
   var biz = store.business || { phone: '917-608-8939', phoneHref: 'tel:9176088939', email: 'info@eastvillagebuyers.com' };
   var sb = null;
@@ -147,10 +157,10 @@
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
           '</em></h1>' +
-        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> you spend — online or in the shop on Avenue A. Every <strong>' + FREE_SHIP + ' points ships an order free.</strong></p>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> — when you buy from us online or in the shop on Avenue A, and when you sell to us. Every <strong>' + PRIZES[0].points + ' points is $5 off.</strong></p>' +
         '<ul class="acct-perks">' +
-          perk(ICON.star, 'Points on every purchase', 'Online orders and counter sales, added to your account by themselves.', 4) +
-          perk(ICON.truck, 'Free shipping at ' + FREE_SHIP + ' points', FREE_SHIP + ' points ships an online order free; ' + FREE_EXPRESS + ' ships it express.', 5) +
+          perk(ICON.star, 'Points when you buy or sell', 'Online orders count by themselves. In the shop, show your QR code when you buy, sell or trade.', 4) +
+          perk(ICON.gift, 'Up to $20 off', prizeLadder() + '. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
           perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
           perk(ICON.gift, 'Members-only perks', 'Exclusive deals, members-only giveaways and raffles, and more.', 7) +
           perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 8) +
@@ -159,6 +169,26 @@
   }
   function perk(icon, title, text, i) {
     return '<li class="acct-perk" style="--i:' + i + '"><span class="acct-perk-icon">' + icon + '</span><div><b>' + title + '</b><span>' + text + '</span></div></li>';
+  }
+
+  // The prizes member_me sent, smallest first, with the short names the ring
+  // uses; ours when it sent none.
+  function prizesOf(rules) {
+    var list = rules && rules.prizes && rules.prizes.length ? rules.prizes : PRIZES;
+    return list.map(function (p) {
+      var ours = PRIZES.filter(function (q) { return q.code === p.code; })[0];
+      return { code: p.code, label: p.label, points: Number(p.points) || 0, short: ours ? ours.short : p.label };
+    }).sort(function (a, b) { return a.points - b.points; });
+  }
+  // "100 points = $5 off, 200 = $10 off, 250 = free shipping, 400 = $20 off"
+  function prizeLadder(prizes) {
+    return (prizes || PRIZES).map(function (p, i) {
+      var what = p.code === 'free_shipping' ? 'free shipping' : p.label.replace(/ an order$/, '');
+      return num(p.points) + (i === 0 ? ' points' : '') + ' = ' + what;
+    }).join(', ');
+  }
+  function daysLeft(at) {
+    return Math.max(Math.ceil((new Date(at).getTime() - Date.now()) / 864e5), 0);
   }
 
   function renderEmail(prefill, error) {
@@ -529,19 +559,35 @@
   function renderDash(me, opts) {
     opts = opts || {};
     var rules = me.rules || { pointsPerDollar: 1 };
-    var ship = rules.freeShippingPoints || FREE_SHIP;
-    var express = rules.freeExpressPoints || FREE_EXPRESS;
+    var prizes = prizesOf(rules);
+    var expireDays = rules.expireDays || EXPIRE_DAYS;
     var bal = Math.max(Number(me.balance) || 0, 0);
-    // The ring fills toward free shipping, then on toward free express.
-    var goal = bal < ship ? ship : express;
+    // The ring fills toward the next prize, and stays full at the top one.
+    var best = prizes.filter(function (p) { return bal >= p.points; }).pop();
+    var next = prizes.filter(function (p) { return bal < p.points; })[0];
+    var goal = (next || prizes[prizes.length - 1]).points;
     var into = Math.min(bal, goal);
     var pct = Math.round((into / goal) * 100);
-    var ready = bal >= express ? 'Free express shipping ready' : bal >= ship ? 'Free shipping ready' : '';
-    var pointsLine = bal < ship
-      ? '<b>' + num(ship - bal) + ' points</b> to free shipping'
-      : bal < express
-        ? 'Text us when you order online and we\u2019ll ship it free. <b>' + num(express - bal) + ' more</b> for free express.'
-        : 'Text us when you order online and we\u2019ll ship it express, free.';
+    var ready = best ? best.label + ' ready' : '';
+    var useIt = 'Show your QR code at the counter, or text us when you order online.';
+    var pointsLine = !best
+      ? '<b>' + num(next.points - bal) + ' points</b> to ' + esc(next.label)
+      : next
+        ? useIt + ' <b>' + num(next.points - bal) + ' more</b> for ' + esc(next.label) + '.'
+        : useIt + ' One prize per order.';
+    // "Your points expire on Dec 25" while there's anything to lose; after a
+    // lapse, say so once on the zero balance.
+    var expiry = '';
+    if (bal > 0 && me.pointsExpireAt) {
+      var left = daysLeft(me.pointsExpireAt);
+      expiry = '<p class="acct-points-expire' + (left <= EXPIRE_SOON_DAYS ? ' is-soon' : '') + '">' + ICON.clock +
+        '<span>Your points expire on <b>' + esc(date(me.pointsExpireAt)) + '</b>' +
+        (left <= EXPIRE_SOON_DAYS ? ' \u2014 ' + (left === 1 ? 'tomorrow' : 'in ' + left + ' days') : '') +
+        '. Buy from us or sell to us before then and they last another ' + expireDays + ' days.</span></p>';
+    } else if (Number(me.expiredPoints) > 0 && me.pointsExpiredAt && Date.now() - new Date(me.pointsExpiredAt).getTime() < 30 * 864e5) {
+      expiry = '<p class="acct-points-expire is-soon">' + ICON.clock + '<span>' + num(me.expiredPoints) +
+        ' points expired on ' + esc(date(me.pointsExpiredAt)) + '. Earn more on your next visit \u2014 they last ' + expireDays + ' days from each one.</span></p>';
+    }
     var history = withVisits(me);
     var sum = totals(me.history || []);
 
@@ -571,13 +617,25 @@
           '<div class="acct-points-main">' +
             '<span class="acct-points-label">' + ICON.star + 'Your points</span>' +
             '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
-            (ready ? '<span class="acct-points-ready">' + ICON.truck + ready + '</span>' : '') +
+            (ready ? '<span class="acct-points-ready">' + ICON.gift + esc(ready) + '</span>' : '') +
             '<p class="acct-points-sub">' + pointsLine + '</p>' +
+            expiry +
           '</div>' +
-          '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + into + '" aria-label="Points toward ' + (goal === ship ? 'free shipping' : 'free express shipping') + '">' +
+          '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + into + '" aria-label="Points toward ' + esc((next || best).label) + '">' +
             '<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="acct-ring-track" cx="60" cy="60" r="52"/><circle class="acct-ring-fill" cx="60" cy="60" r="52" pathLength="100" data-pct="' + pct + '"/></svg>' +
-            '<span class="acct-ring-text"><i aria-hidden="true">' + ICON.truck + '</i><b>' + (goal === ship ? 'Free' : 'Express') + '</b><small>' + num(into) + ' / ' + num(goal) + '</small></span>' +
+            '<span class="acct-ring-text"><i aria-hidden="true">' + ICON.gift + '</i><b>' + esc((next || best).short) + '</b><small>' + num(into) + ' / ' + num(goal) + '</small></span>' +
           '</div>' +
+        '</section>' +
+
+        '<section class="acct-prizes acct-rise" style="--d:80ms" aria-label="Prizes">' +
+          '<p class="acct-prizes-head">' + ICON.gift + 'Prizes <small>One per order · up to $20 off</small></p>' +
+          '<ul class="acct-prize-list">' +
+            prizes.map(function (p) {
+              var have = bal >= p.points;
+              return '<li class="acct-prize' + (have ? ' is-ready' : '') + '"><b>' + esc(p.label) + '</b><span>' + num(p.points) + ' pts' +
+                (have ? ' · ready' : ' · ' + num(p.points - bal) + ' to go') + '</span></li>';
+            }).join('') +
+          '</ul>' +
         '</section>' +
 
         '<a class="acct-visit acct-rise" style="--d:100ms" href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">' +
@@ -617,9 +675,9 @@
         '<section class="acct-section acct-rise" style="--d:260ms">' +
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>How it works</h2>' +
           '<ol class="acct-steps">' +
-            '<li><span class="acct-step-icon">' + ICON.bag + '<em aria-hidden="true">1</em></span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.truck + '<em aria-hidden="true">2</em></span><b>Ship free</b><span>' + num(ship) + ' points is free shipping on an online order; ' + num(express) + ' is free express.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">3</em></span><b>Use</b><span>Text or call us when you order online and we\u2019ll take the shipping off.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.bag + '<em aria-hidden="true">1</em></span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">2</em></span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per order; show your QR code, or text us when you order online.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.clock + '<em aria-hidden="true">3</em></span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -1373,7 +1431,7 @@
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>What’s coming</h2>' +
           '<ol class="acct-steps">' +
             '<li><span class="acct-step-icon">' + ICON.star + '</span><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.truck + '</span><b>Free shipping</b><span>' + FREE_SHIP + ' points ships an online order free.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Prizes</b><span>' + prizeLadder() + '.</span></li>' +
             '<li><span class="acct-step-icon">' + ICON.clock + '</span><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
           '</ol>' +
         '</section>' +
@@ -1511,7 +1569,8 @@
     marketingOptIn: true, joinedAt: '2026-06-02T15:00:00Z',
     dateOfBirth: '1994-05-17', idStatus: 'submitted', onboarded: true, avatarPath: null,
     balance: 410, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
-    rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, freeExpressPoints: 600 },
+    pointsExpireAt: daysAgo(-55), expiredPoints: 0,
+    rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, expireDays: EXPIRE_DAYS, dailyCapCents: 2000, prizes: PRIZES },
     purchases: [],
     activity: [{ kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, createdAt: daysAgo(5) }],
     history: [
