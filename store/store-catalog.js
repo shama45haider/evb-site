@@ -822,6 +822,13 @@
 
   var state = { products: PRODUCTS, source: 'seed', loaded: null };
 
+  // Sold pieces leave the site: everything is one of one, so a sold listing
+  // is just a dead end. Every page reads the catalog through here — the
+  // store, search, related items, and the bag, which drops a sold piece with
+  // its "no longer available" notice. A link to one shows the product page's
+  // "no longer listed" screen.
+  function inStock(p) { return p.stock > 0; }
+
   function normalize(p) {
     p.variants = (p.variants && p.variants.length) ? p.variants : one(1);
     p.variants.forEach(function (v) { if (v.price == null) v.price = p.price; });
@@ -847,7 +854,7 @@
       var base = (cfg.apiBase || '').replace(/\/$/, '');
 
       if (!base) {
-        state.products = PRODUCTS.map(normalize);
+        state.products = PRODUCTS.map(normalize).filter(inStock);
         state.source = 'seed';
         state.loaded = Promise.resolve(state.products);
         return state.loaded;
@@ -859,7 +866,7 @@
           return r.json();
         })
         .then(function (json) {
-          var mapped = fromSquare(json).map(normalize);
+          var mapped = fromSquare(json).map(normalize).filter(inStock);
           state.products = mapped;
           state.source = 'square';
           return mapped;
