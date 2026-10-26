@@ -160,7 +160,7 @@
         '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> — when you buy from us online or in the shop on Avenue A, and when you sell to us. <strong>' + PRIZES[0].points + ' points ships an order free</strong>, and more takes up to $20 off.</p>' +
         '<ul class="acct-perks">' +
           perk(ICON.star, 'Points when you buy or sell', 'Online orders count by themselves. In the shop, show your QR code when you buy, sell or trade.', 4) +
-          perk(ICON.gift, 'Up to $20 off', prizeLadder() + '. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
+          perk(ICON.gift, 'Up to $20 off online orders', prizeLadder() + ', on an order you have shipped or pick up. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
           perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
           perk(ICON.gift, 'Members-only perks', 'Exclusive deals, members-only giveaways and raffles, and more.', 7) +
           perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 8) +
@@ -569,7 +569,8 @@
     var into = Math.min(bal, goal);
     var pct = Math.round((into / goal) * 100);
     var ready = best ? best.label + ' ready' : '';
-    var useIt = 'Show your QR code at the counter, or text us when you order online.';
+    // Prizes go on online orders only, shipped or picked up (panel 0078).
+    var useIt = 'Use it on an online order — shipped or picked up at the shop. Text us after you order and we’ll take it off.';
     var pointsLine = !best
       ? '<b>' + num(next.points - bal) + ' points</b> to ' + esc(next.label)
       : next
@@ -628,7 +629,7 @@
         '</section>' +
 
         '<section class="acct-prizes acct-rise" style="--d:80ms" aria-label="Prizes">' +
-          '<p class="acct-prizes-head">' + ICON.gift + 'Prizes <small>One per order · up to $20 off</small></p>' +
+          '<p class="acct-prizes-head">' + ICON.gift + 'Prizes <small>Online orders, shipped or picked up · one per order · up to $20 off</small></p>' +
           '<ul class="acct-prize-list">' +
             prizes.map(function (p) {
               var have = bal >= p.points;
@@ -676,7 +677,7 @@
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>How it works</h2>' +
           '<ol class="acct-steps">' +
             '<li><span class="acct-step-icon">' + ICON.bag + '<em aria-hidden="true">1</em></span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">2</em></span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per order; show your QR code, or text us when you order online.</span></li>' +
+            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">2</em></span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per online order, shipped or picked up — text us after you order.</span></li>' +
             '<li><span class="acct-step-icon">' + ICON.clock + '<em aria-hidden="true">3</em></span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
           '</ol>' +
         '</section>' +
