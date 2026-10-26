@@ -2,6 +2,9 @@
   'use strict';
 
   var S = window.EVB_STORE, C = window.EVB_CATALOG, CFG = window.EVB_STORE_CONFIG || {};
+  var ACCT = window.EVB_ACCOUNT_CONFIG || {};
+  var PANEL = String(ACCT.panelUrl || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
+  var SIGN_IN_URL = '/account/?next=' + encodeURIComponent('/store/checkout/');
 
   var STEPS = ['contact', 'delivery', 'payment', 'review'];
   var STEP_LABELS = { contact: 'Contact', delivery: 'Delivery', payment: 'Payment', review: 'Review' };
@@ -25,8 +28,137 @@
     quote: { key: null, data: null, promise: null },
     wallet: { gen: 0, detectGen: 0, obj: null, available: null, availableKey: null, resume: null },
     welcomeShip: false,
-    welcomeFor: null
+    welcomeFor: null,
+    // Only members can order (panel migration 0075), and a shipped order goes
+    // only to the address on their ID. status: loading | signedOut | ready |
+    // error. check is member_checkout_check(): who they are, their ID address
+    // and whether they can ship.
+    member: { status: 'loading', token: null, check: null }
   };
+
+  /* ------------------------------------------------------------ members */
+
+  var sb = null;
+
+  function memberHeaders() {
+    var h = { 'Content-Type': 'application/json', 'Accept': 'application/json' };
+    if (state.member.token) h.Authorization = 'Bearer ' + state.member.token;
+    return h;
+  }
+
+  // The access token can refresh while they're on the page; always send the
+  // current one.
+  function freshToken() {
+    if (!sb) return Promise.resolve(state.member.token);
+    return sb.auth.getSession().then(function (res) {
+      var session = res.data && res.data.session;
+      state.member.token = session ? session.access_token : null;
+      return state.member.token;
+    }, function () { return state.member.token; });
+  }
+
+  function idAddress() { return state.member.check && state.member.check.idAddress; }
+  function canShip() { return !!(state.member.check && state.member.check.canShip && idAddress()); }
+
+  // The order ships to the ID's street, city, state and ZIP; only the
+  // apartment line is theirs to add, and only when the ID doesn't print one.
+  function applyIdAddress() {
+    var a = idAddress(), d = state.data;
+    if (!a) return;
+    d.address1 = a.line1 || '';
+    d.city = a.city || '';
+    d.region = a.state || '';
+    d.postal = a.postal || '';
+    if (a.line2) d.address2 = a.line2;
+  }
+
+  function loadMember() {
+    var check = function () {
+      return sb.rpc('member_checkout_check').then(function (r) { if (r.error) throw r.error; return r.data; });
+    };
+    // An ID sent before checkout needed its address: have it read now.
+    var readId = function () {
+      return fetch(PANEL + '/api/member-id/read', { method: 'POST', headers: { Authorization: 'Bearer ' + state.member.token } })
+        .catch(function () { return null; });
+    };
+    return freshToken().then(function (token) {
+      if (!token) { state.member.status = 'signedOut'; return; }
+      return check().then(function (c) {
+        if (c && c.onboarded && !c.canShip && c.reason === 'id_unread') {
+          return readId().then(function () { return check(); });
+        }
+        return c;
+      }).then(function (c) {
+        if (!c) return;
+        state.member.check = c;
+        state.member.status = 'ready';
+        var d = state.data;
+        // Their account is who's ordering: the email is the sign-in, so
+        // points and the receipt go to the right person.
+        d.email = c.email || d.email;
+        if (!d.firstName && !d.lastName && c.fullName) {
+          var parts = String(c.fullName).trim().split(/\s+/);
+          d.firstName = parts.shift() || '';
+          d.lastName = parts.join(' ');
+        }
+        if (!d.phone && c.phone) d.phone = c.phone;
+        if (canShip()) applyIdAddress();
+        else if (d.shippingId !== 'pickup') d.shippingId = 'pickup';
+      });
+    }).catch(function (err) {
+      var m = String((err && err.message) || '');
+      if (/sign in|JWT|Confirm your email|not signed in/i.test(m) || (err && err.code === '28000')) {
+        state.member.status = 'signedOut';
+      } else if (/account page first/i.test(m)) {
+        state.member.status = 'ready';
+        state.member.check = { onboarded: false };
+      } else {
+        console.info('[checkout] member check failed: ' + m);
+        state.member.status = 'error';
+      }
+    });
+  }
+
+  function memberGate() {
+    var m = state.member;
+    if (m.status === 'loading') return '<div class="evb-panel"><div class="evb-skel" style="height:180px;border-radius:14px" aria-label="Checking your account"></div></div>';
+    var title, text, cta, href = SIGN_IN_URL;
+    if (m.status === 'signedOut') {
+      title = 'Sign in to check out';
+      text = 'Online orders are for East Village Buyers members. It\u2019s free, takes a couple of minutes, and your bag stays right here. You\u2019ll need a photo of your ID: we ship only to the address on it.';
+      cta = 'Sign in or create an account';
+    } else if (m.status === 'error') {
+      title = 'We couldn\u2019t check your account';
+      text = 'Something went wrong on our side. Try again, or call us at ' + CFG.business.phone + ' and we\u2019ll take the order by phone.';
+      cta = 'Try again';
+      href = '';
+    } else {
+      title = 'Finish setting up your account';
+      text = 'A couple of steps are left, including a photo of your ID. Online orders ship only to the address on it.';
+      cta = 'Finish setting up';
+    }
+    return '<div class="evb-panel evb-member-gate">' +
+        '<span class="evb-member-gate-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>' +
+        '<p class="evb-panel-title">' + S.esc(title) + '</p>' +
+        '<p class="evb-member-gate-text">' + S.esc(text) + '</p>' +
+        (href
+          ? '<a class="evb-btn evb-btn--primary" href="' + S.attr(href) + '">' + S.esc(cta) + '</a>'
+          : '<button type="button" class="evb-btn evb-btn--primary" id="memberRetry">' + S.esc(cta) + '</button>') +
+        '<p class="evb-member-gate-fine">Questions? Call or text <a href="' + S.attr(CFG.business.phoneHref) + '">' + S.esc(CFG.business.phone) + '</a>.</p>' +
+      '</div>';
+  }
+
+  function memberReady() {
+    return state.member.status === 'ready' && state.member.check && state.member.check.onboarded;
+  }
+
+  // Why they can't ship, and what to do about it.
+  function noShipText() {
+    var r = state.member.check && state.member.check.reason;
+    if (r === 'id_rejected') return 'We couldn\u2019t accept the ID on your account, so for now orders are pickup only. Send a new photo from your account to get shipping.';
+    if (r === 'no_id') return 'Add a photo of your ID to your account to get orders shipped: we ship only to the address on it. Pickup works now.';
+    return 'We couldn\u2019t read the address on your ID yet. Send a clearer photo from your account, or call us at ' + CFG.business.phone + '. Pickup works now.';
+  }
 
   function checkWelcome() {
     var email = state.data.email.trim().toLowerCase();
@@ -93,7 +225,9 @@
       else if (digits(d.phone).length < 10) e.phone = 'Enter a 10-digit phone number';
     }
 
-    if (step === 'delivery' && d.shippingId !== 'pickup') {
+    if (step === 'delivery' && d.shippingId !== 'pickup' && !canShip()) {
+      e.shippingId = noShipText();
+    } else if (step === 'delivery' && d.shippingId !== 'pickup') {
       if (!d.address1.trim()) e.address1 = 'Required';
       if (!d.city.trim()) e.city = 'Required';
       if (!d.region.trim()) e.region = 'Required';
@@ -310,10 +444,12 @@
     var base = (CFG.apiBase || '').replace(/\/$/, '');
     q.key = key;
     q.data = null;
-    q.promise = fetch(base + '/quote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ order: buildOrder(currentTotals(), {}) })
+    q.promise = freshToken().then(function () {
+      return fetch(base + '/quote', {
+        method: 'POST',
+        headers: memberHeaders(),
+        body: JSON.stringify({ order: buildOrder(currentTotals(), {}) })
+      });
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (json) {
         if (!r.ok || typeof json.total !== 'number') throw new Error('HTTP ' + r.status + (json.error ? ' ' + json.error : ''));
@@ -715,15 +851,17 @@
           return order;
         }
 
-        return fetch(base + '/orders', {
+        return freshToken().then(function () {
+          return fetch(base + '/orders', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          headers: memberHeaders(),
           body: JSON.stringify({
             idempotencyKey: idem,
             sourceId: payment.sourceId,
             verificationToken: payment.verificationToken || null,
             order: order
           })
+          });
         }).then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (json) {
             if (!r.ok) throw new Error(json.error || ('Payment failed (' + r.status + ')'));
@@ -771,7 +909,9 @@
         (opts.autocomplete ? ' autocomplete="' + opts.autocomplete + '"' : '') +
         (opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '') +
         (opts.maxlength ? ' maxlength="' + opts.maxlength + '"' : '') +
+        (opts.readonly ? ' readonly' : '') +
         (err ? ' aria-invalid="true"' : '') + '>' +
+      (opts.hint && !err ? '<p class="evb-sumrow-note" style="margin-top:4px">' + S.esc(opts.hint) + '</p>' : '') +
       '<p class="evb-error">' + (err ? S.esc(err) : '') + '</p>' +
     '</div>';
   }
@@ -792,7 +932,8 @@
       '<div class="evb-form-grid">' +
         field('firstName', 'First name', { required: true, autocomplete: 'given-name' }) +
         field('lastName', 'Last name', { required: true, autocomplete: 'family-name' }) +
-        field('email', 'Email', { required: true, type: 'email', autocomplete: 'email', placeholder: 'you@example.com', full: true }) +
+        field('email', 'Email', { required: true, type: 'email', autocomplete: 'email', placeholder: 'you@example.com', full: true, readonly: memberReady(),
+          hint: memberReady() ? 'Signed in as this email. Your receipt and points go here.' : '' }) +
         field('phone', 'Mobile number', { required: true, type: 'tel', autocomplete: 'tel', inputmode: 'tel', placeholder: '917-608-8939', full: true }) +
       '</div>' +
       '<p class="evb-sumrow-note" style="margin-top:6px">Your receipt goes to this email. We text this number only if there is a question about your order.</p>' +
@@ -810,11 +951,13 @@
     var promoFree = /^FREESHIP$/i.test(d.promoCode || '') || state.welcomeShip;
     var threshold = CFG.freeShippingThreshold || 0;
 
+    var ship = canShip();
     var options = rates.map(function (r) {
       var free = r.id === 'standard' && ((threshold > 0 && sub >= threshold) || promoFree);
       var amount = (r.amount === 0 || free) ? 'Free' : S.money(r.amount);
-      return '<label class="evb-radio' + (d.shippingId === r.id ? ' is-active' : '') + '">' +
-        '<input type="radio" name="shippingId" value="' + S.attr(r.id) + '"' + (d.shippingId === r.id ? ' checked' : '') + '>' +
+      var off = r.id !== 'pickup' && !ship;
+      return '<label class="evb-radio' + (d.shippingId === r.id ? ' is-active' : '') + (off ? ' is-disabled' : '') + '">' +
+        '<input type="radio" name="shippingId" value="' + S.attr(r.id) + '"' + (d.shippingId === r.id ? ' checked' : '') + (off ? ' disabled' : '') + '>' +
         '<span class="evb-radio-main">' +
           '<span class="evb-radio-title" style="display:block">' + S.esc(r.label) + '</span>' +
           '<span class="evb-radio-sub" style="display:block">' + S.esc(r.detail) + ' · ' + S.esc(r.days) + '</span>' +
@@ -829,17 +972,15 @@
           '<span><strong>Pick up at 39 Avenue A, New York, NY 10009.</strong><br>' +
           S.esc(CFG.business.hours) + '<br>Bring photo ID matching the name on the order. We will email you when it is ready.</span>' +
         '</div>'
-      : '<div class="evb-form-grid">' +
-          field('address1', 'Street address', { required: true, autocomplete: 'address-line1', full: true }) +
-          field('address2', 'Apartment, suite, floor', { autocomplete: 'address-line2', full: true }) +
-          field('city', 'City', { required: true, autocomplete: 'address-level2' }) +
-          field('region', 'State', { required: true, autocomplete: 'address-level1', maxlength: 2, placeholder: 'NY' }) +
-          field('postal', 'ZIP code', { required: true, autocomplete: 'postal-code', inputmode: 'numeric', placeholder: '10009' }) +
-        '</div>';
+      : idAddressBlock();
 
     return '<div class="evb-panel">' +
         '<p class="evb-panel-title">How would you like it?</p>' +
         '<div class="evb-radio-list">' + options + '</div>' +
+        (!ship ? '<div class="evb-notice evb-notice--info" style="margin:14px 0 0">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>' +
+          '<span>' + S.esc(noShipText()) + ' <a href="/account/">Open your account</a></span></div>' : '') +
+        (state.errors.shippingId ? '<p class="evb-error">' + S.esc(state.errors.shippingId) + '</p>' : '') +
       '</div>' +
       '<div class="evb-panel">' +
         '<p class="evb-panel-title">' + (d.shippingId === 'pickup' ? 'Pickup location' : 'Shipping address') + '</p>' +
@@ -849,6 +990,23 @@
           '<textarea class="evb-textarea" id="f_note" name="note" placeholder="Anything we should know — a pickup time, a gift note, sizing questions.">' + S.esc(d.note) + '</textarea>' +
         '</div>' +
       '</div>';
+  }
+
+  // Shipping goes to the address on their ID, and says so.
+  function idAddressBlock() {
+    var d = state.data, a = idAddress() || {};
+    return '<div class="evb-idaddr">' +
+        '<p class="evb-idaddr-lines">' + S.esc(d.firstName + ' ' + d.lastName) + '<br>' +
+          S.esc(d.address1) + (a.line2 ? '<br>' + S.esc(a.line2) : '') + '<br>' +
+          S.esc(d.city) + ', ' + S.esc(d.region) + ' ' + S.esc(d.postal) + '</p>' +
+        '<p class="evb-idaddr-match"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+          'Matches the address on your ID</p>' +
+      '</div>' +
+      (a.line2 ? '' : '<div class="evb-form-grid" style="margin-top:14px">' +
+        field('address2', 'Apartment, suite, floor', { autocomplete: 'address-line2', full: true, placeholder: 'Optional' }) + '</div>') +
+      '<p class="evb-idaddr-other">We ship only to the address on your ID. To send it somewhere else, ' +
+        '<a href="sms:' + S.attr(digits(CFG.business.phone)) + '">text</a> or <a href="' + S.attr(CFG.business.phoneHref) + '">call us at ' + S.esc(CFG.business.phone) + '</a>, ' +
+        'or email <a href="mailto:' + S.attr(CFG.business.email) + '">' + S.esc(CFG.business.email) + '</a> before you order.</p>';
   }
 
   function paymentStep() {
@@ -905,7 +1063,8 @@
       ? 'In-store pickup<br>' + S.esc(CFG.business.address)
       : S.esc(d.firstName + ' ' + d.lastName) + '<br>' +
         S.esc(d.address1) + (d.address2 ? '<br>' + S.esc(d.address2) : '') + '<br>' +
-        S.esc(d.city) + ', ' + S.esc(d.region) + ' ' + S.esc(d.postal);
+        S.esc(d.city) + ', ' + S.esc(d.region) + ' ' + S.esc(d.postal) +
+        '<span class="evb-idaddr-match" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Matches the address on your ID</span>';
 
     var tok = state.square.token;
     var wallet = S.isLive() && state.payMethod !== 'card';
@@ -1013,6 +1172,15 @@
         '<p class="evb-empty-sub">Your bag is empty. Everything on the floor is authenticated in-house before it goes up.</p>' +
         '<a class="evb-btn evb-btn--primary" href="/store/">Shop the store</a>' +
       '</div>';
+      return;
+    }
+
+    if (!memberReady()) {
+      els.host.innerHTML = '<div class="evb-split"><div id="checkoutSteps">' + memberGate() + '</div>' +
+        '<div class="evb-summary">' + summary() + '</div></div>';
+      var retry = document.getElementById('memberRetry');
+      if (retry) retry.addEventListener('click', function () { state.member.status = 'loading'; render(); loadMember().then(render); });
+      wirePromo();
       return;
     }
 
@@ -1222,6 +1390,7 @@
     Object.keys(saved).forEach(function (k) {
       if (k in state.data && !/^card/.test(k)) state.data[k] = saved[k];
     });
+    if (canShip()) applyIdAddress();
   }
 
   function resumeCashApp() {
@@ -1241,8 +1410,16 @@
 
     S.mountCartUI('/');
 
+    if (window.supabase && ACCT.supabaseUrl && ACCT.supabaseAnonKey) {
+      // The same session the account page keeps (storageKey 'evb-account').
+      sb = window.supabase.createClient(ACCT.supabaseUrl, ACCT.supabaseAnonKey, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: 'evb-account' }
+      });
+    }
+    var member = sb ? loadMember() : Promise.resolve().then(function () { state.member.status = 'error'; });
+
     var ready = false;
-    C.load().then(function () {
+    Promise.all([C.load(), member]).then(function () {
       var changes = S.cart.reconcile();
       restoreDraft();
       resumeCashApp();

@@ -901,3 +901,40 @@
   .acct-steps-track li.is-now span { animation: none; }
   .acct-visit-go, .acct-dash-head .acct-textbtn { transition: none; }
 }
+
+/* ---------------------------------------------------------------- member QR (panel 0075) */
+
+/* Shown at the counter: staff scan it to add points for the visit. The code
+   stays black on white in every theme so any scanner reads it. */
+.acct-qr {
+  display: flex; align-items: center; gap: 18px; margin-top: 14px; padding: 14px 18px 14px 14px;
+  background: #fff; border: 1px solid var(--evb-orange-line); border-radius: 16px;
+  font-family: 'Inter', sans-serif;
+}
+.acct-qr-code {
+  flex-shrink: 0; width: 132px; height: 132px; padding: 6px; border-radius: 12px;
+  background: #fff; border: 1px solid var(--evb-line-soft); display: grid; place-items: center;
+}
+.acct-qr-code svg { display: block; width: 100%; height: 100%; }
+.acct-qr-code.is-missing { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 800; color: var(--evb-ink); }
+.acct-qr-text { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.acct-qr-label { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--evb-orange-deep); }
+.acct-qr-label svg { width: 14px; height: 14px; }
+.acct-qr-text b { font-size: 14.5px; font-weight: 600; color: var(--evb-ink); }
+.acct-qr-text > span:not(.acct-qr-label):not(.acct-qr-num) { font-size: 12.5px; line-height: 1.45; color: var(--evb-muted); }
+.acct-qr-num { margin-top: 4px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: var(--evb-ink); }
+@media (max-width: 460px) {
+  .acct-qr { flex-direction: column; align-items: stretch; text-align: center; padding: 18px 16px; }
+  .acct-qr-code { width: 200px; height: 200px; margin: 0 auto; }
+  .acct-qr-label { justify-content: center; }
+}
+
+/* Sign-up: the address read off the ID (panel 0075). */
+.acct-ob-addr {
+  display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 6px; padding: 16px 18px;
+  border-radius: 14px; background: var(--evb-orange-soft); border: 1px solid var(--evb-orange-line);
+}
+.acct-ob-addr svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: var(--evb-orange-deep); }
+.acct-ob-addr p { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.45; color: var(--evb-ink); overflow-wrap: anywhere; }
+.acct-ob-addr.is-loading { justify-content: center; padding: 28px; }
+.acct-ob-warn { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fff7ed; border: 1px solid #fed7aa; font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5; color: #9a3412; }

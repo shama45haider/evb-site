@@ -23,6 +23,72 @@ const SHIPPING_RATES = {
 
 const FREE_SHIPPING_THRESHOLD = 50000;
 
+// Supabase, for checking who is ordering (panel migration 0075). Public
+// values, the same as the website's account/account-config.js: the anon key
+// can only call the member_* functions, as the member whose session it is.
+const SUPABASE_URL_DEFAULT = 'https://bkiqjirxxodekhnzzlfw.supabase.co';
+const SUPABASE_ANON_KEY_DEFAULT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJraXFqaXJ4eG9kZWtobnp6bGZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2Mjc0NzMsImV4cCI6MjEwMDIwMzQ3M30.XdjdkD7pkSR68cwKP8CGDoczKT7hM3MkAzJLMdrNmT0';
+
+function shout(message, status) {
+  return Object.assign(new Error(message), { status, safe: true });
+}
+
+// Only members can order, and a shipped order goes only to the address on
+// their ID. Asked of Supabase with the member's own session
+// (member_checkout_check), which compares the address — so a hand-edited
+// request can't ship anywhere else. Returns the member.
+async function checkMember(request, env, payload) {
+  const auth = request.headers.get('Authorization') || '';
+  if (!/^Bearer\s+\S+$/.test(auth)) {
+    throw shout('Sign in to check out. Online orders are for East Village Buyers members.', 401);
+  }
+  const f = (payload.order && payload.order.fulfillment) || {};
+  const a = f.type === 'PICKUP' ? null : (f.address || {});
+  const base = (env.SUPABASE_URL || SUPABASE_URL_DEFAULT).replace(/\/+$/, '');
+  const res = await fetch(base + '/rest/v1/rpc/member_checkout_check', {
+    method: 'POST',
+    headers: {
+      apikey: env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT,
+      Authorization: auth,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(a ? {
+      p_line1: String(a.line1 || ''), p_line2: String(a.line2 || ''), p_city: String(a.city || ''),
+      p_state: String(a.region || ''), p_postal: String(a.postal || '')
+    } : {})
+  });
+  const j = await res.json().catch(() => null);
+  if (!res.ok) {
+    const m = (j && j.message) || '';
+    if (res.status === 401 || res.status === 403 || /sign in|JWT|Confirm your email/i.test(m)) {
+      throw shout('Your sign-in expired. Sign in again to check out — your bag is saved.', 401);
+    }
+    if (/account page first/i.test(m)) throw shout('Finish setting up your account before you check out.', 403);
+    console.error('[evb-square] member check failed', res.status, (j && j.code) || '', m);
+    throw shout('We couldn\u2019t check your account just now. Nothing was charged — try again, or call 917-608-8939.', 503);
+  }
+  if (!j || !j.email) throw shout('Sign in to check out.', 401);
+  if (!j.onboarded) throw shout('Finish setting up your account before you check out.', 403);
+  if (a) {
+    if (!j.canShip) {
+      throw shout(j.reason === 'id_rejected'
+        ? 'We couldn\u2019t accept the ID on your account, so this order can only be picked up. Nothing was charged.'
+        : 'We need to read the address on your ID before we can ship. Pick up in the shop, or call 917-608-8939. Nothing was charged.', 409);
+    }
+    if (j.matches !== true) {
+      throw shout('That address doesn\u2019t match the address on your ID. We ship only to the address on your ID — to ship somewhere else, call or text us at 917-608-8939. Nothing was charged.', 409);
+    }
+  }
+  return j;
+}
+
+// The order is the member's: their account email gets the receipt, and it is
+// what their points are matched on (0069).
+function asMember(payload, member) {
+  payload.order.customer = Object.assign({}, payload.order.customer, { email: member.email });
+  return payload;
+}
+
 function corsHeaders(origin) {
   return {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : '',
@@ -322,6 +388,7 @@ async function handleQuote(request, env, origin) {
   const payload = await request.json();
   if (!payload || !payload.order) return json({ error: 'Malformed request.' }, 400, origin);
 
+  asMember(payload, await checkMember(request, env, payload));
   const built = await buildSquareOrder(env, payload);
   const calc = await square(env, '/v2/orders/calculate', 'POST', { order: built.order });
   const o = calc.order || {};
@@ -349,6 +416,7 @@ async function handleCreateOrder(request, env, origin, ctx) {
     if (seen) return json({ order: JSON.parse(seen) }, 200, origin);
   }
 
+  asMember(payload, await checkMember(request, env, payload));
   const built = await buildSquareOrder(env, payload);
 
   const created = await square(env, '/v2/orders', 'POST', {
@@ -850,7 +918,7 @@ export default {
         'INVALID_CARD', 'VERIFY_CVV_FAILURE', 'VERIFY_AVS_FAILURE'
       ];
       const status = err.status || 500;
-      const safe = declineCodes.indexOf(err.squareCode) !== -1 || status === 400 || status === 409;
+      const safe = err.safe || declineCodes.indexOf(err.squareCode) !== -1 || status === 400 || status === 409;
 
       if (!safe) console.error('[evb-square]', err.squareCode || '', err.message);
 

@@ -23,6 +23,12 @@
   var RESEND_SECONDS = 60;
 
   var cfg = window.EVB_ACCOUNT_CONFIG || {};
+  // The panel reads the ID with Gemini (/api/member-id/read) and is where the
+  // member's QR code points (panel migration 0075).
+  var PANEL = String(cfg.panelUrl || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
+  // Where to go once signed in and set up: checkout sends people here first
+  // (?next=/store/checkout/). Kept for the tab, across the emailed-code step.
+  var NEXT_KEY = 'evb_acct_next';
   // Points buy free shipping (panel migration 0074). member_me sends the
   // real numbers in rules; these are for the signed-out pages and previews.
   var FREE_SHIP = 250, FREE_EXPRESS = 600;
@@ -88,6 +94,7 @@
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
     shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h3v3"/></svg>',
     sliders: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
   };
 
@@ -162,8 +169,10 @@
           '<span class="acct-float acct-float--pts" aria-hidden="true">' + ICON.star + '+450 pts</span>' +
           '<span class="acct-float acct-float--off" aria-hidden="true">' + ICON.truck + 'Free shipping</span>' +
           '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
-            '<h2 class="acct-card-title">Sign in or create your account</h2>' +
-            '<p class="acct-card-sub">Enter your email and we’ll send you a sign-in code. New here? That’s all it takes to make your free account.</p>' +
+            '<h2 class="acct-card-title">' + (ss(NEXT_KEY) ? 'Sign in to check out' : 'Sign in or create your account') + '</h2>' +
+            '<p class="acct-card-sub">' + (ss(NEXT_KEY)
+              ? 'Online orders are for members. Enter your email and we’ll send you a code. New here? Making your free account takes a couple of minutes.'
+              : 'Enter your email and we’ll send you a sign-in code. New here? That’s all it takes to make your free account.') + '</p>' +
             '<form id="acctEmailForm" novalidate>' +
               '<label class="acct-label" for="acctEmail">Email address</label>' +
               '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
@@ -417,8 +426,21 @@
     online: { label: 'Online order', icon: function () { return ICON.bag; } },
     store:  { label: 'Bought in the shop', icon: function () { return ICON.store; } },
     sold:   { label: 'Sold to us', icon: function () { return ICON.cash; } },
-    trade:  { label: 'Trade', icon: function () { return ICON.swap; } }
+    trade:  { label: 'Trade', icon: function () { return ICON.swap; } },
+    // Points staff gave at the counter by scanning the member's QR (0075).
+    visit:  { label: 'Shop visit', icon: function () { return ICON.qr; } }
   };
+  var VISIT_LABEL = { bought: 'You bought', sold: 'You sold us', traded: 'You traded' };
+
+  // The ledger's visit rows as history entries, so they sit with the rest.
+  function withVisits(me) {
+    var visits = (me.activity || []).filter(function (a) { return a.kind === 'visit'; }).map(function (a) {
+      return { kind: 'visit', visitKind: a.visitKind, reference: 'Scanned at the counter', occurredAt: a.createdAt,
+        items: [], totalCents: a.visitCents || 0, points: a.points };
+    });
+    if (!visits.length) return me.history || [];
+    return (me.history || []).concat(visits).sort(function (a, b) { return new Date(b.occurredAt) - new Date(a.occurredAt); });
+  }
 
   // A photo for every row: the item's own Square photo when it has one,
   // otherwise the store department photo for what it is (the same photos
@@ -476,6 +498,7 @@
 
   function inFilter(e, f) {
     if (f === 'all') return true;
+    if (e.kind === 'visit') return f === (e.visitKind === 'bought' ? 'bought' : 'sold');
     if (f === 'online') return e.kind === 'online';
     if (f === 'sold') return e.kind === 'sold' || e.kind === 'trade';
     return e.kind === 'store' || e.kind === 'online' || e.kind === 'trade';
@@ -519,8 +542,8 @@
       : bal < express
         ? 'Text us when you order online and we\u2019ll ship it free. <b>' + num(express - bal) + ' more</b> for free express.'
         : 'Text us when you order online and we\u2019ll ship it express, free.';
-    var history = me.history || [];
-    var sum = totals(history);
+    var history = withVisits(me);
+    var sum = totals(me.history || []);
 
     var live = history.filter(isOpenOrder).map(liveOrder)
       .concat(history.filter(activeBuyback).map(liveBuyback));
@@ -561,11 +584,13 @@
           '<img class="acct-visit-img" src="/east-village-buyers-storefront-39-avenue-a.webp" alt="The East Village Buyers storefront at 39 Avenue A" loading="lazy" width="960" height="675">' +
           '<span class="acct-visit-text">' +
             '<b>Earn in the shop too</b>' +
-            '<span>Give us your name or member number <strong>' + esc(me.memberNumber) + '</strong> at the counter.</span>' +
+            '<span>Show your QR code below at the counter, or give us your member number <strong>' + esc(me.memberNumber) + '</strong>.</span>' +
             '<span class="acct-visit-addr">' + ICON.pin + '39 Avenue A, East Village</span>' +
           '</span>' +
           '<span class="acct-visit-go" aria-hidden="true">' + ICON.arrow + '</span>' +
         '</a>' +
+
+        qrCard(me, 120) +
 
         (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' +
           '<p class="acct-live-head" aria-hidden="true"><span class="acct-live-pulse"></span>Happening now</p>' + live.join('') + '</section>' : '') +
@@ -610,6 +635,7 @@
     if (ring) setTimeout(function () { ring.style.strokeDashoffset = String(100 - Number(ring.dataset.pct)); }, 250);
 
     bindHistory(history, me);
+    fillQr(me);
     fillAvatar(me);
     document.getElementById('acctSignOut').addEventListener('click', function () {
       if (!sb) return renderEmail();
@@ -649,7 +675,7 @@
   function itemsTitle(e) {
     var items = (e.items || []).filter(function (i) { return e.kind !== 'trade' || i.side === 'out'; });
     if (!items.length) items = e.items || [];
-    if (!items.length) return KIND[e.kind].label;
+    if (!items.length) return e.kind === 'visit' ? 'Points for your visit' : KIND[e.kind].label;
     return items[0].name + (items.length > 1 ? ' + ' + (items.length - 1) + ' more' : '');
   }
 
@@ -763,6 +789,8 @@
       sums.push(['Total', money(e.totalCents), true]);
     } else if (e.kind === 'sold') {
       sums.push(['We paid you', money(e.totalCents), true]);
+    } else if (e.kind === 'visit') {
+      sums.push([VISIT_LABEL[e.visitKind] || 'Your visit', money(e.totalCents), true]);
     } else if (e.kind === 'trade') {
       sums.push(['Trade-in value', money(e.tradeInCents)]);
       sums.push([e.tradeCashDirection === 'we_pay' ? 'We paid you' : e.tradeCashDirection === 'customer_pays' ? 'You paid' : 'Difference',
@@ -919,14 +947,15 @@
   /* ------------------------------------------------------------ sign-up steps */
 
   // After the emailed code, a new member goes through: profile photo
-  // (optional), name, date of birth, a photo of their ID, done. Each step
+  // (optional), name, date of birth, a photo of their ID, the address read
+  // off it (online orders ship only there — panel migration 0075), done. Each step
   // saves on its own (panel migration 0073), so leaving halfway resumes at
   // the first step still missing. On phones it's full screen.
   //
   // Photos are shrunk and re-encoded as JPEG in the browser before upload:
   // smaller files, and the phone's location data doesn't go with them.
 
-  var OB_STEPS = ['photo', 'name', 'birth', 'id', 'done'];
+  var OB_STEPS = ['photo', 'name', 'birth', 'id', 'address', 'done'];
   var OB_SKIP_PHOTO = 'evb_ob_skip_photo';
 
   function obFirstStep(me) {
@@ -998,6 +1027,29 @@
     return sb.rpc(name, args).then(function (r) { if (r.error) throw r.error; return r.data; });
   }
 
+  // Has Gemini read the ID (the panel's /api/member-id/read)? Resolves
+  // { address, nameMatch, message } or rejects with a message to show.
+  function readId() {
+    return sb.auth.getSession().then(function (res) {
+      var token = res.data && res.data.session && res.data.session.access_token;
+      if (!token) throw new Error('Your sign-in expired. Please sign in again.');
+      return fetch(PANEL + '/api/member-id/read', { method: 'POST', headers: { Authorization: 'Bearer ' + token } }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          if (!r.ok) throw Object.assign(new Error(j.error || 'Our ID reader is busy. Try again in a minute.'), { shown: true });
+          return j;
+        });
+      });
+    }).catch(function (e) {
+      if (e && (e.shown || /expired/.test(e.message || ''))) throw e;
+      throw new Error('We couldn’t reach our ID reader. Check your connection and try again.');
+    });
+  }
+
+  function addressLines(a) {
+    return esc([a.line1, a.line2].filter(Boolean).join(', ')) + '<br>' +
+      esc([a.city, [a.state, a.postal].filter(Boolean).join(' ')].filter(Boolean).join(', '));
+  }
+
   function startOnboarding(me, opts) {
     opts = opts || {};
     var state = { me: me, step: opts.step || obFirstStep(me), dir: 'next', only: !!opts.only, optIn: !!me.marketingOptIn };
@@ -1012,7 +1064,9 @@
   function obRender(state) {
     var step = state.step;
     var steps = OB_STEPS.slice(0, 4);
-    var at = steps.indexOf(step);
+    // Checking the address is part of the ID step.
+    var at = steps.indexOf(step === 'address' ? 'id' : step);
+    var rd = state.read || { status: 'loading' };
     var me = state.me;
     var body = '';
 
@@ -1062,6 +1116,23 @@
           '<label class="acct-ob-pick">' + ICON.image + '<span>Upload a photo</span><input type="file" accept="image/*" data-pick></label>' +
         '</div>' +
         '<p class="acct-ob-private">' + ICON.key + 'Kept private. Only East Village Buyers managers can see it, and it’s only used to confirm who you are.</p>';
+    } else if (step === 'address') {
+      body =
+        '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
+        (rd.status === 'loading'
+          ? '<h1 class="acct-ob-title">Reading your ID…</h1>' +
+            '<p class="acct-ob-sub">This takes a few seconds.</p>' +
+            '<div class="acct-ob-addr is-loading" aria-hidden="true"><span class="acct-spin"></span></div>'
+          : rd.status === 'ok'
+            ? '<h1 class="acct-ob-title">Is this your address?</h1>' +
+              '<p class="acct-ob-sub">We read it off your ID. Online orders ship only to this address.</p>' +
+              '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
+              (rd.nameMatch === 'mismatch'
+                ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo. Otherwise we’ll check it by hand.</p>' : '') +
+              '<p class="acct-ob-private">' + ICON.truck + 'Moved since your ID was made? Call or text us at ' + esc(biz.phone) + ' to ship somewhere else.</p>'
+            : '<h1 class="acct-ob-title">' + (rd.status === 'error' ? 'We couldn’t check your ID' : 'We couldn’t read your address') + '</h1>' +
+              '<p class="acct-ob-sub">' + esc(rd.message || 'Retake the photo flat, in good light, with the whole card showing.') + '</p>' +
+              '<p class="acct-ob-private">' + ICON.truck + 'You can still sign up and pick up in the shop. To get orders shipped, we need to read the address on your ID.</p>');
     } else {
       body =
         '<div class="acct-ob-done">' +
@@ -1072,7 +1143,10 @@
         '</div>';
     }
 
-    var primary = step === 'photo' ? 'Continue' : step === 'id' ? 'Send my ID' : step === 'done' ? 'Go to my account' : 'Continue';
+    var primary = step === 'photo' ? 'Continue' : step === 'id' ? 'Send my ID'
+      : step === 'done' ? (ss(NEXT_KEY) ? 'Continue to checkout' : 'Go to my account')
+      : step === 'address' ? (rd.status === 'ok' ? 'Yes, that’s my address' : rd.status === 'loading' ? 'Reading…' : rd.status === 'error' ? 'Try again' : 'Retake the photo')
+      : 'Continue';
     var canBack = !state.only && at > 0 && step !== 'done';
 
     render(
@@ -1093,6 +1167,8 @@
           '<div class="acct-ob-actions">' +
             '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit" id="obNext">' + primary + '</button>' +
             (step === 'photo' ? '<button type="button" class="acct-link acct-ob-skip" id="obSkip">Skip for now</button>' : '') +
+            (step === 'address' && rd.status !== 'loading'
+              ? '<button type="button" class="acct-link acct-ob-skip" id="obAddrAlt">' + (rd.status === 'ok' ? 'No, retake the photo' : 'Skip for now') + '</button>' : '') +
           '</div>' +
         '</form>' +
       '</div>'
@@ -1115,7 +1191,27 @@
     }
 
     var back = document.getElementById('obBack');
-    if (back) back.addEventListener('click', function () { go(OB_STEPS[at - 1], 'back'); });
+    if (back) back.addEventListener('click', function () { state.read = null; go(step === 'address' ? 'id' : OB_STEPS[at - 1], 'back'); });
+
+    if (step === 'address') {
+      if (rd.status === 'loading') next.disabled = true;
+      if (!state.read) {
+        state.read = rd;
+        var read = !sb
+          ? Promise.resolve({ address: { line1: '39 Avenue A', line2: 'Apt 4B', city: 'New York', state: 'NY', postal: '10009' }, nameMatch: 'match' })
+          : readId();
+        read.then(function (j) {
+          state.read = j.address ? { status: 'ok', address: j.address, nameMatch: j.nameMatch } : { status: 'unreadable', message: j.message };
+          if (j.address) push('account_id_address_read', {});
+        }, function (e) {
+          state.read = { status: 'error', message: e.message };
+        }).then(function () { if (state.step === 'address') obRender(state); });
+      }
+      var alt = document.getElementById('obAddrAlt');
+      if (alt) alt.addEventListener('click', function () {
+        if (rd.status === 'ok') { state.read = null; go('id', 'back'); } else after();
+      });
+    }
     var close = document.getElementById('obClose');
     if (close) close.addEventListener('click', function () {
       endOnboarding();
@@ -1203,11 +1299,19 @@
       }
       if (step === 'id') {
         if (!picked) { err.textContent = 'Take or upload a photo of your ID first.'; return; }
-        if (!sb) { me.idStatus = 'submitted'; return after(); }
+        state.read = null;
+        if (!sb) { me.idStatus = 'submitted'; return go('address'); }
         setBusy(next, true, 'Sending…');
         return uploadPhoto('member-ids', picked)
           .then(function (path) { return rpc('member_submit_id', { p_path: path }); })
-          .then(function () { me.idStatus = 'submitted'; push('account_id_sent', {}); after(); }, fail);
+          .then(function () { me.idStatus = 'submitted'; push('account_id_sent', {}); go('address'); }, fail);
+      }
+      if (step === 'address') {
+        if (rd.status === 'loading') return;
+        if (rd.status === 'ok') return after();
+        state.read = null;
+        if (rd.status === 'error') return obRender(state);
+        return go('id', 'back');
       }
       // done
       var optIn = document.getElementById('obOptIn').checked;
@@ -1263,6 +1367,8 @@
           '</div>' +
         '</section>' +
 
+        qrCard(me, 100) +
+
         '<section class="acct-section acct-rise" style="--d:120ms">' +
           '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>What’s coming</h2>' +
           '<ol class="acct-steps">' +
@@ -1283,8 +1389,46 @@
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
     bindIdNotice(me);
+    fillQr(me);
     fillAvatar(me);
     bindDetails(me);
+  }
+
+  /* ------------------------------------------------------------ member QR */
+
+  // The member's QR code (panel migration 0075): a link to their visit page
+  // in the panel. Staff scan it when they buy or sell in the shop and give
+  // points on the visit's total. The member number isn't a secret — staff
+  // check the photo and name it opens — so the QR is drawn here, in the page.
+  function qrUrl(me) { return PANEL + '/members/visit/' + encodeURIComponent(me.memberNumber); }
+
+  function qrCard(me, delay) {
+    if (!me.memberNumber) return '';
+    return '<section class="acct-qr acct-rise" style="--d:' + delay + 'ms" aria-label="Your member QR code">' +
+      '<div class="acct-qr-code" data-qr role="img" aria-label="QR code for member ' + esc(me.memberNumber) + '"></div>' +
+      '<div class="acct-qr-text">' +
+        '<span class="acct-qr-label">' + ICON.qr + 'Your member code</span>' +
+        '<b>Show this when you buy or sell in the shop</b>' +
+        '<span>We scan it at the counter and add points for the whole visit, 1 for every $1.' +
+          (me.locked ? ' They start adding up now.' : '') + '</span>' +
+        '<span class="acct-qr-num">' + esc(me.memberNumber) + '</span>' +
+      '</div>' +
+    '</section>';
+  }
+
+  function fillQr(me) {
+    var box = host.querySelector('[data-qr]');
+    if (!box) return;
+    if (typeof window.qrcode !== 'function') { box.classList.add('is-missing'); box.textContent = me.memberNumber; return; }
+    try {
+      var qr = window.qrcode(0, 'M');
+      qr.addData(qrUrl(me));
+      qr.make();
+      box.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+    } catch (e) {
+      box.classList.add('is-missing');
+      box.textContent = me.memberNumber;
+    }
   }
 
   function bindIdNotice(me) {
@@ -1343,6 +1487,12 @@
       }
       var me = res.data;
       rememberMember(me);
+      // Sent here from checkout: back there once they're set up.
+      var next = ss(NEXT_KEY);
+      if (next && me.onboarded !== false && me.fullName) {
+        ss(NEXT_KEY, null);
+        return location.replace(next);
+      }
       // onboarded is false only once panel migration 0073 is live; before that
       // it's missing and the sign-up steps have nothing to save to.
       if (me.onboarded === false) startOnboarding(me);
@@ -1362,7 +1512,8 @@
     dateOfBirth: '1994-05-17', idStatus: 'submitted', onboarded: true, avatarPath: null,
     balance: 410, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
     rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, freeExpressPoints: 600 },
-    purchases: [], activity: [],
+    purchases: [],
+    activity: [{ kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, createdAt: daysAgo(5) }],
     history: [
       { kind: 'online', reference: 'EVB-261019-7QX2', occurredAt: daysAgo(3), status: 'shipped', fulfillment: 'ship', shipService: 'Express shipping',
         items: [{ name: 'Air Jordan 1 High “Chicago”', quantity: 1, amountCents: 45000, imageUrl: '' }],
@@ -1413,11 +1564,20 @@
     if (mode === 'requested') return renderRequested('pat@example.com');
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     if (mode === 'signup') return previewAfterCode();
+    if (mode === 'address') { var ad = JSON.parse(JSON.stringify(SAMPLE)); return startOnboarding(ad, { step: 'address' }); }
     if (mode === 'rejected') { var r = JSON.parse(JSON.stringify(SAMPLE)); r.idStatus = 'rejected'; r.idNote = 'The name doesn’t match your account'; return renderLocked(r, { preview: true }); }
     renderDash(SAMPLE, { preview: true });
   }
 
   /* ------------------------------------------------------------ start */
+
+  // Only our own store pages, never somewhere else.
+  var nextParam = /[?&]next=([^&#]+)/.exec(location.search);
+  if (nextParam) {
+    var nextPath = decodeURIComponent(nextParam[1]);
+    if (/^\/store\/[A-Za-z0-9/_-]*$/.test(nextPath)) ss(NEXT_KEY, nextPath);
+    history.replaceState(null, '', location.pathname + location.search.replace(/[?&]next=[^&#]+/, '').replace(/^&/, '?') + location.hash);
+  }
 
   var preview = /[?&]preview(=([a-z]+))?/.exec(location.search);
   if (preview) return startPreview(preview[2] || 'dash');
