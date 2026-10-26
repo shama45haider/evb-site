@@ -89,6 +89,8 @@
     clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
     sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>',
     user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+    tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
     truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"/><path d="M14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>',
     box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
@@ -186,6 +188,28 @@
       var what = p.code === 'free_shipping' ? 'free shipping' : p.label.replace(/ an order$/, '');
       return num(p.points) + (i === 0 ? ' points' : '') + ' = ' + what;
     }).join(', ');
+  }
+  // One prize as a coupon: the value big ("Free" shipping, "$10" off), then
+  // its points under a perforation, with a bar toward it until it's ready.
+  // Each step up the ladder gets a stronger colour (.acct-prize--t1…t4).
+  function prizeCard(p, i, bal) {
+    var have = bal >= p.points;
+    var ship = p.code === 'free_shipping';
+    var amount = /\$\d+/.exec(p.label);
+    var big = ship ? 'Free' : amount ? amount[0] : p.short;
+    var small = ship ? 'shipping' : amount ? 'off an order' : '';
+    var pct = Math.min(Math.round((bal / p.points) * 100), 100);
+    return '<li class="acct-prize acct-prize--t' + Math.min(i + 1, 4) + (have ? ' is-ready' : '') + '">' +
+      '<span class="acct-prize-icon" aria-hidden="true">' + (ship ? ICON.truck : ICON.tag) + '</span>' +
+      '<span class="acct-prize-value"><b>' + esc(big) + '</b>' + (small ? '<small>' + small + '</small>' : '') + '</span>' +
+      '<span class="acct-prize-foot">' +
+        '<span class="acct-prize-pts">' + num(p.points) + ' pts</span>' +
+        (have
+          ? '<span class="acct-prize-state">' + ICON.check + 'Ready</span>'
+          : '<span class="acct-prize-state">' + num(p.points - bal) + ' to go</span>' +
+            '<span class="acct-prize-bar" aria-hidden="true"><i style="--p:' + pct + '%"></i></span>') +
+      '</span>' +
+    '</li>';
   }
   function daysLeft(at) {
     return Math.max(Math.ceil((new Date(at).getTime() - Date.now()) / 864e5), 0);
@@ -629,13 +653,13 @@
         '</section>' +
 
         '<section class="acct-prizes acct-rise" style="--d:80ms" aria-label="Prizes">' +
-          '<p class="acct-prizes-head">' + ICON.gift + 'Prizes <small>Online orders, shipped or picked up · one per order · up to $20 off</small></p>' +
+          '<div class="acct-prizes-head">' +
+            '<span class="acct-prizes-badge" aria-hidden="true">' + ICON.gift + '</span>' +
+            '<div class="acct-prizes-title"><h2>Prizes</h2><p>Online orders, shipped or picked up · one per order</p></div>' +
+            (best ? '<span class="acct-prizes-count">' + prizes.filter(function (p) { return bal >= p.points; }).length + ' of ' + prizes.length + ' ready</span>' : '') +
+          '</div>' +
           '<ul class="acct-prize-list">' +
-            prizes.map(function (p) {
-              var have = bal >= p.points;
-              return '<li class="acct-prize' + (have ? ' is-ready' : '') + '"><b>' + esc(p.label) + '</b><span>' + num(p.points) + ' pts' +
-                (have ? ' · ready' : ' · ' + num(p.points - bal) + ' to go') + '</span></li>';
-            }).join('') +
+            prizes.map(function (p, i) { return prizeCard(p, i, bal); }).join('') +
           '</ul>' +
         '</section>' +
 

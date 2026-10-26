@@ -131,8 +131,9 @@
 
 /* ---------------------------------------------------------------- dashboard */
 
-/* Flat, quiet surfaces: one black card for the balance, white panels with
-   hairline borders for everything else, no gradients anywhere. Motion is
+/* Flat, quiet surfaces: one light card for the balance, white panels with
+   hairline borders for everything else; only the prize coupons get colour.
+   Motion is
    short and eased — things rise in once, numbers count up, rows open. */
 
 .acct-dash { max-width: 640px; margin: 0 auto; font-variant-numeric: tabular-nums; }
@@ -188,27 +189,103 @@
 .acct-points-expire.is-soon { color: var(--evb-red); }
 .acct-points-expire.is-soon svg, .acct-points-expire.is-soon b { color: var(--evb-red); }
 
-/* The prize ladder under the balance: what's ready, and how far the rest are. */
+/* The prize ladder under the balance, as coupons — the one colourful spot on
+   the dashboard. Each step up gets a stronger colour (amber, orange,
+   vermilion, then black for the top prize). Ready ones are filled in with a
+   check; the rest are tinted, with a bar toward them. */
 .acct-prizes {
   margin-top: 12px; background: #fff; border: 1px solid var(--evb-line-soft); border-radius: 20px;
-  padding: 18px 22px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  padding: 18px 16px 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
-.acct-prizes-head {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 4px 7px; margin: 0 0 12px;
-  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: var(--evb-ink);
+@media (min-width: 600px) { .acct-prizes { padding: 22px 22px 20px; } }
+.acct-prizes-head { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; }
+.acct-prizes-badge {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px;
+  display: grid; place-items: center; color: #fff; background: var(--evb-orange);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
 }
-.acct-prizes-head svg { width: 15px; height: 15px; color: var(--evb-orange); }
-.acct-prizes-head small { font-weight: 400; color: var(--evb-faint); }
-.acct-prize-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.acct-prizes-badge svg { width: 19px; height: 19px; }
+.acct-prizes-title { flex: 1; min-width: 0; }
+.acct-prizes-title h2 { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 17px; font-weight: 800; color: var(--evb-ink); letter-spacing: -0.01em; }
+.acct-prizes-title p { margin: 2px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.4; color: var(--evb-muted); }
+.acct-prizes-count {
+  flex-shrink: 0; padding: 5px 10px; border-radius: 99px;
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; white-space: nowrap;
+  color: var(--evb-green); background: rgba(21, 128, 61, 0.09);
+}
+
+.acct-prize-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 @media (min-width: 600px) { .acct-prize-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.acct-prize--t1 { --tier: #f59e0b; --tier-deep: #b45309; --tier-wash: #fef6e4; }
+.acct-prize--t2 { --tier: #f97316; --tier-deep: #c2410c; --tier-wash: #fff0e3; }
+.acct-prize--t3 { --tier: #e5481f; --tier-deep: #b3330f; --tier-wash: #fde9e2; }
+.acct-prize--t4 { --tier: #111; --tier-deep: #111; --tier-wash: #f2efea; }
+
 .acct-prize {
-  display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px;
-  border: 1px solid var(--evb-line-soft); font-family: 'Inter', sans-serif;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; padding: 14px 13px 12px; border-radius: 14px;
+  font-family: 'Inter', sans-serif; color: var(--tier-deep); background: var(--tier-wash);
 }
-.acct-prize b { font-size: 13px; font-weight: 600; color: var(--evb-ink); line-height: 1.3; }
-.acct-prize span { font-size: 12px; color: var(--evb-faint); }
-.acct-prize.is-ready { border-color: var(--evb-orange); background: var(--evb-orange-soft); }
-.acct-prize.is-ready span { color: var(--evb-orange-deep); font-weight: 600; }
+.acct-prize-icon {
+  position: absolute; top: 11px; right: 11px; width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center; background: #fff; color: var(--tier);
+}
+.acct-prize-icon svg { width: 15px; height: 15px; }
+.acct-prize-value { display: flex; flex-direction: column; padding-right: 30px; margin-bottom: 12px; }
+.acct-prize-value b {
+  font-family: 'Montserrat', sans-serif; font-size: 28px; font-weight: 900; line-height: 1;
+  letter-spacing: -0.03em; color: var(--tier-deep);
+}
+.acct-prize-value small { margin-top: 4px; font-size: 12px; font-weight: 600; line-height: 1.25; opacity: 0.85; }
+
+/* Below the perforation: a dashed line with a notch cut from each side. */
+.acct-prize-foot {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 6px;
+  margin: auto -13px 0; padding: 10px 13px 0; border-top: 1.5px dashed currentColor;
+  border-top-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+.acct-prize-foot::before, .acct-prize-foot::after {
+  content: ''; position: absolute; top: -7px; width: 12px; height: 12px; border-radius: 50%; background: #fff;
+}
+.acct-prize-foot::before { left: -6px; }
+.acct-prize-foot::after { right: -6px; }
+.acct-prize-pts { font-size: 12px; font-weight: 700; }
+.acct-prize-state { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; opacity: 0.8; }
+.acct-prize-state svg { width: 13px; height: 13px; }
+.acct-prize-bar {
+  flex-basis: 100%; height: 5px; margin-top: 4px; border-radius: 99px; overflow: hidden;
+  background: color-mix(in srgb, var(--tier) 18%, transparent);
+}
+.acct-prize-bar i {
+  display: block; height: 100%; width: var(--p); border-radius: inherit; background: var(--tier);
+  animation: acct-prize-bar 1.2s cubic-bezier(.2,.7,.2,1) 0.3s both;
+}
+@keyframes acct-prize-bar { from { width: 0; } }
+
+.acct-prize.is-ready {
+  color: #fff; background-color: var(--tier);
+  background-image: radial-gradient(circle at 100% 0, rgba(255,255,255,0.28), transparent 60%);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--tier) 35%, transparent);
+}
+.acct-prize.is-ready .acct-prize-value b { color: #fff; }
+.acct-prize.is-ready .acct-prize-icon { background: rgba(255,255,255,0.22); color: #fff; }
+.acct-prize.is-ready .acct-prize-state {
+  opacity: 1; padding: 3px 8px 3px 6px; border-radius: 99px; background: #fff; color: var(--tier-deep);
+}
+.acct-prize--t4.is-ready .acct-prize-value b { color: var(--evb-orange); }
+.acct-prize--t4.is-ready .acct-prize-icon { color: var(--evb-orange); }
+/* A glint across each ready coupon as the page opens. */
+.acct-prize.is-ready::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%);
+  transform: translateX(-100%); animation: acct-prize-glint 1.1s ease-out 0.6s both;
+}
+@keyframes acct-prize-glint { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .acct-prize-bar i, .acct-prize.is-ready::after { animation: none; }
+  .acct-prize.is-ready::after { display: none; }
+}
 
 .acct-ring { position: relative; flex-shrink: 0; width: 112px; height: 112px; }
 @media (min-width: 600px) { .acct-ring { width: 128px; height: 128px; } }
