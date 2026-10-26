@@ -434,6 +434,11 @@ async function handleCreateOrder(request, env, origin, ctx) {
     return json({ error: 'Missing payment token.' }, 400, origin);
   }
 
+  // A HOLD, not a charge (panel migration 0076). Every piece is one of a
+  // kind and can sell in the shop or on eBay first, so the shop checks the
+  // shelf and accepts the order in the panel — which charges the card — or
+  // declines it and the hold is released. Square lets an unanswered hold go
+  // after 7 days (the default for an online payment).
   const paid = await square(env, '/v2/payments', 'POST', {
     idempotency_key: payload.idempotencyKey,
     source_id: payload.sourceId,
@@ -441,7 +446,7 @@ async function handleCreateOrder(request, env, origin, ctx) {
     amount_money: sqOrder.total_money,
     order_id: sqOrder.id,
     location_id: env.SQUARE_LOCATION_ID,
-    autocomplete: true,
+    autocomplete: false,
     buyer_email_address: (payload.order.customer && payload.order.customer.email) || undefined,
     note: 'eastvillagebuyers.com ' + payload.order.id,
     reference_id: String(payload.order.id).slice(0, 40)
@@ -451,8 +456,10 @@ async function handleCreateOrder(request, env, origin, ctx) {
   const card = (p.card_details && p.card_details.card) || {};
   const claimed = payload.order.payment && payload.order.payment.method;
   const via = ['Apple Pay', 'Google Pay', 'Cash App Pay', 'Afterpay'].indexOf(claimed) !== -1 ? claimed : 'Square';
+  // APPROVED: the hold went through. COMPLETED only if Square charged anyway.
+  const placed = p.status === 'APPROVED' || p.status === 'COMPLETED';
 
-  if (built.welcomeEmail && p.status === 'COMPLETED') {
+  if (built.welcomeEmail && placed) {
     const sub = await getSubscriber(env, built.welcomeEmail);
     if (sub) {
       await env.SUBSCRIBERS.put('sub:' + built.welcomeEmail, '1', { metadata: Object.assign({}, sub, { r: Date.now() }) });
@@ -460,10 +467,11 @@ async function handleCreateOrder(request, env, origin, ctx) {
   }
 
   const receipt = Object.assign({}, payload.order, {
-    status: p.status === 'COMPLETED' ? 'PAID' : (p.status || 'PENDING'),
+    status: p.status === 'COMPLETED' ? 'PAID' : p.status === 'APPROVED' ? 'ON_HOLD' : (p.status || 'PENDING'),
     squareOrderId: sqOrder.id,
     squarePaymentId: p.id,
     receiptUrl: p.receipt_url || null,
+    holdUntil: p.status === 'APPROVED' ? (p.delayed_until || null) : null,
     demo: false,
     payment: {
       brand: card.card_brand || (via === 'Square' ? 'Card' : via),
@@ -513,7 +521,9 @@ async function handleCreateOrder(request, env, origin, ctx) {
     }
   }
 
-  if (p.status === 'COMPLETED' && env.PANEL_API_KEY) {
+  // The panel copies the order in (and emails the customer) — a held one too,
+  // so it's waiting in Orders for someone to accept.
+  if (placed && env.PANEL_API_KEY) {
     const panel = (env.PANEL_URL || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
     const ping = fetch(panel + '/api/cron/square-sync', {
       method: 'POST',
@@ -834,6 +844,27 @@ async function handleResendOrderEmail(request, env, id, origin) {
   }, result === 'sent' ? 200 : 502, origin);
 }
 
+/**
+ * POST /orders/:id/status — the panel accepted or declined a held order
+ * (0076), so the receipt saved here at checkout stops saying "on hold".
+ * Authenticated with the panel key, like /resend.
+ */
+async function handleOrderStatus(request, env, id, origin) {
+  if (!(await isAdmin(request, env))) return json({ error: 'Not authorized.' }, 401, origin);
+  if (!env.ORDERS) return json({ error: 'Order lookup is not configured.' }, 404, origin);
+  const body = await request.json().catch(() => ({}));
+  if (body.status !== 'PAID' && body.status !== 'CANCELLED') return json({ error: 'Unknown status.' }, 400, origin);
+
+  const raw = await env.ORDERS.get('order:' + id);
+  if (!raw) return json({ error: 'Order not found.' }, 404, origin);
+  const order = JSON.parse(raw);
+  order.status = body.status;
+  order.holdUntil = null;
+  if (order.payment) order.payment.status = body.status === 'PAID' ? 'COMPLETED' : 'CANCELED';
+  await env.ORDERS.put('order:' + id, JSON.stringify(order), { expirationTtl: 60 * 60 * 24 * 365 });
+  return json({ id: order.id, status: order.status }, 200, origin);
+}
+
 export default {
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
@@ -903,6 +934,10 @@ export default {
       const m = /^\/orders\/([A-Za-z0-9._-]{1,64})$/.exec(path);
       if (request.method === 'GET' && m) {
         return await handleGetOrder(env, m[1], origin);
+      }
+      const st = /^\/orders\/([A-Za-z0-9._-]{1,64})\/status$/.exec(path);
+      if (request.method === 'POST' && st) {
+        return await handleOrderStatus(request, env, st[1], origin);
       }
       const rs = /^\/orders\/([A-Za-z0-9._-]{1,64})\/resend$/.exec(path);
       if (request.method === 'POST' && rs) {

@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.8.7">
+<link rel="stylesheet" href="/store/store.css?v=1.8.9">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -251,8 +251,15 @@
     '</div>';
   }
 
+  // A website order's card is held until the shop confirms stock (the
+  // panel's 0076): ON_HOLD until then, then PAID — or CANCELLED, unpaid.
+  var STATUS_LABEL = { PAID: 'Paid', ON_HOLD: 'Checking stock', CANCELLED: 'Cancelled' };
+
   function render(o) {
     var pickup = o.fulfillment && o.fulfillment.type === 'PICKUP';
+    var held = o.status === 'ON_HOLD';
+    var cancelled = o.status === 'CANCELLED';
+    var email = o.customer ? o.customer.email : '';
     var t = o.totals || {};
     var a = (o.fulfillment && o.fulfillment.address) || null;
 
@@ -266,23 +273,34 @@
           '<span style="color:var(--evb-muted);font-weight:500">' + S.esc(o.fulfillment.method || '') +
           (o.fulfillment.eta ? ' · ' + S.esc(o.fulfillment.eta) : '') + '</span></p>';
 
-    var nextSteps = pickup
+    var nextSteps = cancelled
+      ? 'Something in this order sold before we could confirm it, so we cancelled it and released the hold on your card. You were not charged. Questions? Call or text 917-608-8939.'
+      : (held ? 'Once we confirm everything is in stock, we charge your card and email you. Then: ' : '') + (pickup
       ? 'We will email you as soon as it is packed and waiting at the counter — usually the same day during store hours. Bring photo ID matching the name on this order.'
-      : 'You will get a tracking number by email as soon as it ships. Every shipment is insured and requires a signature on delivery.';
+      : 'You will get a tracking number by email as soon as it ships. Every shipment is insured and requires a signature on delivery.');
 
     host.innerHTML =
       '<div class="evb-wrap">' +
-        '<div class="evb-receipt-hero">' +
+        '<div class="evb-receipt-hero' + (held ? ' is-held' : cancelled ? ' is-cancelled' : '') + '">' +
           '<div class="evb-receipt-check">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+            (held
+              ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+              : cancelled
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>') +
           '</div>' +
-          '<h1 class="evb-receipt-title">Thank you, ' + S.esc((o.customer && o.customer.firstName) || 'friend') + '.</h1>' +
+          '<h1 class="evb-receipt-title">' + (cancelled ? 'Sorry, ' : 'Thank you, ') + S.esc((o.customer && o.customer.firstName) || 'friend') + '.</h1>' +
           // Only promise an email when one was actually sent. emailStatus is
           // set by the Worker; anything other than sent/queued means no mail
           // went out, so the page says to save the link instead of claiming
           // a confirmation that is not coming.
           '<p class="evb-receipt-sub">' + (
-            (o.emailStatus === 'sent' || o.emailStatus === 'queued')
+            cancelled
+              ? 'This order was cancelled — something sold before we could confirm it. The hold on your card was released, so you were not charged.'
+            : held
+              ? 'We got your order and we’re checking everything is on the shelf. Your card is on hold, not charged — we’ll charge it and email you' +
+                (email ? ' at <strong>' + S.esc(email) + '</strong>' : '') + ' as soon as we confirm, usually within a day.'
+            : (o.emailStatus === 'sent' || o.emailStatus === 'queued')
               ? 'Your order is confirmed. A copy of this receipt is on its way to ' +
                 '<strong>' + S.esc(o.customer ? o.customer.email : '') + '</strong>.'
               : 'Your order is confirmed. Save this page to check your order any time — ' +
@@ -308,7 +326,7 @@
             '<div class="evb-receipt-metaright">' +
               '<p>Order <strong>' + S.esc(o.id) + '</strong></p>' +
               '<p>' + S.esc(fmtDate(o.createdAt)) + '</p>' +
-              '<p>Status <strong>' + S.esc(o.status || 'PAID') + '</strong></p>' +
+              '<p>Status <strong>' + S.esc(STATUS_LABEL[o.status] || o.status || 'Paid') + '</strong></p>' +
             '</div>' +
           '</div>' +
 
@@ -352,12 +370,13 @@
             '<div class="evb-sumrow"><span>' + S.esc(pickup ? 'In-store pickup' : (o.fulfillment.method || 'Shipping')) + '</span><strong>' +
               (t.shipping ? S.money(t.shipping) : 'Free') + '</strong></div>' +
             '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
-            '<div class="evb-sumrow evb-sumrow--total"><span>Total paid</span><strong>' + S.money(t.total) + '</strong></div>' +
-            (o.payment && o.payment.last4
-              ? '<p class="evb-sumrow-note" style="margin-top:14px">Paid with ' + S.esc(o.payment.brand || 'card') +
+            '<div class="evb-sumrow evb-sumrow--total"><span>' + (held ? 'Total on hold' : cancelled ? 'Total (not charged)' : 'Total paid') +
+              '</span><strong>' + S.money(t.total) + '</strong></div>' +
+            (cancelled ? '' : o.payment && o.payment.last4
+              ? '<p class="evb-sumrow-note" style="margin-top:14px">' + (held ? 'On hold on ' : 'Paid with ') + S.esc(o.payment.brand || 'card') +
                 ' ending ' + S.esc(o.payment.last4) + '</p>'
               : (o.payment && o.payment.method
-                ? '<p class="evb-sumrow-note" style="margin-top:14px">Paid securely via ' + S.esc(o.payment.method) + '</p>' : '')) +
+                ? '<p class="evb-sumrow-note" style="margin-top:14px">' + (held ? 'On hold via ' : 'Paid securely via ') + S.esc(o.payment.method) + '</p>' : '')) +
           '</div>' +
 
           '<div class="evb-receipt-section">' +

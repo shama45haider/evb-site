@@ -680,7 +680,7 @@
         throw new Error('The total changed while you were in Cash App, so nothing was charged. Check it and try again');
       }
       var total = document.getElementById('walletTotal');
-      if (total) total.textContent = 'Total charged: ' + S.money(q.total);
+      if (total) total.textContent = 'Total: ' + S.money(q.total) + ' · held until we confirm';
       return squarePayments().then(function (payments) {
         if (gen !== state.wallet.gen) return;
         var ref = resume ? resume.ref : 'evb-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -1125,7 +1125,19 @@
         '<p class="evb-error" id="termsError"' + (e.terms ? '' : ' hidden') + '>' + S.esc(e.terms || '') + '</p>' +
 
         action +
+        holdNote() +
       '</div>';
+  }
+
+  // The card is only held at checkout (the panel's 0076): the shop checks
+  // every piece is still on the shelf, then charges it — or lets it go.
+  function holdNote() {
+    return '<p class="evb-hold-note">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' +
+      '<span>We hold the total on your ' + (state.payMethod === 'cashapp' ? 'Cash App' : state.payMethod === 'afterpay' ? 'Afterpay plan' : 'card') +
+      ' and only charge it once we’ve checked everything is on the shelf, usually within a day. If something’s gone, we release the hold' +
+      (state.payMethod === 'afterpay' ? ' and Afterpay refunds your first payment.' : ' and you pay nothing.') + '</span>' +
+    '</p>';
   }
 
   function summary() {

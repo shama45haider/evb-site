@@ -1108,3 +1108,9 @@ html:not(.evb-rewards-open) .evb-rewards-nudge { display: none !important; }
 .evb-idaddr-other { margin: 12px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--evb-muted); }
 .evb-idaddr-other a { color: var(--evb-ink); font-weight: 600; }
 .evb-radio.is-disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* The card is held, not charged, until the shop confirms stock (panel 0076). */
+.evb-hold-note { display: flex; gap: 9px; align-items: flex-start; margin: 14px 0 0; font-size: 12px; line-height: 1.55; font-weight: 600; color: var(--evb-ink-2); }
+.evb-hold-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--evb-orange); }
+.evb-receipt-hero.is-held .evb-receipt-check { background: var(--evb-orange-soft); color: var(--evb-orange); }
+.evb-receipt-hero.is-cancelled .evb-receipt-check { background: #fde8e8; color: #b42318; }
