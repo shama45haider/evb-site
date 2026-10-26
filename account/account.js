@@ -34,9 +34,9 @@
   // member_me sends the real ones in rules; these are for the signed-out
   // pages, previews, and a panel that hasn't run 0077 yet.
   var PRIZES = [
-    { code: 'off_5', label: '$5 off an order', short: '$5 off', points: 100 },
+    { code: 'free_shipping', label: 'Free standard shipping', short: 'Free ship', points: 100 },
     { code: 'off_10', label: '$10 off an order', short: '$10 off', points: 200 },
-    { code: 'free_shipping', label: 'Free standard shipping', short: 'Free ship', points: 250 },
+    { code: 'off_15', label: '$15 off an order', short: '$15 off', points: 300 },
     { code: 'off_20', label: '$20 off an order', short: '$20 off', points: 400 }
   ];
   var EXPIRE_DAYS = 60;
@@ -157,7 +157,7 @@
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
           '</em></h1>' +
-        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> — when you buy from us online or in the shop on Avenue A, and when you sell to us. Every <strong>' + PRIZES[0].points + ' points is $5 off.</strong></p>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> — when you buy from us online or in the shop on Avenue A, and when you sell to us. <strong>' + PRIZES[0].points + ' points ships an order free</strong>, and more takes up to $20 off.</p>' +
         '<ul class="acct-perks">' +
           perk(ICON.star, 'Points when you buy or sell', 'Online orders count by themselves. In the shop, show your QR code when you buy, sell or trade.', 4) +
           perk(ICON.gift, 'Up to $20 off', prizeLadder() + '. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
