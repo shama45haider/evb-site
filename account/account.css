@@ -1231,6 +1231,16 @@
 .acct-invite-stats { display: flex; align-items: center; gap: 7px; }
 .acct-invite-stats svg { flex-shrink: 0; width: 15px; height: 15px; color: #2563eb; }
 .acct-invite-stats b { color: var(--evb-ink); }
+.acct-invite-claim {
+  grid-column: 1 / -1; display: grid; gap: 8px; margin: 4px 0 0; padding-top: 12px;
+  border-top: 1px dashed rgba(37, 99, 235, 0.25);
+}
+.acct-invite-claim label { font-size: 13px; line-height: 1.45; color: var(--evb-ink); font-weight: 500; }
+.acct-invite-claim input { text-transform: uppercase; }
+.acct-invite-claim input::placeholder { text-transform: none; color: #9aa3b2; }
+.acct-invite-claim .acct-invite-btn:disabled { opacity: 0.6; cursor: wait; }
+.acct-invite-claim .acct-invite-note:empty { display: none; }
+.acct-invite-note.is-error { color: #b42318; }
 
 /* A bit more colour on what was there: orange section icons, and the three
    how-it-works steps in their own colours. */
