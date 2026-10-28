@@ -5,7 +5,7 @@
  * not. Everything about the member comes from one call, member_me() (panel
  * migration 0069), which only ever answers about the signed-in member.
  *
- * ?preview, ?preview=signin|code|welcome|empty renders sample data without
+ * ?preview, ?preview=signin|code|welcome|empty|climb renders sample data without
  * touching Supabase — for checking the design before accounts go live.
  */
 (function () {
@@ -210,27 +210,48 @@
       return num(p.points) + (i === 0 ? ' points' : '') + ' = ' + what;
     }).join(', ');
   }
-  // One prize as a coupon: the value big ("Free" shipping, "$10" off), then
-  // its points under a perforation, with a bar toward it until it's ready.
+  // One prize as a ticket: the value big ("Free" shipping, "$10" off) over a
+  // large faded icon, then its points under a perforation. Ready ones are
+  // filled in; the next one up is ringed; the rest are tinted with a lock.
   // Each step up the ladder gets a stronger colour (.acct-prize--t1…t4).
-  function prizeCard(p, i, bal) {
+  function prizeCard(p, i, bal, isNext) {
     var have = bal >= p.points;
     var ship = p.code === 'free_shipping';
     var amount = /\$\d+/.exec(p.label);
     var big = ship ? 'Free' : amount ? amount[0] : p.short;
     var small = ship ? 'shipping' : amount ? 'off an order' : '';
-    var pct = Math.min(Math.round((bal / p.points) * 100), 100);
-    return '<li class="acct-prize acct-prize--t' + Math.min(i + 1, 4) + (have ? ' is-ready' : '') + '">' +
-      '<span class="acct-prize-icon" aria-hidden="true">' + (ship ? ICON.truck : ICON.tag) + '</span>' +
+    var icon = ship ? ICON.truck : ICON.tag;
+    var state = have ? 'is-ready' : isNext ? 'is-next' : 'is-locked';
+    var flag = have
+      ? '<span class="acct-prize-flag">' + ICON.check + 'Ready</span>'
+      : isNext
+        ? '<span class="acct-prize-flag">Next up</span>'
+        : '<span class="acct-prize-flag acct-prize-flag--lock">' + ICON.lock + '<span class="acct-sr">Locked</span></span>';
+    return '<li class="acct-prize acct-prize--t' + Math.min(i + 1, 4) + ' ' + state + '">' +
+      '<span class="acct-prize-mark" aria-hidden="true">' + icon + '</span>' +
+      '<span class="acct-prize-top">' +
+        '<span class="acct-prize-icon" aria-hidden="true">' + icon + '</span>' + flag +
+      '</span>' +
       '<span class="acct-prize-value"><b>' + esc(big) + '</b>' + (small ? '<small>' + small + '</small>' : '') + '</span>' +
       '<span class="acct-prize-foot">' +
-        '<span class="acct-prize-pts">' + num(p.points) + ' pts</span>' +
-        (have
-          ? '<span class="acct-prize-state">' + ICON.check + 'Ready</span>'
-          : '<span class="acct-prize-state">' + num(p.points - bal) + ' to go</span>' +
-            '<span class="acct-prize-bar" aria-hidden="true"><i style="--p:' + pct + '%"></i></span>') +
+        '<span class="acct-prize-pts">' + ICON.star + num(p.points) + ' pts</span>' +
+        '<span class="acct-prize-state">' + (have ? 'Yours to use' : num(p.points - bal) + ' to go') + '</span>' +
       '</span>' +
     '</li>';
+  }
+  // The road to the top prize: a stop for each one, filled up to the
+  // balance, with the member's spot marked on it.
+  function prizeRoad(prizes, bal) {
+    var top = prizes[prizes.length - 1].points || 1;
+    var at = function (pts) { return Math.min(pts / top, 1) * 100; };
+    return '<div class="acct-prize-road" aria-hidden="true">' +
+      '<span class="acct-prize-you' + (at(bal) > 80 ? ' is-end' : at(bal) < 20 ? ' is-start' : '') + '" style="--at:' + at(bal) + '%"><b>You</b> · ' + num(bal) + ' pts</span>' +
+      '<span class="acct-prize-track"><i style="--p:' + at(bal) + '%"></i></span>' +
+      prizes.map(function (p, i) {
+        return '<span class="acct-prize-stop acct-prize--t' + Math.min(i + 1, 4) + (bal >= p.points ? ' is-ready' : '') + '" style="--at:' + at(p.points) + '%">' +
+          '<i>' + (bal >= p.points ? ICON.check : '') + '</i><small>' + esc(p.short) + '</small></span>';
+      }).join('') +
+    '</div>';
   }
   function daysLeft(at) {
     return Math.max(Math.ceil((new Date(at).getTime() - Date.now()) / 864e5), 0);
@@ -689,9 +710,13 @@
             '<div class="acct-prizes-title"><h2>Prizes</h2><p>Online orders, shipped or picked up · one per order</p></div>' +
             (best ? '<span class="acct-prizes-count">' + prizes.filter(function (p) { return bal >= p.points; }).length + ' of ' + prizes.length + ' ready</span>' : '') +
           '</div>' +
+          prizeRoad(prizes, bal) +
           '<ul class="acct-prize-list">' +
-            prizes.map(function (p, i) { return prizeCard(p, i, bal); }).join('') +
+            prizes.map(function (p, i) { return prizeCard(p, i, bal, next && p.code === next.code); }).join('') +
           '</ul>' +
+          (ready
+            ? '<a class="acct-prize-go" href="/store/"><span>' + ICON.gift + 'Use one on your next online order</span><b>Shop now' + ICON.arrow + '</b></a>'
+            : '') +
         '</section>' +
 
         '<a class="acct-visit acct-rise" style="--d:100ms" href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" target="_blank" rel="noopener">' +
@@ -1987,6 +2012,8 @@
       bday.bonuses.history.unshift({ bonus: 'birthday', points: 50, createdAt: daysAgo(0) });
       return renderDash(bday, { preview: true });
     }
+    // Partway up the prizes: two ready, one next, one locked.
+    if (mode === 'climb') { var cl = JSON.parse(JSON.stringify(SAMPLE)); cl.balance = 240; return renderDash(cl, { preview: true }); }
     if (mode === 'rejected') { var r = JSON.parse(JSON.stringify(SAMPLE)); r.idStatus = 'rejected'; r.idNote = 'The name doesn’t match your account'; return renderLocked(r, { preview: true }); }
     renderDash(SAMPLE, { preview: true });
   }
