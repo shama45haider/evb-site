@@ -5,7 +5,7 @@
  * not. Everything about the member comes from one call, member_me() (panel
  * migration 0069), which only ever answers about the signed-in member.
  *
- * ?preview, ?preview=signin|code|welcome|empty|climb renders sample data without
+ * ?preview, ?preview=signin|code|welcome|empty|climb|match renders sample data without
  * touching Supabase — for checking the design before accounts go live.
  */
 (function () {
@@ -1394,15 +1394,26 @@
   //
   // Photos are shrunk and re-encoded as JPEG in the browser before upload:
   // smaller files, and the phone's location data doesn't go with them.
+  //
+  // Checked by itself (panel migration 0082): "Yes, that's my address" asks
+  // member_confirm_id, which verifies the ID and lets them in when the name,
+  // birthday, expiry and address on it all check out. Anything off waits for
+  // an admin. And between birthday and ID, if exactly one shop customer has
+  // the name and birthday they typed, "Is this you?" asks for the number on
+  // the ID they showed us; a match verifies them without a photo.
 
-  var OB_STEPS = ['photo', 'name', 'birth', 'id', 'address', 'done'];
+  var OB_STEPS = ['photo', 'name', 'birth', 'match', 'id', 'address', 'done'];
+  // The progress bar's four: "Is this you?" and the address count as the ID step.
+  var OB_BAR = ['photo', 'name', 'birth', 'id'];
   var OB_SKIP_PHOTO = 'evb_ob_skip_photo';
 
   function obFirstStep(me) {
     if (!me.avatarPath && !ss(OB_SKIP_PHOTO) && !me.fullName) return 'photo';
     if (!me.fullName) return 'name';
     if (!me.dateOfBirth) return 'birth';
-    if (!me.idStatus || me.idStatus === 'none') return 'id';
+    if (!me.idStatus || me.idStatus === 'none') return 'match';
+    // Sent the photo but left before saying whether the address is right.
+    if (me.idStatus === 'submitted' && !me.onboarded) return 'address';
     return 'done';
   }
 
@@ -1470,19 +1481,40 @@
   // Has Gemini read the ID (the panel's /api/member-id/read)? Resolves
   // { address, nameMatch, message } or rejects with a message to show.
   function readId() {
+    return panelPost('/api/member-id/read', null, 'Our ID reader is busy. Try again in a minute.')
+      .catch(function (e) {
+        if (e && (e.shown || /expired/.test(e.message || ''))) throw e;
+        throw new Error('We couldn’t reach our ID reader. Check your connection and try again.');
+      });
+  }
+
+  // "Is this you?" (the panel's /api/member-id/shop-match). Without a number:
+  // { status: 'found' | 'none' }. With one: 'linked' (+ address, expired),
+  // 'wrong' (+ triesLeft), 'locked' or 'none'.
+  function shopMatch(idNumber) {
+    return panelPost('/api/member-id/shop-match', idNumber == null ? {} : { idNumber: idNumber }, 'Something went wrong. Try again.');
+  }
+
+  function panelPost(path, body, busyMessage) {
     return sb.auth.getSession().then(function (res) {
       var token = res.data && res.data.session && res.data.session.access_token;
       if (!token) throw new Error('Your sign-in expired. Please sign in again.');
-      return fetch(PANEL + '/api/member-id/read', { method: 'POST', headers: { Authorization: 'Bearer ' + token } }).then(function (r) {
+      var headers = { Authorization: 'Bearer ' + token };
+      if (body) headers['Content-Type'] = 'application/json';
+      return fetch(PANEL + path, { method: 'POST', headers: headers, body: body ? JSON.stringify(body) : undefined }).then(function (r) {
         return r.json().catch(function () { return {}; }).then(function (j) {
-          if (!r.ok) throw Object.assign(new Error(j.error || 'Our ID reader is busy. Try again in a minute.'), { shown: true });
+          if (!r.ok) throw Object.assign(new Error(j.error || busyMessage), { shown: true });
           return j;
         });
       });
-    }).catch(function (e) {
-      if (e && (e.shown || /expired/.test(e.message || ''))) throw e;
-      throw new Error('We couldn’t reach our ID reader. Check your connection and try again.');
     });
+  }
+
+  // "Yes, that's my address" / "I've moved" → { verified }. Before panel
+  // migration 0082 there's no automatic check: an admin looks, as before.
+  function confirmId(moved) {
+    if (!sb) return Promise.resolve({ verified: !moved });
+    return rpc('member_confirm_id', { p_moved: !!moved }).catch(function () { return { verified: false }; });
   }
 
   function addressLines(a) {
@@ -1492,7 +1524,7 @@
 
   function startOnboarding(me, opts) {
     opts = opts || {};
-    var state = { me: me, step: opts.step || obFirstStep(me), dir: 'next', only: !!opts.only, optIn: !!me.marketingOptIn };
+    var state = { me: me, step: opts.step || obFirstStep(me), dir: 'next', only: !!opts.only, optIn: !!me.marketingOptIn, previewMatch: !!opts.previewMatch };
     document.documentElement.classList.add('acct-ob-open');
     obRender(state);
   }
@@ -1503,10 +1535,11 @@
 
   function obRender(state) {
     var step = state.step;
-    var steps = OB_STEPS.slice(0, 4);
-    // Checking the address is part of the ID step.
-    var at = steps.indexOf(step === 'address' ? 'id' : step);
+    var steps = OB_BAR;
+    // "Is this you?" and checking the address are part of the ID step.
+    var at = steps.indexOf(step === 'address' || step === 'match' ? 'id' : step);
     var rd = state.read || { status: 'loading' };
+    var mt = state.match || { status: 'loading' };
     var me = state.me;
     var body = '';
 
@@ -1535,11 +1568,32 @@
         '<label class="acct-label" for="obBirth">Date of birth</label>' +
         '<input class="acct-input acct-ob-input" id="obBirth" type="date" autocomplete="bday" min="' + isoDaysAgo(120) + '" max="' + isoDaysAgo(13) + '" value="' + esc(me.dateOfBirth || '') + '">' +
         '<p class="acct-ob-age" id="obAge" aria-live="polite"></p>';
+    } else if (step === 'match') {
+      body =
+        '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
+        (mt.status === 'loading'
+          ? '<h1 class="acct-ob-title">One moment…</h1>' +
+            '<div class="acct-ob-addr is-loading" aria-hidden="true"><span class="acct-spin"></span></div>'
+          : mt.status === 'number'
+            ? '<h1 class="acct-ob-title">Type your ID number</h1>' +
+              '<p class="acct-ob-sub">The number on the ID you showed us at the shop: your driver’s license, state ID or passport number. We’ll check it against what we scanned.</p>' +
+              '<label class="acct-label" for="obIdNumber">ID number</label>' +
+              '<input class="acct-input acct-ob-input" id="obIdNumber" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="e.g. 123 456 789">' +
+              '<p class="acct-ob-private">' + ICON.key + 'Never shown to anyone, and we don’t keep what you type. We only check that it matches.</p>'
+            : '<h1 class="acct-ob-title">Is this you?</h1>' +
+              '<p class="acct-ob-sub">Looks like you’ve been to East Village Buyers before and showed us your ID at the counter.</p>' +
+              '<div class="acct-ob-match">' +
+                '<span>We have a customer named</span>' +
+                '<b>' + esc(me.fullName || '') + '</b>' +
+                '<span>born ' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</span>' +
+              '</div>' +
+              '<p class="acct-ob-private">' + ICON.shield + 'If it’s you, you can skip sending a photo of your ID.</p>');
     } else if (step === 'id') {
       body =
         '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
         '<h1 class="acct-ob-title">Take a photo of your ID</h1>' +
         '<p class="acct-ob-sub">Driver\u2019s license, state ID or passport. Once it\u2019s on file, you won\u2019t need to bring it when you sell to us.</p>' +
+        (state.idNote ? '<p class="acct-ob-warn">' + esc(state.idNote) + '</p>' : '') +
         '<div class="acct-ob-match">' +
           '<span>The name on your ID has to match</span>' +
           '<b>' + esc(me.fullName || '') + '</b>' +
@@ -1563,9 +1617,14 @@
           ? '<h1 class="acct-ob-title">Reading your ID…</h1>' +
             '<p class="acct-ob-sub">This takes a few seconds.</p>' +
             '<div class="acct-ob-addr is-loading" aria-hidden="true"><span class="acct-spin"></span></div>'
+          : rd.status === 'ok' && state.addrNo
+            ? '<h1 class="acct-ob-title">Read wrong, or have you moved?</h1>' +
+              '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
+              '<p class="acct-ob-sub">If we misread your ID, retake the photo. If you’ve moved since it was made, we’ll check your account by hand.</p>' +
+              '<p class="acct-ob-private">' + ICON.truck + 'Online orders still ship only to the address on your ID. Call or text us at ' + esc(biz.phone) + ' to ship somewhere else.</p>'
           : rd.status === 'ok'
-            ? '<h1 class="acct-ob-title">Is this your address?</h1>' +
-              '<p class="acct-ob-sub">We read it off your ID. Online orders ship only to this address.</p>' +
+            ? '<h1 class="acct-ob-title">' + (rd.shop ? 'Is this still your address?' : 'Is this your address?') + '</h1>' +
+              '<p class="acct-ob-sub">' + (rd.shop ? 'It’s from the ID we scanned at the shop.' : 'We read it off your ID.') + ' Online orders ship only to this address.</p>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               (rd.nameMatch === 'mismatch'
                 ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo. Otherwise we’ll check it by hand.</p>' : '') +
@@ -1578,15 +1637,22 @@
         '<div class="acct-ob-done">' +
           '<span class="acct-ob-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></span>' +
           '<h1 class="acct-ob-title">You’re all set' + (me.fullName ? ', ' + esc(firstName(me.fullName)) : '') + '</h1>' +
-          '<p class="acct-ob-sub">We’ll check your ID and let you know when your Rewards are on.</p>' +
+          '<p class="acct-ob-sub">' + (state.verified || me.idStatus === 'verified'
+            ? 'Your ID checked out. ' + (closed() ? 'Your Rewards are on.' : 'You’re verified.')
+            : 'We’ll check your ID by hand and let you know when your Rewards are on.') + '</p>' +
           '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
         '</div>';
     }
 
     var primary = step === 'photo' ? 'Continue' : step === 'id' ? 'Send my ID'
       : step === 'done' ? (ss(NEXT_KEY) ? 'Continue to checkout' : 'Go to my account')
-      : step === 'address' ? (rd.status === 'ok' ? 'Yes, that’s my address' : rd.status === 'loading' ? 'Reading…' : rd.status === 'error' ? 'Try again' : 'Retake the photo')
+      : step === 'match' ? (mt.status === 'number' ? 'Check my number' : mt.status === 'loading' ? 'One moment…' : 'Yes, that’s me')
+      : step === 'address' ? (rd.status === 'ok' ? (state.addrNo ? 'Retake the photo' : 'Yes, that’s my address') : rd.status === 'loading' ? 'Reading…' : rd.status === 'error' ? 'Try again' : 'Retake the photo')
       : 'Continue';
+    var alt = step === 'match' ? (mt.status === 'found' ? 'No, that’s not me' : mt.status === 'number' ? 'Send a photo of my ID instead' : '')
+      : step === 'address' && rd.status !== 'loading'
+        ? (rd.status !== 'ok' ? 'Skip for now' : state.addrNo ? 'I’ve moved' : 'No, that’s not my address')
+        : '';
     var canBack = !state.only && at > 0 && step !== 'done';
 
     render(
@@ -1607,8 +1673,7 @@
           '<div class="acct-ob-actions">' +
             '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit" id="obNext">' + primary + '</button>' +
             (step === 'photo' ? '<button type="button" class="acct-link acct-ob-skip" id="obSkip">Skip for now</button>' : '') +
-            (step === 'address' && rd.status !== 'loading'
-              ? '<button type="button" class="acct-link acct-ob-skip" id="obAddrAlt">' + (rd.status === 'ok' ? 'No, retake the photo' : 'Skip for now') + '</button>' : '') +
+            (alt ? '<button type="button" class="acct-link acct-ob-skip" id="obAlt">' + alt + '</button>' : '') +
           '</div>' +
         '</form>' +
       '</div>'
@@ -1631,7 +1696,32 @@
     }
 
     var back = document.getElementById('obBack');
-    if (back) back.addEventListener('click', function () { state.read = null; go(step === 'address' ? 'id' : OB_STEPS[at - 1], 'back'); });
+    if (back) back.addEventListener('click', function () {
+      state.read = null; state.addrNo = false; state.match = null;
+      go(step === 'address' ? 'id' : OB_STEPS[at - 1], 'back');
+    });
+    var altBtn = document.getElementById('obAlt');
+
+    // "Is this you?": ask the panel once whether there's a shop customer to
+    // ask about; if not, straight on to the ID photo.
+    if (step === 'match') {
+      if (mt.status === 'loading') next.disabled = true;
+      if (!state.match) {
+        state.match = mt;
+        (!sb ? Promise.resolve({ status: state.previewMatch ? 'found' : 'none' }) : shopMatch())
+          .then(function (j) { return j.status; }, function () { return 'none'; })
+          .then(function (status) {
+            if (state.step !== 'match') return;
+            if (status === 'found') { state.match = { status: 'found' }; push('account_shop_match_found', {}); obRender(state); }
+            else go('id');
+          });
+      }
+      if (altBtn) altBtn.addEventListener('click', function () {
+        if (mt.status === 'found') push('account_shop_match_no', {});
+        state.match = { status: 'skipped' };
+        go('id');
+      });
+    }
 
     if (step === 'address') {
       if (rd.status === 'loading') next.disabled = true;
@@ -1647,9 +1737,18 @@
           state.read = { status: 'error', message: e.message };
         }).then(function () { if (state.step === 'address') obRender(state); });
       }
-      var alt = document.getElementById('obAddrAlt');
-      if (alt) alt.addEventListener('click', function () {
-        if (rd.status === 'ok') { state.read = null; go('id', 'back'); } else after();
+      if (altBtn) altBtn.addEventListener('click', function () {
+        if (rd.status !== 'ok') { state.verified = false; return after(); }
+        // From the shop record: a photo of the ID with the new address.
+        if (rd.shop) {
+          state.read = null;
+          state.idNote = 'Send a photo of your current ID, with your new address.';
+          return go('id');
+        }
+        if (!state.addrNo) { state.addrNo = true; return obRender(state); }
+        // "I've moved": an admin looks.
+        setBusy(altBtn, true, 'One moment…');
+        confirmId(true).then(function (j) { state.verified = !!j.verified; state.addrNo = false; after(); });
       });
     }
     var close = document.getElementById('obClose');
@@ -1737,19 +1836,57 @@
         setBusy(next, true, 'Saving…');
         return rpc('member_set_birth_date', { p_date_of_birth: v }).then(function () { me.dateOfBirth = v; after(); }, fail);
       }
+      if (step === 'match') {
+        if (mt.status === 'loading') return;
+        if (mt.status !== 'number') { state.match = { status: 'number' }; return obRender(state); }
+        var typed = document.getElementById('obIdNumber').value.replace(/[^A-Za-z0-9]/g, '');
+        if (typed.length < 4) { err.textContent = 'Type the whole number from your ID.'; return; }
+        setBusy(next, true, 'Checking…');
+        var preview = { status: 'linked', expired: false, address: { line1: '39 Avenue A', line2: 'Apt 4B', city: 'New York', state: 'NY', postal: '10009' } };
+        return (!sb ? Promise.resolve(preview) : shopMatch(typed)).then(function (j) {
+          if (j.status === 'wrong') {
+            setBusy(next, false, primary);
+            err.textContent = 'That doesn’t match the ID we have on file. ' +
+              (j.triesLeft === 1 ? '1 try left.' : (j.triesLeft || 0) + ' tries left.');
+            return;
+          }
+          if (j.status === 'linked' && !j.expired) {
+            push('account_shop_match_linked', {});
+            me.idStatus = 'verified';
+            state.verified = true;
+            if (!j.address) return go('done');
+            state.read = { status: 'ok', address: j.address, nameMatch: 'match', shop: true };
+            return go('address');
+          }
+          state.idNote = j.status === 'linked'
+            ? 'The ID we have on file has expired. Send a photo of your current one.'
+            : j.status === 'locked' ? 'That number didn’t match, so send a photo of your ID instead.' : '';
+          go('id');
+        }, fail);
+      }
       if (step === 'id') {
         if (!picked) { err.textContent = 'Take or upload a photo of your ID first.'; return; }
         state.read = null;
-        if (!sb) { me.idStatus = 'submitted'; return go('address'); }
+        if (!sb) { me.idStatus = 'submitted'; state.idNote = ''; return go('address'); }
         setBusy(next, true, 'Sending…');
         return uploadPhoto('member-ids', picked)
           .then(function (path) { return rpc('member_submit_id', { p_path: path }); })
-          .then(function () { me.idStatus = 'submitted'; push('account_id_sent', {}); go('address'); }, fail);
+          .then(function () { me.idStatus = 'submitted'; state.idNote = ''; push('account_id_sent', {}); go('address'); }, fail);
       }
       if (step === 'address') {
         if (rd.status === 'loading') return;
-        if (rd.status === 'ok') return after();
+        if (rd.status === 'ok' && !state.addrNo) {
+          // The automatic check (panel migration 0082) verifies them here
+          // when everything on the ID matched.
+          setBusy(next, true, 'One moment…');
+          return confirmId(false).then(function (j) {
+            state.verified = !!j.verified;
+            if (j.verified) { me.idStatus = 'verified'; push('account_id_auto_verified', {}); }
+            after();
+          });
+        }
         state.read = null;
+        state.addrNo = false;
         if (rd.status === 'error') return obRender(state);
         return go('id', 'back');
       }
@@ -2044,6 +2181,7 @@
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     if (mode === 'signup') return previewAfterCode();
     if (mode === 'address') { var ad = JSON.parse(JSON.stringify(SAMPLE)); return startOnboarding(ad, { step: 'address' }); }
+    if (mode === 'match') { var sm = JSON.parse(JSON.stringify(SAMPLE)); sm.idStatus = 'none'; sm.onboarded = false; return startOnboarding(sm, { step: 'match', previewMatch: true }); }
     if (mode === 'birthday') {
       var bday = JSON.parse(JSON.stringify(SAMPLE));
       bday.bonuses.birthday = { points: 50, month: new Date().getMonth() + 1, thisMonth: true, eligible: true, receivedThisYear: true, receivedEver: true };
