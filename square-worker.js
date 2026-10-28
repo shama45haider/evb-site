@@ -82,6 +82,71 @@ async function checkMember(request, env, payload) {
   return j;
 }
 
+// A member_* function in Supabase, called as the member (their own session).
+// Resolves { ok, data, message }; never throws, so a caller decides.
+async function memberRpc(env, auth, fn, body) {
+  const base = (env.SUPABASE_URL || SUPABASE_URL_DEFAULT).replace(/\/+$/, '');
+  try {
+    const res = await fetch(base + '/rest/v1/rpc/' + fn, {
+      method: 'POST',
+      headers: {
+        apikey: env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT,
+        Authorization: auth,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body || {})
+    });
+    const j = await res.json().catch(() => null);
+    return { ok: res.ok, data: j, message: (!res.ok && j && j.message) || '' };
+  } catch (e) {
+    return { ok: false, data: null, message: e.message };
+  }
+}
+
+// The points prize this cart gets (panel 0079): the one worth the most here.
+// Free shipping only takes off standard shipping. A lookup that fails means
+// no prize, never a failed checkout.
+async function checkoutPrize(env, auth, itemsCents, shippingCents) {
+  if (!auth) return null;
+  const r = await memberRpc(env, auth, 'member_checkout_prize', {
+    p_items_cents: Math.max(Math.round(itemsCents), 0),
+    p_shipping_cents: Math.max(Math.round(shippingCents), 0)
+  });
+  if (!r.ok) {
+    console.error('[evb-square] prize lookup failed', r.message);
+    return null;
+  }
+  const p = r.data && r.data.prize;
+  return p && p.code ? {
+    code: String(p.code), label: String(p.label || ''), kind: p.kind === 'shipping' ? 'shipping' : 'off',
+    points: Number(p.points) || 0, creditCents: Number(p.creditCents) || 0
+  } : null;
+}
+
+// What a prize is called on the Square order and the receipt.
+function prizeName(prize) {
+  return prize.kind === 'shipping' ? 'EVB Rewards · Free shipping' : 'EVB Rewards · ' + prize.label.replace(/ an order$/, '');
+}
+
+// Lets go of a hold (or, if Square charged anyway, refunds it) when the
+// order can't stand — the points it was priced with are gone.
+async function undoPayment(env, p, idem) {
+  try {
+    if (p.status === 'APPROVED') {
+      await square(env, '/v2/payments/' + encodeURIComponent(p.id) + '/cancel', 'POST', {});
+    } else if (p.status === 'COMPLETED') {
+      await square(env, '/v2/refunds', 'POST', {
+        idempotency_key: idem + '-undo',
+        payment_id: p.id,
+        amount_money: p.amount_money,
+        reason: 'Points prize could not be applied'
+      });
+    }
+  } catch (e) {
+    console.error('[evb-square] could not undo payment', p.id, e.message);
+  }
+}
+
 // The order is the member's: their account email gets the receipt, and it is
 // what their points are matched on (0069).
 function asMember(payload, member) {
@@ -239,7 +304,7 @@ async function checkStock(env, incoming, variations, items) {
   });
 }
 
-async function buildSquareOrder(env, payload) {
+async function buildSquareOrder(env, payload, auth) {
   const incoming = (payload.order && payload.order.lineItems) || [];
   if (!incoming.length) throw Object.assign(new Error('Your bag is empty.'), { status: 400 });
 
@@ -289,13 +354,16 @@ async function buildSquareOrder(env, payload) {
   const code = String((payload.order.totals && payload.order.totals.promoCode) || '').toUpperCase();
   const promo = PROMO_CODES[code];
   let freeShipping = false;
+  let promoOff = 0;
 
   if (promo) {
     if (promo.minSubtotal && subtotal < promo.minSubtotal) {
     } else if (promo.type === 'percent') {
+      promoOff = Math.round(subtotal * promo.value / 100);
       discounts.push({ uid: 'promo', name: code, percentage: String(promo.value), scope: 'ORDER' });
     } else if (promo.type === 'fixed') {
-      discounts.push({ uid: 'promo', name: code, amount_money: money(Math.min(promo.value, subtotal)), scope: 'ORDER' });
+      promoOff = Math.min(promo.value, subtotal);
+      discounts.push({ uid: 'promo', name: code, amount_money: money(promoOff), scope: 'ORDER' });
     } else if (promo.type === 'shipping') {
       freeShipping = true;
     }
@@ -317,6 +385,19 @@ async function buildSquareOrder(env, payload) {
   const claimed = !!(payload.order.totals && payload.order.totals.welcomeShipping);
   if (claimed && shippingId === 'standard' && shippingAmount > 0) {
     throw Object.assign(new Error('The free-shipping welcome offer has already been used for this email. Go back to Delivery to see the updated total.'), { status: 409 });
+  }
+
+  // The member's points prize comes off by itself (panel 0079), unless they
+  // chose to save their points (usePrize false). A checkout page from before
+  // prizes sends no usePrize and gets none, so its total still matches.
+  // Priced on the goods after any promo code, and on standard shipping still
+  // being charged.
+  const prizeCart = { itemsCents: Math.max(subtotal - promoOff, 0), shippingCents: shippingId === 'standard' ? shippingAmount : 0 };
+  const prize = await checkoutPrize(env, auth, prizeCart.itemsCents, prizeCart.shippingCents);
+  const prizeApplied = !!prize && !!(payload.order.totals && payload.order.totals.usePrize === true);
+  if (prizeApplied) {
+    if (prize.kind === 'shipping') shippingAmount = 0;
+    else discounts.push({ uid: 'evb-prize', name: prizeName(prize), amount_money: money(prize.creditCents), scope: 'ORDER' });
   }
 
   const serviceCharges = shippingAmount > 0 ? [{
@@ -363,7 +444,7 @@ async function buildSquareOrder(env, payload) {
         }
       }];
 
-  return { welcomeEmail, order: {
+  return { welcomeEmail, prize, prizeApplied, prizeCart, order: {
     location_id: env.SQUARE_LOCATION_ID,
     reference_id: payload.order.id,
     line_items: lineItems,
@@ -389,7 +470,7 @@ async function handleQuote(request, env, origin) {
   if (!payload || !payload.order) return json({ error: 'Malformed request.' }, 400, origin);
 
   asMember(payload, await checkMember(request, env, payload));
-  const built = await buildSquareOrder(env, payload);
+  const built = await buildSquareOrder(env, payload, request.headers.get('Authorization'));
   const calc = await square(env, '/v2/orders/calculate', 'POST', { order: built.order });
   const o = calc.order || {};
   const amount = m => (m && m.amount) || 0;
@@ -400,7 +481,10 @@ async function handleQuote(request, env, origin) {
     discount: amount(o.total_discount_money),
     shipping: amount(o.total_service_charge_money),
     tax: amount(o.total_tax_money),
-    welcomeShipping: !!built.welcomeEmail
+    welcomeShipping: !!built.welcomeEmail,
+    // Sent even when they chose to save their points, so checkout can offer it.
+    prize: built.prize ? Object.assign({ name: prizeName(built.prize) }, built.prize) : null,
+    prizeApplied: built.prizeApplied
   }, 200, origin);
 }
 
@@ -417,7 +501,17 @@ async function handleCreateOrder(request, env, origin, ctx) {
   }
 
   asMember(payload, await checkMember(request, env, payload));
-  const built = await buildSquareOrder(env, payload);
+  const auth = request.headers.get('Authorization');
+  const built = await buildSquareOrder(env, payload, auth);
+
+  // The total they agreed to had a prize on it, or didn't. If their points
+  // changed since (spent on another order, or lapsed), show the new total
+  // before anything is held.
+  const sawPrize = String((payload.order.totals && payload.order.totals.prizeCode) || '');
+  const nowPrize = built.prizeApplied ? built.prize.code : '';
+  if (sawPrize !== nowPrize) {
+    throw shout('Your points changed since you started checking out, so your total did too. Check the new total and place your order again. Nothing was charged.', 409);
+  }
 
   const created = await square(env, '/v2/orders', 'POST', {
     idempotency_key: payload.idempotencyKey + '-order',
@@ -459,6 +553,24 @@ async function handleCreateOrder(request, env, origin, ctx) {
   // APPROVED: the hold went through. COMPLETED only if Square charged anyway.
   const placed = p.status === 'APPROVED' || p.status === 'COMPLETED';
 
+  // Spend the points now the card is held. If they can't be (used on another
+  // order a moment ago), the order can't stand at this price: let go of the
+  // hold and say so. Nothing is stored, so trying again starts fresh.
+  if (placed && built.prizeApplied) {
+    const claim = await memberRpc(env, auth, 'member_claim_checkout_prize', {
+      p_prize: built.prize.code,
+      p_square_order: sqOrder.id,
+      p_reference: String(payload.order.id || '').slice(0, 40),
+      p_items_cents: built.prizeCart.itemsCents,
+      p_shipping_cents: built.prizeCart.shippingCents
+    });
+    if (!claim.ok) {
+      console.error('[evb-square] prize claim failed', sqOrder.id, claim.message);
+      await undoPayment(env, p, payload.idempotencyKey);
+      throw shout('Your points changed while you were checking out, so we couldn’t take your prize off. Nothing was charged — go back and place your order again to see the new total.', 409);
+    }
+  }
+
   if (built.welcomeEmail && placed) {
     const sub = await getSubscriber(env, built.welcomeEmail);
     if (sub) {
@@ -472,6 +584,11 @@ async function handleCreateOrder(request, env, origin, ctx) {
     squarePaymentId: p.id,
     receiptUrl: p.receipt_url || null,
     holdUntil: p.status === 'APPROVED' ? (p.delayed_until || null) : null,
+    // The points prize that came off (panel 0079), for the receipt page.
+    prize: placed && built.prizeApplied ? {
+      code: built.prize.code, name: prizeName(built.prize), kind: built.prize.kind,
+      points: built.prize.points, creditCents: built.prize.creditCents
+    } : null,
     demo: false,
     payment: {
       brand: card.card_brand || (via === 'Square' ? 'Card' : via),
@@ -773,7 +890,7 @@ async function sendOrderEmail(env, order) {
     subject: 'Order ' + order.id + ' confirmed - East Village Buyers',
     html: orderEmailHtml(order),
     text: orderEmailText(order),
-    reply_to: 'info@eastvillagebuyers.com'
+    reply_to: 'help@eastvillagebuyers.com'
   };
   if (env.ORDER_BCC) body.bcc = [env.ORDER_BCC];
 

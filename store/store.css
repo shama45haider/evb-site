@@ -744,6 +744,26 @@ body.evb-store-page {
 .evb-sumrow--total span { font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--evb-ink); }
 .evb-sumrow--total strong { font-size: 24px; letter-spacing: -0.03em; }
 .evb-sumrow-note { font-size: 11.5px; color: var(--evb-muted); font-weight: 500; margin: 0 0 14px; line-height: 1.6; }
+.evb-sumrow-was { font-weight: 600; color: var(--evb-faint); margin-right: 4px; }
+
+/* The member's points prize (panel 0079), taken off by itself. */
+.evb-prize-row {
+  margin: 4px 0 6px; padding: 10px 12px; border-radius: 12px;
+  background: var(--evb-orange-soft); border: 1px solid var(--evb-orange-line);
+}
+.evb-prize-row .evb-sumrow { padding: 0; }
+.evb-sumrow--prize span { display: inline-flex; align-items: center; gap: 6px; color: var(--evb-orange-deep); font-weight: 800; }
+.evb-sumrow--prize strong { color: var(--evb-orange-deep); }
+.evb-sumrow--prize svg, .evb-prize-note svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--evb-orange); }
+.evb-prize-note { margin: 4px 0 0; font-size: 12px; font-weight: 500; line-height: 1.5; color: var(--evb-body); }
+.evb-prize-row.is-saved { background: transparent; border-style: dashed; }
+.evb-prize-row.is-saved .evb-prize-note { display: flex; gap: 7px; align-items: flex-start; margin: 0; }
+.evb-prize-row.is-saved .evb-prize-note svg { margin-top: 2px; }
+.evb-prize-note b { color: var(--evb-ink); font-weight: 700; }
+.evb-prize-toggle {
+  background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-weight: 700;
+  color: var(--evb-orange-dark); text-decoration: underline; text-underline-offset: 2px;
+}
 
 .evb-promo { display: flex; gap: 8px; margin: 16px 0; }
 .evb-promo input {

@@ -33,7 +33,10 @@
     // only to the address on their ID. status: loading | signedOut | ready |
     // error. check is member_checkout_check(): who they are, their ID address
     // and whether they can ship.
-    member: { status: 'loading', token: null, check: null }
+    member: { status: 'loading', token: null, check: null },
+    // Their points prize for this cart (see currentTotals). use: false once
+    // they choose to save their points.
+    prize: { use: true, key: null, data: null, promise: null }
   };
 
   /* ------------------------------------------------------------ members */
@@ -425,16 +428,76 @@
 
   function noop() {}
 
+  /* ------------------------------------------------------------ points prize */
+
+  // A member's best points prize comes off by itself (panel migration 0079):
+  // the one worth the most on this cart, asked of Supabase as the member —
+  // the same question the Worker asks when it prices the order. "Save my
+  // points for later" turns it off. The Worker checks the prize again and
+  // refuses an order whose prize changed, so nobody pays a total they
+  // didn't see.
+
+  // What the prize is priced on: the goods after any promo code, and
+  // standard shipping that's still being charged (free shipping is standard
+  // only).
+  function prizeCart(t) {
+    return {
+      items: Math.max(t.subtotal - t.discount, 0),
+      shipping: t.shippingRate && t.shippingRate.id === 'standard' ? t.shipping : 0
+    };
+  }
+
+  function loadPrize(cart) {
+    var p = state.prize, key = cart.items + ':' + cart.shipping;
+    if (p.key === key || !sb || state.member.status !== 'ready') return;
+    p.key = key;
+    p.data = null;
+    p.promise = Promise.resolve(sb.rpc('member_checkout_prize', { p_items_cents: cart.items, p_shipping_cents: cart.shipping }))
+      .then(function (r) {
+        if (p.key !== key) return;
+        p.data = (r && !r.error && r.data && r.data.prize) || null;
+        if (p.data && !state.submitting) refresh();
+      }, function () { });
+  }
+
+  // The prize lookup for the cart as it is now, finished.
+  function prizeSettled() {
+    currentTotals();
+    return state.prize.promise || Promise.resolve();
+  }
+
   function currentTotals() {
     var d = state.data;
-    return S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
+    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
+    t.promoDiscount = t.discount;
+    t.prize = null;
+    t.prizeOffer = null;
+    var cart = prizeCart(t);
+    loadPrize(cart);
+    var p = state.prize;
+    if (!p.data || p.key !== cart.items + ':' + cart.shipping) return t;
+    t.prizeOffer = p.data;
+    if (!p.use) return t;
+    if (p.data.kind === 'shipping') {
+      t.shipping = 0;
+    } else {
+      // Off the goods before tax, spread over them the way Square does.
+      t.discount += p.data.creditCents;
+      var taxable = t.subtotal > 0
+        ? Math.max(0, t.taxableSubtotal - Math.round(t.discount * (t.taxableSubtotal / t.subtotal)))
+        : 0;
+      t.tax = Math.round(taxable * (CFG.taxRate || 0));
+    }
+    t.total = Math.max(0, t.subtotal - t.discount + t.shipping + t.tax);
+    t.prize = p.data;
+    return t;
   }
 
   function quoteKey() {
     var d = state.data;
     return JSON.stringify([
       S.cart.lines.map(function (l) { return [l.squareVariationId || l.variantId, l.qty]; }),
-      d.shippingId, d.promoCode, d.email.trim().toLowerCase(), state.welcomeShip
+      d.shippingId, d.promoCode, d.email.trim().toLowerCase(), state.welcomeShip, state.prize.use
     ]);
   }
 
@@ -801,6 +864,10 @@
         discount: totals.discount,
         promoCode: totals.promoCode,
         welcomeShipping: totals.welcomeShip,
+        // The Worker applies a prize only when asked, and refuses the order
+        // if the one it finds isn't the one shown here.
+        usePrize: !!state.prize.use,
+        prizeCode: totals.prize ? totals.prize.code : '',
         shipping: totals.shipping,
         tax: totals.tax,
         total: totals.total
@@ -824,17 +891,21 @@
     state.submitting = true;
     render();
 
-    var totals = S.totals({ shippingId: state.data.shippingId, promoCode: state.data.promoCode, welcomeShip: state.welcomeShip });
+    var totals;
     var base = (CFG.apiBase || '').replace(/\/$/, '');
     var idem = S.idempotencyKey();
 
-    var tokenStep = S.isLive()
-      ? squareTokenize(totals)
-      : Promise.resolve({
-          sourceId: null,
-          brand: cardBrand(state.data.cardNumber),
-          last4: digits(state.data.cardNumber).slice(-4)
-        });
+    // The prize has to be known before the total is: the Worker compares.
+    var tokenStep = prizeSettled().then(function () {
+      totals = currentTotals();
+      return S.isLive()
+        ? squareTokenize(totals)
+        : {
+            sourceId: null,
+            brand: cardBrand(state.data.cardNumber),
+            last4: digits(state.data.cardNumber).slice(-4)
+          };
+    });
 
     tokenStep
       .then(function (payment) {
@@ -879,6 +950,10 @@
         state.submitting = false;
         var message = err.message || 'Something went wrong taking payment.';
         if (state.welcomeShip) { state.welcomeShip = false; state.welcomeFor = null; }
+        // Their points may have changed: ask again for the next try.
+        state.prize.key = null;
+        state.prize.promise = null;
+        state.quote.key = null;
         if (S.isLive() && state.payMethod !== 'card') {
           state.square.token = null;
           state.errors = { wallet: message };
@@ -1055,7 +1130,7 @@
 
   function reviewStep() {
     var d = state.data;
-    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
+    var t = currentTotals();
     var pickup = d.shippingId === 'pickup';
     var e = state.errors;
 
@@ -1140,9 +1215,31 @@
     '</p>';
   }
 
+  // The points prize in the summary: on, with a way to save the points, or
+  // saved, with a way to use them.
+  function prizeRows(t) {
+    var offer = t.prizeOffer;
+    if (!offer) return '';
+    var star = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+    var what = offer.kind === 'shipping' ? 'Free shipping' : String(offer.label || '').replace(/ an order$/, '');
+    if (t.prize) {
+      return '<div class="evb-prize-row">' +
+          '<div class="evb-sumrow evb-sumrow--prize"><span>' + star + 'EVB Rewards · ' + S.esc(what) + '</span>' +
+            // Free shipping already shows on the shipping line.
+            '<strong>' + (offer.kind === 'shipping' ? 'Applied' : '&minus;' + S.money(offer.creditCents)) + '</strong></div>' +
+          '<p class="evb-prize-note">' + offer.points + ' points, taken off automatically. ' +
+            '<button type="button" class="evb-prize-toggle" data-prize="save">Save my points for later</button></p>' +
+        '</div>';
+    }
+    return '<div class="evb-prize-row is-saved">' +
+        '<p class="evb-prize-note">' + star + '<span>You have <b>' + S.esc(what) + '</b> for ' + offer.points + ' points. ' +
+          '<button type="button" class="evb-prize-toggle" data-prize="use">Use it on this order</button></span></p>' +
+      '</div>';
+  }
+
   function summary() {
     var d = state.data;
-    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
+    var t = currentTotals();
     var lines = S.cart.lines;
 
     return '<div class="evb-panel">' +
@@ -1168,8 +1265,11 @@
       (state.promoMsg ? '<p class="evb-promo-msg ' + (state.promoMsg.ok ? 'is-ok' : 'is-err') + '">' + S.esc(state.promoMsg.text) + '</p>' : '') +
 
       '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
-      (t.discount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount (' + S.esc(t.promoCode) + ')</span><strong>&minus;' + S.money(t.discount) + '</strong></div>' : '') +
-      '<div class="evb-sumrow"><span>' + S.esc(t.shippingRate.label) + '</span><strong>' + (t.shipping === 0 ? 'Free' : S.money(t.shipping)) + '</strong></div>' +
+      (t.promoDiscount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount (' + S.esc(t.promoCode) + ')</span><strong>&minus;' + S.money(t.promoDiscount) + '</strong></div>' : '') +
+      '<div class="evb-sumrow"><span>' + S.esc(t.shippingRate.label) + '</span><strong>' +
+        (t.prize && t.prize.kind === 'shipping' ? '<s class="evb-sumrow-was">' + S.money(t.prize.creditCents) + '</s> ' : '') +
+        (t.shipping === 0 ? 'Free' : S.money(t.shipping)) + '</strong></div>' +
+      prizeRows(t) +
       (t.welcomeShip ? '<p class="evb-promo-msg is-ok">Welcome offer: free shipping on your first order.</p>' : '') +
       '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
       '<div class="evb-sumrow evb-sumrow--total"><span>Total</span><strong>' + S.money(t.total) + '</strong></div>' +
@@ -1358,6 +1458,12 @@
   }
 
   function wirePromo() {
+    els.host.querySelectorAll('[data-prize]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.prize.use = b.getAttribute('data-prize') === 'use';
+        refresh();
+      });
+    });
     var promoBtn = els.host.querySelector('#promoBtn');
     var promoInput = els.host.querySelector('#promoInput');
     if (!promoBtn) return;

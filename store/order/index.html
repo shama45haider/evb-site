@@ -20,7 +20,7 @@
 <link rel="stylesheet" href="/site-nav.css">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.8.9">
+<link rel="stylesheet" href="/store/store.css?v=1.9.0">
 </head>
 
 <body class="evb-store evb-store-page">
@@ -210,7 +210,7 @@
 </footer>
 
 <script src="/site-nav.js?v=20261005"></script>
-<script src="/store/store-config.js?v=1.9.3"></script>
+<script src="/store/store-config.js?v=1.9.4"></script>
 <script src="/store/store-catalog.js?v=1.9.2"></script>
 <script src="/store/store-core.js?v=1.9.0"></script>
 <script>
@@ -261,6 +261,10 @@
     var cancelled = o.status === 'CANCELLED';
     var email = o.customer ? o.customer.email : '';
     var t = o.totals || {};
+    // A points prize taken off at checkout (the panel's 0079): money off is
+    // part of t.discount, free shipping already shows as Free.
+    var prize = o.prize || null;
+    var prizeOff = prize && prize.kind === 'off' ? Number(prize.creditCents) || 0 : 0;
     var a = (o.fulfillment && o.fulfillment.address) || null;
 
     var deliveryBlock = pickup
@@ -365,8 +369,11 @@
 
           '<div class="evb-receipt-section">' +
             '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
-            (t.discount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount' +
-              (t.promoCode ? ' (' + S.esc(t.promoCode) + ')' : '') + '</span><strong>&minus;' + S.money(t.discount) + '</strong></div>' : '') +
+            (t.discount - prizeOff > 0 ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount' +
+              (t.promoCode ? ' (' + S.esc(t.promoCode) + ')' : '') + '</span><strong>&minus;' + S.money(t.discount - prizeOff) + '</strong></div>' : '') +
+            (prize ? '<div class="evb-sumrow evb-sumrow--discount"><span>' + S.esc(prize.name || 'EVB Rewards') +
+              ' (' + Number(prize.points || 0).toLocaleString('en-US') + ' pts)</span><strong>' +
+              (prizeOff ? '&minus;' + S.money(prizeOff) : 'Applied') + '</strong></div>' : '') +
             '<div class="evb-sumrow"><span>' + S.esc(pickup ? 'In-store pickup' : (o.fulfillment.method || 'Shipping')) + '</span><strong>' +
               (t.shipping ? S.money(t.shipping) : 'Free') + '</strong></div>' +
             '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
