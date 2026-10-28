@@ -53,7 +53,7 @@
   // Where an invite link's code waits until the friend is signed in (0080).
   var REF_KEY = 'evb_acct_ref';
   var store = window.EVB_STORE_CONFIG || {};
-  var biz = store.business || { phone: '917-608-8939', phoneHref: 'tel:9176088939', email: 'info@eastvillagebuyers.com' };
+  var biz = store.business || { phone: '917-608-8939', phoneHref: 'tel:9176088939', email: 'help@eastvillagebuyers.com' };
   var sb = null;
   var resendTimer = null;
 
