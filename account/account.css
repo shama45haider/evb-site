@@ -1046,3 +1046,201 @@
 .acct-ob-addr p { margin: 0; font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; line-height: 1.45; color: var(--evb-ink); overflow-wrap: anywhere; }
 .acct-ob-addr.is-loading { justify-content: center; padding: 28px; }
 .acct-ob-warn { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: #fff7ed; border: 1px solid #fed7aa; font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5; color: #9a3412; }
+
+/* ---------------------------------------------------------------- level, stats, badges, bonuses */
+
+.acct-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* "A friend invited you" on the sign-in page (0080). */
+.acct-invited {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px; padding: 7px 13px 7px 10px;
+  border-radius: 99px; background: #eef3ff; color: #1d4ed8;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.35;
+}
+.acct-invited svg { flex-shrink: 0; width: 16px; height: 16px; }
+
+/* Member level: a card in the level's metal, under the greeting. The bar
+   runs along the whole ladder, under the level names. */
+.acct-tier {
+  --t1: #b8692e; --t2: #6e3a15; --t-ink: #fff; --t-soft: rgba(255,255,255,0.78);
+  --t-track: rgba(255,255,255,0.25); --t-fill: #fff;
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-columns: auto 1fr; gap: 14px 16px; align-items: center;
+  margin-bottom: 12px; padding: 18px 18px 16px; border-radius: 20px;
+  color: var(--t-ink); background: linear-gradient(135deg, var(--t1), var(--t2));
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--t2) 30%, transparent);
+}
+@media (min-width: 600px) { .acct-tier { grid-template-columns: auto 1fr minmax(0, 240px); padding: 20px 24px; gap: 14px 20px; } }
+.acct-tier--silver { --t1: #8f9aa7; --t2: #4b5563; }
+.acct-tier--gold { --t1: #f7cb52; --t2: #d4900c; --t-ink: #2a1c00; --t-soft: rgba(42,28,0,0.72); --t-track: rgba(42,28,0,0.16); --t-fill: #2a1c00; }
+.acct-tier--black { --t1: #2d2d2d; --t2: #050505; --t-fill: var(--evb-orange); }
+.acct-tier-glow {
+  position: absolute; z-index: -1; top: -120px; right: -60px; width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.32), transparent 65%); pointer-events: none;
+}
+.acct-tier--black .acct-tier-glow { background: radial-gradient(circle, rgba(249,115,22,0.28), transparent 65%); }
+.acct-tier-medal {
+  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,0.2); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.5);
+  animation: acct-badge-pop 0.6s cubic-bezier(.2,1.5,.4,1) 0.2s both;
+}
+.acct-tier--gold .acct-tier-medal { background: rgba(255,255,255,0.4); }
+.acct-tier--black .acct-tier-medal { color: var(--evb-orange); box-shadow: inset 0 0 0 1.5px rgba(249,115,22,0.6); }
+.acct-tier-medal svg { width: 26px; height: 26px; }
+.acct-tier-main { min-width: 0; }
+.acct-tier-kicker {
+  margin: 0; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--t-soft);
+}
+.acct-tier-name { margin: 2px 0 0; font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 900; line-height: 1.05; letter-spacing: -0.02em; }
+.acct-tier--black .acct-tier-name { color: var(--evb-orange); }
+.acct-tier-sub { margin: 4px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; color: var(--t-soft); }
+.acct-tier-next { grid-column: 1 / -1; font-family: 'Inter', sans-serif; }
+@media (min-width: 600px) { .acct-tier-next { grid-column: auto; } }
+.acct-tier-steps { list-style: none; margin: 0 0 7px; padding: 0; display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--t-soft); }
+.acct-tier-steps .is-now { color: var(--t-ink); font-weight: 800; }
+.acct-tier-bar { display: block; height: 7px; border-radius: 99px; overflow: hidden; background: var(--t-track); }
+.acct-tier-bar i { display: block; height: 100%; width: var(--p); border-radius: inherit; background: var(--t-fill); animation: acct-prize-bar 1.3s cubic-bezier(.2,.7,.2,1) 0.35s both; }
+.acct-tier-next small { display: block; margin-top: 7px; font-size: 12px; color: var(--t-soft); }
+.acct-tier-next small b { color: var(--t-ink); }
+
+/* Your stats: four coloured totals, then points by month. */
+.acct-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 6px 0 16px; }
+@media (min-width: 600px) { .acct-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.acct-kpi { --k: var(--evb-orange); --k-wash: #fff3e8; min-width: 0; padding: 12px 12px 13px; border-radius: 14px; background: var(--k-wash); font-family: 'Inter', sans-serif; }
+.acct-kpi--green { --k: #16a34a; --k-wash: #ecfaf0; }
+.acct-kpi--blue { --k: #2563eb; --k-wash: #eef3ff; }
+.acct-kpi--violet { --k: #7c3aed; --k-wash: #f4effe; }
+.acct-kpi i { display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 8px; border-radius: 9px; background: var(--k); color: #fff; }
+.acct-kpi i svg { width: 15px; height: 15px; }
+.acct-kpi span { display: block; font-size: 12px; color: var(--evb-muted); }
+.acct-kpi b {
+  display: block; margin-top: 2px; font-family: 'Montserrat', sans-serif; font-size: clamp(17px, 4.6vw, 21px); font-weight: 800;
+  color: var(--evb-ink); letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.acct-chart { margin-bottom: 8px; padding: 14px 14px 8px; border-radius: 14px; border: 1px solid var(--evb-line-soft); }
+.acct-chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 0 4px; font-family: 'Inter', sans-serif; }
+.acct-chart-head b { font-size: 13px; font-weight: 700; color: var(--evb-ink); }
+.acct-chart-head span { font-size: 12px; color: var(--evb-faint); }
+.acct-chart-empty { margin: 10px 0 8px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--evb-muted); }
+.acct-chart-bars { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); height: 156px; }
+.acct-bar { display: grid; grid-template-rows: 1fr 24px; min-width: 0; outline: none; cursor: default; }
+.acct-bar-col {
+  position: relative; display: flex; align-items: flex-end; justify-content: center;
+  padding-top: 20px; border-bottom: 1px solid var(--evb-line);
+}
+.acct-bar-fill { position: relative; display: flex; justify-content: center; width: 100%; }
+.acct-bar-col i {
+  display: block; width: min(56%, 34px); height: 100%; border-radius: 4px 4px 0 0;
+  background: #fdc79a; transform-origin: bottom;
+  animation: acct-bar-grow 0.9s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 60ms + 0.25s);
+  transition: background 0.2s ease;
+}
+.acct-bar.is-now .acct-bar-col i { background: var(--evb-orange); }
+.acct-bar:hover .acct-bar-col i, .acct-bar:focus-visible .acct-bar-col i { background: var(--evb-orange-dark); }
+.acct-bar:focus-visible .acct-bar-col { box-shadow: inset 0 0 0 2px var(--evb-orange-line); border-radius: 6px 6px 0 0; }
+.acct-bar-val {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); text-align: center;
+  font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; color: var(--evb-ink);
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.acct-bar.is-now .acct-bar-val, .acct-bar.is-best .acct-bar-val,
+.acct-bar:hover .acct-bar-val, .acct-bar:focus-visible .acct-bar-val { opacity: 1; }
+.acct-bar small { padding-top: 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--evb-faint); }
+.acct-bar.is-now small { color: var(--evb-ink); font-weight: 700; }
+@keyframes acct-bar-grow { from { transform: scaleY(0); } }
+
+/* Badges: coloured when earned, grey with a lock until then. */
+.acct-badges-count {
+  padding: 5px 10px; border-radius: 99px; background: var(--evb-orange-soft); color: var(--evb-orange-deep);
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; white-space: nowrap;
+}
+.acct-badges { list-style: none; margin: 8px 0 10px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 8px; }
+@media (min-width: 600px) { .acct-badges { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.acct-badge { --b: #f97316; display: flex; flex-direction: column; align-items: center; text-align: center; font-family: 'Inter', sans-serif; min-width: 0; }
+.acct-badge--green { --b: #16a34a; }
+.acct-badge--blue { --b: #2563eb; }
+.acct-badge--teal { --b: #0d9488; }
+.acct-badge--pink { --b: #db2777; }
+.acct-badge--violet { --b: #7c3aed; }
+.acct-badge--amber { --b: #f59e0b; }
+.acct-badge--gold { --b: #ca8a04; }
+.acct-badge-icon {
+  position: relative; width: 56px; height: 56px; margin-bottom: 8px; border-radius: 50%;
+  display: grid; place-items: center; background: #f1efec; color: #bdb7af;
+}
+.acct-badge-icon svg { width: 24px; height: 24px; }
+.acct-badge.is-earned .acct-badge-icon {
+  color: #fff;
+  background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--b) 65%, #fff), var(--b) 72%);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--b) 32%, transparent), inset 0 0 0 3px rgba(255,255,255,0.32);
+  animation: acct-badge-pop 0.5s cubic-bezier(.2,1.5,.4,1) both; animation-delay: calc(var(--i) * 45ms + 0.2s);
+}
+.acct-badge-icon em {
+  position: absolute; right: -2px; bottom: -2px; width: 21px; height: 21px; border-radius: 50%;
+  display: grid; place-items: center; background: #fff; color: var(--evb-faint); box-shadow: 0 0 0 1px var(--evb-line);
+}
+.acct-badge-icon em svg { width: 11px; height: 11px; }
+.acct-badge b { font-size: 12.5px; font-weight: 700; line-height: 1.25; color: var(--evb-ink); }
+.acct-badge:not(.is-earned) b { color: var(--evb-muted); }
+.acct-badge > span:last-child { margin-top: 2px; font-size: 11px; line-height: 1.35; color: var(--evb-faint); }
+@keyframes acct-badge-pop { from { transform: scale(0.6); opacity: 0; } }
+
+/* Birthday points and the invite link (0080). */
+.acct-bonuses { display: grid; gap: 12px; margin-top: 22px; }
+@media (min-width: 600px) { .acct-bonuses { grid-template-columns: 1fr 1.4fr; } }
+.acct-bonus {
+  position: relative; overflow: hidden; display: grid; grid-template-columns: auto 1fr; gap: 12px 14px;
+  align-content: start; padding: 18px; border-radius: 18px; font-family: 'Inter', sans-serif;
+}
+.acct-bonus--birthday { background: #fdf0f6; }
+.acct-bonus--birthday.is-now { background: linear-gradient(135deg, #ec4899, #f97316); box-shadow: 0 10px 24px rgba(236, 72, 153, 0.25); }
+.acct-bonus--invite { background: #eef3ff; }
+.acct-bonus-icon { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: #fff; background: #db2777; }
+.acct-bonus--invite .acct-bonus-icon { background: #2563eb; }
+.acct-bonus.is-now .acct-bonus-icon { background: rgba(255,255,255,0.22); }
+.acct-bonus-icon svg { width: 21px; height: 21px; }
+.acct-bonus-text { min-width: 0; }
+.acct-bonus-text b { display: block; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: var(--evb-ink); }
+.acct-bonus-text span { display: block; margin-top: 3px; font-size: 13px; line-height: 1.5; color: var(--evb-body); }
+.acct-bonus-text strong { color: var(--evb-ink); }
+.acct-bonus.is-now .acct-bonus-text b, .acct-bonus.is-now .acct-bonus-text span, .acct-bonus.is-now .acct-bonus-text strong { color: #fff; }
+.acct-invite { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.acct-invite-link {
+  flex: 1 1 220px; min-width: 0; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px;
+  border-radius: 11px; background: #fff; border: 1px solid rgba(37, 99, 235, 0.22); color: #2563eb;
+}
+.acct-invite-link svg { flex-shrink: 0; width: 16px; height: 16px; }
+/* 16px so phones don't zoom in when it's tapped. */
+.acct-invite-link input {
+  flex: 1; min-width: 0; border: 0; outline: 0; padding: 0; background: none;
+  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 500; color: var(--evb-ink); text-overflow: ellipsis;
+}
+.acct-invite-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; padding: 0 18px;
+  border: 0; border-radius: 11px; cursor: pointer; background: #2563eb; color: #fff;
+  font-family: 'Inter', sans-serif; font-size: 13.5px; font-weight: 700; transition: background 0.2s ease;
+}
+.acct-invite-btn:hover { background: #1d4ed8; }
+.acct-invite-btn.is-done { background: var(--evb-green); }
+.acct-invite-btn--share { background: #fff; color: #2563eb; box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.3); }
+.acct-invite-btn--share:hover { background: #fff; color: #1d4ed8; }
+.acct-invite-btn svg { width: 15px; height: 15px; }
+.acct-invite-stats, .acct-invite-note { grid-column: 1 / -1; margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--evb-body); }
+.acct-invite-stats { display: flex; align-items: center; gap: 7px; }
+.acct-invite-stats svg { flex-shrink: 0; width: 15px; height: 15px; color: #2563eb; }
+.acct-invite-stats b { color: var(--evb-ink); }
+
+/* A bit more colour on what was there: orange section icons, and the three
+   how-it-works steps in their own colours. */
+.acct-section-title > i, .acct-section-title > span > i { background: var(--evb-orange); color: #fff; }
+.acct-steps .acct-step-icon { border-color: transparent; background: #fff3e8; color: var(--evb-orange-dark); }
+.acct-steps li:nth-child(2) .acct-step-icon { background: #fdf0f6; color: #db2777; }
+.acct-steps li:nth-child(3) .acct-step-icon { background: #eef3ff; color: #2563eb; }
+
+.acct-rise.is-waiting .acct-badge-icon,
+.acct-rise.is-waiting .acct-bar-col i { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .acct-tier-medal, .acct-tier-bar i, .acct-bar-col i, .acct-badge.is-earned .acct-badge-icon { animation: none; }
+}

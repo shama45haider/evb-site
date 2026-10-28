@@ -42,6 +42,16 @@
   var EXPIRE_DAYS = 60;
   // Points this close to lapsing get the warning colour.
   var EXPIRE_SOON_DAYS = 14;
+  // Member levels, by lifetime points (what they've earned, not what's left
+  // after expiry or prizes). Status only for now — no perks attached.
+  var TIERS = [
+    { code: 'bronze', name: 'Bronze', min: 0 },
+    { code: 'silver', name: 'Silver', min: 500 },
+    { code: 'gold', name: 'Gold', min: 1500 },
+    { code: 'black', name: 'Black', min: 4000 }
+  ];
+  // Where an invite link's code waits until the friend is signed in (0080).
+  var REF_KEY = 'evb_acct_ref';
   var store = window.EVB_STORE_CONFIG || {};
   var biz = store.business || { phone: '917-608-8939', phoneHref: 'tel:9176088939', email: 'info@eastvillagebuyers.com' };
   var sb = null;
@@ -91,6 +101,13 @@
     user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
     tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+    award: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.6 13.8 7 22l5-3 5 3-1.6-8.2"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    cake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7"/><path d="M4 16c1.5 1.3 3 1.3 4 0s2.5-1.3 4 0 2.5 1.3 4 0 2.5-1.3 4 0"/><path d="M2 21h20M12 12V8"/><path d="M12 8c-1.1 0-1.8-.9-1.4-2L12 3l1.4 3c.4 1.1-.3 2-1.4 2z"/></svg>',
+    users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3a6.5 6.5 0 0 1 3.5 5.7"/></svg>',
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.3-3.3a4.5 4.5 0 0 0-6.4-6.4L12 5.6"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.3 3.3a4.5 4.5 0 0 0 6.4 6.4l1.3-1.3"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
     truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3z"/><path d="M14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg>',
     box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
@@ -155,6 +172,7 @@
           '<span class="acct-spark acct-spark--a">' + ICON.sparkle + '</span>' +
           '<span class="acct-spark acct-spark--b">' + ICON.sparkle + '</span>' +
         '</span>' +
+        (invited() ? '<p class="acct-invited">' + ICON.users + '<span>A friend invited you. Join, and you both get points after your first purchase.</span></p>' : '') +
         '<h1 class="acct-title"><span class="acct-word" style="--i:1">Shop with us.</span> ' +
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
@@ -164,10 +182,13 @@
           perk(ICON.star, 'Points when you buy or sell', 'Online orders count by themselves. In the shop, show your QR code when you buy, sell or trade.', 4) +
           perk(ICON.gift, 'Up to $20 off online orders', prizeLadder() + ', on an order you have shipped or pick up. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
           perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
-          perk(ICON.gift, 'Members-only perks', 'Exclusive deals, members-only giveaways and raffles, and more.', 7) +
+          perk(ICON.cake, 'Birthday and invite points', 'Bonus points every birthday month, and when a friend you invite shops with us. Plus members-only deals and giveaways.', 7) +
           perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 8) +
         '</ul>' +
       '</div>';
+  }
+  function invited() {
+    try { return !!localStorage.getItem(REF_KEY); } catch (e) { return false; }
   }
   function perk(icon, title, text, i) {
     return '<li class="acct-perk" style="--i:' + i + '"><span class="acct-perk-icon">' + icon + '</span><div><b>' + title + '</b><span>' + text + '</span></div></li>';
@@ -482,16 +503,23 @@
     sold:   { label: 'Sold to us', icon: function () { return ICON.cash; } },
     trade:  { label: 'Trade', icon: function () { return ICON.swap; } },
     // Points staff gave at the counter by scanning the member's QR (0075).
-    visit:  { label: 'Shop visit', icon: function () { return ICON.qr; } }
+    visit:  { label: 'Shop visit', icon: function () { return ICON.qr; } },
+    // Birthday and invite points (0080).
+    bonus:  { label: 'Bonus points', icon: function () { return ICON.gift; } }
   };
   var VISIT_LABEL = { bought: 'You bought', sold: 'You sold us', traded: 'You traded' };
+  var BONUS_LABEL = { birthday: 'Birthday points', referral: 'A friend you invited shopped', referred: 'Joined with a friend’s invite' };
 
-  // The ledger's visit rows as history entries, so they sit with the rest.
+  // The ledger's visit rows and bonuses as history entries, so they sit with
+  // the rest.
   function withVisits(me) {
     var visits = (me.activity || []).filter(function (a) { return a.kind === 'visit'; }).map(function (a) {
       return { kind: 'visit', visitKind: a.visitKind, reference: 'Scanned at the counter', occurredAt: a.createdAt,
         items: [], totalCents: a.visitCents || 0, points: a.points };
-    });
+    }).concat(((me.bonuses && me.bonuses.history) || []).map(function (b) {
+      return { kind: 'bonus', bonus: b.bonus, reference: BONUS_LABEL[b.bonus] || 'Bonus points', occurredAt: b.createdAt,
+        items: [], totalCents: 0, points: b.points };
+    }));
     if (!visits.length) return me.history || [];
     return (me.history || []).concat(visits).sort(function (a, b) { return new Date(b.occurredAt) - new Date(a.occurredAt); });
   }
@@ -552,6 +580,7 @@
 
   function inFilter(e, f) {
     if (f === 'all') return true;
+    if (e.kind === 'bonus') return false;
     if (e.kind === 'visit') return f === (e.visitKind === 'bought' ? 'bought' : 'sold');
     if (f === 'online') return e.kind === 'online';
     if (f === 'sold') return e.kind === 'sold' || e.kind === 'trade';
@@ -634,6 +663,8 @@
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
 
+        tierCard(me) +
+
         '<section class="acct-points acct-rise" style="--d:60ms" aria-label="Your points">' +
           '<span class="acct-points-deco" aria-hidden="true">' +
             '<span class="acct-pd acct-pd--a"></span><span class="acct-pd acct-pd--b"></span>' +
@@ -678,11 +709,9 @@
         (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' +
           '<p class="acct-live-head" aria-hidden="true"><span class="acct-live-pulse"></span>Happening now</p>' + live.join('') + '</section>' : '') +
 
-        '<section class="acct-stats acct-rise" style="--d:180ms">' +
-          stat(ICON.bag, 'Bought from us', sum.bought, true) +
-          stat(ICON.cash, 'Sold to us', sum.sold, true) +
-          stat(ICON.truck, 'Online orders', sum.orders, false) +
-        '</section>' +
+        statsSection(me, sum, history) +
+        badgesSection(me, sum, history) +
+        bonusSection(me) +
 
         '<section class="acct-section acct-rise" style="--d:220ms">' +
           '<div class="acct-section-head">' +
@@ -718,6 +747,7 @@
     if (ring) setTimeout(function () { ring.style.strokeDashoffset = String(100 - Number(ring.dataset.pct)); }, 250);
 
     bindHistory(history, me);
+    bindInvite();
     fillQr(me);
     fillAvatar(me);
     document.getElementById('acctSignOut').addEventListener('click', function () {
@@ -727,9 +757,225 @@
     bindDetails(me);
   }
 
-  function stat(icon, label, value, isMoney) {
-    return '<div class="acct-stat"><i aria-hidden="true">' + icon + '</i><span>' + label + '</span>' +
-      '<b data-count="' + value + '"' + (isMoney ? ' data-money' : '') + '>' + (isMoney ? money(value) : num(value)) + '</b></div>';
+  /* ------------------------------------------------------------ level, stats, badges, bonuses */
+
+  function tierOf(points) {
+    var i = 0;
+    while (i + 1 < TIERS.length && points >= TIERS[i + 1].min) i++;
+    return i;
+  }
+
+  // The member's level as a coloured card under the greeting, with a bar to
+  // the next one.
+  function tierCard(me) {
+    var pts = Math.max(Number(me.lifetimePoints) || 0, 0);
+    var i = tierOf(pts);
+    var t = TIERS[i], next = TIERS[i + 1];
+    // Along the whole ladder, so the bar lines up with the level names above it.
+    var pct = next ? Math.round(((i + (pts - t.min) / (next.min - t.min)) / (TIERS.length - 1)) * 100) : 100;
+    var since = me.joinedAt ? new Date(me.joinedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+    return '<section class="acct-tier acct-tier--' + t.code + ' acct-rise" style="--d:30ms" aria-label="Member level">' +
+      '<span class="acct-tier-glow" aria-hidden="true"></span>' +
+      '<span class="acct-tier-medal" aria-hidden="true">' + ICON.award + '</span>' +
+      '<div class="acct-tier-main">' +
+        '<p class="acct-tier-kicker">Member level</p>' +
+        '<p class="acct-tier-name">' + t.name + '</p>' +
+        '<p class="acct-tier-sub">' + num(pts) + ' lifetime points' + (since ? ' · since ' + esc(since) : '') + '</p>' +
+      '</div>' +
+      '<div class="acct-tier-next">' +
+        '<ol class="acct-tier-steps" aria-hidden="true">' + TIERS.map(function (x, j) {
+          return '<li class="' + (j < i ? 'is-past' : j === i ? 'is-now' : '') + '">' + x.name + '</li>';
+        }).join('') + '</ol>' +
+        '<span class="acct-tier-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + (next ? 'Progress to ' + next.name : 'Top level') + '"><i style="--p:' + pct + '%"></i></span>' +
+        '<small>' + (next ? '<b>' + num(next.min - pts) + '</b> more points to ' + next.name : 'Top level — you’re one of our best') + '</small>' +
+      '</div>' +
+    '</section>';
+  }
+
+  // Points earned in each of the last six months — orders, shop visits and
+  // bonuses — oldest first.
+  function monthlyPoints(history) {
+    var now = new Date();
+    var months = [];
+    for (var k = 5; k >= 0; k--) {
+      var d = new Date(now.getFullYear(), now.getMonth() - k, 1);
+      months.push({
+        y: d.getFullYear(), m: d.getMonth(), points: 0,
+        label: d.toLocaleDateString('en-US', { month: 'short' }),
+        long: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+      });
+    }
+    history.forEach(function (e) {
+      var d = new Date(e.occurredAt);
+      if (!(e.points > 0) || isNaN(d)) return;
+      months.forEach(function (mo) { if (mo.y === d.getFullYear() && mo.m === d.getMonth()) mo.points += e.points; });
+    });
+    return months;
+  }
+
+  // Four totals in colour, then points by month as bars. Only this month
+  // and the best month carry their number; the rest show it on hover or focus.
+  function statsSection(me, sum, history) {
+    var saved = (me.activity || []).reduce(function (n, a) { return n + (a.kind === 'redeem' ? Number(a.creditCents) || 0 : 0); }, 0);
+    var months = monthlyPoints(history);
+    var max = Math.max.apply(null, months.map(function (m) { return m.points; }));
+    var best = max > 0 ? months.map(function (m) { return m.points; }).lastIndexOf(max) : -1;
+    return '<section class="acct-section acct-insights acct-rise" style="--d:180ms">' +
+      '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.chart + '</i>Your stats</h2>' +
+      '<div class="acct-kpis">' +
+        kpi('orange', ICON.star, 'Lifetime points', me.lifetimePoints, false) +
+        kpi('green', ICON.tag, 'Saved with prizes', saved, true) +
+        kpi('blue', ICON.bag, 'Bought from us', sum.bought, true) +
+        kpi('violet', ICON.cash, 'Sold to us', sum.sold, true) +
+      '</div>' +
+      '<div class="acct-chart">' +
+        '<p class="acct-chart-head"><b>Points earned</b><span>Last 6 months</span></p>' +
+        (max > 0
+          ? '<ul class="acct-chart-bars">' + months.map(function (m, i) {
+              var h = m.points ? Math.max(Math.round((m.points / max) * 100), 4) : 0;
+              return '<li class="acct-bar' + (i === months.length - 1 ? ' is-now' : '') + (i === best ? ' is-best' : '') + '" tabindex="0" aria-label="' + esc(m.long) + ': ' + num(m.points) + ' points" style="--i:' + i + '">' +
+                '<span class="acct-bar-col" aria-hidden="true"><span class="acct-bar-fill" style="height:' + h + '%"><i></i>' +
+                  (m.points ? '<span class="acct-bar-val">' + num(m.points) + '</span>' : '') + '</span></span>' +
+                '<small aria-hidden="true">' + esc(m.label) + '</small>' +
+              '</li>';
+            }).join('') + '</ul>'
+          : '<p class="acct-chart-empty">Your points show up here month by month once you start earning.</p>') +
+      '</div>' +
+    '</section>';
+  }
+  function kpi(tone, icon, label, value, isMoney) {
+    var v = Number(value) || 0;
+    return '<div class="acct-kpi acct-kpi--' + tone + '"><i aria-hidden="true">' + icon + '</i><span>' + label + '</span>' +
+      '<b data-count="' + v + '"' + (isMoney ? ' data-money' : '') + '>' + (isMoney ? money(v) : num(v)) + '</b></div>';
+  }
+
+  // Badges for the things members do with us. Worked out here from what
+  // member_me sends; birthday and invite ones need panel 0080.
+  function badgesOf(me, sum, history) {
+    var done = history.filter(function (e) { return e.kind !== 'bonus' && !(e.kind === 'online' && e.status === 'cancelled'); });
+    var life = Number(me.lifetimePoints) || 0;
+    var b = me.bonuses;
+    var list = [
+      ['Welcome', 'Joined EVB Rewards', ICON.star, 'orange', true],
+      ['First buy', 'Buy something from us', ICON.bag, 'orange',
+        sum.bought > 0 || done.some(function (e) { return e.kind === 'visit' && e.visitKind === 'bought'; })],
+      ['First sale', 'Sell something to us', ICON.cash, 'green',
+        sum.sold > 0 || done.some(function (e) { return e.kind === 'visit' && e.visitKind !== 'bought'; })],
+      ['Online shopper', 'Place an online order', ICON.truck, 'blue', sum.orders > 0],
+      ['Verified', 'Get your ID checked', ICON.shield, 'teal', me.idStatus === 'verified'],
+      ['Prize winner', 'Use points for a prize', ICON.gift, 'pink',
+        (me.activity || []).some(function (a) { return a.kind === 'redeem'; })],
+      ['Regular', 'Shop or sell with us 5 times', ICON.store, 'violet', done.length >= 5],
+      ['1K club', 'Earn 1,000 points', ICON.sparkle, 'amber', life >= 1000],
+      ['Big spender', 'Spend $1,000 with us', ICON.layers, 'gold', sum.bought >= 100000],
+      ['Gold level', 'Reach Gold', ICON.award, 'gold', tierOf(life) >= 2]
+    ];
+    if (b) {
+      list.push(['Birthday', 'Get your birthday points', ICON.cake, 'pink', !!(b.birthday && b.birthday.receivedEver)]);
+      list.push(['Friend bringer', 'Invite a friend who shops', ICON.users, 'blue', !!(b.referral && b.referral.rewarded > 0)]);
+    }
+    return list.map(function (x) { return { name: x[0], hint: x[1], icon: x[2], tone: x[3], earned: !!x[4] }; });
+  }
+
+  function badgesSection(me, sum, history) {
+    var list = badgesOf(me, sum, history);
+    var got = list.filter(function (x) { return x.earned; }).length;
+    return '<section class="acct-section acct-rise" style="--d:200ms">' +
+      '<div class="acct-section-head">' +
+        '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.award + '</i>Badges</h2>' +
+        '<span class="acct-badges-count">' + got + ' of ' + list.length + ' unlocked</span>' +
+      '</div>' +
+      '<ul class="acct-badges">' + list.map(function (x, i) {
+        return '<li class="acct-badge acct-badge--' + x.tone + (x.earned ? ' is-earned' : '') + '" style="--i:' + i + '">' +
+          '<span class="acct-badge-icon" aria-hidden="true">' + x.icon + (x.earned ? '' : '<em>' + ICON.lock + '</em>') + '</span>' +
+          '<b>' + x.name + '</b>' +
+          '<span><span class="acct-sr">' + (x.earned ? 'Unlocked: ' : 'Locked: ') + '</span>' + x.hint + '</span>' +
+        '</li>';
+      }).join('') + '</ul>' +
+    '</section>';
+  }
+
+  function inviteLink(me) {
+    var b = me.bonuses || {};
+    return ACCOUNT_URL + '?ref=' + encodeURIComponent((b.referral && b.referral.code) || me.memberNumber);
+  }
+
+  // Birthday points and the invite link (panel 0080). Nothing until the
+  // panel sends them.
+  function bonusSection(me) {
+    var b = me.bonuses;
+    if (!b) return '';
+    var bd = b.birthday || {}, rf = b.referral || {};
+    var bdPts = num(bd.points || 50);
+    var month = bd.month ? new Date(2000, bd.month - 1, 1).toLocaleDateString('en-US', { month: 'long' }) : '';
+    var party = bd.thisMonth && bd.receivedThisYear;
+    var bdText = party
+      ? '<b>Happy birthday, ' + esc(firstName(me.fullName) || 'friend') + '!</b><span>We added <strong>' + bdPts + ' bonus points</strong> to your balance. Treat yourself.</span>'
+      : bd.thisMonth
+        ? '<b>Happy birthday month!</b><span>Your <strong>' + bdPts + ' birthday points</strong> arrive as soon as we’ve checked your ID.</span>'
+        : '<b>Birthday points</b><span><strong>' + bdPts + ' points</strong> every year in your birthday month' +
+          (month ? ' — yours is ' + esc(month) : '') + '.' + (bd.eligible ? '' : ' They start once we’ve checked your ID.') + '</span>';
+
+    var friendPts = num(rf.friendPoints || 50), myPts = num(rf.points || 100);
+    var min = rf.minCents ? ' of ' + money(rf.minCents) + ' or more' : '';
+    var stats = rf.joined > 0
+      ? '<p class="acct-invite-stats">' + ICON.users + '<span><b>' + num(rf.joined) + '</b> friend' + (rf.joined === 1 ? '' : 's') + ' joined · <b>' + num(rf.rewarded || 0) + '</b> bonus' + (rf.rewarded === 1 ? '' : 'es') + ' earned</span></p>'
+      : '';
+    var joinedWith = rf.referredBy
+      ? '<p class="acct-invite-note">' + (rf.friendBonus
+          ? 'You got ' + friendPts + ' points for joining with ' + esc(rf.referredBy) + '’s invite.'
+          : 'You joined with ' + esc(rf.referredBy) + '’s invite — you both get points after your first purchase' + min + '.') + '</p>'
+      : '';
+
+    return '<section class="acct-bonuses acct-rise" style="--d:220ms" aria-label="Bonus points">' +
+      '<div class="acct-bonus acct-bonus--birthday' + (bd.thisMonth ? ' is-now' : '') + '">' +
+        '<span class="acct-bonus-icon" aria-hidden="true">' + ICON.cake + '</span>' +
+        '<div class="acct-bonus-text">' + bdText + '</div>' +
+      '</div>' +
+      '<div class="acct-bonus acct-bonus--invite">' +
+        '<span class="acct-bonus-icon" aria-hidden="true">' + ICON.users + '</span>' +
+        '<div class="acct-bonus-text"><b>Invite a friend</b><span>They get <strong>' + friendPts + ' points</strong> and you get <strong>' + myPts + '</strong> after their first purchase' + min + '.</span></div>' +
+        '<div class="acct-invite">' +
+          '<span class="acct-invite-link">' + ICON.link + '<input id="acctInviteLink" type="text" readonly value="' + esc(inviteLink(me)) + '" aria-label="Your invite link"></span>' +
+          '<button type="button" class="acct-invite-btn" id="acctInviteCopy">Copy</button>' +
+          '<button type="button" class="acct-invite-btn acct-invite-btn--share" id="acctInviteShare" hidden>' + ICON.share + 'Share</button>' +
+        '</div>' +
+        stats + joinedWith +
+      '</div>' +
+    '</section>';
+  }
+
+  function bindInvite() {
+    var input = document.getElementById('acctInviteLink');
+    if (!input) return;
+    var copy = document.getElementById('acctInviteCopy');
+    var share = document.getElementById('acctInviteShare');
+    var timer = null;
+    copy.addEventListener('click', function () {
+      var done = function () {
+        copy.textContent = 'Copied!';
+        copy.classList.add('is-done');
+        clearTimeout(timer);
+        timer = setTimeout(function () { copy.textContent = 'Copy'; copy.classList.remove('is-done'); }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(input.value).then(done, function () { input.select(); });
+      } else {
+        input.select();
+        try { if (document.execCommand('copy')) done(); } catch (e) {}
+      }
+    });
+    if (navigator.share) {
+      share.hidden = false;
+      share.addEventListener('click', function () {
+        navigator.share({
+          title: 'East Village Buyers Rewards',
+          text: 'Join EVB Rewards with my link and get points after your first purchase.',
+          url: input.value
+        }).catch(function () {});
+      });
+    }
+    input.addEventListener('focus', function () { input.select(); });
   }
 
   /* "Happening now": orders on their way and buy-backs still open. */
@@ -758,7 +1004,7 @@
   function itemsTitle(e) {
     var items = (e.items || []).filter(function (i) { return e.kind !== 'trade' || i.side === 'out'; });
     if (!items.length) items = e.items || [];
-    if (!items.length) return e.kind === 'visit' ? 'Points for your visit' : KIND[e.kind].label;
+    if (!items.length) return e.kind === 'visit' ? 'Points for your visit' : e.kind === 'bonus' ? e.reference : KIND[e.kind].label;
     return items[0].name + (items.length > 1 ? ' + ' + (items.length - 1) + ' more' : '');
   }
 
@@ -822,8 +1068,9 @@
     else if (e.kind === 'trade') {
       amount = e.tradeCashDirection === 'even' ? 'Even' : money(e.totalCents);
       note = e.tradeCashDirection === 'we_pay' ? 'Paid to you' : e.tradeCashDirection === 'customer_pays' ? 'You paid' : 'Straight swap';
-    } else { amount = money(e.totalCents); note = ''; }
-    if (e.points > 0) note = '+' + num(e.points) + ' pts';
+    } else if (e.kind === 'bonus') { amount = '+' + num(e.points) + ' pts'; note = 'Bonus'; }
+    else { amount = money(e.totalCents); note = ''; }
+    if (e.points > 0 && e.kind !== 'bonus') note = '+' + num(e.points) + ' pts';
 
     var chip = e.kind === 'online'
       ? '<span class="acct-chip acct-chip--' + esc(e.status) + '">' + esc(ONLINE_STATUS[e.status] || e.status) + '</span>' : '';
@@ -874,6 +1121,8 @@
       sums.push(['We paid you', money(e.totalCents), true]);
     } else if (e.kind === 'visit') {
       sums.push([VISIT_LABEL[e.visitKind] || 'Your visit', money(e.totalCents), true]);
+    } else if (e.kind === 'bonus') {
+      sums.push(['Bonus points', '+' + num(e.points), true]);
     } else if (e.kind === 'trade') {
       sums.push(['Trade-in value', money(e.tradeInCents)]);
       sums.push([e.tradeCashDirection === 'we_pay' ? 'We paid you' : e.tradeCashDirection === 'customer_pays' ? 'You paid' : 'Difference',
@@ -1581,8 +1830,33 @@
       if (me.onboarded === false) startOnboarding(me);
       else if (!me.fullName) startOnboarding(me, { step: 'name', only: true });
       else if (me.locked) renderLocked(me);
-      else renderDash(me);
+      else withBonuses(me).then(renderDash);
     }, function (e) { renderProblem(friendly(e)); });
+  }
+
+  // Birthday and invite points (panel 0080). A friend's invite is linked
+  // first, then any bonus that's due lands before the page shows the
+  // balance. A panel without 0080 shows the page without them.
+  function withBonuses(me) {
+    var ref = null;
+    try { ref = localStorage.getItem(REF_KEY); } catch (e) {}
+    var linked = ref
+      ? sb.rpc('member_set_referrer', { p_code: ref }).then(function (r) {
+          // Kept only when the function isn't there yet, to try next time.
+          if (!r.error || !/Could not find the function|does not exist/i.test(r.error.message || '')) {
+            try { localStorage.removeItem(REF_KEY); } catch (e) {}
+          }
+        }, function () {})
+      : Promise.resolve();
+    return linked.then(function () { return sb.rpc('member_bonuses'); }).then(function (r) {
+      if (r.error || !r.data) return me;
+      if (!(r.data.awarded > 0)) { me.bonuses = r.data; return me; }
+      return sb.rpc('member_me').then(function (again) {
+        var fresh = again.error || !again.data ? me : again.data;
+        fresh.bonuses = r.data;
+        return fresh;
+      });
+    }).catch(function () { return me; });
   }
 
   /* ------------------------------------------------------------ preview */
@@ -1597,7 +1871,16 @@
     pointsExpireAt: daysAgo(-55), expiredPoints: 0,
     rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, expireDays: EXPIRE_DAYS, dailyCapCents: 2000, prizes: PRIZES },
     purchases: [],
-    activity: [{ kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, createdAt: daysAgo(5) }],
+    activity: [
+      { kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, createdAt: daysAgo(5) },
+      { kind: 'redeem', points: -200, creditCents: 1000, prize: 'off_10', createdAt: daysAgo(63) }
+    ],
+    bonuses: {
+      awarded: 0,
+      birthday: { points: 50, month: 5, thisMonth: false, eligible: false, receivedThisYear: false, receivedEver: false },
+      referral: { code: 'M1024', points: 100, friendPoints: 50, minCents: 2500, max: 10, joined: 2, rewarded: 1, referredBy: null, friendBonus: false },
+      history: [{ bonus: 'referral', points: 100, createdAt: daysAgo(12) }]
+    },
     history: [
       { kind: 'online', reference: 'EVB-261019-7QX2', occurredAt: daysAgo(3), status: 'shipped', fulfillment: 'ship', shipService: 'Express shipping',
         items: [{ name: 'Air Jordan 1 High “Chicago”', quantity: 1, amountCents: 45000, imageUrl: '' }],
@@ -1649,6 +1932,12 @@
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     if (mode === 'signup') return previewAfterCode();
     if (mode === 'address') { var ad = JSON.parse(JSON.stringify(SAMPLE)); return startOnboarding(ad, { step: 'address' }); }
+    if (mode === 'birthday') {
+      var bday = JSON.parse(JSON.stringify(SAMPLE));
+      bday.bonuses.birthday = { points: 50, month: new Date().getMonth() + 1, thisMonth: true, eligible: true, receivedThisYear: true, receivedEver: true };
+      bday.bonuses.history.unshift({ bonus: 'birthday', points: 50, createdAt: daysAgo(0) });
+      return renderDash(bday, { preview: true });
+    }
     if (mode === 'rejected') { var r = JSON.parse(JSON.stringify(SAMPLE)); r.idStatus = 'rejected'; r.idNote = 'The name doesn’t match your account'; return renderLocked(r, { preview: true }); }
     renderDash(SAMPLE, { preview: true });
   }
@@ -1661,6 +1950,13 @@
     var nextPath = decodeURIComponent(nextParam[1]);
     if (/^\/store\/[A-Za-z0-9/_-]*$/.test(nextPath)) ss(NEXT_KEY, nextPath);
     history.replaceState(null, '', location.pathname + location.search.replace(/[?&]next=[^&#]+/, '').replace(/^&/, '?') + location.hash);
+  }
+
+  // An invite link (?ref=M1024) waits here until the friend has signed in.
+  var refParam = /[?&]ref=(M\d{1,9})(?=&|#|$)/i.exec(location.search);
+  if (refParam) {
+    try { localStorage.setItem(REF_KEY, refParam[1].toUpperCase()); } catch (e) {}
+    history.replaceState(null, '', location.pathname + location.search.replace(/[?&]ref=[^&#]+/, '').replace(/^&/, '?') + location.hash);
   }
 
   var preview = /[?&]preview(=([a-z]+))?/.exec(location.search);
