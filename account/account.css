@@ -1274,6 +1274,9 @@
 .acct-badge--violet { --b: #7c3aed; }
 .acct-badge--amber { --b: #f59e0b; }
 .acct-badge--gold { --b: #ca8a04; }
+.acct-badge--red { --b: #dc2626; }
+.acct-badge--silver { --b: #8a94a6; }
+.acct-badge--black { --b: #27272a; }
 .acct-badge-icon {
   position: relative; width: 56px; height: 56px; margin-bottom: 8px; border-radius: 50%;
   display: grid; place-items: center; background: #f1efec; color: #bdb7af;
@@ -1294,6 +1297,38 @@
 .acct-badge:not(.is-earned) b { color: var(--evb-muted); }
 .acct-badge > span:last-child { margin-top: 2px; font-size: 11px; line-height: 1.35; color: var(--evb-faint); }
 @keyframes acct-badge-pop { from { transform: scale(0.6); opacity: 0; } }
+/* How far along a locked badge is. */
+.acct-badge-prog { display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 6px; }
+.acct-badge-bar { display: block; width: 100%; max-width: 84px; height: 5px; border-radius: 99px; background: #efece8; overflow: hidden; }
+.acct-badge-bar i { display: block; height: 100%; border-radius: inherit; background: var(--b); }
+.acct-badge-prog small { font-size: 10.5px; font-weight: 700; color: var(--evb-muted); font-variant-numeric: tabular-nums; }
+.acct-badge-go {
+  margin-top: 8px; padding: 6px 12px; border: 0; border-radius: 99px; background: var(--evb-ink); color: #fff;
+  font: 700 11.5px 'Inter', sans-serif; cursor: pointer;
+}
+.acct-badge-go:hover { background: #000; }
+.acct-badge-go:focus-visible { outline: 2px solid var(--evb-orange); outline-offset: 2px; }
+.acct-badges-meter { display: block; height: 6px; margin: 2px 0 16px; border-radius: 99px; background: #efece8; overflow: hidden; }
+.acct-badges-meter i { display: block; height: 100%; width: var(--p); border-radius: inherit; background: linear-gradient(90deg, var(--evb-orange), #f59e0b); }
+.acct-badges-sub {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 0 2px;
+  font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--evb-muted);
+}
+.acct-badges-sub span { letter-spacing: 0; text-transform: none; font-weight: 600; color: var(--evb-faint); }
+.acct-badges-next { margin-bottom: 14px; padding: 12px 12px 2px; border-radius: 16px; background: #faf8f5; box-shadow: inset 0 0 0 1px var(--evb-line); }
+.acct-badges--next { margin-bottom: 8px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.acct-badges-group + .acct-badges-group { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--evb-line); }
+.acct-badges-more { margin: 0 0 6px; text-align: center; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--evb-faint); }
+.acct-badges-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 6px; padding: 11px 14px;
+  border: 1px solid var(--evb-line); border-radius: 12px; background: #fff; color: var(--evb-ink);
+  font: 700 13px 'Inter', sans-serif; cursor: pointer;
+}
+.acct-badges-toggle:hover { background: #faf8f5; }
+.acct-badges-toggle:focus-visible { outline: 2px solid var(--evb-orange); outline-offset: 2px; }
+.acct-badges-toggle svg { width: 16px; height: 16px; transform: rotate(-90deg); transition: transform 0.2s; }
+.acct-badges-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+.acct-badges-all[hidden], .acct-badges-short[hidden] { display: none; }
 
 /* Birthday points and the invite link (0080). */
 .acct-bonuses { display: grid; gap: 12px; margin-top: 22px; }

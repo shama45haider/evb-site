@@ -123,6 +123,19 @@
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
     shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
     close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    crown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 11H5z"/><path d="M5 21h14"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4 0 7-2.7 7-6.8 0-3.4-2.3-5.7-3.9-7.6-.4 2-1.4 3.2-2.6 3.7C12.8 7.6 11.4 4.3 8.5 2c.3 3.4-1.4 5.6-2.8 7.5C4.6 11 4 12.6 4 14.9 4 19.2 7.6 22 12 22z"/></svg>',
+    watch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"/><path d="M12 9.5V12l1.5 1.5"/><path d="M9 6.5 9.5 2h5l.5 4.5M9 17.5l.5 4.5h5l.5-4.5"/></svg>',
+    gem: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6z"/></svg>',
+    coin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>',
+    glasses: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="15" r="3.5"/><circle cx="17.5" cy="15" r="3.5"/><path d="M10 15c1.3-1 2.7-1 4 0M3 15V9l2-3M21 15V9l-2-3"/></svg>',
+    shirt: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 3 6l2 5 3-1v11h8V10l3 1 2-5-5-3c-.5 1.5-2 2.5-4 2.5S8.5 4.5 8 3z"/></svg>',
+    gamepad: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3M15.5 12h.01M18 14h.01"/></svg>',
+    shoe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18v-6l4-1 3-5 3 2c1 3 4 4 8 5 1.2.3 2 1.3 2 2.5V18z"/><path d="M2 15h20M10 9l1.6.9M8.6 11.2l1.6.9"/></svg>',
+    zap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+    trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 16v5M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-9-9a4.6 4.6 0 0 1 9-3 4.6 4.6 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>',
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
     qr: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h3v3"/></svg>',
     sliders: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
   };
@@ -807,6 +820,7 @@
 
     bindHistory(history, me);
     bindInvite();
+    bindBadges(me);
     fillQr(me);
     fillAvatar(me);
     document.getElementById('acctSignOut').addEventListener('click', function () {
@@ -908,50 +922,235 @@
       '<b data-count="' + v + '"' + (isMoney ? ' data-money' : '') + '>' + (isMoney ? money(v) : num(v)) + '</b></div>';
   }
 
-  // Badges for the things members do with us. Worked out here from what
-  // member_me sends; birthday and invite ones need panel 0080.
+  // Badges for the things members do with us, in groups. All worked out here
+  // from what member_me sends (history is its last 300 rows, activity its
+  // last 50); birthday and invite ones need panel 0080. Counted ones carry
+  // [have, goal] so locked badges can show how far along the member is.
+  var BADGE_GROUPS = [
+    ['start', 'Getting started'], ['shop', 'Shopping'], ['sell', 'Selling and trading'],
+    ['visits', 'Visits'], ['points', 'Points'], ['prizes', 'Prizes'],
+    ['level', 'Levels and loyalty'], ['dept', 'Collections'], ['friends', 'Friends and bonuses']
+  ];
+  // Item departments (deptOf) with a badge each.
+  var DEPT_BADGES = [
+    ['sneakers', 'Sneakerhead', 'Buy or sell sneakers', ICON.shoe, 'orange'],
+    ['watch', 'Timekeeper', 'Buy or sell a watch', ICON.watch, 'blue'],
+    ['jewelry', 'Iced out', 'Buy or sell jewelry', ICON.gem, 'teal'],
+    ['gold', 'Gold rush', 'Buy or sell gold coins or bullion', ICON.coin, 'gold'],
+    ['silver', 'Silver lining', 'Buy or sell silver', ICON.sparkle, 'silver'],
+    ['handbag', 'Bag check', 'Buy or sell a designer bag', ICON.bag, 'pink'],
+    ['sunglasses', 'Shady', 'Buy or sell sunglasses', ICON.glasses, 'violet'],
+    ['streetwear', 'Streetwise', 'Buy or sell streetwear', ICON.shirt, 'red'],
+    ['electronics', 'Tech head', 'Buy or sell electronics', ICON.gamepad, 'blue'],
+    ['collectible', 'Collector', 'Buy or sell a collectible', ICON.box, 'amber']
+  ];
+
   function badgesOf(me, sum, history) {
     var done = history.filter(function (e) { return e.kind !== 'bonus' && !(e.kind === 'online' && e.status === 'cancelled'); });
     var life = Number(me.lifetimePoints) || 0;
     var b = me.bonuses;
+    function count(fn) { return done.filter(fn).length; }
+    function isBuy(e) { return e.kind === 'online' || e.kind === 'store' || (e.kind === 'visit' && e.visitKind === 'bought'); }
+    var buys = count(isBuy);
+    var shopBuys = count(function (e) { return e.kind === 'store' || (e.kind === 'visit' && e.visitKind === 'bought'); });
+    var sells = count(function (e) { return e.kind === 'sold' || (e.kind === 'visit' && e.visitKind === 'sold'); });
+    var trades = count(function (e) { return e.kind === 'trade' || (e.kind === 'visit' && e.visitKind === 'traded'); });
+    var online = done.filter(function (e) { return e.kind === 'online'; });
+    var biggestBuy = Math.max.apply(null, [0].concat(done.filter(isBuy).map(function (e) {
+      return Math.max((e.totalCents || 0) - (e.refundedCents || 0), 0);
+    })));
+    var biggestSale = Math.max.apply(null, [0].concat(done.filter(function (e) { return e.kind === 'sold'; }).map(function (e) { return e.totalCents || 0; })));
+
+    // Months the member came in or ordered: the longest run in a row, and
+    // the most visits and points in one month.
+    var perMonth = {}, ptsMonth = {};
+    done.forEach(function (e) {
+      var d = new Date(e.occurredAt);
+      if (!isNaN(d)) perMonth[d.getFullYear() * 12 + d.getMonth()] = (perMonth[d.getFullYear() * 12 + d.getMonth()] || 0) + 1;
+    });
+    history.forEach(function (e) {
+      var d = new Date(e.occurredAt);
+      if (e.points > 0 && !isNaN(d)) ptsMonth[d.getFullYear() * 12 + d.getMonth()] = (ptsMonth[d.getFullYear() * 12 + d.getMonth()] || 0) + e.points;
+    });
+    var months = Object.keys(perMonth).map(Number).sort(function (x, y) { return x - y; });
+    var run = 0, streak = 0;
+    months.forEach(function (m, i) { run = i && m === months[i - 1] + 1 ? run + 1 : 1; streak = Math.max(streak, run); });
+    var busiest = Math.max.apply(null, [0].concat(months.map(function (m) { return perMonth[m]; })));
+    var bestPts = Math.max.apply(null, [0].concat(Object.keys(ptsMonth).map(function (m) { return ptsMonth[m]; })));
+    var weekend = done.some(function (e) { var day = new Date(e.occurredAt).getDay(); return day === 0 || day === 6; });
+
+    var depts = {};
+    done.forEach(function (e) { (e.items || []).forEach(function (it) { var d = deptOf(it); if (d) depts[d] = true; }); });
+
+    var redeems = (me.activity || []).filter(function (a) { return a.kind === 'redeem'; });
+    var saved = redeems.reduce(function (n, a) { return n + (Number(a.creditCents) || 0); }, 0);
+    var prizes = prizesOf(me.rules);
+    var low = prizes[0], top = prizes[prizes.length - 1];
+
+    var joined = me.joinedAt ? new Date(me.joinedAt) : null;
+    var memberMonths = joined && !isNaN(joined) ? Math.max(Math.floor((Date.now() - joined) / (30.44 * 864e5)), 0) : 0;
+    var rf = (b && b.referral) || {};
+
+    // [group, name, how to earn it, icon, tone, earned or [have, goal], unit, secret, [action, button]]
+    // A secret badge only shows once it's earned.
     var list = [
-      ['Welcome', 'Joined EVB Rewards', ICON.star, 'orange', true],
-      ['First buy', 'Buy something from us', ICON.bag, 'orange',
-        sum.bought > 0 || done.some(function (e) { return e.kind === 'visit' && e.visitKind === 'bought'; })],
-      ['First sale', 'Sell something to us', ICON.cash, 'green',
+      ['start', 'Welcome', 'Join EVB Rewards', ICON.star, 'orange', true],
+      ['start', 'Verified', 'Get your ID checked', ICON.shield, 'teal', me.idStatus === 'verified'],
+      ['start', 'Picture perfect', 'Add a profile photo', ICON.camera, 'pink', !!me.avatarPath, '', false, ['photo', 'Add a photo']],
+      ['start', 'In the loop', 'Turn on new-arrival emails in Your details', ICON.mail, 'blue', !!me.marketingOptIn],
+      ['start', 'Founding member', 'Joined EVB Rewards in 2026', ICON.crown, 'gold', !!joined && joined < new Date('2027-01-01T05:00:00Z'), '', true],
+
+      ['shop', 'First buy', 'Buy something from us', ICON.bag, 'orange', sum.bought > 0 || buys > 0],
+      ['shop', 'Online shopper', 'Place an online order', ICON.truck, 'blue', sum.orders > 0],
+      ['shop', 'Counter find', 'Buy something in the shop on Avenue A', ICON.store, 'violet', shopBuys > 0],
+      ['shop', 'Picked up', 'Pick up an online order at the shop', ICON.pin, 'teal', online.some(function (e) { return e.fulfillment === 'pickup'; })],
+      ['shop', 'Fast lane', 'Choose express shipping', ICON.zap, 'amber', online.some(function (e) { return /express|overnight|priority/i.test(e.shipService || ''); })],
+      ['shop', 'Repeat customer', 'Buy from us 5 times', ICON.heart, 'red', [buys, 5]],
+      ['shop', 'Big ticket', 'Spend $500 or more at once', ICON.tag, 'green', biggestBuy >= 50000],
+      ['shop', 'Treat yourself', 'Spend $250 with us', ICON.gift, 'pink', [sum.bought, 25000], 'money'],
+      ['shop', 'Big spender', 'Spend $1,000 with us', ICON.layers, 'gold', [sum.bought, 100000], 'money'],
+      ['shop', 'High roller', 'Spend $5,000 with us', ICON.gem, 'black', [sum.bought, 500000], 'money'],
+
+      ['sell', 'First sale', 'Sell something to us', ICON.cash, 'green',
         sum.sold > 0 || done.some(function (e) { return e.kind === 'visit' && e.visitKind !== 'bought'; })],
-      ['Online shopper', 'Place an online order', ICON.truck, 'blue', sum.orders > 0],
-      ['Verified', 'Get your ID checked', ICON.shield, 'teal', me.idStatus === 'verified'],
-      ['Prize winner', 'Use points for a prize', ICON.gift, 'pink',
-        (me.activity || []).some(function (a) { return a.kind === 'redeem'; })],
-      ['Regular', 'Shop or sell with us 5 times', ICON.store, 'violet', done.length >= 5],
-      ['1K club', 'Earn 1,000 points', ICON.sparkle, 'amber', life >= 1000],
-      ['Big spender', 'Spend $1,000 with us', ICON.layers, 'gold', sum.bought >= 100000],
-      ['Gold level', 'Reach Gold', ICON.award, 'gold', tierOf(life) >= 2]
+      ['sell', 'First trade', 'Trade something in for something new', ICON.swap, 'violet', trades > 0],
+      ['sell', 'Swap master', 'Trade with us 3 times', ICON.swap, 'blue', [trades, 3]],
+      ['sell', 'Steady seller', 'Sell to us 5 times', ICON.cash, 'teal', [sells, 5]],
+      ['sell', 'Big sale', 'Sell us $1,000 or more at once', ICON.zap, 'amber', biggestSale >= 100000],
+      ['sell', 'Cashed in', 'Sell or trade in $1,000 with us', ICON.coin, 'gold', [sum.sold, 100000], 'money'],
+      ['sell', 'Top seller', 'Sell or trade in $10,000 with us', ICON.trophy, 'black', [sum.sold, 1000000], 'money'],
+
+      ['visits', 'Regular', 'Shop, sell or order 5 times', ICON.store, 'violet', [done.length, 5]],
+      ['visits', 'Familiar face', 'Shop, sell or order 10 times', ICON.users, 'blue', [done.length, 10]],
+      ['visits', 'Local legend', 'Shop, sell or order 25 times', ICON.star, 'gold', [done.length, 25]],
+      ['visits', 'Avenue A icon', 'Shop, sell or order 50 times', ICON.crown, 'black', [done.length, 50]],
+      ['visits', 'Weekender', 'Visit or order on a Saturday or Sunday', ICON.sun, 'amber', weekend],
+      ['visits', 'Busy month', 'Visit or order 3 times in one month', ICON.calendar, 'teal', [busiest, 3]],
+      ['visits', 'On a roll', 'Visit or order 3 months in a row', ICON.flame, 'red', [streak, 3], 'months'],
+      ['visits', 'Hot streak', 'Visit or order 6 months in a row', ICON.flame, 'orange', [streak, 6], 'months'],
+
+      ['points', 'First points', 'Earn your first points', ICON.sparkle, 'orange', life > 0],
+      ['points', 'Century', 'Earn 100 points', ICON.star, 'amber', [life, 100], 'points'],
+      ['points', '500 club', 'Earn 500 points', ICON.star, 'teal', [life, 500], 'points'],
+      ['points', '1K club', 'Earn 1,000 points', ICON.sparkle, 'amber', [life, 1000], 'points'],
+      ['points', '2.5K club', 'Earn 2,500 points', ICON.sparkle, 'violet', [life, 2500], 'points'],
+      ['points', '5K club', 'Earn 5,000 points', ICON.trophy, 'gold', [life, 5000], 'points'],
+      ['points', 'Points legend', 'Earn 10,000 points', ICON.crown, 'black', [life, 10000], 'points'],
+      ['points', 'Big month', 'Earn 500 points in one month', ICON.chart, 'green', [bestPts, 500], 'points'],
+
+      ['prizes', 'Prize winner', 'Use points for a prize', ICON.gift, 'pink', redeems.length > 0],
+      ['prizes', 'First prize', 'Use points for ' + low.label.charAt(0).toLowerCase() + low.label.slice(1), ICON.truck, 'blue',
+        redeems.some(function (a) { return a.prize === low.code; })],
+      ['prizes', 'Top shelf', 'Use points for ' + top.label.charAt(0).toLowerCase() + top.label.slice(1), ICON.trophy, 'gold',
+        redeems.some(function (a) { return a.prize === top.code; })],
+      ['prizes', 'Prize hunter', 'Use points for 5 prizes', ICON.gift, 'violet', [redeems.length, 5]],
+      ['prizes', 'Smart saver', 'Save $50 with prizes', ICON.tag, 'green', [saved, 5000], 'money'],
+
+      ['level', 'Silver level', 'Reach Silver at ' + num(TIERS[1].min) + ' lifetime points', ICON.award, 'silver', [life, TIERS[1].min], 'points'],
+      ['level', 'Gold level', 'Reach Gold at ' + num(TIERS[2].min) + ' lifetime points', ICON.award, 'gold', [life, TIERS[2].min], 'points'],
+      ['level', 'Black level', 'Reach Black at ' + num(TIERS[3].min) + ' lifetime points', ICON.crown, 'black', [life, TIERS[3].min], 'points'],
+      ['level', 'Settling in', 'Be a member for 3 months', ICON.calendar, 'teal', [memberMonths, 3], 'months'],
+      ['level', 'Half a year', 'Be a member for 6 months', ICON.calendar, 'blue', [memberMonths, 6], 'months'],
+      ['level', 'One year in', 'Be a member for a year', ICON.cake, 'pink', [memberMonths, 12], 'months'],
+      ['level', 'Old friend', 'Be a member for 2 years', ICON.heart, 'red', [memberMonths, 24], 'months']
     ];
+    DEPT_BADGES.forEach(function (d) { list.push(['dept', d[1], d[2], d[3], d[4], !!depts[d[0]]]); });
+    list.push(['dept', 'All-rounder', 'Buy or sell in 5 different collections', ICON.layers, 'violet', [Object.keys(depts).length, 5]]);
     if (b) {
-      list.push(['Birthday', 'Get your birthday points', ICON.cake, 'pink', !!(b.birthday && b.birthday.receivedEver)]);
-      list.push(['Friend bringer', 'Invite a friend who shops', ICON.users, 'blue', !!(b.referral && b.referral.rewarded > 0)]);
+      list.push(['friends', 'Birthday', 'Get your birthday points', ICON.cake, 'pink', !!(b.birthday && b.birthday.receivedEver)]);
+      list.push(['friends', 'Plus one', 'Join with a friend’s invite', ICON.link, 'teal', !!rf.friendBonus, '', !rf.canLink]);
+      list.push(['friends', 'Friend bringer', 'Invite a friend who shops', ICON.users, 'blue', (rf.rewarded || 0) > 0]);
+      list.push(['friends', 'Crew', 'Invite 3 friends who shop', ICON.users, 'violet', [rf.rewarded || 0, 3], 'friends']);
+      list.push(['friends', 'Squad goals', 'Invite 5 friends who shop', ICON.trophy, 'gold', [rf.rewarded || 0, 5], 'friends']);
     }
-    return list.map(function (x) { return { name: x[0], hint: x[1], icon: x[2], tone: x[3], earned: !!x[4] }; });
+    return list.map(function (x) {
+      var n = Array.isArray(x[5]) ? x[5] : null;
+      var have = n ? Math.max(Number(n[0]) || 0, 0) : 0;
+      return {
+        group: x[0], name: x[1], hint: x[2], icon: x[3], tone: x[4],
+        earned: n ? have >= n[1] : !!x[5], have: have, goal: n ? n[1] : 0, unit: x[6] || '', secret: !!x[7],
+        action: x[8] || null
+      };
+    }).filter(function (x) { return x.earned || !x.secret; });
   }
 
+  // "3 of 5", "$420 of $1,000", "2 of 6 months"
+  function badgeCount(x) {
+    if (x.unit === 'money') return money(Math.min(x.have, x.goal)) + ' of ' + money(x.goal);
+    return num(Math.min(x.have, x.goal)) + ' of ' + num(x.goal) + (x.unit ? ' ' + x.unit : '');
+  }
+
+  function badgeItem(x, i) {
+    var pct = x.goal && !x.earned ? Math.round(Math.min(x.have / x.goal, 1) * 100) : 0;
+    return '<li class="acct-badge acct-badge--' + x.tone + (x.earned ? ' is-earned' : '') + '" style="--i:' + i + '">' +
+      '<span class="acct-badge-icon" aria-hidden="true">' + x.icon + (x.earned ? '' : '<em>' + ICON.lock + '</em>') + '</span>' +
+      '<b>' + esc(x.name) + '</b>' +
+      '<span><span class="acct-sr">' + (x.earned ? 'Unlocked: ' : 'Locked: ') + '</span>' + esc(x.hint) +
+        (x.goal && !x.earned
+          ? '<span class="acct-badge-prog"><span class="acct-badge-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span><small>' + badgeCount(x) + '</small></span>'
+          : '') +
+      '</span>' +
+      (x.action && !x.earned ? '<button type="button" class="acct-badge-go" data-badge-go="' + x.action[0] + '">' + x.action[1] + '</button>' : '') +
+    '</li>';
+  }
+
+  // Earned badges up front, the three locked ones closest to done, and every
+  // badge by group behind "See all".
   function badgesSection(me, sum, history) {
     var list = badgesOf(me, sum, history);
-    var got = list.filter(function (x) { return x.earned; }).length;
-    return '<section class="acct-section acct-rise" style="--d:200ms">' +
+    var earned = list.filter(function (x) { return x.earned; });
+    var close = list.filter(function (x) { return !x.earned; }).map(function (x, i) {
+      return { x: x, i: i, p: x.goal ? Math.min(x.have / x.goal, 1) : 0 };
+    }).sort(function (a, c) { return c.p - a.p || a.i - c.i; }).slice(0, 3).map(function (o) { return o.x; });
+    var pct = Math.round((earned.length / list.length) * 100);
+    var SHOW = 12;
+    return '<section class="acct-section acct-rise" style="--d:200ms" id="acctBadges">' +
       '<div class="acct-section-head">' +
         '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.award + '</i>Badges</h2>' +
-        '<span class="acct-badges-count">' + got + ' of ' + list.length + ' unlocked</span>' +
+        '<span class="acct-badges-count">' + earned.length + ' of ' + list.length + ' unlocked</span>' +
       '</div>' +
-      '<ul class="acct-badges">' + list.map(function (x, i) {
-        return '<li class="acct-badge acct-badge--' + x.tone + (x.earned ? ' is-earned' : '') + '" style="--i:' + i + '">' +
-          '<span class="acct-badge-icon" aria-hidden="true">' + x.icon + (x.earned ? '' : '<em>' + ICON.lock + '</em>') + '</span>' +
-          '<b>' + x.name + '</b>' +
-          '<span><span class="acct-sr">' + (x.earned ? 'Unlocked: ' : 'Locked: ') + '</span>' + x.hint + '</span>' +
-        '</li>';
-      }).join('') + '</ul>' +
+      '<span class="acct-badges-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Badges unlocked"><i style="--p:' + pct + '%"></i></span>' +
+      (close.length
+        ? '<div class="acct-badges-next"><p class="acct-badges-sub">Up next</p>' +
+            '<ul class="acct-badges acct-badges--next">' + close.map(badgeItem).join('') + '</ul></div>'
+        : '') +
+      '<div class="acct-badges-short">' +
+        '<p class="acct-badges-sub">Unlocked</p>' +
+        '<ul class="acct-badges">' + earned.slice(0, SHOW).map(badgeItem).join('') + '</ul>' +
+        (earned.length > SHOW ? '<p class="acct-badges-more">+' + (earned.length - SHOW) + ' more unlocked</p>' : '') +
+      '</div>' +
+      '<div class="acct-badges-all" id="acctBadgesAll" hidden>' + BADGE_GROUPS.map(function (g) {
+        var inGroup = list.filter(function (x) { return x.group === g[0]; });
+        if (!inGroup.length) return '';
+        return '<div class="acct-badges-group">' +
+          '<p class="acct-badges-sub">' + g[1] + '<span>' + inGroup.filter(function (x) { return x.earned; }).length + ' of ' + inGroup.length + '</span></p>' +
+          '<ul class="acct-badges">' + inGroup.map(badgeItem).join('') + '</ul>' +
+        '</div>';
+      }).join('') + '</div>' +
+      '<button type="button" class="acct-badges-toggle" aria-expanded="false" aria-controls="acctBadgesAll">' +
+        '<span>See all ' + list.length + ' badges</span>' + ICON.back +
+      '</button>' +
     '</section>';
+  }
+
+  function bindBadges(me) {
+    var sec = document.getElementById('acctBadges');
+    if (!sec) return;
+    // The photo step from sign-up, on its own: the only place to add one.
+    Array.prototype.forEach.call(sec.querySelectorAll('[data-badge-go="photo"]'), function (b) {
+      b.addEventListener('click', function () { startOnboarding(me, { step: 'photo', only: true }); });
+    });
+    var btn = sec.querySelector('.acct-badges-toggle');
+    var all = sec.querySelector('.acct-badges-all'), short = sec.querySelector('.acct-badges-short');
+    var label = btn.querySelector('span').textContent;
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      all.hidden = !open;
+      short.hidden = open;
+      btn.querySelector('span').textContent = open ? 'Show fewer' : label;
+      if (!open) sec.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    });
   }
 
   function inviteLink(me) {
@@ -1672,7 +1871,7 @@
           '<p class="acct-error" id="obErr" role="alert"></p>' +
           '<div class="acct-ob-actions">' +
             '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit" id="obNext">' + primary + '</button>' +
-            (step === 'photo' ? '<button type="button" class="acct-link acct-ob-skip" id="obSkip">Skip for now</button>' : '') +
+            (step === 'photo' && !state.only ? '<button type="button" class="acct-link acct-ob-skip" id="obSkip">Skip for now</button>' : '') +
             (alt ? '<button type="button" class="acct-link acct-ob-skip" id="obAlt">' + alt + '</button>' : '') +
           '</div>' +
         '</form>' +
@@ -1686,7 +1885,7 @@
 
     function go(step, dir) { state.step = step; state.dir = dir || 'next'; obRender(state); }
     function after() {
-      if (state.only) { endOnboarding(); return loadMe(); }
+      if (state.only) { endOnboarding(); return sb ? loadMe() : closed() ? renderLocked(me, { preview: true }) : renderDash(me, { preview: true }); }
       go(OB_STEPS[OB_STEPS.indexOf(state.step) + 1]);
     }
     function fail(e) {
@@ -1754,7 +1953,7 @@
     var close = document.getElementById('obClose');
     if (close) close.addEventListener('click', function () {
       endOnboarding();
-      if (!sb) return renderLocked(me, { preview: true });
+      if (!sb) return closed() ? renderLocked(me, { preview: true }) : renderDash(me, { preview: true });
       loadMe();
     });
 
