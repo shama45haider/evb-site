@@ -1820,14 +1820,14 @@
             ? '<h1 class="acct-ob-title">Read wrong, or have you moved?</h1>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               '<p class="acct-ob-sub">If we misread your ID, retake the photo. If you’ve moved since it was made, we’ll check your account by hand.</p>' +
-              '<p class="acct-ob-private">' + ICON.truck + 'Online orders still ship only to the address on your ID. Call or text us at ' + esc(biz.phone) + ' to ship somewhere else.</p>'
+              '<p class="acct-ob-private">' + ICON.truck + 'Online orders still ship only to the address on your ID. To ship somewhere else, email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>'
           : rd.status === 'ok'
             ? '<h1 class="acct-ob-title">' + (rd.shop ? 'Is this still your address?' : 'Is this your address?') + '</h1>' +
               '<p class="acct-ob-sub">' + (rd.shop ? 'It’s from the ID we scanned at the shop.' : 'We read it off your ID.') + ' Online orders ship only to this address.</p>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               (rd.nameMatch === 'mismatch'
                 ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo. Otherwise we’ll check it by hand.</p>' : '') +
-              '<p class="acct-ob-private">' + ICON.truck + 'Moved since your ID was made? Call or text us at ' + esc(biz.phone) + ' to ship somewhere else.</p>'
+              '<p class="acct-ob-private">' + ICON.truck + 'Moved since your ID was made? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a> to ship somewhere else.</p>'
             : '<h1 class="acct-ob-title">' + (rd.status === 'error' ? 'We couldn’t check your ID' : 'We couldn’t read your address') + '</h1>' +
               '<p class="acct-ob-sub">' + esc(rd.message || 'Retake the photo flat, in good light, with the whole card showing.') + '</p>' +
               '<p class="acct-ob-private">' + ICON.truck + 'You can still sign up and pick up in the shop. To get orders shipped, we need to read the address on your ID.</p>');
