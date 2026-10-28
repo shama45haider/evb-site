@@ -172,7 +172,7 @@
           '<span class="acct-spark acct-spark--a">' + ICON.sparkle + '</span>' +
           '<span class="acct-spark acct-spark--b">' + ICON.sparkle + '</span>' +
         '</span>' +
-        (invited() ? '<p class="acct-invited">' + ICON.users + '<span>A friend invited you. Join, and you both get points after your first purchase.</span></p>' : '') +
+        inviteNote() +
         '<h1 class="acct-title"><span class="acct-word" style="--i:1">Shop with us.</span> ' +
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
@@ -187,8 +187,42 @@
         '</ul>' +
       '</div>';
   }
-  function invited() {
-    try { return !!localStorage.getItem(REF_KEY); } catch (e) { return false; }
+  // The member number from an invite link, and once looked up (panel 0082)
+  // who it is and what the bonus is. Kept with the number so every step of
+  // signing up can say it.
+  var inviteInfo = null;
+  function inviteCode() {
+    if (inviteInfo && inviteInfo.preview) return inviteInfo.code;
+    try { return localStorage.getItem(REF_KEY); } catch (e) { return null; }
+  }
+  function inviteNote() {
+    var code = inviteCode();
+    if (!code) return '';
+    var info = inviteInfo && inviteInfo.code === code ? inviteInfo : {};
+    var name = info.firstName ? esc(info.firstName) : '';
+    var who = name || 'your friend';
+    var min = money(info.minCents || 2500);
+    return '<div class="acct-invited" id="acctInvited">' +
+      '<span class="acct-invited-icon" aria-hidden="true">' + ICON.users + '</span>' +
+      '<div class="acct-invited-text">' +
+        '<b>' + (name ? name + ' invited you' : 'A friend invited you') + ' to EVB Rewards</b>' +
+        '<span>Make your free account with your email. When your first purchase comes to <strong>' + min + ' or more</strong> — online or in our shop on Avenue A — ' +
+          'you get <strong>' + num(info.friendPoints || 50) + ' bonus points</strong> and ' + who + ' gets <strong>' + num(info.points || 100) + '</strong>.</span>' +
+        '<small>' + (name ? name + '’s' : 'The') + ' invite is saved on this device, so sign up here. On another phone? Add member number <strong>' + esc(code) + '</strong> on your account page after you join.</small>' +
+      '</div>' +
+    '</div>';
+  }
+  // Asks who sent the invite, then redraws the note with their name.
+  function loadInvite() {
+    var code = inviteCode();
+    if (!code || !sb) return;
+    sb.rpc('member_invite_preview', { p_code: code }).then(function (r) {
+      if (r.error || !r.data) return;
+      inviteInfo = r.data;
+      try { localStorage.setItem(REF_KEY + '_info', JSON.stringify(r.data)); } catch (e) {}
+      var note = document.getElementById('acctInvited');
+      if (note) note.outerHTML = inviteNote();
+    }, function () {});
   }
   function perk(icon, title, text, i) {
     return '<li class="acct-perk" style="--i:' + i + '"><span class="acct-perk-icon">' + icon + '</span><div><b>' + title + '</b><span>' + text + '</span></div></li>';
@@ -1918,7 +1952,7 @@
       ? sb.rpc('member_set_referrer', { p_code: ref }).then(function (r) {
           // Kept only when the function isn't there yet, to try next time.
           if (!r.error || !/Could not find the function|does not exist/i.test(r.error.message || '')) {
-            try { localStorage.removeItem(REF_KEY); } catch (e) {}
+            try { localStorage.removeItem(REF_KEY); localStorage.removeItem(REF_KEY + '_info'); } catch (e) {}
           }
         }, function () {})
       : Promise.resolve();
@@ -2002,6 +2036,10 @@
     if (mode === 'welcome') return previewAfterCode();
     if (mode === 'empty') return previewAfterProfile('Pat Rivera');
     if (mode === 'signin') return renderEmail();
+    if (mode === 'invite') {
+      inviteInfo = { preview: true, code: 'M1001', firstName: 'Ana', points: 100, friendPoints: 50, minCents: 2500 };
+      return renderEmail();
+    }
     if (mode === 'requested') return renderRequested('pat@example.com');
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     if (mode === 'signup') return previewAfterCode();
@@ -2034,6 +2072,7 @@
     try { localStorage.setItem(REF_KEY, refParam[1].toUpperCase()); } catch (e) {}
     history.replaceState(null, '', location.pathname + location.search.replace(/[?&]ref=[^&#]+/, '').replace(/^&/, '?') + location.hash);
   }
+  try { inviteInfo = JSON.parse(localStorage.getItem(REF_KEY + '_info') || 'null'); } catch (e) {}
 
   var preview = /[?&]preview(=([a-z]+))?/.exec(location.search);
   if (preview) return startPreview(preview[2] || 'dash');
@@ -2045,6 +2084,8 @@
   sb = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'evb-account' }
   });
+
+  loadInvite();
 
   // A sign-in link that failed comes back as #error=…&error_description=…
   var linkError = /[#&]error_description=([^&]+)/.exec(location.hash);

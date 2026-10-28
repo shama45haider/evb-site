@@ -1152,11 +1152,20 @@
 
 /* "A friend invited you" on the sign-in page (0080). */
 .acct-invited {
-  display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px; padding: 7px 13px 7px 10px;
-  border-radius: 99px; background: #eef3ff; color: #1d4ed8;
-  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; line-height: 1.35;
+  display: flex; align-items: flex-start; gap: 12px; max-width: 560px; margin: 0 0 18px; padding: 14px 16px;
+  border-radius: 16px; background: linear-gradient(135deg, #eef3ff, #f5f8ff); border: 1px solid rgba(37, 99, 235, 0.18);
+  font-family: 'Inter', sans-serif; color: var(--evb-body);
 }
-.acct-invited svg { flex-shrink: 0; width: 16px; height: 16px; }
+.acct-invited-icon {
+  flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
+  color: #fff; background: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+}
+.acct-invited-icon svg { width: 19px; height: 19px; }
+.acct-invited-text { display: grid; gap: 4px; min-width: 0; }
+.acct-invited-text b { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; line-height: 1.25; color: #1d4ed8; }
+.acct-invited-text span { font-size: 13.5px; line-height: 1.5; }
+.acct-invited-text strong { color: var(--evb-ink); }
+.acct-invited-text small { font-size: 12px; line-height: 1.45; color: var(--evb-muted); }
 
 /* Member level: a card in the level's metal, under the greeting. The bar
    runs along the whole ladder, under the level names. */
