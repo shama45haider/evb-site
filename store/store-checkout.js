@@ -1080,8 +1080,7 @@
       (a.line2 ? '' : '<div class="evb-form-grid" style="margin-top:14px">' +
         field('address2', 'Apartment, suite, floor', { autocomplete: 'address-line2', full: true, placeholder: 'Optional' }) + '</div>') +
       '<p class="evb-idaddr-other">We ship only to the address on your ID. To send it somewhere else, ' +
-        '<a href="sms:' + S.attr(digits(CFG.business.phone)) + '">text</a> or <a href="' + S.attr(CFG.business.phoneHref) + '">call us at ' + S.esc(CFG.business.phone) + '</a>, ' +
-        'or email <a href="mailto:' + S.attr(CFG.business.email) + '">' + S.esc(CFG.business.email) + '</a> before you order.</p>';
+        'email <a href="mailto:' + S.attr(CFG.business.email) + '">' + S.esc(CFG.business.email) + '</a> before you order.</p>';
   }
 
   function paymentStep() {
