@@ -1526,10 +1526,10 @@
   // Photos are shrunk and re-encoded as JPEG in the browser before upload:
   // smaller files, and the phone's location data doesn't go with them.
   //
-  // Checked by itself (panel migration 0082): "Yes, that's my address" asks
-  // member_confirm_id, which verifies the ID and lets them in when the name,
-  // birthday, expiry and address on it all check out. Anything off waits for
-  // an admin. And between birthday and ID, if exactly one shop customer has
+  // Checked by itself (panel migrations 0082, 0084): "Yes, that's my address"
+  // asks member_confirm_id, which verifies the ID when the name, birthday,
+  // expiry and address on it all check out, and otherwise rejects it with the
+  // reason — nobody checks IDs by hand. And between birthday and ID, if exactly one shop customer has
   // the name and birthday they typed, "Is this you?" asks for the number on
   // the ID they showed us; a match verifies them without a photo.
 
@@ -1641,11 +1641,19 @@
     });
   }
 
-  // "Yes, that's my address" / "I've moved" → { verified }. Before panel
-  // migration 0082 there's no automatic check: an admin looks, as before.
+  // "Yes, that's my address" / "I've moved" → { verified } or, since panel
+  // migration 0084, { rejected, note } with the reason the ID didn't pass.
   function confirmId(moved) {
-    if (!sb) return Promise.resolve({ verified: !moved });
+    if (!sb) return Promise.resolve({ verified: true });
     return rpc('member_confirm_id', { p_moved: !!moved }).catch(function () { return { verified: false }; });
+  }
+
+  // Keeps the answer for the done screen and the account page's ID box.
+  function tookIdAnswer(state, j) {
+    state.verified = !!(j && j.verified);
+    state.rejectNote = j && j.rejected ? (j.note || '') : null;
+    if (state.verified) state.me.idStatus = 'verified';
+    if (state.rejectNote !== null) { state.me.idStatus = 'rejected'; state.me.idNote = state.rejectNote; }
   }
 
   function addressLines(a) {
@@ -1751,14 +1759,14 @@
           : rd.status === 'ok' && state.addrNo
             ? '<h1 class="acct-ob-title">Read wrong, or have you moved?</h1>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
-              '<p class="acct-ob-sub">If we misread your ID, retake the photo. If you’ve moved since it was made, we’ll check your account by hand.</p>' +
+              '<p class="acct-ob-sub">If we misread your ID, retake the photo. If you’ve moved since it was made, that’s fine: tap “I’ve moved”.</p>' +
               '<p class="acct-ob-private">' + ICON.truck + 'Online orders still ship only to the address on your ID. To ship somewhere else, email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>'
           : rd.status === 'ok'
             ? '<h1 class="acct-ob-title">' + (rd.shop ? 'Is this still your address?' : 'Is this your address?') + '</h1>' +
               '<p class="acct-ob-sub">' + (rd.shop ? 'It’s from the ID we scanned at the shop.' : 'We read it off your ID.') + ' Online orders ship only to this address.</p>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               (rd.nameMatch === 'mismatch'
-                ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo. Otherwise we’ll check it by hand.</p>' : '') +
+                ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo: the name on your ID has to match your account.</p>' : '') +
               '<p class="acct-ob-private">' + ICON.truck + 'Moved since your ID was made? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a> to ship somewhere else.</p>'
             : '<h1 class="acct-ob-title">' + (rd.status === 'error' ? 'We couldn’t check your ID' : 'We couldn’t read your address') + '</h1>' +
               '<p class="acct-ob-sub">' + esc(rd.message || 'Retake the photo flat, in good light, with the whole card showing.') + '</p>' +
@@ -1770,7 +1778,9 @@
           '<h1 class="acct-ob-title">You’re all set' + (me.fullName ? ', ' + esc(firstName(me.fullName)) : '') + '</h1>' +
           '<p class="acct-ob-sub">' + (state.verified || me.idStatus === 'verified'
             ? 'Your ID checked out. Your Rewards are on.'
-            : 'Your Rewards are on. We’ll check your ID by hand and let you know when it’s done.') + '</p>' +
+            : state.rejectNote != null
+              ? 'Your Rewards are on, but we couldn’t accept your ID' + (state.rejectNote ? ': ' + esc(state.rejectNote) : '') + '. Send a new photo from your account to get orders shipped.'
+              : 'Your Rewards are on. To get orders shipped, send a photo of your ID from your account.') + '</p>' +
           '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
         '</div>';
     }
@@ -1877,9 +1887,9 @@
           return go('id');
         }
         if (!state.addrNo) { state.addrNo = true; return obRender(state); }
-        // "I've moved": an admin looks.
+        // "I've moved": the ID still counts, checked like any other (0084).
         setBusy(altBtn, true, 'One moment…');
-        confirmId(true).then(function (j) { state.verified = !!j.verified; state.addrNo = false; after(); });
+        confirmId(true).then(function (j) { tookIdAnswer(state, j); state.addrNo = false; after(); });
       });
     }
     var close = document.getElementById('obClose');
@@ -2007,12 +2017,12 @@
       if (step === 'address') {
         if (rd.status === 'loading') return;
         if (rd.status === 'ok' && !state.addrNo) {
-          // The automatic check (panel migration 0082) verifies them here
-          // when everything on the ID matched.
+          // The automatic check (panel migrations 0082, 0084) verifies them
+          // here, or rejects the ID with the reason.
           setBusy(next, true, 'One moment…');
           return confirmId(false).then(function (j) {
-            state.verified = !!j.verified;
-            if (j.verified) { me.idStatus = 'verified'; push('account_id_auto_verified', {}); }
+            tookIdAnswer(state, j);
+            if (state.verified) push('account_id_auto_verified', {});
             after();
           });
         }
