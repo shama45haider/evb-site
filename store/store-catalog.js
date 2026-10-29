@@ -794,6 +794,13 @@
         custom[cav.name || k] = cav.string_value || cav.number_value || cav.boolean_value;
       });
 
+      // This week's deal (square-worker.js): the price drops by its percent,
+      // and the usual price shows struck through. The Worker takes the same
+      // amount off at checkout.
+      var deal = o.evb_deal && o.evb_deal.pct ? { pct: o.evb_deal.pct, ends: o.evb_deal.ends } : null;
+      var listPrice = vars.length && vars[0].price != null ? vars[0].price : 0;
+      if (deal) vars.forEach(function (v) { if (v.price != null) v.price = Math.round(v.price * (100 - deal.pct) / 100); });
+
       var basePrice = vars.length && vars[0].price != null ? vars[0].price : 0;
 
       return {
@@ -804,7 +811,8 @@
         category: (custom.category || (d.category_id ? 'uncategorized' : 'uncategorized')).toLowerCase(),
         condition: custom.condition || '',
         price: basePrice,
-        compareAt: custom.compare_at ? Number(custom.compare_at) : null,
+        compareAt: deal ? listPrice : custom.compare_at ? Number(custom.compare_at) : null,
+        deal: deal,
         images: imgs.length ? imgs : ['/evblogo.webp'],
         blurb: custom.blurb || '',
         description: d.description_plaintext || d.description || '',

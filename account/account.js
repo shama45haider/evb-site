@@ -735,7 +735,7 @@
         (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' +
           '<h2 class="acct-section-title">Happening now</h2>' + live.join('') + '</section>' : '') +
 
-        statsSection(me, sum, history) +
+        '<div id="acctDeals"></div>' +
         badgesSection(me, sum, history) +
         bonusSection(me) +
 
@@ -782,6 +782,7 @@
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
     bindDetails(me);
+    dealsSection(opts);
   }
 
   /* ------------------------------------------------------------ level, stats, badges, bonuses */
@@ -816,60 +817,68 @@
     '</section>';
   }
 
-  // Points earned in each of the last six months — orders, shop visits and
-  // bonuses — oldest first.
-  function monthlyPoints(history) {
-    var now = new Date();
-    var months = [];
-    for (var k = 5; k >= 0; k--) {
-      var d = new Date(now.getFullYear(), now.getMonth() - k, 1);
-      months.push({
-        y: d.getFullYear(), m: d.getMonth(), points: 0,
-        label: d.toLocaleDateString('en-US', { month: 'short' }),
-        long: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
-      });
-    }
-    history.forEach(function (e) {
-      var d = new Date(e.occurredAt);
-      if (!(e.points > 0) || isNaN(d)) return;
-      months.forEach(function (mo) { if (mo.y === d.getFullYear() && mo.m === d.getMonth()) mo.points += e.points; });
-    });
-    return months;
+  // This week's deals: the pieces square-worker.js marked down 5–8% for the
+  // week, from the store catalog. Filled in once the catalog loads; nothing
+  // shows if there are none. The previews mark a few of the live listings.
+  var DEAL_SHOW = 4;
+
+  function dealsSection(opts) {
+    var C = window.EVB_CATALOG;
+    if (!C) return;
+    C.load().then(function (all) {
+      var slot = document.getElementById('acctDeals');
+      if (!slot) return;
+      var deals = all.filter(function (p) { return p.deal; });
+      if (!deals.length && opts.preview) {
+        deals = all.slice(0, DEAL_SHOW).map(function (p, i) {
+          var pct = [7, 5, 8, 6][i];
+          return Object.assign({}, p, {
+            compareAt: p.price, price: Math.round(p.price * (100 - pct) / 100),
+            deal: { pct: pct, ends: weekEnd() }
+          });
+        });
+      }
+      deals = deals.slice(0, DEAL_SHOW);
+      if (!deals.length) return;
+      slot.outerHTML = '<section class="acct-section acct-deals" aria-labelledby="acctDealsTitle">' +
+        '<div class="acct-deals-head">' +
+          '<div class="acct-prizes-title"><h2 id="acctDealsTitle">This week’s deals</h2><p>A few pieces marked down for the week. The price you see is the price at checkout.</p></div>' +
+          '<span class="acct-deals-ends">' + ICON.clock + esc(dealEnds(deals[0].deal.ends)) + '</span>' +
+        '</div>' +
+        '<ul class="acct-deal-list">' + deals.map(dealCard).join('') + '</ul>' +
+        '<a class="acct-deals-all" href="/store/">See everything in the store' + ICON.arrow + '</a>' +
+      '</section>';
+    }, function () { });
   }
 
-  // Four totals, then points by month as bars. Only this month
-  // and the best month carry their number; the rest show it on hover or focus.
-  function statsSection(me, sum, history) {
-    var saved = (me.activity || []).reduce(function (n, a) { return n + (a.kind === 'redeem' ? Number(a.creditCents) || 0 : 0); }, 0);
-    var months = monthlyPoints(history);
-    var max = Math.max.apply(null, months.map(function (m) { return m.points; }));
-    var best = max > 0 ? months.map(function (m) { return m.points; }).lastIndexOf(max) : -1;
-    return '<section class="acct-section acct-insights acct-rise" style="--d:180ms">' +
-      '<h2 class="acct-section-title">Your stats</h2>' +
-      '<div class="acct-kpis">' +
-        kpi('Lifetime points', me.lifetimePoints, false) +
-        kpi('Saved with prizes', saved, true) +
-        kpi('Bought from us', sum.bought, true) +
-        kpi('Sold to us', sum.sold, true) +
-      '</div>' +
-      '<div class="acct-chart">' +
-        '<p class="acct-chart-head"><b>Points earned</b><span>Last 6 months</span></p>' +
-        (max > 0
-          ? '<ul class="acct-chart-bars">' + months.map(function (m, i) {
-              var h = m.points ? Math.max(Math.round((m.points / max) * 100), 4) : 0;
-              return '<li class="acct-bar' + (i === months.length - 1 ? ' is-now' : '') + (i === best ? ' is-best' : '') + '" tabindex="0" aria-label="' + esc(m.long) + ': ' + num(m.points) + ' points" style="--i:' + i + '">' +
-                '<span class="acct-bar-col" aria-hidden="true"><span class="acct-bar-fill" style="height:' + h + '%"><i></i>' +
-                  (m.points ? '<span class="acct-bar-val">' + num(m.points) + '</span>' : '') + '</span></span>' +
-                '<small aria-hidden="true">' + esc(m.label) + '</small>' +
-              '</li>';
-            }).join('') + '</ul>'
-          : '<p class="acct-chart-empty">Your points show up here month by month once you start earning.</p>') +
-      '</div>' +
-    '</section>';
+  function dealCard(p, i) {
+    var href = '/store/product/?p=' + encodeURIComponent(p.slug);
+    return '<li class="acct-deal" style="--i:' + i + '"><a href="' + esc(href) + '">' +
+      '<span class="acct-deal-img"><img src="' + esc(p.images[0]) + '" alt="" loading="lazy" decoding="async">' +
+        '<span class="acct-deal-pct">' + p.deal.pct + '% off</span></span>' +
+      '<span class="acct-deal-name">' + esc(p.title) + '</span>' +
+      '<span class="acct-deal-price"><b>' + money(p.price) + '</b><s>' + money(p.compareAt) + '</s></span>' +
+    '</a></li>';
   }
-  function kpi(label, value, isMoney) {
-    var v = Number(value) || 0;
-    return '<div class="acct-kpi"><b>' + (isMoney ? money(v) : num(v)) + '</b><span>' + label + '</span></div>';
+
+  // The Sunday this week's deals end on, as YYYY-MM-DD (previews only; the
+  // Worker sends the real one).
+  function weekEnd() {
+    var d = new Date();
+    d.setDate(d.getDate() + (7 - d.getDay()) % 7);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  // "Ends Sunday", "Ends tonight", or "Ends in 3 days".
+  function dealEnds(ymd) {
+    var parts = String(ymd || '').split('-');
+    var end = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    var now = new Date();
+    var days = Math.round((end - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5);
+    if (isNaN(days) || days < 0) return 'This week only';
+    if (days === 0) return 'Ends tonight';
+    if (days === 1) return 'Ends tomorrow';
+    return 'Ends in ' + days + ' days';
   }
 
   // Badges for the things members do with us, in groups. All worked out here

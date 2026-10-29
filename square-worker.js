@@ -221,6 +221,60 @@ function isPanelListing(o) {
   });
 }
 
+// This week's deals: a few listings at 5–8% off, Monday through Sunday in
+// New York. Picked the first time the catalog is asked for in a week and
+// kept in KV, so the price the site shows is the price checkout charges.
+// One that sells is replaced by the next pick; the rest keep their price
+// all week.
+const DEAL_COUNT = 4;
+const DEAL_MIN_PRICE = 2000;
+
+function dealWeek(now) {
+  const ny = new Date((now || new Date()).toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const mon = new Date(ny.getFullYear(), ny.getMonth(), ny.getDate() - (ny.getDay() + 6) % 7);
+  const sun = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + 6);
+  const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  return { key: 'deals:' + ymd(mon), ends: ymd(sun) };
+}
+
+function hash32(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+
+// The same rounding as the site's store-catalog.js.
+function dealPrice(unit, pct) {
+  return Math.round(unit * (100 - pct) / 100);
+}
+
+// { itemId: percent } for this week. Kept in the SUBSCRIBERS namespace under
+// "deals:", apart from the "sub:" keys.
+async function readDeals(env, week) {
+  if (!env.SUBSCRIBERS) return {};
+  return (await env.SUBSCRIBERS.get(week.key, 'json').catch(() => null)) || {};
+}
+
+async function pickDeals(env, week, items) {
+  const deals = await readDeals(env, week);
+  if (!env.SUBSCRIBERS) return deals;
+  const vars = o => (o.item_data && o.item_data.variations) || [];
+  const price = o => { const v = vars(o)[0]; return (v && v.item_variation_data.price_money && v.item_variation_data.price_money.amount) || 0; };
+  const open = items.filter(o => price(o) >= DEAL_MIN_PRICE && vars(o).some(v => v.stock > 0));
+  let have = open.filter(o => deals[o.id]).length;
+  const fresh = open.filter(o => !deals[o.id])
+    .sort((a, b) => hash32(week.key + a.id) - hash32(week.key + b.id));
+  let added = false;
+  for (const o of fresh) {
+    if (have >= DEAL_COUNT) break;
+    deals[o.id] = 5 + hash32(o.id + week.key) % 4;
+    have++;
+    added = true;
+  }
+  if (added) await env.SUBSCRIBERS.put(week.key, JSON.stringify(deals), { expirationTtl: 60 * 60 * 24 * 14 });
+  return deals;
+}
+
 async function handleCatalog(env, origin) {
   let all = [];
   let cursor = '';
@@ -272,6 +326,10 @@ async function handleCatalog(env, origin) {
       v.stock = tracked ? (counts[v.id] || 0) : (counts[v.id] != null ? counts[v.id] : 1);
     });
   });
+
+  const week = dealWeek();
+  const deals = await pickDeals(env, week, items).catch(() => ({}));
+  items.forEach(o => { if (deals[o.id]) o.evb_deal = { pct: deals[o.id], ends: week.ends }; });
 
   return json({ objects }, 200, origin, {
     'Cache-Control': 'public, max-age=60'
@@ -327,6 +385,8 @@ async function buildSquareOrder(env, payload, auth) {
   await checkStock(env, incoming, variations, items);
 
   const lineItems = [];
+  const discounts = [];
+  const deals = await readDeals(env, dealWeek());
   let subtotal = 0;
 
   incoming.forEach((l, i) => {
@@ -339,18 +399,25 @@ async function buildSquareOrder(env, payload, auth) {
     const qty = Math.max(1, parseInt(l.quantity, 10) || 1);
     const unit = (vd.price_money && vd.price_money.amount) || 0;
 
-    subtotal += unit * qty;
-
     const li = {
       uid: 'line-' + i,
       catalog_object_id: l.variationId,
       quantity: String(qty)
     };
     if (taxable) li.applied_taxes = [{ tax_uid: 'sales-tax' }];
+
+    // This week's deal comes off the line, before any promo code or prize.
+    const pct = parent && deals[parent.id];
+    const off = pct ? (unit - dealPrice(unit, pct)) * qty : 0;
+    if (off > 0) {
+      discounts.push({ uid: 'deal-' + i, name: 'This week’s deal (' + pct + '% off)', amount_money: money(off), scope: 'LINE_ITEM' });
+      li.applied_discounts = [{ discount_uid: 'deal-' + i }];
+    }
+
+    subtotal += unit * qty - off;
     lineItems.push(li);
   });
 
-  const discounts = [];
   const code = String((payload.order.totals && payload.order.totals.promoCode) || '').toUpperCase();
   const promo = PROMO_CODES[code];
   let freeShipping = false;
