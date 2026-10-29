@@ -275,7 +275,6 @@
         ? '<span class="acct-prize-flag">Next up</span>'
         : '<span class="acct-prize-flag acct-prize-flag--lock">' + ICON.lock + '<span class="acct-sr">Locked</span></span>';
     return '<li class="acct-prize acct-prize--t' + Math.min(i + 1, 4) + ' ' + state + '">' +
-      '<span class="acct-prize-mark" aria-hidden="true">' + icon + '</span>' +
       '<span class="acct-prize-top">' +
         '<span class="acct-prize-icon" aria-hidden="true">' + icon + '</span>' + flag +
       '</span>' +
@@ -721,40 +720,31 @@
         (opts.preview ? '<span class="acct-preview-tag acct-rise">Preview · sample data</span>' : '') +
 
         '<header class="acct-dash-head acct-rise">' +
-          '<div>' +
-            '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
-              '<span>Hi, <em class="acct-hi-name">' + esc(firstName(me.fullName) || 'there') +
-                '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
-              '</em></span></h1>' +
-          '</div>' +
+          '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
+            '<span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</span></h1>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
 
+        qrCard(me, 0) +
         tierCard(me) +
 
         '<section class="acct-points acct-rise" style="--d:60ms" aria-label="Your points">' +
-          '<span class="acct-points-deco" aria-hidden="true">' +
-            '<span class="acct-pd acct-pd--a"></span><span class="acct-pd acct-pd--b"></span>' +
-            '<span class="acct-pd-spark">' + ICON.sparkle + '</span>' +
-          '</span>' +
           '<div class="acct-points-main">' +
-            '<span class="acct-points-label">' + ICON.star + 'Your points</span>' +
+            '<span class="acct-points-label">Your points</span>' +
             '<p class="acct-points-num" data-count="' + bal + '">' + num(bal) + '</p>' +
-            (ready ? '<span class="acct-points-ready">' + ICON.gift + esc(ready) + '</span>' : '') +
+            (ready ? '<span class="acct-points-ready">' + esc(ready) + '</span>' : '') +
             '<p class="acct-points-sub">' + pointsLine + '</p>' +
             expiry +
           '</div>' +
           '<div class="acct-ring" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + into + '" aria-label="Points toward ' + esc((next || best).label) + '">' +
             '<svg viewBox="0 0 120 120" aria-hidden="true"><circle class="acct-ring-track" cx="60" cy="60" r="52"/><circle class="acct-ring-fill" cx="60" cy="60" r="52" pathLength="100" data-pct="' + pct + '"/></svg>' +
-            '<span class="acct-ring-text"><i aria-hidden="true">' + ICON.gift + '</i><b>' + esc((next || best).short) + '</b><small>' + num(into) + ' / ' + num(goal) + '</small></span>' +
+            '<span class="acct-ring-text"><b>' + esc((next || best).short) + '</b><small>' + num(into) + ' / ' + num(goal) + '</small></span>' +
           '</div>' +
         '</section>' +
 
         '<section class="acct-prizes acct-rise" style="--d:80ms" aria-label="Prizes">' +
           '<div class="acct-prizes-head">' +
-            '<span class="acct-prizes-badge" aria-hidden="true">' + ICON.gift + '</span>' +
-            '<div class="acct-prizes-title"><h2>Prizes</h2><p>Online orders, shipped or picked up · one per order</p></div>' +
+            '<div class="acct-prizes-title"><h2>Prizes</h2><p>For online orders, shipped or picked up. One per order.</p></div>' +
             (best ? '<span class="acct-prizes-count">' + prizes.filter(function (p) { return bal >= p.points; }).length + ' of ' + prizes.length + ' ready</span>' : '') +
           '</div>' +
           prizeRoad(prizes, bal) +
@@ -762,7 +752,7 @@
             prizes.map(function (p, i) { return prizeCard(p, i, bal, next && p.code === next.code); }).join('') +
           '</ul>' +
           (ready
-            ? '<a class="acct-prize-go" href="/store/"><span>' + ICON.gift + 'Use one on your next online order</span><b>Shop now' + ICON.arrow + '</b></a>'
+            ? '<a class="acct-prize-go" href="/store/"><span>Use one on your next online order</span><b>Shop now' + ICON.arrow + '</b></a>'
             : '') +
         '</section>' +
 
@@ -770,16 +760,14 @@
           '<img class="acct-visit-img" src="/east-village-buyers-storefront-39-avenue-a.webp" alt="The East Village Buyers storefront at 39 Avenue A" loading="lazy" width="960" height="675">' +
           '<span class="acct-visit-text">' +
             '<b>Earn in the shop too</b>' +
-            '<span>Show your QR code below at the counter, or give us your member number <strong>' + esc(me.memberNumber) + '</strong>.</span>' +
+            '<span>Show your member code at the counter, or give us your member number <strong>' + esc(me.memberNumber) + '</strong>.</span>' +
             '<span class="acct-visit-addr">' + ICON.pin + '39 Avenue A, East Village</span>' +
           '</span>' +
           '<span class="acct-visit-go" aria-hidden="true">' + ICON.arrow + '</span>' +
         '</a>' +
 
-        qrCard(me, 120) +
-
         (live.length ? '<section class="acct-live acct-rise" style="--d:140ms" aria-label="Happening now">' +
-          '<p class="acct-live-head" aria-hidden="true"><span class="acct-live-pulse"></span>Happening now</p>' + live.join('') + '</section>' : '') +
+          '<h2 class="acct-section-title">Happening now</h2>' + live.join('') + '</section>' : '') +
 
         statsSection(me, sum, history) +
         badgesSection(me, sum, history) +
@@ -787,7 +775,7 @@
 
         '<section class="acct-section acct-rise" style="--d:220ms">' +
           '<div class="acct-section-head">' +
-            '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.clock + '</i>History</h2>' +
+            '<h2 class="acct-section-title">History</h2>' +
             '<div class="acct-seg" role="tablist" aria-label="Filter history">' +
               '<span class="acct-seg-pill" aria-hidden="true"></span>' +
               FILTERS.map(function (f, i) {
@@ -799,11 +787,11 @@
         '</section>' +
 
         '<section class="acct-section acct-rise" style="--d:260ms">' +
-          '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>How it works</h2>' +
+          '<h2 class="acct-section-title">How it works</h2>' +
           '<ol class="acct-steps">' +
-            '<li><span class="acct-step-icon">' + ICON.bag + '<em aria-hidden="true">1</em></span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '<em aria-hidden="true">2</em></span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per online order, shipped or picked up — text us after you order.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.clock + '<em aria-hidden="true">3</em></span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
+            '<li><span class="acct-step-n" aria-hidden="true">1</span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
+            '<li><span class="acct-step-n" aria-hidden="true">2</span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per online order, shipped or picked up — text us after you order.</span></li>' +
+            '<li><span class="acct-step-n" aria-hidden="true">3</span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -848,12 +836,9 @@
     var pct = next ? Math.round(((i + (pts - t.min) / (next.min - t.min)) / (TIERS.length - 1)) * 100) : 100;
     var since = me.joinedAt ? new Date(me.joinedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
     return '<section class="acct-tier acct-tier--' + t.code + ' acct-rise" style="--d:30ms" aria-label="Member level">' +
-      '<span class="acct-tier-glow" aria-hidden="true"></span>' +
-      '<span class="acct-tier-medal" aria-hidden="true">' + ICON.award + '</span>' +
       '<div class="acct-tier-main">' +
-        '<p class="acct-tier-kicker">Member level</p>' +
-        '<p class="acct-tier-name">' + t.name + '</p>' +
-        '<p class="acct-tier-sub">' + num(pts) + ' lifetime points' + (since ? ' · since ' + esc(since) : '') + '</p>' +
+        '<p class="acct-tier-name">' + t.name + ' member</p>' +
+        '<p class="acct-tier-sub">' + num(pts) + ' lifetime points' + (since ? ' since ' + esc(since) : '') + '</p>' +
       '</div>' +
       '<div class="acct-tier-next">' +
         '<ol class="acct-tier-steps" aria-hidden="true">' + TIERS.map(function (x, j) {
@@ -886,7 +871,7 @@
     return months;
   }
 
-  // Four totals in colour, then points by month as bars. Only this month
+  // Four totals, then points by month as bars. Only this month
   // and the best month carry their number; the rest show it on hover or focus.
   function statsSection(me, sum, history) {
     var saved = (me.activity || []).reduce(function (n, a) { return n + (a.kind === 'redeem' ? Number(a.creditCents) || 0 : 0); }, 0);
@@ -894,12 +879,12 @@
     var max = Math.max.apply(null, months.map(function (m) { return m.points; }));
     var best = max > 0 ? months.map(function (m) { return m.points; }).lastIndexOf(max) : -1;
     return '<section class="acct-section acct-insights acct-rise" style="--d:180ms">' +
-      '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.chart + '</i>Your stats</h2>' +
+      '<h2 class="acct-section-title">Your stats</h2>' +
       '<div class="acct-kpis">' +
-        kpi('orange', ICON.star, 'Lifetime points', me.lifetimePoints, false) +
-        kpi('green', ICON.tag, 'Saved with prizes', saved, true) +
-        kpi('blue', ICON.bag, 'Bought from us', sum.bought, true) +
-        kpi('violet', ICON.cash, 'Sold to us', sum.sold, true) +
+        kpi('Lifetime points', me.lifetimePoints, false) +
+        kpi('Saved with prizes', saved, true) +
+        kpi('Bought from us', sum.bought, true) +
+        kpi('Sold to us', sum.sold, true) +
       '</div>' +
       '<div class="acct-chart">' +
         '<p class="acct-chart-head"><b>Points earned</b><span>Last 6 months</span></p>' +
@@ -916,10 +901,9 @@
       '</div>' +
     '</section>';
   }
-  function kpi(tone, icon, label, value, isMoney) {
+  function kpi(label, value, isMoney) {
     var v = Number(value) || 0;
-    return '<div class="acct-kpi acct-kpi--' + tone + '"><i aria-hidden="true">' + icon + '</i><span>' + label + '</span>' +
-      '<b data-count="' + v + '"' + (isMoney ? ' data-money' : '') + '>' + (isMoney ? money(v) : num(v)) + '</b></div>';
+    return '<div class="acct-kpi"><b>' + (isMoney ? money(v) : num(v)) + '</b><span>' + label + '</span></div>';
   }
 
   // Badges for the things members do with us, in groups. All worked out here
@@ -933,16 +917,16 @@
   ];
   // Item departments (deptOf) with a badge each.
   var DEPT_BADGES = [
-    ['sneakers', 'Sneakerhead', 'Buy or sell sneakers', ICON.shoe, 'orange'],
-    ['watch', 'Timekeeper', 'Buy or sell a watch', ICON.watch, 'blue'],
-    ['jewelry', 'Iced out', 'Buy or sell jewelry', ICON.gem, 'teal'],
-    ['gold', 'Gold rush', 'Buy or sell gold coins or bullion', ICON.coin, 'gold'],
-    ['silver', 'Silver lining', 'Buy or sell silver', ICON.sparkle, 'silver'],
-    ['handbag', 'Bag check', 'Buy or sell a designer bag', ICON.bag, 'pink'],
-    ['sunglasses', 'Shady', 'Buy or sell sunglasses', ICON.glasses, 'violet'],
-    ['streetwear', 'Streetwise', 'Buy or sell streetwear', ICON.shirt, 'red'],
-    ['electronics', 'Tech head', 'Buy or sell electronics', ICON.gamepad, 'blue'],
-    ['collectible', 'Collector', 'Buy or sell a collectible', ICON.box, 'amber']
+    ['sneakers', 'Sneakerhead', 'Buy or sell sneakers', 'steps', 'orange'],
+    ['watch', 'Timekeeper', 'Buy or sell a watch', 'watch', 'blue'],
+    ['jewelry', 'Iced out', 'Buy or sell jewelry', 'diamond', 'teal'],
+    ['gold', 'Gold rush', 'Buy or sell gold coins or bullion', 'toll', 'gold'],
+    ['silver', 'Silver lining', 'Buy or sell silver', 'flare', 'silver'],
+    ['handbag', 'Bag check', 'Buy or sell a designer bag', 'local_mall', 'pink'],
+    ['sunglasses', 'Shady', 'Buy or sell sunglasses', 'eyeglasses', 'violet'],
+    ['streetwear', 'Streetwise', 'Buy or sell streetwear', 'apparel', 'red'],
+    ['electronics', 'Tech head', 'Buy or sell electronics', 'sports_esports', 'blue'],
+    ['collectible', 'Collector', 'Buy or sell a collectible', 'toys', 'amber']
   ];
 
   function badgesOf(me, sum, history) {
@@ -994,74 +978,74 @@
     // [group, name, how to earn it, icon, tone, earned or [have, goal], unit, secret, [action, button]]
     // A secret badge only shows once it's earned.
     var list = [
-      ['start', 'Welcome', 'Join EVB Rewards', ICON.star, 'orange', true],
-      ['start', 'Verified', 'Get your ID checked', ICON.shield, 'teal', me.idStatus === 'verified'],
-      ['start', 'Picture perfect', 'Add a profile photo', ICON.camera, 'pink', !!me.avatarPath, '', false, ['photo', 'Add a photo']],
-      ['start', 'In the loop', 'Turn on new-arrival emails in Your details', ICON.mail, 'blue', !!me.marketingOptIn],
-      ['start', 'Founding member', 'Joined EVB Rewards in 2026', ICON.crown, 'gold', !!joined && joined < new Date('2027-01-01T05:00:00Z'), '', true],
+      ['start', 'Welcome', 'Join EVB Rewards', 'waving_hand', 'orange', true],
+      ['start', 'Verified', 'Get your ID checked', 'verified_user', 'teal', me.idStatus === 'verified'],
+      ['start', 'Picture perfect', 'Add a profile photo', 'photo_camera', 'pink', !!me.avatarPath, '', false, ['photo', 'Add a photo']],
+      ['start', 'In the loop', 'Turn on new-arrival emails in Your details', 'mail', 'blue', !!me.marketingOptIn],
+      ['start', 'Founding member', 'Joined EVB Rewards in 2026', 'crown', 'gold', !!joined && joined < new Date('2027-01-01T05:00:00Z'), '', true],
 
-      ['shop', 'First buy', 'Buy something from us', ICON.bag, 'orange', sum.bought > 0 || buys > 0],
-      ['shop', 'Online shopper', 'Place an online order', ICON.truck, 'blue', sum.orders > 0],
-      ['shop', 'Counter find', 'Buy something in the shop on Avenue A', ICON.store, 'violet', shopBuys > 0],
-      ['shop', 'Picked up', 'Pick up an online order at the shop', ICON.pin, 'teal', online.some(function (e) { return e.fulfillment === 'pickup'; })],
-      ['shop', 'Fast lane', 'Choose express shipping', ICON.zap, 'amber', online.some(function (e) { return /express|overnight|priority/i.test(e.shipService || ''); })],
-      ['shop', 'Repeat customer', 'Buy from us 5 times', ICON.heart, 'red', [buys, 5]],
-      ['shop', 'Big ticket', 'Spend $500 or more at once', ICON.tag, 'green', biggestBuy >= 50000],
-      ['shop', 'Treat yourself', 'Spend $250 with us', ICON.gift, 'pink', [sum.bought, 25000], 'money'],
-      ['shop', 'Big spender', 'Spend $1,000 with us', ICON.layers, 'gold', [sum.bought, 100000], 'money'],
-      ['shop', 'High roller', 'Spend $5,000 with us', ICON.gem, 'black', [sum.bought, 500000], 'money'],
+      ['shop', 'First buy', 'Buy something from us', 'shopping_bag', 'orange', sum.bought > 0 || buys > 0],
+      ['shop', 'Online shopper', 'Place an online order', 'local_shipping', 'blue', sum.orders > 0],
+      ['shop', 'Counter find', 'Buy something in the shop on Avenue A', 'storefront', 'violet', shopBuys > 0],
+      ['shop', 'Picked up', 'Pick up an online order at the shop', 'location_on', 'teal', online.some(function (e) { return e.fulfillment === 'pickup'; })],
+      ['shop', 'Fast lane', 'Choose express shipping', 'bolt', 'amber', online.some(function (e) { return /express|overnight|priority/i.test(e.shipService || ''); })],
+      ['shop', 'Repeat customer', 'Buy from us 5 times', 'favorite', 'red', [buys, 5]],
+      ['shop', 'Big ticket', 'Spend $500 or more at once', 'sell', 'green', biggestBuy >= 50000],
+      ['shop', 'Treat yourself', 'Spend $250 with us', 'redeem', 'pink', [sum.bought, 25000], 'money'],
+      ['shop', 'Big spender', 'Spend $1,000 with us', 'payments', 'gold', [sum.bought, 100000], 'money'],
+      ['shop', 'High roller', 'Spend $5,000 with us', 'diamond', 'black', [sum.bought, 500000], 'money'],
 
-      ['sell', 'First sale', 'Sell something to us', ICON.cash, 'green',
+      ['sell', 'First sale', 'Sell something to us', 'attach_money', 'green',
         sum.sold > 0 || done.some(function (e) { return e.kind === 'visit' && e.visitKind !== 'bought'; })],
-      ['sell', 'First trade', 'Trade something in for something new', ICON.swap, 'violet', trades > 0],
-      ['sell', 'Swap master', 'Trade with us 3 times', ICON.swap, 'blue', [trades, 3]],
-      ['sell', 'Steady seller', 'Sell to us 5 times', ICON.cash, 'teal', [sells, 5]],
-      ['sell', 'Big sale', 'Sell us $1,000 or more at once', ICON.zap, 'amber', biggestSale >= 100000],
-      ['sell', 'Cashed in', 'Sell or trade in $1,000 with us', ICON.coin, 'gold', [sum.sold, 100000], 'money'],
-      ['sell', 'Top seller', 'Sell or trade in $10,000 with us', ICON.trophy, 'black', [sum.sold, 1000000], 'money'],
+      ['sell', 'First trade', 'Trade something in for something new', 'swap_horiz', 'violet', trades > 0],
+      ['sell', 'Swap master', 'Trade with us 3 times', 'cached', 'blue', [trades, 3]],
+      ['sell', 'Steady seller', 'Sell to us 5 times', 'handshake', 'teal', [sells, 5]],
+      ['sell', 'Big sale', 'Sell us $1,000 or more at once', 'trending_up', 'amber', biggestSale >= 100000],
+      ['sell', 'Cashed in', 'Sell or trade in $1,000 with us', 'paid', 'gold', [sum.sold, 100000], 'money'],
+      ['sell', 'Top seller', 'Sell or trade in $10,000 with us', 'emoji_events', 'black', [sum.sold, 1000000], 'money'],
 
-      ['visits', 'Regular', 'Shop, sell or order 5 times', ICON.store, 'violet', [done.length, 5]],
-      ['visits', 'Familiar face', 'Shop, sell or order 10 times', ICON.users, 'blue', [done.length, 10]],
-      ['visits', 'Local legend', 'Shop, sell or order 25 times', ICON.star, 'gold', [done.length, 25]],
-      ['visits', 'Avenue A icon', 'Shop, sell or order 50 times', ICON.crown, 'black', [done.length, 50]],
-      ['visits', 'Weekender', 'Visit or order on a Saturday or Sunday', ICON.sun, 'amber', weekend],
-      ['visits', 'Busy month', 'Visit or order 3 times in one month', ICON.calendar, 'teal', [busiest, 3]],
-      ['visits', 'On a roll', 'Visit or order 3 months in a row', ICON.flame, 'red', [streak, 3], 'months'],
-      ['visits', 'Hot streak', 'Visit or order 6 months in a row', ICON.flame, 'orange', [streak, 6], 'months'],
+      ['visits', 'Regular', 'Shop, sell or order 5 times', 'door_open', 'violet', [done.length, 5]],
+      ['visits', 'Familiar face', 'Shop, sell or order 10 times', 'face', 'blue', [done.length, 10]],
+      ['visits', 'Local legend', 'Shop, sell or order 25 times', 'star', 'gold', [done.length, 25]],
+      ['visits', 'Avenue A icon', 'Shop, sell or order 50 times', 'crown', 'black', [done.length, 50]],
+      ['visits', 'Weekender', 'Visit or order on a Saturday or Sunday', 'sunny', 'amber', weekend],
+      ['visits', 'Busy month', 'Visit or order 3 times in one month', 'calendar_month', 'teal', [busiest, 3]],
+      ['visits', 'On a roll', 'Visit or order 3 months in a row', 'local_fire_department', 'red', [streak, 3], 'months'],
+      ['visits', 'Hot streak', 'Visit or order 6 months in a row', 'whatshot', 'orange', [streak, 6], 'months'],
 
-      ['points', 'First points', 'Earn your first points', ICON.sparkle, 'orange', life > 0],
-      ['points', 'Century', 'Earn 100 points', ICON.star, 'amber', [life, 100], 'points'],
-      ['points', '500 club', 'Earn 500 points', ICON.star, 'teal', [life, 500], 'points'],
-      ['points', '1K club', 'Earn 1,000 points', ICON.sparkle, 'amber', [life, 1000], 'points'],
-      ['points', '2.5K club', 'Earn 2,500 points', ICON.sparkle, 'violet', [life, 2500], 'points'],
-      ['points', '5K club', 'Earn 5,000 points', ICON.trophy, 'gold', [life, 5000], 'points'],
-      ['points', 'Points legend', 'Earn 10,000 points', ICON.crown, 'black', [life, 10000], 'points'],
-      ['points', 'Big month', 'Earn 500 points in one month', ICON.chart, 'green', [bestPts, 500], 'points'],
+      ['points', 'First points', 'Earn your first points', 'auto_awesome', 'orange', life > 0],
+      ['points', 'Century', 'Earn 100 points', 'star', 'amber', [life, 100], 'points'],
+      ['points', '500 club', 'Earn 500 points', 'stars', 'teal', [life, 500], 'points'],
+      ['points', '1K club', 'Earn 1,000 points', 'hotel_class', 'amber', [life, 1000], 'points'],
+      ['points', '2.5K club', 'Earn 2,500 points', 'rocket_launch', 'violet', [life, 2500], 'points'],
+      ['points', '5K club', 'Earn 5,000 points', 'emoji_events', 'gold', [life, 5000], 'points'],
+      ['points', 'Points legend', 'Earn 10,000 points', 'crown', 'black', [life, 10000], 'points'],
+      ['points', 'Big month', 'Earn 500 points in one month', 'bar_chart', 'green', [bestPts, 500], 'points'],
 
-      ['prizes', 'Prize winner', 'Use points for a prize', ICON.gift, 'pink', redeems.length > 0],
-      ['prizes', 'First prize', 'Use points for ' + low.label.charAt(0).toLowerCase() + low.label.slice(1), ICON.truck, 'blue',
+      ['prizes', 'Prize winner', 'Use points for a prize', 'redeem', 'pink', redeems.length > 0],
+      ['prizes', 'First prize', 'Use points for ' + low.label.charAt(0).toLowerCase() + low.label.slice(1), 'local_shipping', 'blue',
         redeems.some(function (a) { return a.prize === low.code; })],
-      ['prizes', 'Top shelf', 'Use points for ' + top.label.charAt(0).toLowerCase() + top.label.slice(1), ICON.trophy, 'gold',
+      ['prizes', 'Top shelf', 'Use points for ' + top.label.charAt(0).toLowerCase() + top.label.slice(1), 'military_tech', 'gold',
         redeems.some(function (a) { return a.prize === top.code; })],
-      ['prizes', 'Prize hunter', 'Use points for 5 prizes', ICON.gift, 'violet', [redeems.length, 5]],
-      ['prizes', 'Smart saver', 'Save $50 with prizes', ICON.tag, 'green', [saved, 5000], 'money'],
+      ['prizes', 'Prize hunter', 'Use points for 5 prizes', 'card_giftcard', 'violet', [redeems.length, 5]],
+      ['prizes', 'Smart saver', 'Save $50 with prizes', 'savings', 'green', [saved, 5000], 'money'],
 
-      ['level', 'Silver level', 'Reach Silver at ' + num(TIERS[1].min) + ' lifetime points', ICON.award, 'silver', [life, TIERS[1].min], 'points'],
-      ['level', 'Gold level', 'Reach Gold at ' + num(TIERS[2].min) + ' lifetime points', ICON.award, 'gold', [life, TIERS[2].min], 'points'],
-      ['level', 'Black level', 'Reach Black at ' + num(TIERS[3].min) + ' lifetime points', ICON.crown, 'black', [life, TIERS[3].min], 'points'],
-      ['level', 'Settling in', 'Be a member for 3 months', ICON.calendar, 'teal', [memberMonths, 3], 'months'],
-      ['level', 'Half a year', 'Be a member for 6 months', ICON.calendar, 'blue', [memberMonths, 6], 'months'],
-      ['level', 'One year in', 'Be a member for a year', ICON.cake, 'pink', [memberMonths, 12], 'months'],
-      ['level', 'Old friend', 'Be a member for 2 years', ICON.heart, 'red', [memberMonths, 24], 'months']
+      ['level', 'Silver level', 'Reach Silver at ' + num(TIERS[1].min) + ' lifetime points', 'workspace_premium', 'silver', [life, TIERS[1].min], 'points'],
+      ['level', 'Gold level', 'Reach Gold at ' + num(TIERS[2].min) + ' lifetime points', 'workspace_premium', 'gold', [life, TIERS[2].min], 'points'],
+      ['level', 'Black level', 'Reach Black at ' + num(TIERS[3].min) + ' lifetime points', 'crown', 'black', [life, TIERS[3].min], 'points'],
+      ['level', 'Settling in', 'Be a member for 3 months', 'event', 'teal', [memberMonths, 3], 'months'],
+      ['level', 'Half a year', 'Be a member for 6 months', 'calendar_month', 'blue', [memberMonths, 6], 'months'],
+      ['level', 'One year in', 'Be a member for a year', 'cake', 'pink', [memberMonths, 12], 'months'],
+      ['level', 'Old friend', 'Be a member for 2 years', 'favorite', 'red', [memberMonths, 24], 'months']
     ];
     DEPT_BADGES.forEach(function (d) { list.push(['dept', d[1], d[2], d[3], d[4], !!depts[d[0]]]); });
-    list.push(['dept', 'All-rounder', 'Buy or sell in 5 different collections', ICON.layers, 'violet', [Object.keys(depts).length, 5]]);
+    list.push(['dept', 'All-rounder', 'Buy or sell in 5 different collections', 'category', 'violet', [Object.keys(depts).length, 5]]);
     if (b) {
-      list.push(['friends', 'Birthday', 'Get your birthday points', ICON.cake, 'pink', !!(b.birthday && b.birthday.receivedEver)]);
-      list.push(['friends', 'Plus one', 'Join with a friend’s invite', ICON.link, 'teal', !!rf.friendBonus, '', !rf.canLink]);
-      list.push(['friends', 'Friend bringer', 'Invite a friend who shops', ICON.users, 'blue', (rf.rewarded || 0) > 0]);
-      list.push(['friends', 'Crew', 'Invite 3 friends who shop', ICON.users, 'violet', [rf.rewarded || 0, 3], 'friends']);
-      list.push(['friends', 'Squad goals', 'Invite 5 friends who shop', ICON.trophy, 'gold', [rf.rewarded || 0, 5], 'friends']);
+      list.push(['friends', 'Birthday', 'Get your birthday points', 'cake', 'pink', !!(b.birthday && b.birthday.receivedEver)]);
+      list.push(['friends', 'Plus one', 'Join with a friend’s invite', 'person_add', 'teal', !!rf.friendBonus, '', !rf.canLink]);
+      list.push(['friends', 'Friend bringer', 'Invite a friend who shops', 'group_add', 'blue', (rf.rewarded || 0) > 0]);
+      list.push(['friends', 'Crew', 'Invite 3 friends who shop', 'group', 'violet', [rf.rewarded || 0, 3], 'friends']);
+      list.push(['friends', 'Squad goals', 'Invite 5 friends who shop', 'groups', 'gold', [rf.rewarded || 0, 5], 'friends']);
     }
     return list.map(function (x) {
       var n = Array.isArray(x[5]) ? x[5] : null;
@@ -1080,10 +1064,31 @@
     return num(Math.min(x.have, x.goal)) + ' of ' + num(x.goal) + (x.unit ? ' ' + x.unit : '');
   }
 
+  // Each group of badges sits in its own Material 3 shape — a scalloped
+  // cookie, a clover, a flower — drawn as a wave around a circle:
+  // [lobes, depth]. Earned ones fill in with the badge's tonal colour.
+  // The birthday card borrows one for its cake.
+  var BADGE_SHAPES = {
+    start: [4, 0.08], shop: [9, 0.055], sell: [4, 0.2], visits: [8, 0.06], points: [12, 0.04],
+    prizes: [6, 0.15], level: [5, 0.08], dept: [7, 0.06], friends: [3, 0.1],
+    birthday: [10, 0.06]
+  };
+  var shapePaths = {};
+  function badgeShape(group) {
+    if (shapePaths[group]) return shapePaths[group];
+    var s = BADGE_SHAPES[group] || [0, 0], n = s[0], k = s[1], d = '';
+    for (var a = 0; a < 180; a++) {
+      var t = (a / 180) * Math.PI * 2;
+      var r = 48 * (1 - k + k * Math.cos(n * t));
+      d += (a ? 'L' : 'M') + (50 + r * Math.sin(t)).toFixed(2) + ' ' + (50 - r * Math.cos(t)).toFixed(2);
+    }
+    return (shapePaths[group] = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="' + d + 'Z"/></svg>');
+  }
+
   function badgeItem(x, i) {
     var pct = x.goal && !x.earned ? Math.round(Math.min(x.have / x.goal, 1) * 100) : 0;
-    return '<li class="acct-badge acct-badge--' + x.tone + (x.earned ? ' is-earned' : '') + '" style="--i:' + i + '">' +
-      '<span class="acct-badge-icon" aria-hidden="true">' + x.icon + (x.earned ? '' : '<em>' + ICON.lock + '</em>') + '</span>' +
+    return '<li class="acct-badge acct-badge--' + x.tone + (x.earned ? ' is-earned' : '') + '">' +
+      '<span class="acct-badge-icon" aria-hidden="true">' + badgeShape(x.group) + '<i class="acct-sym">' + x.icon + '</i></span>' +
       '<b>' + esc(x.name) + '</b>' +
       '<span><span class="acct-sr">' + (x.earned ? 'Unlocked: ' : 'Locked: ') + '</span>' + esc(x.hint) +
         (x.goal && !x.earned
@@ -1106,7 +1111,7 @@
     var SHOW = 12;
     return '<section class="acct-section acct-rise" style="--d:200ms" id="acctBadges">' +
       '<div class="acct-section-head">' +
-        '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.award + '</i>Badges</h2>' +
+        '<h2 class="acct-section-title">Badges</h2>' +
         '<span class="acct-badges-count">' + earned.length + ' of ' + list.length + ' unlocked</span>' +
       '</div>' +
       '<span class="acct-badges-meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Badges unlocked"><i style="--p:' + pct + '%"></i></span>' +
@@ -1151,6 +1156,18 @@
       btn.querySelector('span').textContent = open ? 'Show fewer' : label;
       if (!open) sec.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
+  }
+
+  // How long until the birthday month starts: "12 days to go", "5 months to go".
+  function bdCountdown(bd) {
+    if (bd.thisMonth) return '<span class="acct-bday-chip">It’s your birthday month</span>';
+    if (!bd.month) return '';
+    var now = new Date();
+    var start = new Date(now.getFullYear(), bd.month - 1, 1);
+    if (start <= now) start = new Date(now.getFullYear() + 1, bd.month - 1, 1);
+    var days = Math.ceil((start - now) / 864e5);
+    var months = Math.round(days / 30.44);
+    return '<span class="acct-bday-chip">' + (days <= 45 ? days + (days === 1 ? ' day' : ' days') : months + ' months') + ' to go</span>';
   }
 
   function inviteLink(me) {
@@ -1199,8 +1216,9 @@
 
     return '<section class="acct-bonuses acct-rise" style="--d:220ms" aria-label="Bonus points">' +
       '<div class="acct-bonus acct-bonus--birthday' + (bd.thisMonth ? ' is-now' : '') + '">' +
-        '<span class="acct-bonus-icon" aria-hidden="true">' + ICON.cake + '</span>' +
-        '<div class="acct-bonus-text">' + bdText + '</div>' +
+        '<span class="acct-bday-confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>' +
+        '<span class="acct-bday-art" aria-hidden="true">' + badgeShape('birthday') + '<i class="acct-sym">cake</i></span>' +
+        '<div class="acct-bonus-text">' + bdText + bdCountdown(bd) + '</div>' +
       '</div>' +
       '<div class="acct-bonus acct-bonus--invite">' +
         '<span class="acct-bonus-icon" aria-hidden="true">' + ICON.users + '</span>' +
@@ -1543,16 +1561,16 @@
   }
 
   function detailsView(me) {
-    function dt(icon, label) { return '<dt><i aria-hidden="true">' + icon + '</i>' + label + '</dt>'; }
-    return '<h2 class="acct-section-title"><span><i aria-hidden="true">' + ICON.user + '</i>Your details</span> <button type="button" class="acct-textbtn" id="acctEdit">Edit</button></h2>' +
+    function dt(label) { return '<dt>' + label + '</dt>'; }
+    return '<h2 class="acct-section-title">Your details <button type="button" class="acct-textbtn" id="acctEdit">Edit</button></h2>' +
       '<dl class="acct-dl">' +
-        '<div>' + dt(ICON.user, 'Name') + '<dd>' + esc(me.fullName || '\u2014') + '</dd></div>' +
-        '<div>' + dt(ICON.mail, 'Email') + '<dd>' + esc(me.email) + '</dd></div>' +
-        '<div>' + dt(ICON.phone, 'Phone') + '<dd>' + esc(me.phone || '\u2014') + '</dd></div>' +
-        '<div>' + dt(ICON.bell, 'New-arrival emails') + '<dd>' + (me.marketingOptIn ? 'On' : 'Off') + '</dd></div>' +
-        (me.dateOfBirth ? '<div>' + dt(ICON.calendar, 'Date of birth') + '<dd>' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</dd></div>' : '') +
-        '<div>' + dt(ICON.shield, 'Photo ID') + '<dd>' + esc(idLabel(me.idStatus)) + '</dd></div>' +
-        '<div>' + dt(ICON.calendar, 'Member since') + '<dd>' + esc(date(me.joinedAt)) + '</dd></div>' +
+        '<div>' + dt('Name') + '<dd>' + esc(me.fullName || '\u2014') + '</dd></div>' +
+        '<div>' + dt('Email') + '<dd>' + esc(me.email) + '</dd></div>' +
+        '<div>' + dt('Phone') + '<dd>' + esc(me.phone || '\u2014') + '</dd></div>' +
+        '<div>' + dt('New-arrival emails') + '<dd>' + (me.marketingOptIn ? 'On' : 'Off') + '</dd></div>' +
+        (me.dateOfBirth ? '<div>' + dt('Date of birth') + '<dd>' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</dd></div>' : '') +
+        '<div>' + dt('Photo ID') + '<dd>' + esc(idLabel(me.idStatus)) + '</dd></div>' +
+        '<div>' + dt('Member since') + '<dd>' + esc(date(me.joinedAt)) + '</dd></div>' +
       '</dl>';
   }
 
@@ -2124,13 +2142,8 @@
         (opts.preview ? '<span class="acct-preview-tag acct-rise">Preview · sample data</span>' : '') +
 
         '<header class="acct-dash-head acct-rise">' +
-          '<div>' +
-            '<p class="acct-dash-kicker">EVB Rewards · Member ' + esc(me.memberNumber) + '</p>' +
-            '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
-              '<span>Hi, <em class="acct-hi-name">' + esc(firstName(me.fullName) || 'there') +
-                '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
-              '</em></span></h1>' +
-          '</div>' +
+          '<h1 class="acct-hi"><span class="acct-hi-avatar" data-avatar aria-hidden="true">' + esc((firstName(me.fullName) || '?').charAt(0)) + '</span>' +
+            '<span>Hi, ' + esc(firstName(me.fullName) || 'there') + '</span></h1>' +
           '<button type="button" class="acct-textbtn" id="acctSignOut">Sign out</button>' +
         '</header>' +
 
@@ -2146,11 +2159,11 @@
         qrCard(me, 100) +
 
         '<section class="acct-section acct-rise" style="--d:120ms">' +
-          '<h2 class="acct-section-title"><i aria-hidden="true">' + ICON.sparkle + '</i>What’s coming</h2>' +
+          '<h2 class="acct-section-title">What’s coming</h2>' +
           '<ol class="acct-steps">' +
-            '<li><span class="acct-step-icon">' + ICON.star + '</span><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.gift + '</span><b>Prizes</b><span>' + prizeLadder() + '.</span></li>' +
-            '<li><span class="acct-step-icon">' + ICON.clock + '</span><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
+            '<li><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
+            '<li><b>Prizes</b><span>' + prizeLadder() + '.</span></li>' +
+            '<li><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -2183,7 +2196,7 @@
     return '<section class="acct-qr acct-rise" style="--d:' + delay + 'ms" aria-label="Your member QR code">' +
       '<div class="acct-qr-code" data-qr role="img" aria-label="QR code for member ' + esc(me.memberNumber) + '"></div>' +
       '<div class="acct-qr-text">' +
-        '<span class="acct-qr-label">' + ICON.qr + 'Your member code</span>' +
+        '<span class="acct-qr-label">Your member code</span>' +
         '<b>Show this when you buy or sell in the shop</b>' +
         '<span>We scan it at the counter and add points for the whole visit, 1 for every $1.' +
           (me.locked ? ' They start adding up now.' : '') + '</span>' +
