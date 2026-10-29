@@ -439,45 +439,14 @@ function toggleNav() { toggleEvbNav(); }
   document.head.appendChild(s);
 })();
 
-// EVB Rewards: a Rewards link beside Store in both navs. Added here rather
-// than in each page's header markup so all 128 pages get it at once.
-//
-// EVB_REWARDS_OPEN is the launch switch for the site's Rewards marketing.
-// While false there's no Rewards link in the navs and no "claim your
-// points" box on receipts (store.css hides it unless <html> has
-// .evb-rewards-open). Accounts themselves are reached from the store bar's
-// Sign in, and what an account shows is decided in the database (panel
-// migration 0072, store_settings.rewards_open).
+// EVB_REWARDS_OPEN is the launch switch for the site's Rewards marketing:
+// while false there's no "claim your points" box on receipts (store.css
+// hides it unless <html> has .evb-rewards-open). There's no Rewards link in
+// the navs (the owner's call, 2026-10-29): accounts are reached from the
+// profile button in the store bar. What an account shows is decided in the
+// database (panel migration 0072, store_settings.rewards_open).
 var EVB_REWARDS_OPEN = true;
-(function () {
-  if (!EVB_REWARDS_OPEN) return;
-  document.documentElement.classList.add('evb-rewards-open');
-  function add() {
-    if (document.querySelector('[data-evb-rewards-link]')) return;
-    var here = /^\/account(\/|$)/.test(location.pathname);
-    var store = document.querySelector('.site-nav-links .site-nav-link--store');
-    if (store) {
-      var a = document.createElement('a');
-      a.href = '/account/';
-      a.className = 'site-nav-link' + (here ? ' is-active' : '');
-      a.textContent = 'Rewards';
-      a.setAttribute('data-evb-rewards-link', '');
-      store.parentNode.insertBefore(a, store.nextSibling);
-    }
-    var mob = document.querySelector('.site-mob-links .site-mob-link--store');
-    if (mob) {
-      var m = document.createElement('a');
-      m.href = '/account/';
-      m.className = 'site-mob-link';
-      m.textContent = 'Rewards';
-      m.setAttribute('data-evb-rewards-link', '');
-      m.addEventListener('click', function () { toggleEvbNav(); });
-      mob.parentNode.insertBefore(m, mob.nextSibling);
-    }
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', add);
-  else add();
-})();
+if (EVB_REWARDS_OPEN) document.documentElement.classList.add('evb-rewards-open');
 
 // Sign in lives in the store bar (.evb-acctbtn), on the Online Store pages
 // and /account/ only, not in the site-wide nav. Once signed in it reads "My
