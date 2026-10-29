@@ -23,6 +23,28 @@ const SHIPPING_RATES = {
 
 const FREE_SHIPPING_THRESHOLD = 50000;
 
+// The most a free-shipping offer (the threshold, FREESHIP, the welcome
+// offer, a Rewards prize) takes off standard shipping. The usual $15 is still
+// free; an item the panel gave dearer shipping pays the rest (the owner's
+// call, 2026-10-29). store-config.js shippingOfferCap is the browser's copy.
+const SHIPPING_OFFER_CAP = 2000;
+
+// How an item can reach the buyer and what its shipping costs, from the
+// panel (migration 0083): the Square item's `shipping` attribute, "both" |
+// "ship" | "pickup", then ":free" or ":<cents>" for its own standard
+// shipping. Nothing means pickup or shipping at the usual rate. Read the
+// same way in store-catalog.js.
+function itemShipping(item) {
+  const values = (item && item.custom_attribute_values) || {};
+  const key = Object.keys(values).find(k => {
+    const v = values[k] || {};
+    return v.name === 'shipping' || k === 'evb_shipping' || k.endsWith(':evb_shipping');
+  });
+  const m = /^(both|ship|pickup)(?::(free|\d{1,6}))?$/.exec(String((key && values[key].string_value) || '').trim());
+  if (!m) return { delivery: 'both', cents: null };
+  return { delivery: m[1], cents: m[1] === 'pickup' || !m[2] ? null : m[2] === 'free' ? 0 : Number(m[2]) };
+}
+
 // Supabase, for checking who is ordering (panel migration 0075). Public
 // values, the same as the website's account/account-config.js: the anon key
 // can only call the member_* functions, as the member whose session it is.
@@ -388,6 +410,12 @@ async function buildSquareOrder(env, payload, auth) {
   const discounts = [];
   const deals = await readDeals(env, dealWeek());
   let subtotal = 0;
+  let taxableSubtotal = 0;
+  // Standard shipping goes in one box, priced at its dearest item; an item
+  // with no price of its own is the usual rate.
+  let standardShipping = 0;
+  const pickupOnly = [];
+  const shipOnly = [];
 
   incoming.forEach((l, i) => {
     const v = variations[l.variationId];
@@ -415,6 +443,14 @@ async function buildSquareOrder(env, payload, auth) {
     }
 
     subtotal += unit * qty - off;
+    if (taxable) taxableSubtotal += unit * qty - off;
+
+    const ship = itemShipping(parent);
+    const name = (parent && parent.item_data && parent.item_data.name) || 'An item in your bag';
+    if (ship.delivery === 'pickup') pickupOnly.push(name);
+    if (ship.delivery === 'ship') shipOnly.push(name);
+    standardShipping = Math.max(standardShipping, ship.cents != null ? ship.cents : SHIPPING_RATES.standard.amount);
+
     lineItems.push(li);
   });
 
@@ -439,18 +475,34 @@ async function buildSquareOrder(env, payload, auth) {
   const shippingId = (payload.order.fulfillment && payload.order.fulfillment.shippingId) ||
     (payload.order.fulfillment && payload.order.fulfillment.type === 'PICKUP' ? 'pickup' : 'standard');
   const rate = SHIPPING_RATES[shippingId] || SHIPPING_RATES.pickup;
+  const pickup = rate === SHIPPING_RATES.pickup;
 
-  let shippingAmount = rate.amount;
-  if (shippingId === 'standard' && (freeShipping || subtotal >= FREE_SHIPPING_THRESHOLD)) shippingAmount = 0;
+  // Pickup-only and ship-only items (panel 0083). The checkout page stops
+  // these first; this is what holds.
+  if (pickup && shipOnly.length) {
+    throw Object.assign(new Error(shipOnly[0] + ' ships only, so it can\u2019t be picked up. Go back to Delivery and choose shipping. Nothing was charged.'), { status: 409 });
+  }
+  if (!pickup && pickupOnly.length) {
+    throw Object.assign(new Error(pickupOnly[0] + ' is pickup only. Go back to Delivery and choose pickup. Nothing was charged.'), { status: 409 });
+  }
+
+  let shippingAmount = pickup ? 0
+    : shippingId === 'standard' ? standardShipping
+    : standardShipping + Math.max(rate.amount - SHIPPING_RATES.standard.amount, 0);
+  let shippingOff = 0;
+  if (shippingId === 'standard' && (freeShipping || subtotal >= FREE_SHIPPING_THRESHOLD)) {
+    shippingOff = Math.min(shippingAmount, SHIPPING_OFFER_CAP);
+  }
 
   const buyerEmail = normEmail(payload.order.customer && payload.order.customer.email);
   let welcomeEmail = null;
-  if (shippingId === 'standard' && shippingAmount > 0 && env.SUBSCRIBERS && buyerEmail) {
+  if (shippingId === 'standard' && shippingAmount > 0 && !shippingOff && env.SUBSCRIBERS && buyerEmail) {
     const sub = await getSubscriber(env, buyerEmail);
-    if (sub && !sub.r) { shippingAmount = 0; welcomeEmail = buyerEmail; }
+    if (sub && !sub.r) { shippingOff = Math.min(shippingAmount, SHIPPING_OFFER_CAP); welcomeEmail = buyerEmail; }
   }
+  shippingAmount -= shippingOff;
   const claimed = !!(payload.order.totals && payload.order.totals.welcomeShipping);
-  if (claimed && shippingId === 'standard' && shippingAmount > 0) {
+  if (claimed && shippingId === 'standard' && !welcomeEmail) {
     throw Object.assign(new Error('The free-shipping welcome offer has already been used for this email. Go back to Delivery to see the updated total.'), { status: 409 });
   }
 
@@ -458,22 +510,43 @@ async function buildSquareOrder(env, payload, auth) {
   // chose to save their points (usePrize false). A checkout page from before
   // prizes sends no usePrize and gets none, so its total still matches.
   // Priced on the goods after any promo code, and on standard shipping still
-  // being charged.
-  const prizeCart = { itemsCents: Math.max(subtotal - promoOff, 0), shippingCents: shippingId === 'standard' ? shippingAmount : 0 };
+  // being charged, up to what a free-shipping offer may take off — none if
+  // one already has.
+  const prizeCart = {
+    itemsCents: Math.max(subtotal - promoOff, 0),
+    shippingCents: shippingId === 'standard' && !shippingOff ? Math.min(shippingAmount, SHIPPING_OFFER_CAP) : 0
+  };
   const prize = await checkoutPrize(env, auth, prizeCart.itemsCents, prizeCart.shippingCents);
   const prizeApplied = !!prize && !!(payload.order.totals && payload.order.totals.usePrize === true);
   if (prizeApplied) {
-    if (prize.kind === 'shipping') shippingAmount = 0;
+    if (prize.kind === 'shipping') shippingAmount = Math.max(0, shippingAmount - prize.creditCents);
     else discounts.push({ uid: 'evb-prize', name: prizeName(prize), amount_money: money(prize.creditCents), scope: 'ORDER' });
   }
 
-  const serviceCharges = shippingAmount > 0 ? [{
-    uid: 'shipping',
-    name: rate.label,
-    amount_money: money(shippingAmount),
-    calculation_phase: 'SUBTOTAL_PHASE',
-    taxable: false
-  }] : [];
+  // NY taxes shipping on taxable goods (TB-ST-838). With both kinds in the
+  // bag, the shipping is split by value and each part stated on its own:
+  // the taxable goods' share is taxed, the rest isn't.
+  const taxedShipping = subtotal > 0 ? Math.round(shippingAmount * taxableSubtotal / subtotal) : 0;
+  const serviceCharges = [];
+  if (taxedShipping > 0) {
+    serviceCharges.push({
+      uid: 'shipping',
+      name: rate.label,
+      amount_money: money(taxedShipping),
+      calculation_phase: 'SUBTOTAL_PHASE',
+      taxable: true,
+      applied_taxes: [{ tax_uid: 'sales-tax' }]
+    });
+  }
+  if (shippingAmount - taxedShipping > 0) {
+    serviceCharges.push({
+      uid: 'shipping-exempt',
+      name: taxedShipping > 0 ? rate.label + ' (tax-free items)' : rate.label,
+      amount_money: money(shippingAmount - taxedShipping),
+      calculation_phase: 'SUBTOTAL_PHASE',
+      taxable: false
+    });
+  }
 
   const f = payload.order.fulfillment || {};
   const c = payload.order.customer || {};

@@ -99,9 +99,17 @@ in Square Dashboard → **Items**:
 - **Track inventory** — turn this on. Almost everything in this shop is
   one-of-one, and this is what makes an item show as *Last one* and then
   disappear when it sells.
-- **Sellable / taxable** — leave taxable ON for everything except bullion.
-  Gold and silver bullion must have **taxable OFF**; the storefront and the
-  Worker both read this flag, and the tax is calculated from it.
+- **Sellable / taxable** — the storefront and the Worker both read this flag,
+  and the tax is calculated from it. Items posted from the panel get it from
+  the listing's sales-tax answer, which New listing presets from NY's rules:
+  clothing and shoes under $110 tax-free, bullion sold for $1,000 and up
+  tax-free, everything else taxed. Shipping on taxable items is taxed too.
+- **Pickup / shipping** — the panel writes a `shipping` custom attribute on
+  items that aren't "pickup or shipping at the usual rate": `pickup`, `ship`,
+  or either with `:free` / `:<cents>` for the item's own standard shipping
+  (e.g. `both:4500`). Checkout offers only what every item in the bag allows,
+  and charges the dearest item's shipping. Free-shipping offers take off at
+  most $20.
 
 ### Optional custom attributes
 
@@ -147,7 +155,10 @@ Confirm all of this before going live:
 
 - [ ] `/store/` lists your real Square products, not the seed catalog
 - [ ] A sold-out item shows **Sold** and cannot be added
-- [ ] Bullion shows no sales tax; everything else does
+- [ ] An item marked no-tax in the panel shows no sales tax; a taxed one does,
+      on its share of shipping too
+- [ ] A pickup-only item greys out shipping at checkout, and a ship-only one
+      greys out pickup
 - [ ] The declined card shows a readable error and does **not** clear the bag
 - [ ] The approved card lands on `/store/order/?id=…` with a correct receipt
 - [ ] The order appears in Square Dashboard → **Orders**, with the right

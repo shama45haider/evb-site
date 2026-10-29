@@ -17,6 +17,11 @@ window.EVB_STORE_CONFIG = {
 
   freeShippingThreshold: 50000,
 
+  // The most a free-shipping offer (the threshold, FREESHIP, the welcome
+  // offer, a Rewards prize) takes off. The usual $15 is still free; an item
+  // the panel gave dearer shipping pays the rest. Same as the Worker's.
+  shippingOfferCap: 2000,
+
   shippingRates: [
     { id: 'pickup',   label: 'In-store pickup',  detail: '39 Avenue A — ready same day during store hours', amount: 0,    days: 'Today' },
     { id: 'standard', label: 'Standard shipping', detail: 'Insured, signature on delivery',                  amount: 1500, days: '3–5 business days' },

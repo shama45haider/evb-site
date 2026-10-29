@@ -763,6 +763,17 @@
     }
   ];
 
+  // How an item can reach the buyer and what its shipping costs, from the
+  // panel (migration 0083): the Square item's `shipping` attribute, "both" |
+  // "ship" | "pickup", then ":free" or ":<cents>" for its own standard
+  // shipping. Null means pickup or shipping at the usual rate.
+  // square-worker.js reads it the same way, and its copy is what charges.
+  function parseShipping(v) {
+    var m = /^(both|ship|pickup)(?::(free|\d{1,6}))?$/.exec(String(v || '').trim());
+    if (!m) return null;
+    return { delivery: m[1], cents: m[1] === 'pickup' || !m[2] ? null : m[2] === 'free' ? 0 : Number(m[2]) };
+  }
+
   function fromSquare(payload) {
     var objects = (payload && payload.objects) || [];
     var images = {};
@@ -820,6 +831,7 @@
         variantLabel: vars.length > 1 ? (custom.variant_label || 'Option') : null,
         variants: vars.length ? vars : one(1),
         taxable: d.is_taxable !== false,
+        shipping: parseShipping(custom.shipping),
         featured: custom.featured === true || custom.featured === 'true',
         tags: custom.tags ? String(custom.tags).split(',').map(function (t) { return t.trim(); }) : [],
         sku: (vars[0] && vars[0].sku) || '',

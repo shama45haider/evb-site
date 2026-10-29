@@ -107,6 +107,7 @@
         if (!d.phone && c.phone) d.phone = c.phone;
         if (canShip()) applyIdAddress();
         else if (d.shippingId !== 'pickup') d.shippingId = 'pickup';
+        fitDelivery();
       });
     }).catch(function (err) {
       var m = String((err && err.message) || '');
@@ -153,6 +154,35 @@
 
   function memberReady() {
     return state.member.status === 'ready' && state.member.check && state.member.check.onboarded;
+  }
+
+  // Some items are pickup only or ship only (panel 0083). Moves the choice
+  // to the one the bag allows when only one is, and the member can have it.
+  function fitDelivery() {
+    var d = state.data, del = S.totals({ shippingId: d.shippingId }).delivery;
+    if (d.shippingId === 'pickup' && !del.pickup && del.ship && canShip()) d.shippingId = 'standard';
+    else if (d.shippingId !== 'pickup' && !del.ship && del.pickup) d.shippingId = 'pickup';
+  }
+
+  function listNames(names) {
+    names = names.map(function (n) { return '“' + n + '”'; });
+    return names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+  }
+
+  // Why the bag can't go the way they picked, or null if it can.
+  function deliveryProblem(shippingId) {
+    var del = S.totals({ shippingId: shippingId }).delivery;
+    if (!del.pickup && !del.ship) {
+      return listNames(del.pickupOnly) + (del.pickupOnly.length > 1 ? ' are' : ' is') + ' pickup only and ' +
+        listNames(del.shipOnly) + (del.shipOnly.length > 1 ? ' ship' : ' ships') + ' only, so they can’t be in one order. Remove one from your bag to check out.';
+    }
+    if (shippingId === 'pickup' && !del.pickup) {
+      return listNames(del.shipOnly) + (del.shipOnly.length > 1 ? ' ship' : ' ships') + ' only — it can’t be picked up in store.';
+    }
+    if (shippingId !== 'pickup' && !del.ship) {
+      return listNames(del.pickupOnly) + (del.pickupOnly.length > 1 ? ' are' : ' is') + ' pickup only, at 39 Avenue A.';
+    }
+    return null;
   }
 
   // Why they can't ship, and what to do about it.
@@ -228,7 +258,10 @@
       else if (digits(d.phone).length < 10) e.phone = 'Enter a 10-digit phone number';
     }
 
-    if (step === 'delivery' && d.shippingId !== 'pickup' && !canShip()) {
+    var deliveryWrong = (step === 'delivery' || step === 'review') && deliveryProblem(d.shippingId);
+    if (deliveryWrong) {
+      e.shippingId = deliveryWrong;
+    } else if (step === 'delivery' && d.shippingId !== 'pickup' && !canShip()) {
       e.shippingId = noShipText();
     } else if (step === 'delivery' && d.shippingId !== 'pickup') {
       if (!d.address1.trim()) e.address1 = 'Required';
@@ -439,11 +472,13 @@
 
   // What the prize is priced on: the goods after any promo code, and
   // standard shipping that's still being charged (free shipping is standard
-  // only).
+  // only), up to what a free-shipping offer may take off — none if one
+  // already has.
   function prizeCart(t) {
+    var standard = t.shippingRate && t.shippingRate.id === 'standard' && !t.shippingOff;
     return {
       items: Math.max(t.subtotal - t.discount, 0),
-      shipping: t.shippingRate && t.shippingRate.id === 'standard' ? t.shipping : 0
+      shipping: standard ? Math.min(t.shipping, CFG.shippingOfferCap || Infinity) : 0
     };
   }
 
@@ -479,15 +514,12 @@
     t.prizeOffer = p.data;
     if (!p.use) return t;
     if (p.data.kind === 'shipping') {
-      t.shipping = 0;
+      t.shipping = Math.max(0, t.shipping - p.data.creditCents);
     } else {
       // Off the goods before tax, spread over them the way Square does.
       t.discount += p.data.creditCents;
-      var taxable = t.subtotal > 0
-        ? Math.max(0, t.taxableSubtotal - Math.round(t.discount * (t.taxableSubtotal / t.subtotal)))
-        : 0;
-      t.tax = Math.round(taxable * (CFG.taxRate || 0));
     }
+    t.tax = S.taxFor(t);
     t.total = Math.max(0, t.subtotal - t.discount + t.shipping + t.tax);
     t.prize = p.data;
     return t;
@@ -1022,15 +1054,13 @@
   function deliveryStep() {
     var d = state.data;
     var rates = CFG.shippingRates || [];
-    var sub = S.cart.subtotal();
-    var promoFree = /^FREESHIP$/i.test(d.promoCode || '') || state.welcomeShip;
-    var threshold = CFG.freeShippingThreshold || 0;
-
     var ship = canShip();
+    var del = S.totals({ shippingId: d.shippingId }).delivery;
     var options = rates.map(function (r) {
-      var free = r.id === 'standard' && ((threshold > 0 && sub >= threshold) || promoFree);
-      var amount = (r.amount === 0 || free) ? 'Free' : S.money(r.amount);
-      var off = r.id !== 'pickup' && !ship;
+      // Each item's own shipping (panel 0083) and any offer, as charged.
+      var cost = S.totals({ shippingId: r.id, promoCode: d.promoCode, welcomeShip: state.welcomeShip }).shipping;
+      var amount = cost === 0 ? 'Free' : S.money(cost);
+      var off = r.id === 'pickup' ? !del.pickup : (!ship || !del.ship);
       return '<label class="evb-radio' + (d.shippingId === r.id ? ' is-active' : '') + (off ? ' is-disabled' : '') + '">' +
         '<input type="radio" name="shippingId" value="' + S.attr(r.id) + '"' + (d.shippingId === r.id ? ' checked' : '') + (off ? ' disabled' : '') + '>' +
         '<span class="evb-radio-main">' +
@@ -1052,10 +1082,13 @@
     return '<div class="evb-panel">' +
         '<p class="evb-panel-title">How would you like it?</p>' +
         '<div class="evb-radio-list">' + options + '</div>' +
-        (!ship ? '<div class="evb-notice evb-notice--info" style="margin:14px 0 0">' +
+        (deliveryProblem(d.shippingId) || (!del.pickup || !del.ship) ? '<div class="evb-notice evb-notice--info" style="margin:14px 0 0">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>' +
+          '<span>' + S.esc(deliveryProblem(d.shippingId) || deliveryProblem(del.pickup ? 'standard' : 'pickup')) + '</span></div>' : '') +
+        (!ship && del.ship ? '<div class="evb-notice evb-notice--info" style="margin:14px 0 0">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>' +
           '<span>' + S.esc(noShipText()) + ' <a href="/account/">Open your account</a></span></div>' : '') +
-        (state.errors.shippingId ? '<p class="evb-error">' + S.esc(state.errors.shippingId) + '</p>' : '') +
+        (state.errors.shippingId && state.errors.shippingId !== deliveryProblem(d.shippingId) ? '<p class="evb-error">' + S.esc(state.errors.shippingId) + '</p>' : '') +
       '</div>' +
       '<div class="evb-panel">' +
         '<p class="evb-panel-title">' + (d.shippingId === 'pickup' ? 'Pickup location' : 'Shipping address') + '</p>' +
@@ -1266,10 +1299,10 @@
       '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
       (t.promoDiscount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount (' + S.esc(t.promoCode) + ')</span><strong>&minus;' + S.money(t.promoDiscount) + '</strong></div>' : '') +
       '<div class="evb-sumrow"><span>' + S.esc(t.shippingRate.label) + '</span><strong>' +
-        (t.prize && t.prize.kind === 'shipping' ? '<s class="evb-sumrow-was">' + S.money(t.prize.creditCents) + '</s> ' : '') +
+        (t.prize && t.prize.kind === 'shipping' ? '<s class="evb-sumrow-was">' + S.money(t.shipping + t.prize.creditCents) + '</s> ' : '') +
         (t.shipping === 0 ? 'Free' : S.money(t.shipping)) + '</strong></div>' +
       prizeRows(t) +
-      (t.welcomeShip ? '<p class="evb-promo-msg is-ok">Welcome offer: free shipping on your first order.</p>' : '') +
+      (t.welcomeShip ? '<p class="evb-promo-msg is-ok">Welcome offer: ' + (t.shipping ? S.money(t.shippingOff) + ' off shipping' : 'free shipping') + ' on your first order.</p>' : '') +
       '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
       '<div class="evb-sumrow evb-sumrow--total"><span>Total</span><strong>' + S.money(t.total) + '</strong></div>' +
     '</div>';

@@ -93,6 +93,7 @@
           price: variant.price,
           qty: want,
           taxable: product.taxable !== false,
+          shipping: product.shipping || null,
           maxStock: variant.stock,
           squareVariationId: variant.squareVariationId || null
         };
@@ -144,6 +145,7 @@
         l.title = p.title;
         l.slug = p.slug;
         l.taxable = p.taxable !== false;
+        l.shipping = p.shipping || null;
         kept.push(l);
       });
       if (changes.length) { lines = kept; persist(); }
@@ -188,6 +190,43 @@
     }
   };
 
+  // Which ways the whole bag can go: pickup unless something ships only,
+  // shipping unless something is pickup only.
+  function deliveryFor(ls) {
+    var pickupOnly = [], shipOnly = [];
+    ls.forEach(function (l) {
+      var d = l.shipping && l.shipping.delivery;
+      if (d === 'pickup') pickupOnly.push(l.title);
+      if (d === 'ship') shipOnly.push(l.title);
+    });
+    return { pickup: !shipOnly.length, ship: !pickupOnly.length, pickupOnly: pickupOnly, shipOnly: shipOnly };
+  }
+
+  // Standard shipping for the bag: everything goes in one box, priced at its
+  // dearest item (an item with no price of its own is the usual rate).
+  // Express is that plus the usual difference.
+  function shippingFor(ls, rate) {
+    if (!rate || rate.id === 'pickup') return 0;
+    var rates = CFG.shippingRates || [];
+    var std = (rates.filter(function (r) { return r.id === 'standard'; })[0] || { amount: 0 }).amount;
+    var standard = ls.length ? 0 : std;
+    ls.forEach(function (l) {
+      var c = l.shipping && l.shipping.cents != null ? l.shipping.cents : std;
+      if (c > standard) standard = c;
+    });
+    return rate.id === 'standard' ? standard : standard + Math.max((rate.amount || 0) - std, 0);
+  }
+
+  // NY taxes shipping on taxable goods (TB-ST-838): the share of shipping
+  // that goes with them is taxed along with the goods, after discounts.
+  function taxFor(t) {
+    var share = t.subtotal > 0 ? t.taxableSubtotal / t.subtotal : 0;
+    var goods = t.subtotal > 0
+      ? Math.max(0, t.taxableSubtotal - Math.round(t.discount * share))
+      : 0;
+    return Math.round((goods + Math.round(t.shipping * share)) * (CFG.taxRate || 0));
+  }
+
   function totals(opts) {
     opts = opts || {};
     var ls = lines;
@@ -210,22 +249,25 @@
 
     var rates = CFG.shippingRates || [];
     var rate = rates.filter(function (r) { return r.id === opts.shippingId; })[0] || rates[0] || { id: 'pickup', amount: 0 };
-    var shipping = rate.amount || 0;
+    var shipping = shippingFor(ls, rate);
 
+    // Free-shipping offers are on standard shipping, and take off at most
+    // shippingOfferCap: an item with its own dearer shipping still pays the
+    // rest (the owner's call, 2026-10-29).
+    var cap = CFG.shippingOfferCap || Infinity;
     var threshold = CFG.freeShippingThreshold || 0;
-    var shippingFree = false;
-    if (rate.id === 'standard' && threshold > 0 && (subtotal - discount) >= threshold) {
-      shipping = 0; shippingFree = true;
-    }
-    if (freeShip && rate.id === 'standard') { shipping = 0; shippingFree = true; }
+    var shippingOff = 0;
     var welcomeShip = false;
-    if (opts.welcomeShip && rate.id === 'standard' && !shippingFree) { shipping = 0; shippingFree = true; welcomeShip = true; }
-
-    var taxableAfterDiscount = taxableSub;
-    if (discount > 0 && subtotal > 0) {
-      taxableAfterDiscount = Math.max(0, taxableSub - Math.round(discount * (taxableSub / subtotal)));
+    if (rate.id === 'standard' && ((threshold > 0 && (subtotal - discount) >= threshold) || freeShip)) {
+      shippingOff = Math.min(shipping, cap);
+    } else if (opts.welcomeShip && rate.id === 'standard' && shipping > 0) {
+      shippingOff = Math.min(shipping, cap);
+      welcomeShip = true;
     }
-    var tax = Math.round(taxableAfterDiscount * (CFG.taxRate || 0));
+    shipping -= shippingOff;
+    var shippingFree = shippingOff > 0 && shipping === 0;
+
+    var tax = taxFor({ subtotal: subtotal, taxableSubtotal: taxableSub, discount: discount, shipping: shipping });
 
     var total = Math.max(0, subtotal - discount + shipping + tax);
 
@@ -237,7 +279,9 @@
       promoCode: v.ok ? v.code : '',
       shipping: shipping,
       shippingFree: shippingFree,
+      shippingOff: shippingOff,
       welcomeShip: welcomeShip,
+      delivery: deliveryFor(ls),
       shippingRate: rate,
       tax: tax,
       taxRate: CFG.taxRate || 0,
@@ -526,6 +570,7 @@
     promo: promo,
     welcome: welcome,
     totals: totals,
+    taxFor: taxFor,
     orders: orders,
     draft: draft,
     toast: toast,
