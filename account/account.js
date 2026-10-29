@@ -157,7 +157,7 @@
   /* Supabase's messages are written for developers; these are for customers. */
   function friendly(err) {
     var m = String((err && (err.message || err.error_description)) || err || '');
-    if (/signups? not allowed|signup.*disabled/i.test(m)) return 'There’s no account for that email yet. EVB Rewards opens to everyone very soon!';
+    if (/signups? not allowed|signup.*disabled/i.test(m)) return 'We couldn’t make your account just now. Please try again in a minute, or call us at ' + biz.phone + '.';
     if (/rate limit|only request this after|too many/i.test(m)) {
       var s = /after (\d+) seconds?/.exec(m);
       return s ? 'Please wait ' + s[1] + ' seconds, then try again.' : 'Too many tries. Please wait a minute and try again.';
@@ -170,8 +170,8 @@
 
   /* ------------------------------------------------------------ signed out */
 
-  // The intro plays its entrance once; the code, welcome and on-the-list
-  // steps redraw it, and replaying it every step would be noise.
+  // The intro plays its entrance once; the code and welcome steps redraw
+  // it, and replaying it every step would be noise.
   var introPlayed = false;
 
   function heroIntro() {
@@ -344,18 +344,15 @@
     });
   }
 
-  // Anyone can make an account; what it unlocks is decided by member_me
-  // (panel 0072). If Supabase's sign-up switch is still off, a new email is
-  // saved as a request for Members → Requests (0071) instead of an error.
+  // Anyone can make an account, and Rewards are on from the start
+  // (store_settings.rewards_open, panel 0072). closed() only picks which
+  // screen the ?preview pages show.
   function closed() { return window.EVB_REWARDS_OPEN === false; }
 
   function sendCode(email, btn, errEl) {
     if (!sb) return renderCode(email);
     setBusy(btn, true, 'Sending…');
     sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true, emailRedirectTo: ACCOUNT_URL } }).then(function (res) {
-      if (res.error && /signups? not allowed|signup.*disabled/i.test(res.error.message || '')) {
-        return requestAccess(email, btn, errEl);
-      }
       setBusy(btn, false, 'Email me a code');
       if (res.error) { if (errEl) errEl.textContent = friendly(res.error); return; }
       ss(PENDING_KEY, JSON.stringify({ email: email, sentAt: Date.now() }));
@@ -365,37 +362,6 @@
       setBusy(btn, false, 'Email me a code');
       if (errEl) errEl.textContent = friendly(e);
     });
-  }
-
-  function requestAccess(email, btn, errEl) {
-    sb.rpc('request_member_access', { p_email: email, p_page: location.pathname }).then(function (res) {
-      setBusy(btn, false, 'Email me a code');
-      if (res.error) {
-        if (errEl) errEl.textContent = /full email/i.test(res.error.message || '') ? res.error.message : friendly(res.error);
-        return;
-      }
-      push('account_access_requested', {});
-      renderRequested(email);
-    }, function (e) {
-      setBusy(btn, false, 'Email me a code');
-      if (errEl) errEl.textContent = friendly(e);
-    });
-  }
-
-  function renderRequested(email) {
-    stopResendTimer();
-    render(
-      '<div class="acct-hero">' + heroIntro() +
-        '<div class="acct-card acct-fade">' +
-          '<div class="acct-welcome-badge">' + ICON.clock + '</div>' +
-          '<h2 class="acct-card-title">You’re on the list</h2>' +
-          '<p class="acct-card-sub">We’ve saved <b>' + esc(email) + '</b>. EVB Rewards is opening to a few customers at a time — we’ll email you as soon as your account is ready.</p>' +
-          '<a class="evb-btn evb-btn--primary acct-btn" href="/store/">Browse the store</a>' +
-          '<div class="acct-links"><button type="button" class="acct-link" id="acctBack">Use a different email</button></div>' +
-        '</div>' +
-      '</div>'
-    );
-    document.getElementById('acctBack').addEventListener('click', function () { renderEmail(''); });
   }
 
   function renderCode(email, error) {
@@ -1855,8 +1821,8 @@
           '<span class="acct-ob-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></span>' +
           '<h1 class="acct-ob-title">You’re all set' + (me.fullName ? ', ' + esc(firstName(me.fullName)) : '') + '</h1>' +
           '<p class="acct-ob-sub">' + (state.verified || me.idStatus === 'verified'
-            ? 'Your ID checked out. ' + (closed() ? 'Your Rewards are on.' : 'You’re verified.')
-            : 'We’ll check your ID by hand and let you know when your Rewards are on.') + '</p>' +
+            ? 'Your ID checked out. Your Rewards are on.'
+            : 'Your Rewards are on. We’ll check your ID by hand and let you know when it’s done.') + '</p>' +
           '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
         '</div>';
     }
@@ -2389,7 +2355,6 @@
       inviteInfo = { preview: true, code: 'M1001', firstName: 'Ana', points: 100, friendPoints: 50, minCents: 2500 };
       return renderEmail();
     }
-    if (mode === 'requested') return renderRequested('pat@example.com');
     if (mode === 'locked') return renderLocked(SAMPLE, { preview: true });
     if (mode === 'signup') return previewAfterCode();
     if (mode === 'address') { var ad = JSON.parse(JSON.stringify(SAMPLE)); return startOnboarding(ad, { step: 'address' }); }

@@ -448,7 +448,7 @@ function toggleNav() { toggleEvbNav(); }
 // .evb-rewards-open). Accounts themselves are reached from the store bar's
 // Sign in, and what an account shows is decided in the database (panel
 // migration 0072, store_settings.rewards_open).
-var EVB_REWARDS_OPEN = false;
+var EVB_REWARDS_OPEN = true;
 (function () {
   if (!EVB_REWARDS_OPEN) return;
   document.documentElement.classList.add('evb-rewards-open');
