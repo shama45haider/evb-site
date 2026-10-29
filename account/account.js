@@ -491,29 +491,6 @@
     } catch (e) { return null; }
   }
 
-  /* ------------------------------------------------------------ profile form */
-
-  function bindProfileForm(formId, label, after) {
-    var form = document.getElementById(formId);
-    var err = form.querySelector('.acct-error');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var name = document.getElementById('acctName').value.trim();
-      var phone = document.getElementById('acctPhone').value.trim();
-      var optIn = document.getElementById('acctOptIn').checked;
-      if (!name) { err.textContent = 'Enter your name.'; document.getElementById('acctName').focus(); return; }
-      if (phone && !/^[0-9 ()+.-]{7,32}$/.test(phone)) { err.textContent = 'That phone number doesn’t look right.'; document.getElementById('acctPhone').focus(); return; }
-      if (!sb) return previewAfterProfile(name);
-      var btn = form.querySelector('button[type="submit"]');
-      setBusy(btn, true, 'Saving…');
-      sb.rpc('member_update_profile', { p_full_name: name, p_phone: phone || null, p_marketing_opt_in: optIn }).then(function (res) {
-        if (res.error) { setBusy(btn, false, label); err.textContent = friendly(res.error); return; }
-        if (after) after();
-        loadMe();
-      }, function (e2) { setBusy(btn, false, label); err.textContent = friendly(e2); });
-    });
-  }
-
   /* ------------------------------------------------------------ dashboard */
 
   // Everything the member has done with the shop (member_history, panel
@@ -761,8 +738,6 @@
           '</ol>' +
         '</section>' +
 
-        '<section class="acct-section acct-rise" style="--d:300ms" id="acctDetails">' + detailsView(me) + '</section>' +
-
         '<p class="acct-foot-note">Want to close your account? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>' +
       '</div>'
     );
@@ -781,7 +756,6 @@
       if (!sb) return renderEmail();
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
-    bindDetails(me);
     dealsSection(opts);
   }
 
@@ -956,7 +930,7 @@
       ['start', 'Welcome', 'Join EVB Rewards', 'waving_hand', 'orange', true],
       ['start', 'Verified', 'Get your ID checked', 'verified_user', 'teal', me.idStatus === 'verified'],
       ['start', 'Picture perfect', 'Add a profile photo', 'photo_camera', 'pink', !!me.avatarPath, '', false, ['photo', 'Add a photo']],
-      ['start', 'In the loop', 'Turn on new-arrival emails in Your details', 'mail', 'blue', !!me.marketingOptIn],
+      ['start', 'In the loop', 'Get new-arrival emails', 'mail', 'blue', !!me.marketingOptIn, '', false, ['emails', 'Turn on']],
       ['start', 'Founding member', 'Joined EVB Rewards in 2026', 'crown', 'gold', !!joined && joined < new Date('2027-01-01T05:00:00Z'), '', true],
 
       ['shop', 'First buy', 'Buy something from us', 'shopping_bag', 'orange', sum.bought > 0 || buys > 0],
@@ -1119,6 +1093,17 @@
     // The photo step from sign-up, on its own: the only place to add one.
     Array.prototype.forEach.call(sec.querySelectorAll('[data-badge-go="photo"]'), function (b) {
       b.addEventListener('click', function () { startOnboarding(me, { step: 'photo', only: true }); });
+    });
+    // New-arrival emails, turned on in one tap: the only place to now.
+    Array.prototype.forEach.call(sec.querySelectorAll('[data-badge-go="emails"]'), function (b) {
+      b.addEventListener('click', function () {
+        if (!sb) { b.textContent = 'On'; b.disabled = true; return; }
+        setBusy(b, true, 'Turning on…');
+        sb.rpc('member_update_profile', { p_full_name: me.fullName, p_phone: me.phone || null, p_marketing_opt_in: true }).then(function (res) {
+          if (res.error) { setBusy(b, false, 'Turn on'); return; }
+          loadMe();
+        }, function () { setBusy(b, false, 'Turn on'); });
+      });
     });
     var btn = sec.querySelector('.acct-badges-toggle');
     var all = sec.querySelector('.acct-badges-all'), short = sec.querySelector('.acct-badges-short');
@@ -1520,11 +1505,6 @@
     });
   }
 
-  function idLabel(status) {
-    return status === 'verified' ? 'Verified' : status === 'submitted' ? 'Sent — we’re checking it'
-      : status === 'rejected' ? 'Needs a new photo' : 'Not sent';
-  }
-
   // A rejected ID gets a box at the top with a way to send a new one.
   function idNotice(me) {
     if (me.idStatus !== 'rejected') return '';
@@ -1533,47 +1513,6 @@
       '<div><b>We couldn\u2019t accept your ID</b><span>' + esc(me.idNote ? me.idNote + '. ' : '') + 'Please send a new photo so we can turn on your Rewards.</span></div>' +
       '<button type="button" class="acct-small-btn" data-resend-id>Send a new photo</button>' +
     '</section>';
-  }
-
-  function detailsView(me) {
-    function dt(label) { return '<dt>' + label + '</dt>'; }
-    return '<h2 class="acct-section-title">Your details <button type="button" class="acct-textbtn" id="acctEdit">Edit</button></h2>' +
-      '<dl class="acct-dl">' +
-        '<div>' + dt('Name') + '<dd>' + esc(me.fullName || '\u2014') + '</dd></div>' +
-        '<div>' + dt('Email') + '<dd>' + esc(me.email) + '</dd></div>' +
-        '<div>' + dt('Phone') + '<dd>' + esc(me.phone || '\u2014') + '</dd></div>' +
-        '<div>' + dt('New-arrival emails') + '<dd>' + (me.marketingOptIn ? 'On' : 'Off') + '</dd></div>' +
-        (me.dateOfBirth ? '<div>' + dt('Date of birth') + '<dd>' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</dd></div>' : '') +
-        '<div>' + dt('Photo ID') + '<dd>' + esc(idLabel(me.idStatus)) + '</dd></div>' +
-        '<div>' + dt('Member since') + '<dd>' + esc(date(me.joinedAt)) + '</dd></div>' +
-      '</dl>';
-  }
-
-  function bindDetails(me) {
-    var box = document.getElementById('acctDetails');
-    document.getElementById('acctEdit').addEventListener('click', function () {
-      box.innerHTML =
-        '<h2 class="acct-section-title">Edit your details</h2>' +
-        '<form id="acctEditForm" novalidate>' +
-          '<div class="acct-field"><label class="acct-label" for="acctName">Name</label>' +
-            '<input class="acct-input" id="acctName" autocomplete="name" maxlength="120" value="' + esc(me.fullName || '') + '"' +
-              (me.idStatus === 'verified' ? ' readonly aria-describedby="acctNameLock"' : '') + '>' +
-            (me.idStatus === 'verified' ? '<p class="acct-field-note" id="acctNameLock">Matches your verified ID. Call us to change it.</p>' : '') +
-          '</div>' +
-          '<div class="acct-field"><label class="acct-label" for="acctPhone">Phone <small>(optional)</small></label>' +
-            '<input class="acct-input" id="acctPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" value="' + esc(me.phone || '') + '"></div>' +
-          '<label class="acct-check"><input type="checkbox" id="acctOptIn"' + (me.marketingOptIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
-          '<p class="acct-error" role="alert"></p>' +
-          '<button class="evb-btn evb-btn--primary acct-btn" type="submit">Save</button>' +
-          '<div class="acct-links"><button type="button" class="acct-link" id="acctCancel">Cancel</button></div>' +
-        '</form>';
-      document.getElementById('acctName').focus();
-      document.getElementById('acctCancel').addEventListener('click', function () {
-        box.innerHTML = detailsView(me);
-        bindDetails(me);
-      });
-      bindProfileForm('acctEditForm', 'Save');
-    });
   }
 
   /* ------------------------------------------------------------ sign-up steps */
@@ -2142,8 +2081,6 @@
           '</ol>' +
         '</section>' +
 
-        '<section class="acct-section acct-rise" style="--d:180ms" id="acctDetails">' + detailsView(me) + '</section>' +
-
         '<p class="acct-foot-note">Questions? Call <a href="' + esc(biz.phoneHref) + '">' + esc(biz.phone) + '</a> or email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>' +
       '</div>'
     );
@@ -2155,7 +2092,6 @@
     bindIdNotice(me);
     fillQr(me);
     fillAvatar(me);
-    bindDetails(me);
   }
 
   /* ------------------------------------------------------------ member QR */
