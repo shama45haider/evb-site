@@ -177,6 +177,8 @@
   function heroIntro() {
     var play = !introPlayed;
     introPlayed = true;
+    // "$20" from the top prize's "$20 off an order".
+    var topOff = (/\$\d+/.exec(PRIZES[PRIZES.length - 1].label) || ['$20'])[0];
     return '' +
       '<div class="acct-intro' + (play ? ' acct-intro--play' : '') + '">' +
         '<span class="acct-deco" aria-hidden="true">' +
@@ -190,9 +192,9 @@
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
           '</em></h1>' +
-        '<p class="acct-lede" style="--i:3">Earn <strong>1 point per $1</strong> when you buy or sell, online or in the shop.</p>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point per $1</strong> when you buy from us, online or in the shop, or sell to us.</p>' +
         '<ul class="acct-perks">' +
-          perk(ICON.gift, 'Free shipping and up to $20 off', 'From ' + num(PRIZES[0].points) + ' points.', 4) +
+          perk(ICON.gift, 'Up to ' + topOff + ' off online orders', 'Free shipping from ' + num(PRIZES[0].points) + ' points.', 4) +
           perk(ICON.idcard, 'No ID needed to sell', 'Yours stays on file.', 5) +
           perk(ICON.cake, 'Birthday and invite bonuses', 'Plus members-only deals.', 6) +
           perk(ICON.key, 'No password', 'We email you a code.', 7) +
@@ -218,7 +220,7 @@
       '<span class="acct-invited-icon" aria-hidden="true">' + ICON.users + '</span>' +
       '<div class="acct-invited-text">' +
         '<b>' + (name ? name + ' invited you' : 'A friend invited you') + '</b>' +
-        '<span>Spend <strong>' + min + '+</strong> on your first order: you get <strong>' + num(info.friendPoints || 50) + ' points</strong>, ' + who + ' gets ' + num(info.points || 100) + '.</span>' +
+        '<span>Spend <strong>' + min + '+</strong> on your first purchase, online or in the shop: you get <strong>' + num(info.friendPoints || 50) + ' points</strong>, ' + who + ' gets ' + num(info.points || 100) + '.</span>' +
         '<small>Joining on another device? Add member number <strong>' + esc(code) + '</strong> after you sign up.</small>' +
       '</div>' +
     '</div>';
@@ -311,7 +313,7 @@
           '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
             '<h2 class="acct-card-title">' + (ss(NEXT_KEY) ? 'Sign in to check out' : 'Sign in or create your account') + '</h2>' +
             '<p class="acct-card-sub">' + (ss(NEXT_KEY)
-              ? 'Online orders are for members. We’ll email you a code.'
+              ? 'Online orders are for members. New here? Join free with your email.'
               : 'We’ll email you a code. New here? This makes your free account.') + '</p>' +
             '<form id="acctEmailForm" novalidate>' +
               '<label class="acct-label" for="acctEmail">Email address</label>' +
@@ -319,7 +321,7 @@
               '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
               '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit">Email me a code</button>' +
             '</form>' +
-            '<p class="acct-fine">By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
+            '<p class="acct-fine">Use the email you shop with so recent orders count. By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -1641,9 +1643,12 @@
 
   // "Yes, that's my address" / "I've moved" → { verified } or, since panel
   // migration 0084, { rejected, note } with the reason the ID didn't pass.
+  // { failed } when the check couldn't run, so the step stays up to retry
+  // rather than finishing as if the ID were never sent.
+  var CHECK_FAILED = 'We couldn’t check your ID just now. Try again.';
   function confirmId(moved) {
     if (!sb) return Promise.resolve({ verified: true });
-    return rpc('member_confirm_id', { p_moved: !!moved }).catch(function () { return { verified: false }; });
+    return rpc('member_confirm_id', { p_moved: !!moved }).catch(function () { return { failed: true }; });
   }
 
   // Keeps the answer for the done screen and the account page's ID box.
@@ -1764,10 +1769,10 @@
               '<p class="acct-ob-sub">' + (rd.shop ? 'From the ID we scanned in the shop.' : 'Read from your ID.') + ' Orders ship only here.</p>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               (rd.nameMatch === 'mismatch'
-                ? '<p class="acct-ob-warn">The name doesn’t match <b>' + esc(me.fullName || '') + '</b>. Misread? Retake the photo.</p>' : '') +
-              '<p class="acct-ob-private">' + ICON.truck + 'Moved? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a> to ship elsewhere.</p>'
+                ? '<p class="acct-ob-warn">The name on your ID doesn’t match <b>' + esc(me.fullName || '') + '</b>, so it won’t pass. Misread? Retake the photo.</p>' : '') +
+              '<p class="acct-ob-private">' + ICON.truck + 'Moved? Tap “No, that’s not my address”.</p>'
             : '<h1 class="acct-ob-title">' + (rd.status === 'error' ? 'We couldn’t check your ID' : 'We couldn’t read your address') + '</h1>' +
-              '<p class="acct-ob-sub">' + esc(rd.message || 'Retake it flat, in good light.') + '</p>' +
+              '<p class="acct-ob-sub">' + esc(rd.message || 'Retake it flat, in good light, with the whole card showing.') + '</p>' +
               '<p class="acct-ob-private">' + ICON.truck + 'You can skip and pick up in the shop. Shipping needs your ID address.</p>');
     } else {
       body =
@@ -1887,7 +1892,10 @@
         if (!state.addrNo) { state.addrNo = true; return obRender(state); }
         // "I've moved": the ID still counts, checked like any other (0084).
         setBusy(altBtn, true, 'One moment…');
-        confirmId(true).then(function (j) { tookIdAnswer(state, j); state.addrNo = false; after(); });
+        confirmId(true).then(function (j) {
+          if (j.failed) { setBusy(altBtn, false, 'I’ve moved'); err.textContent = CHECK_FAILED; return; }
+          tookIdAnswer(state, j); state.addrNo = false; after();
+        });
       });
     }
     var close = document.getElementById('obClose');
@@ -2019,6 +2027,7 @@
           // here, or rejects the ID with the reason.
           setBusy(next, true, 'One moment…');
           return confirmId(false).then(function (j) {
+            if (j.failed) { setBusy(next, false, primary); err.textContent = CHECK_FAILED; return; }
             tookIdAnswer(state, j);
             if (state.verified) push('account_id_auto_verified', {});
             after();

@@ -129,7 +129,7 @@
     var title, text, cta, href = SIGN_IN_URL;
     if (m.status === 'signedOut') {
       title = 'Sign in to check out';
-      text = 'Online orders are for East Village Buyers members. It\u2019s free, takes a couple of minutes, and your bag stays right here. You\u2019ll need a photo of your ID: we ship only to the address on it.';
+      text = 'Online orders are for members. Joining is free, and your bag stays here.';
       cta = 'Sign in or create an account';
     } else if (m.status === 'error') {
       title = 'We couldn\u2019t check your account';
@@ -138,7 +138,7 @@
       href = '';
     } else {
       title = 'Finish setting up your account';
-      text = 'A couple of steps are left, including a photo of your ID. Online orders ship only to the address on it.';
+      text = 'A few steps left, including a photo of your ID.';
       cta = 'Finish setting up';
     }
     return '<div class="evb-panel evb-member-gate">' +
