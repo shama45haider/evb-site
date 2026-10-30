@@ -190,13 +190,12 @@
           '<em class="acct-word" style="--i:2">Get rewarded.' +
             '<svg class="acct-squiggle" viewBox="0 0 220 16" preserveAspectRatio="none" aria-hidden="true"><path d="M3 11 C 45 3, 85 15, 125 8 S 190 3, 217 9"/></svg>' +
           '</em></h1>' +
-        '<p class="acct-lede" style="--i:3">Earn <strong>1 point for every $1</strong> — when you buy from us online or in the shop on Avenue A, and when you sell to us. <strong>' + PRIZES[0].points + ' points ships an order free</strong>, and more takes up to $20 off.</p>' +
+        '<p class="acct-lede" style="--i:3">Earn <strong>1 point per $1</strong> when you buy or sell, online or in the shop.</p>' +
         '<ul class="acct-perks">' +
-          perk(ICON.star, 'Points when you buy or sell', 'Online orders count by themselves. In the shop, show your QR code when you buy, sell or trade.', 4) +
-          perk(ICON.gift, 'Up to $20 off online orders', prizeLadder() + ', on an order you have shipped or pick up. Points last ' + EXPIRE_DAYS + ' days from your last visit.', 5) +
-          perk(ICON.idcard, 'No ID needed to sell', 'Your ID is on file with your account, so you don’t have to bring it when you sell to us.', 6) +
-          perk(ICON.cake, 'Birthday and invite points', 'Bonus points every birthday month, and when a friend you invite shops with us. Plus members-only deals and giveaways.', 7) +
-          perk(ICON.key, 'No password to remember', 'We email you a code each time you sign in.', 8) +
+          perk(ICON.gift, 'Free shipping and up to $20 off', 'From ' + num(PRIZES[0].points) + ' points.', 4) +
+          perk(ICON.idcard, 'No ID needed to sell', 'Yours stays on file.', 5) +
+          perk(ICON.cake, 'Birthday and invite bonuses', 'Plus members-only deals.', 6) +
+          perk(ICON.key, 'No password', 'We email you a code.', 7) +
         '</ul>' +
       '</div>';
   }
@@ -218,10 +217,9 @@
     return '<div class="acct-invited" id="acctInvited">' +
       '<span class="acct-invited-icon" aria-hidden="true">' + ICON.users + '</span>' +
       '<div class="acct-invited-text">' +
-        '<b>' + (name ? name + ' invited you' : 'A friend invited you') + ' to EVB Rewards</b>' +
-        '<span>Make your free account with your email. When your first purchase comes to <strong>' + min + ' or more</strong> — online or in our shop on Avenue A — ' +
-          'you get <strong>' + num(info.friendPoints || 50) + ' bonus points</strong> and ' + who + ' gets <strong>' + num(info.points || 100) + '</strong>.</span>' +
-        '<small>' + (name ? name + '’s' : 'The') + ' invite is saved on this device, so sign up here. On another phone? Add member number <strong>' + esc(code) + '</strong> on your account page after you join.</small>' +
+        '<b>' + (name ? name + ' invited you' : 'A friend invited you') + '</b>' +
+        '<span>Spend <strong>' + min + '+</strong> on your first order: you get <strong>' + num(info.friendPoints || 50) + ' points</strong>, ' + who + ' gets ' + num(info.points || 100) + '.</span>' +
+        '<small>Joining on another device? Add member number <strong>' + esc(code) + '</strong> after you sign up.</small>' +
       '</div>' +
     '</div>';
   }
@@ -313,15 +311,15 @@
           '<div class="acct-card acct-fade" style="animation-delay:.08s">' +
             '<h2 class="acct-card-title">' + (ss(NEXT_KEY) ? 'Sign in to check out' : 'Sign in or create your account') + '</h2>' +
             '<p class="acct-card-sub">' + (ss(NEXT_KEY)
-              ? 'Online orders are for members. Enter your email and we’ll send you a code. New here? Making your free account takes a couple of minutes.'
-              : 'Enter your email and we’ll send you a sign-in code. New here? That’s all it takes to make your free account.') + '</p>' +
+              ? 'Online orders are for members. We’ll email you a code.'
+              : 'We’ll email you a code. New here? This makes your free account.') + '</p>' +
             '<form id="acctEmailForm" novalidate>' +
               '<label class="acct-label" for="acctEmail">Email address</label>' +
               '<input class="acct-input" id="acctEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@example.com" required autofocus value="' + esc(prefill || '') + '">' +
               '<p class="acct-error" id="acctErr" role="alert">' + esc(error || '') + '</p>' +
               '<button class="evb-btn evb-btn--primary acct-btn acct-btn--go" type="submit">Email me a code</button>' +
             '</form>' +
-            '<p class="acct-fine">Use the email you shop with — orders from the last 30 days count too. By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
+            '<p class="acct-fine">By joining you agree to our <a href="/cookie-policy/">privacy &amp; cookie policy</a>.</p>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -371,7 +369,7 @@
       '<div class="acct-hero">' + heroIntro() +
         '<div class="acct-card acct-fade">' +
           '<h2 class="acct-card-title">Check your email</h2>' +
-          '<p class="acct-card-sub">We sent a sign-in code to <b>' + esc(email) + '</b>. Type it below, or tap the link in the email. It can take a minute — check spam too.</p>' +
+          '<p class="acct-card-sub">We sent a code to <b>' + esc(email) + '</b>. Not there? Check spam.</p>' +
           '<form id="acctCodeForm" novalidate>' +
             '<label class="acct-label" for="acctCode">Your code</label>' +
             '<div class="acct-code" id="acctCodeWrap">' + boxes +
@@ -1686,7 +1684,7 @@
       body =
         '<p class="acct-ob-eyebrow">Your profile</p>' +
         '<h1 class="acct-ob-title">Add a profile photo</h1>' +
-        '<p class="acct-ob-sub">So we know it’s you when you come in. You can skip this.</p>' +
+        '<p class="acct-ob-sub">Optional. Helps us know you at the counter.</p>' +
         '<div class="acct-ob-avatar" id="obAvatar">' + ICON.user + '</div>' +
         '<div class="acct-ob-pickers">' +
           '<label class="acct-ob-pick">' + ICON.camera + '<span>Take a selfie</span><input type="file" accept="image/*" capture="user" data-pick></label>' +
@@ -1696,14 +1694,14 @@
       body =
         '<p class="acct-ob-eyebrow">About you</p>' +
         '<h1 class="acct-ob-title">What’s your name?</h1>' +
-        '<p class="acct-ob-sub">The name on your ID, so we can match it at the counter.</p>' +
+        '<p class="acct-ob-sub">As it appears on your ID.</p>' +
         '<label class="acct-label" for="obName">Full name</label>' +
         '<input class="acct-input acct-ob-input" id="obName" autocomplete="name" autocapitalize="words" maxlength="120" placeholder="First and last name" value="' + esc(me.fullName || '') + '">';
     } else if (step === 'birth') {
       body =
         '<p class="acct-ob-eyebrow">About you</p>' +
         '<h1 class="acct-ob-title">When’s your birthday?</h1>' +
-        '<p class="acct-ob-sub">We use it to match your ID.</p>' +
+        '<p class="acct-ob-sub">To match your ID.</p>' +
         '<label class="acct-label" for="obBirth">Date of birth</label>' +
         '<input class="acct-input acct-ob-input" id="obBirth" type="date" autocomplete="bday" min="' + isoDaysAgo(120) + '" max="' + isoDaysAgo(13) + '" value="' + esc(me.dateOfBirth || '') + '">' +
         '<p class="acct-ob-age" id="obAge" aria-live="polite"></p>';
@@ -1715,23 +1713,23 @@
             '<div class="acct-ob-addr is-loading" aria-hidden="true"><span class="acct-spin"></span></div>'
           : mt.status === 'number'
             ? '<h1 class="acct-ob-title">Type your ID number</h1>' +
-              '<p class="acct-ob-sub">The number on the ID you showed us at the shop: your driver’s license, state ID or passport number. We’ll check it against what we scanned.</p>' +
+              '<p class="acct-ob-sub">From the license, state ID or passport you showed us in the shop.</p>' +
               '<label class="acct-label" for="obIdNumber">ID number</label>' +
               '<input class="acct-input acct-ob-input" id="obIdNumber" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="e.g. 123 456 789">' +
-              '<p class="acct-ob-private">' + ICON.key + 'Never shown to anyone, and we don’t keep what you type. We only check that it matches.</p>'
+              '<p class="acct-ob-private">' + ICON.key + 'We only check that it matches. It isn’t saved.</p>'
             : '<h1 class="acct-ob-title">Is this you?</h1>' +
-              '<p class="acct-ob-sub">Looks like you’ve been to East Village Buyers before and showed us your ID at the counter.</p>' +
+              '<p class="acct-ob-sub">You’ve shown us your ID in the shop before.</p>' +
               '<div class="acct-ob-match">' +
                 '<span>We have a customer named</span>' +
                 '<b>' + esc(me.fullName || '') + '</b>' +
                 '<span>born ' + esc(date(me.dateOfBirth + 'T12:00:00')) + '</span>' +
               '</div>' +
-              '<p class="acct-ob-private">' + ICON.shield + 'If it’s you, you can skip sending a photo of your ID.</p>');
+              '<p class="acct-ob-private">' + ICON.shield + 'If it’s you, no ID photo needed.</p>');
     } else if (step === 'id') {
       body =
         '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
         '<h1 class="acct-ob-title">Take a photo of your ID</h1>' +
-        '<p class="acct-ob-sub">Driver\u2019s license, state ID or passport. Once it\u2019s on file, you won\u2019t need to bring it when you sell to us.</p>' +
+        '<p class="acct-ob-sub">License, state ID or passport.</p>' +
         (state.idNote ? '<p class="acct-ob-warn">' + esc(state.idNote) + '</p>' : '') +
         '<div class="acct-ob-match">' +
           '<span>The name on your ID has to match</span>' +
@@ -1743,45 +1741,45 @@
           '<span class="acct-ob-corner acct-ob-corner--bl"></span><span class="acct-ob-corner acct-ob-corner--br"></span>' +
           '<span class="acct-ob-idhint">' + ICON.idcard + '<b>Fit the whole ID in the frame</b></span>' +
         '</div>' +
-        '<ul class="acct-ob-tips"><li>All four corners showing</li><li>No glare, nothing covering it</li><li>Name and photo easy to read</li></ul>' +
+        '<ul class="acct-ob-tips"><li>All 4 corners</li><li>No glare</li><li>Easy to read</li></ul>' +
         '<div class="acct-ob-pickers">' +
           '<label class="acct-ob-pick acct-ob-pick--main">' + ICON.camera + '<span>Take a photo</span><input type="file" accept="image/*" capture="environment" data-pick></label>' +
           '<label class="acct-ob-pick">' + ICON.image + '<span>Upload a photo</span><input type="file" accept="image/*" data-pick></label>' +
         '</div>' +
-        '<p class="acct-ob-private">' + ICON.key + 'Kept private. Only East Village Buyers managers can see it, and it’s only used to confirm who you are.</p>';
+        '<p class="acct-ob-private">' + ICON.key + 'Private. Only our managers can see it.</p>';
     } else if (step === 'address') {
       body =
         '<p class="acct-ob-eyebrow">Verify it’s you</p>' +
         (rd.status === 'loading'
           ? '<h1 class="acct-ob-title">Reading your ID…</h1>' +
-            '<p class="acct-ob-sub">This takes a few seconds.</p>' +
+            '<p class="acct-ob-sub">A few seconds.</p>' +
             '<div class="acct-ob-addr is-loading" aria-hidden="true"><span class="acct-spin"></span></div>'
           : rd.status === 'ok' && state.addrNo
             ? '<h1 class="acct-ob-title">Read wrong, or have you moved?</h1>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
-              '<p class="acct-ob-sub">If we misread your ID, retake the photo. If you’ve moved since it was made, that’s fine: tap “I’ve moved”.</p>' +
-              '<p class="acct-ob-private">' + ICON.truck + 'Online orders still ship only to the address on your ID. To ship somewhere else, email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>'
+              '<p class="acct-ob-sub">Misread? Retake the photo. Moved? Tap “I’ve moved”.</p>' +
+              '<p class="acct-ob-private">' + ICON.truck + 'Orders ship only to your ID address. To ship elsewhere, email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a>.</p>'
           : rd.status === 'ok'
             ? '<h1 class="acct-ob-title">' + (rd.shop ? 'Is this still your address?' : 'Is this your address?') + '</h1>' +
-              '<p class="acct-ob-sub">' + (rd.shop ? 'It’s from the ID we scanned at the shop.' : 'We read it off your ID.') + ' Online orders ship only to this address.</p>' +
+              '<p class="acct-ob-sub">' + (rd.shop ? 'From the ID we scanned in the shop.' : 'Read from your ID.') + ' Orders ship only here.</p>' +
               '<div class="acct-ob-addr">' + ICON.pin + '<p>' + addressLines(rd.address) + '</p></div>' +
               (rd.nameMatch === 'mismatch'
-                ? '<p class="acct-ob-warn">The name on your ID doesn’t look like <b>' + esc(me.fullName || '') + '</b>. If that’s a misread, retake the photo: the name on your ID has to match your account.</p>' : '') +
-              '<p class="acct-ob-private">' + ICON.truck + 'Moved since your ID was made? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a> to ship somewhere else.</p>'
+                ? '<p class="acct-ob-warn">The name doesn’t match <b>' + esc(me.fullName || '') + '</b>. Misread? Retake the photo.</p>' : '') +
+              '<p class="acct-ob-private">' + ICON.truck + 'Moved? Email <a href="mailto:' + esc(biz.email) + '">' + esc(biz.email) + '</a> to ship elsewhere.</p>'
             : '<h1 class="acct-ob-title">' + (rd.status === 'error' ? 'We couldn’t check your ID' : 'We couldn’t read your address') + '</h1>' +
-              '<p class="acct-ob-sub">' + esc(rd.message || 'Retake the photo flat, in good light, with the whole card showing.') + '</p>' +
-              '<p class="acct-ob-private">' + ICON.truck + 'You can still sign up and pick up in the shop. To get orders shipped, we need to read the address on your ID.</p>');
+              '<p class="acct-ob-sub">' + esc(rd.message || 'Retake it flat, in good light.') + '</p>' +
+              '<p class="acct-ob-private">' + ICON.truck + 'You can skip and pick up in the shop. Shipping needs your ID address.</p>');
     } else {
       body =
         '<div class="acct-ob-done">' +
           '<span class="acct-ob-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></span>' +
           '<h1 class="acct-ob-title">You’re all set' + (me.fullName ? ', ' + esc(firstName(me.fullName)) : '') + '</h1>' +
           '<p class="acct-ob-sub">' + (state.verified || me.idStatus === 'verified'
-            ? 'Your ID checked out. Your Rewards are on.'
+            ? 'Your ID checked out. Rewards are on.'
             : state.rejectNote != null
-              ? 'Your Rewards are on, but we couldn’t accept your ID' + (state.rejectNote ? ': ' + esc(state.rejectNote) : '') + '. Send a new photo from your account to get orders shipped.'
-              : 'Your Rewards are on. To get orders shipped, send a photo of your ID from your account.') + '</p>' +
-          '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me first looks at new arrivals and members-only deals.</label>' +
+              ? 'Rewards are on, but your ID didn’t pass' + (state.rejectNote ? ': ' + esc(state.rejectNote) : '') + '. Send a new one from your account to ship orders.'
+              : 'Rewards are on. Add your ID from your account to ship orders.') + '</p>' +
+          '<label class="acct-check"><input type="checkbox" id="obOptIn"' + (state.optIn ? ' checked' : '') + '> Email me new arrivals and members-only deals.</label>' +
         '</div>';
     }
 
