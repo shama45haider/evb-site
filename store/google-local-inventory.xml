@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+<title>East Village Buyers, 39 Avenue A</title>
+<link>https://eastvillagebuyers.com/store/</link>
+<description>In-store stock at 39 Avenue A, New York, NY 10009.</description>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1004</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>250.00 USD</g:price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1005</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>250.00 USD</g:price>
+<g:sale_price>235.00 USD</g:sale_price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1006</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>150.00 USD</g:price>
+<g:sale_price>138.00 USD</g:sale_price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1007</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>225.00 USD</g:price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1008</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>150.00 USD</g:price>
+<g:sale_price>139.50 USD</g:sale_price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1011</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>150.00 USD</g:price>
+<g:sale_price>142.50 USD</g:sale_price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1013</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>150.00 USD</g:price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
+</channel>
+</rss>

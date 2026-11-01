@@ -6,7 +6,8 @@
 
 <title>Product | East Village Buyers Store</title>
 <meta name="description" content="Authenticated luxury goods, sneakers, watches and gold from East Village Buyers — 39 Avenue A, New York, NY 10009.">
-<link rel="canonical" href="https://eastvillagebuyers.com/store/product/">
+<!-- No canonical here: injectSeo() adds the product's own once it loads. A
+     static one would tell Google every product is this one empty shell. -->
 
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -475,7 +476,12 @@
     if (d) d.setAttribute('content', (product.blurb || product.description).slice(0, 300));
 
     var canon = document.querySelector('link[rel="canonical"]');
-    if (canon) canon.setAttribute('href', 'https://eastvillagebuyers.com/store/product/?p=' + encodeURIComponent(product.slug));
+    if (!canon) {
+      canon = document.createElement('link');
+      canon.rel = 'canonical';
+      document.head.appendChild(canon);
+    }
+    canon.setAttribute('href', 'https://eastvillagebuyers.com/store/product/?p=' + encodeURIComponent(product.slug));
 
     var v = currentVariant();
     var ld = {
