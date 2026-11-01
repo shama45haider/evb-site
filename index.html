@@ -4888,6 +4888,68 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 
+  <style>
+    .evb-guides { background: #f8f5f0; }
+    .evb-guides-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 24px; }
+    .evb-guides-all { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #e8690a; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+    .evb-guides-all svg { width: 12px; height: 12px; }
+    .evb-guides-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .evb-guide { background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #e8e4de; box-shadow: 0 3px 14px rgba(0,0,0,0.05); text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform 0.22s, box-shadow 0.22s; }
+    .evb-guide:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .evb-guide-media { height: 160px; background: #ece8e2; overflow: hidden; flex-shrink: 0; }
+    .evb-guide-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .evb-guide-body { padding: 16px 16px 18px; display: flex; flex-direction: column; flex: 1; }
+    .evb-guide-cat { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #e8690a; margin-bottom: 8px; }
+    .evb-guide-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 800; color: #0c0b0a; line-height: 1.3; text-transform: uppercase; margin-bottom: 8px; }
+    .evb-guide-excerpt { font-family: 'Inter', sans-serif; font-size: 12.5px; color: #6b6560; line-height: 1.6; margin: 0; }
+    @media (max-width: 900px) { .evb-guides-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) {
+      .evb-guides h2.text-4xl { font-size: 1.6rem !important; line-height: 1.15 !important; }
+      .evb-guides-head { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 18px; }
+      .evb-guides-grid { grid-template-columns: 1fr; gap: 12px; }
+      .evb-guide { flex-direction: row; }
+      .evb-guide-media { width: 104px; height: auto; min-height: 104px; }
+      .evb-guide-body { padding: 12px 14px; }
+      .evb-guide-title { font-size: 12.5px; margin-bottom: 0; }
+      .evb-guide-excerpt { display: none; }
+    }
+  </style>
+  <section id="guides" class="evb-guides px-6 lg:px-20 py-12 scroll-mt-20" aria-labelledby="guides-title">
+    <div class="evb-guides-head">
+      <div>
+        <h2 id="guides-title" class="text-4xl font-black uppercase mb-1">Seller <span style="color:#f97316;">Guides</span></h2>
+        <p class="text-black/50 text-sm">Know what your piece is worth before you walk in.</p>
+      </div>
+      <a href="blog/" class="evb-guides-all">All guides <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="evb-guides-grid">
+      <a href="blog/where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc/" class="evb-guide">
+        <div class="evb-guide-media"><img src="blog-where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc-hero.webp" alt="Where to Sell Gold, Jewelry, Coins &amp; Valuables in the East Village, NYC" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Gold &amp; Jewelry</span><div class="evb-guide-title">Where to Sell Gold, Jewelry &amp; Coins in the East Village</div><p class="evb-guide-excerpt">Testing, pricing and same-day cash at 39 Avenue A, explained straight.</p></div>
+      </a>
+      <a href="blog/sell-gold-for-cash-nyc-neighborhood-guide/" class="evb-guide">
+        <div class="evb-guide-media"><img src="blog-img-gold-neighborhood.webp" alt="Best place to sell gold in NYC compared" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Gold</span><div class="evb-guide-title">The Best Place to Sell Gold in NYC: Every Option Compared</div><p class="evb-guide-excerpt">Diamond District, pawn shops, mail-in and neighborhood buyers side by side.</p></div>
+      </a>
+      <a href="blog/sell-gold-nyc-real-math-not-slogans/" class="evb-guide">
+        <div class="evb-guide-media"><img src="blog-img-gold-real-math.webp" alt="Sell gold in NYC — real math, not top dollar slogans" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Gold</span><div class="evb-guide-title">How Gold Buyers Calculate Offers: The Real Math</div><p class="evb-guide-excerpt">Weight, karat and spot price, so you can check any offer yourself.</p></div>
+      </a>
+      <a href="blog/engagement-ring-resale-value-nyc/" class="evb-guide">
+        <div class="evb-guide-media"><img src="round-diamond-engagement-ring-baguettes.webp" alt="Yellow gold engagement ring with a round brilliant center diamond, round side diamonds and tapered baguettes on a black ring display" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Diamonds</span><div class="evb-guide-title">Engagement Ring Resale Value: Stones, Gold &amp; Setting</div><p class="evb-guide-excerpt">How the center stone, side stones and gold are each priced.</p></div>
+      </a>
+      <a href="blog/buy-sell-trade-sneakers-nyc/" class="evb-guide">
+        <div class="evb-guide-media"><img src="blog-buy-sell-trade-sneakers-nyc-hero.webp" alt="Three pairs of sneakers on shoeboxes on a glass counter inside East Village Buyers, a buy, sell and trade shop in NYC" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Sneakers</span><div class="evb-guide-title">Where to Buy, Sell &amp; Trade Sneakers in NYC</div><p class="evb-guide-excerpt">Cash, consignment or trade: every NYC sneaker shop worth your time.</p></div>
+      </a>
+      <a href="blog/buy-sell-trade-designer-bags-nyc/" class="evb-guide">
+        <div class="evb-guide-media"><img src="blog-buy-sell-trade-designer-bags-nyc-hero.webp" alt="Black, tan and burgundy leather handbags with a dust bag on a glass counter inside East Village Buyers in NYC" loading="lazy" decoding="async"></div>
+        <div class="evb-guide-body"><span class="evb-guide-cat">Designer Bags</span><div class="evb-guide-title">Where to Buy, Sell &amp; Trade Designer Bags in NYC</div><p class="evb-guide-excerpt">Where to sell a Louis Vuitton, Chanel or Hermès bag, and how each place pays.</p></div>
+      </a>
+    </div>
+  </section>
+
 
 
   <section id="faq" class="evb-faq-section scroll-mt-20" style="position:relative;overflow:hidden;">
