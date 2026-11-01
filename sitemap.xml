@@ -1,752 +1,1222 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
     <loc>https://eastvillagebuyers.com/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/wn-gold-jewelry.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagehat4.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goyardbackground.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/eeknicks.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/travispink2.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/gembox-card.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/ebaybanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/instabanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldnecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sneakers-main.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watches-main.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/lvhandbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/google-icon.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximageshoe.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagewatch3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelrybanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-hover.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyshoe.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/streetwear-main.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb8.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watches-hover.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bagbanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/electronicsbanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-the-promise.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagewatch.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagebag3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/amiribackground.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb2.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb4.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb5.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb6.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-neighborhood.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-real-math.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/round-diamond-engagement-ring-baguettes.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-sneakers-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-designer-bags-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximageduffle.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagehandbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indeximagehat.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/moneyfall.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-instagram.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-tiktok.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-youtube.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-google.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/store/</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-instagram.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-tiktok.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-youtube.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-google.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/about/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/firsthouses.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-zipper-hardware-and-drawstrings-affect-hoodie-resale-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-hollow-vs-solid-gold-chains-weight-and-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-sneakers-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-pokemon-cards-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-designer-bags-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-over-polishing-a-watch-case-affects-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-outsole-yellowing-affects-sneaker-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-to-sell-christian-dior-in-nyc-what-affects-your-offer-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-gemstone-clarity-and-inclusions-affect-your-payout-selling-vintage-jewelry-at-east-village-buyers-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-tag-removal-and-collar-alterations-impact-streetwear-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-watch-service-history-and-maintenance-records-impact-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-sneaker-box-condition-and-accessories-affect-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-what-to-do-before-selling-a-used-game-console-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-stains-fading-and-print-cracking-affect-streetwear-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-selling-broken-gold-jewelry-how-bent-rings-and-snapped-chains-are-valued-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-extra-watch-bracelet-links-impact-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-tennis-bracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-heart-pendant-necklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/gold-pave-diamond-link-bracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-heart-link-bracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/gold-baguette-hoop-earrings.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/emerald-diamond-drop-earrings.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sapphire-diamond-gold-bangle.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/ruby-diamond-cluster-pendant.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-bangle-bracelet-three-row.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/round-diamond-engagement-ring-baguettes.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/cluster-diamond-halo-ring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-cuban-link-bracelet-pave.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-is-gold-so-expensive-explained-by-a-5-year-old-east-village-buyers-explains-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-is-your-gold-magnetic-the-surprising-science-place-a-magnet-on-a-1-kg-gold-bar-or-1-kg-silver-bar-and-feel-resistance-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-testing-diamond-moissanite-testers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-patek-philippe-ladies-certificate.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-omega-seamaster-diver-300m-wrist.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/forever-situated-fs-tracksuit-set-nyc.jpg</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-your-kitchen-scale-is-lying-to-you-about-your-golds-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/2-7-mm-solid-gold-italy-miami-cuban-chain-yellow-14k-18k-made-in-italy-yellow-model-shot.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/s-l400.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/buying-gold-and-silver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-necklace-jaipur-rajasthan-india.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-diamond-rings-and-necklaces-show-in-luxury-retail-store-window-display-showcase.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hotwheel.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/pokemoncards.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sonycamera.png</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/valley.jpg</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-ever-wonder-why-gold-coins-have-ridges-on-their-edges-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-will-kobe-sneakers-keep-their-resale-value-what-you-should-know-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-is-amiri-still-popular-in-2026-how-to-check-your-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-selling-gold-streetwear-and-electronics-in-one-trip-to-the-east-village-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-vintage-prince-merchandise-and-collectibles-hold-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-is-ai-consuming-gold-what-tech-demand-means-for-your-gold-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-11-gamma-blue.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-low-fragment-travis-scott.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/gucci-rhyton-sneaker-cream.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-1-high-obsidian-unc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-tracksuit-set-nyc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-warehouse-hoodies.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-lookbook-graphic-hoodie.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-adidas-collab-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-avirex-collab-jackets-group.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/louis-vuitton-green-monogram-speedy-bag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sb-studios-graphic-tee-set-nyc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/labgrowndiamond.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/14kgoldnecklace-wide.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/davidyurmansterlingsilver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldpendantcoin-wide.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/indianheadgold.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbar.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-real-math.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-cross-patch-wallet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-framed-art-prints.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-heart-cross-pendant.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/estatejewl.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbar2.5.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvertiffanybracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-supreme.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bapebanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/electronicsbanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-neighborhood.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-diamonds.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-silver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-estate.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-jordans.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-travis.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-vintage.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-chrome.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-prices.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-instagram.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-tiktok.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-youtube.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/icon-google.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/cookie-policy/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
-
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-jewelry-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelrybanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-gold.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-diamond.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-silver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-platinum.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/estatejewl.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-coins.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-broken.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldimage3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/labgrowndiamond.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldimage6.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-gold-nyc/</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-nyc-og.jpg</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelrybanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-gold.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-bracelet-nyc-cable-bangle.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-pendant-nyc-diamond-heart.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-nyc-maple-leaf-coins.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-nyc-gold-bar-in-hand.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/cartierbracelet2.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/wn-gold-jewelry.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-estate.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-diamonds-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-diamonds.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-diamond.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/14kgoldnecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-cuban-link-bracelet-pave.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-heart-pendant-necklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/emerald-diamond-drop-earrings.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/estatejewl.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/labgrowndiamond.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/cluster-diamond-halo-ring-illusion-setting.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-designer-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/fendi-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chanel-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goyard-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/burberry-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/prada-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/celine-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mcm-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bottega-veneta-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/valentino-designer-handbag.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-streetwear-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bape-milo-plush.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mitchell-ness-allen-iverson-76ers-jersey.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/supreme-leather-varsity-jacket.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vanson-leather-racing-jacket.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/polo-ralph-lauren-corduroy-jacket.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-watches-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-omega-seamaster-diver-300m-wrist.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-omega-seamaster-diver-300m-box-set.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-audemars-piguet-royal-oak-offshore-box.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-tag-heuer-formula-1-green-dial.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-grand-seiko-gmt-wrist.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-tiffany-co-blue-dial-wrist.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-bulova-gold-box.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-tiffany-co-tank-stainless.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-breitling-box-warranty-card.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-casio-oceanus.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-audemars-piguet-royal-oak-offshore-caseback.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-patek-philippe-ladies-certificate.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-grand-seiko-gmt-caseback.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-electronics-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/canon-g7x-camera.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/Apple-iPhone-17-Pro-4x3-1_4x3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/4000308504-847__1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/airpodmax.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/macbook.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/ipad.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/playstation-5-pro-console.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/steam-deck-handheld.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/metaquest3.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nikon-f-film-camera.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-accessories-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/louis-vuitton-initiales-belt.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/dior-sunglasses.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-bead-necklace-green.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-knit-gloves.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-bead-necklace-pink.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-sneakers-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-12-taxi.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-high-chicago.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-air-jordan-4.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-3-doernbecher.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/dior-b22-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/prada-americas-cup-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/rick-owens-jumbo-lace-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chanel-espadrille-slides.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/ugg-tasman-slippers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/travis-scott-air-jordan-1-low-mocha.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-collectibles-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-08-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-the-promise.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/pokemon-booster-box.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bapebanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bearbrickbanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/legobanner.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/funko-pop-jordan.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hotwheelsbanner.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-silver/</loc>
     <lastmod>2026-07-26</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-silver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvercuban.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvering.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvertiffanybracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbar.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverpageimage1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvercubanlink.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverring.webp</image:loc></image:image>
   </url>
-
   <url>
     <loc>https://eastvillagebuyers.com/blog/lab-grown-vs-natural-diamonds-resale-nyc/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/labgrowndiamond.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gia-certified-diamond-what-it-proves-nyc/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/14kgoldnecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/14kgoldnecklace-wide.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/david-yurman-resale-value-nyc/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/davidyurmansterlingsilver.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gold-coin-pendant-value-nyc/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldpendantcoin.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldpendantcoin-wide.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/indian-head-gold-eagle-value-nyc/</loc>
-    <lastmod>2026-07-21</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/indianheadgold.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-test-silver-accurately-nyc/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbar.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gold-dealer-bankruptcy-mail-in-risk-nyc/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sell-gold-nyc-real-math-not-slogans/</loc>
-    <lastmod>2026-07-20</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-real-math.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sell-gold-for-cash-nyc-neighborhood-guide/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-neighborhood.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-gold-prices-fluctuate-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-gold-prices.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-is-silver-so-valuable/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvertiffanybracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverring.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/the-value-of-silver-in-2026/</loc>
-    <lastmod>2026-07-08</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvercuban.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvering.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/silver-bullion-vs-silver-jewelry-nyc/</loc>
-    <lastmod>2026-07-08</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbar.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvercubanlink.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverpageimage1.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/viral-instagram-reel-vintage-jewelry-nyc/</loc>
-    <lastmod>2026-07-08</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/estatejewl.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-diamonds.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-is-chrome-jewelry-pricing-skyrocketed/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-heart-cross-pendant.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-cross-ring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-dagger-pendant.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-dog-tag-necklace-bracelet.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/who-is-matty-boy-artist-collaborations/</loc>
-    <lastmod>2026-07-11</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-framed-art-prints.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-camo-caution-tshirt.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-sex-records-hoodie.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-anti-trucker-hat.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mattyboy-graphic-tee-outfit.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/the-rise-of-chrome-hearts/</loc>
-    <lastmod>2026-07-10</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-cross-patch-wallet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-cross-ring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-trucker-hat-green.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-dagger-pendant.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-dog-tag-necklace-bracelet.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-did-sb-studios-get-so-popular-in-nyc/</loc>
-    <lastmod>2026-07-24</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/sb-studios-graphic-tee-set-nyc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sb-studios-crop-top-shorts-set-nyc.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-has-louis-vuitton-been-dominating-the-market-for-years/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/louis-vuitton-green-monogram-speedy-bag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/louis-vuitton-trainer-sneakers-nyc.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/what-is-hellstar-streetwear-brand-story/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-lookbook-graphic-hoodie.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-graffiti-wall-tees.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/hellstar-adidas-collab-resale-value/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-adidas-collab-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-avirex-collab-jackets-group.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-spot-real-hellstar-before-you-pay-resale-price/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-avirex-collab-jackets-group.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/hellstar-graffiti-wall-tees.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/iconic-jordan-retro-colorways-nyc/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-11-gamma-blue.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-6-infrared-black-red.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/jordan-collabs-fragment-levis-clot-nyc/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-low-fragment-travis-scott.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-3-levis-denim.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-5-low-clot-jade.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/designer-sneakers-resale-value-nyc/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/gucci-rhyton-sneaker-cream.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/gucci-basket-sneaker-black-white.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/louis-vuitton-trainer-sneaker.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/dior-b30-sneaker-sage.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/christian-louboutin-sneaker-red-sole.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/hype-vs-luxury-sneakers-resale-nyc/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-1-high-obsidian-unc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-4-cherry-sail-red.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/common-ways-to-test-jewelry-nyc/</loc>
-    <lastmod>2026-09-16</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-testing-diamond-moissanite-testers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-testing-electronic-gold-tester.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-spot-a-fake-luxury-watch-nyc/</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-patek-philippe-ladies-certificate.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/luxury-watch-resale-value-nyc/</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/watch-omega-seamaster-diver-300m-wrist.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/what-is-forever-situated-streetwear-brand/</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/forever-situated-fs-tracksuit-set-nyc.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/what-is-vale-forever-streetwear-brand/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-tracksuit-set-nyc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-caps-tees-collection.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/is-vale-forever-real-how-to-tell-before-you-buy/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-warehouse-hoodies.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vale-forever-tracksuit-set-nyc.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/should-i-save-or-sell-my-gold-in-2026/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbar2.5.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldcoincanada.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-sell-diamonds-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-diamonds.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/is-silver-jewelry-worth-selling/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-silver.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sell-your-silver-jewelry-in-east-village-nyc-get-top-dollar-with-trusted-local-buyers/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-silver.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/estate-jewelry-appraisal-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-07-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-estate.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/supreme-box-logo-guide-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-supreme.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/supreme-leather-varsity-jacket.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sell-jordans-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-jordans.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-high-chicago.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-air-jordan-4.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/travis-scott-sneakers-resale-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-travis.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/travis-scott-air-jordan-1-low-mocha.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/vintage-streetwear-worth-selling-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-vintage.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/vanson-leather-racing-jacket.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mitchell-ness-allen-iverson-76ers-jersey.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/authenticate-chrome-hearts-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-chrome.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/chrome-hearts-bead-necklace-pink.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/the-ultimate-guide-to-selling-luxury-goods-in-the-east-village-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/top-10-best-streetwear-stores-to-visit-in-nyc/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/bapebanner.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/where-in-nyc-can-i-sell-electronics/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/electronicsbanner.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/top-10-places-to-sell-your-streetwear-today/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/bapebanner.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/the-history-of-supreme-from-a-skate-shop-to-a-global-icon/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-supreme.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/where-in-nyc-can-i-sell-my-items-for-cash/</loc>
-    <lastmod>2026-07-05</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
-
   <url>
     <loc>https://eastvillagebuyers.com/sell-engagement-ring-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-diamonds.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/labgrowndiamond.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-gold-chain-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/14kgoldnecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldnecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbundled.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-gold-coins-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/indianheadgold.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/coinimage1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldpendantcoin.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-gold-bullion-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbar2.5.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldpageimage1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldcoincanada.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-sterling-silver-flatware-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverpageimage1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/davidyurmansterlingsilver.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silvertiffanybracelet.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-silver.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-silver-coins-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbar.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/coinimage1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbundled.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-estate-jewelry-nyc/</loc>
-    <lastmod>2026-07-26</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/estatejewl.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-img-estate.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelrybanner.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-platinum-nyc/</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jw-bg-platinum.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-designer-jewelry-nyc/</loc>
     <lastmod>2026-07-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/cartierbracelet2.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanynecklace.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyjewelry.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/gold-price-per-gram/</loc>
     <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbar2.5.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbundled.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-gold-east-village/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/firsthouses.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/wn-gold-jewelry.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-broken-scrap-jewelry-nyc/</loc>
-    <lastmod>2026-07-27</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/silverbundled.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/goldacidtester.webp</image:loc></image:image>
   </url>
-
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-is-ai-consuming-gold-what-tech-demand-means-for-your-gold-value/</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-is-ai-consuming-gold-what-tech-demand-means-for-your-gold-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-vintage-prince-merchandise-and-collectibles-hold-value/</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-vintage-prince-merchandise-and-collectibles-hold-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/selling-gold-streetwear-and-electronics-in-one-trip-to-the-east-village/</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-selling-gold-streetwear-and-electronics-in-one-trip-to-the-east-village-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/is-amiri-still-popular-in-2026-how-to-check-your-resale-value/</loc>
-    <lastmod>2026-08-07</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-is-amiri-still-popular-in-2026-how-to-check-your-resale-value-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-is-amiri-still-popular-in-2026-how-to-check-your-resale-value-1.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/will-kobe-sneakers-keep-their-resale-value-what-you-should-know/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-will-kobe-sneakers-keep-their-resale-value-what-you-should-know-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-will-kobe-sneakers-keep-their-resale-value-what-you-should-know-1.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/ever-wonder-why-gold-coins-have-ridges-on-their-edges/</loc>
-    <lastmod>2026-08-10</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-ever-wonder-why-gold-coins-have-ridges-on-their-edges-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gold-cuban-link-chain-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/2-7-mm-solid-gold-italy-miami-cuban-chain-yellow-14k-18k-made-in-italy-yellow-model-shot.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gold-cuban-bracelet-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/s-l400.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sell-gold-and-silver-together-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/buying-gold-and-silver.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/diamond-tennis-necklace-resale-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-necklace-jaipur-rajasthan-india.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/retail-jewelry-markup-resale-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jewelry-diamond-rings-and-necklaces-show-in-luxury-retail-store-window-display-showcase.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/vintage-hot-wheels-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/hotwheel.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/pokemon-card-collection-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/pokemoncards.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/sony-camera-resale-value-nyc/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-08-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/sonycamera.png</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/what-is-valley-dreams-streetwear-brand/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/valley.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/reviews/</loc>
-    <lastmod>2026-08-13</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/google-icon.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-your-kitchen-scale-is-lying-to-you-about-your-golds-value/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-your-kitchen-scale-is-lying-to-you-about-your-golds-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/is-your-gold-magnetic-the-surprising-science-place-a-magnet-on-a-1-kg-gold-bar-or-1-kg-silver-bar-and-feel-resistance/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-is-your-gold-magnetic-the-surprising-science-place-a-magnet-on-a-1-kg-gold-bar-or-1-kg-silver-bar-and-feel-resistance-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/why-is-gold-so-expensive-explained-by-a-5-year-old-east-village-buyers-explains/</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-why-is-gold-so-expensive-explained-by-a-5-year-old-east-village-buyers-explains-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc/</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-where-to-sell-gold-jewelry-coins-valuables-in-the-east-village-nyc-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/diamond-cuban-link-bracelet-value-nyc/</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-cuban-link-bracelet-pave.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-cuban-link-bracelet-box-clasp.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/cluster-diamond-ring-value-nyc/</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/cluster-diamond-halo-ring.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/cluster-diamond-halo-ring-illusion-setting.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/engagement-ring-resale-value-nyc/</loc>
-    <lastmod>2026-10-05</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/round-diamond-engagement-ring-baguettes.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/round-diamond-engagement-ring-side-stones.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-clean-gold-and-diamond-jewelry/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-bangle-bracelet-three-row.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-tell-if-a-ruby-is-real/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/ruby-diamond-cluster-pendant.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-tell-if-a-sapphire-is-real/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/sapphire-diamond-gold-bangle.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-tell-if-an-emerald-is-real/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/emerald-diamond-drop-earrings.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-much-are-gold-earrings-worth/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/gold-baguette-hoop-earrings.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/10k-vs-14k-vs-18k-gold/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-heart-link-bracelet.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/gold-jewelry-stamps-meaning/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/gold-pave-diamond-link-bracelet.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-much-is-a-diamond-necklace-worth/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-heart-pendant-necklace.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/diamond-tennis-bracelet-value/</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/diamond-tennis-bracelet.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-extra-watch-bracelet-links-impact-resale-value/</loc>
     <lastmod>2026-10-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-extra-watch-bracelet-links-impact-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/selling-broken-gold-jewelry-how-bent-rings-and-snapped-chains-are-valued/</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-selling-broken-gold-jewelry-how-bent-rings-and-snapped-chains-are-valued-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-stains-fading-and-print-cracking-affect-streetwear-resale-value/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-stains-fading-and-print-cracking-affect-streetwear-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/what-to-do-before-selling-a-used-game-console/</loc>
     <lastmod>2026-10-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-what-to-do-before-selling-a-used-game-console-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-sneaker-box-condition-and-accessories-affect-resale-value/</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-sneaker-box-condition-and-accessories-affect-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-watch-service-history-and-maintenance-records-impact-resale-value/</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-watch-service-history-and-maintenance-records-impact-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-tag-removal-and-collar-alterations-impact-streetwear-resale-value/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-tag-removal-and-collar-alterations-impact-streetwear-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-gemstone-clarity-and-inclusions-affect-your-payout-selling-vintage-jewelry-at-east-village-buyers/</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-11-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-gemstone-clarity-and-inclusions-affect-your-payout-selling-vintage-jewelry-at-east-village-buyers-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-to-sell-christian-dior-in-nyc-what-affects-your-offer/</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-to-sell-christian-dior-in-nyc-what-affects-your-offer-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-outsole-yellowing-affects-sneaker-resale-value/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-outsole-yellowing-affects-sneaker-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-over-polishing-a-watch-case-affects-value/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-over-polishing-a-watch-case-affects-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/buy-sell-trade-sneakers-nyc/</loc>
-    <lastmod>2026-10-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://eastvillagebuyers.com/blog/buy-sell-trade-pokemon-cards-nyc/</loc>
-    <lastmod>2026-10-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://eastvillagebuyers.com/blog/buy-sell-trade-designer-bags-nyc/</loc>
-    <lastmod>2026-10-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://eastvillagebuyers.com/blog/hollow-vs-solid-gold-chains-weight-and-resale-value/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-sneakers-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-1-high-obsidian-unc.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-3-wizards-black-blue.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-sneakers-nyc-1.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/buy-sell-trade-pokemon-cards-nyc/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-pokemon-cards-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-pokemon-cards-nyc-1.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/pokemoncards.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/buy-sell-trade-designer-bags-nyc/</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-designer-bags-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/lvhandbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/fendi-designer-handbag.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-designer-bags-nyc-1.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/hollow-vs-solid-gold-chains-weight-and-resale-value/</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-hollow-vs-solid-gold-chains-weight-and-resale-value-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/how-zipper-hardware-and-drawstrings-affect-hoodie-resale/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-zipper-hardware-and-drawstrings-affect-hoodie-resale-hero.webp</image:loc></image:image>
   </url>
 </urlset>
