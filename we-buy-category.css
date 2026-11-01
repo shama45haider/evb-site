@@ -512,6 +512,7 @@
   transition: color 0.3s ease;
 }
 .brand-tile:hover .brand-name { color: #ea580c; }
+a.brand-tile { text-decoration: none; }
 
 .brand-tile--cta {
   background: linear-gradient(145deg, #fff5ed 0%, #fff0e0 100%);
