@@ -77,10 +77,14 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-sb-studios-stainbandz-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/mixed-emotion.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/valeblog.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-graded-slab-scratches-affect-collectible-value-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/blog-how-zipper-hardware-and-drawstrings-affect-hoodie-resale-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/blog-hollow-vs-solid-gold-chains-weight-and-resale-value-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-trade-sneakers-nyc-hero.webp</image:loc></image:image>
@@ -1280,5 +1284,28 @@
     <lastmod>2026-11-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-how-graded-slab-scratches-affect-collectible-value-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/buy-sell-mixed-emotion-clothing-nyc/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/mixed-emotion.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/buy-sell-sb-studios-stainbandz-nyc/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-sb-studios-stainbandz-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sb-studios-graphic-tee-set-nyc.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/buy-sell-vale-forever-nyc/</loc>
+    <lastmod>2026-11-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/valeblog.webp</image:loc></image:image>
   </url>
 </urlset>
