@@ -1079,9 +1079,6 @@ body.evb-store-page {
   border-color: var(--evb-orange); color: var(--evb-orange-dark); transform: translateY(-1px);
 }
 
-div.evbs { display: none !important; }
-html.evbs-lock { overflow: visible !important; }
-
 /* EVB Rewards nudge on the order confirmation */
 .evb-rewards-nudge {
   max-width: 720px; margin: 0 auto 22px; padding: 18px 20px;

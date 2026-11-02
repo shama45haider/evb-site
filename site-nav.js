@@ -424,14 +424,6 @@ function toggleNav() { toggleEvbNav(); }
 })();
 
 (function () {
-  if (!/^\/store(\/|$)/.test(location.pathname) && !/[?&]signup-preview\b/.test(location.search)) return;
-  var s = document.createElement('script');
-  s.src = '/evb-signup.js?v=7';
-  s.defer = true;
-  document.head.appendChild(s);
-})();
-
-(function () {
   if (Date.now() >= Date.UTC(2026, 10, 1, 4, 0, 0)) return;
   var s = document.createElement('script');
   s.src = '/evb-halloween.js?v=2';

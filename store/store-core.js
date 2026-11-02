@@ -174,11 +174,7 @@
       email = String(email || '').trim().toLowerCase();
       if (!email) return Promise.resolve(false);
       var base = (CFG.apiBase || '').replace(/\/$/, '');
-      if (!base) {
-        var mine = '';
-        try { mine = localStorage.getItem('evb_signup_email') || ''; } catch (e) {}
-        return Promise.resolve(mine === email);
-      }
+      if (!base) return Promise.resolve(false);
       return fetch(base + '/welcome-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

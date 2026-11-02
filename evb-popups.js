@@ -81,8 +81,7 @@
   function otherDialogOpen() {
     return !!document.getElementById('evbClosure') ||
       shown(document.getElementById('wnWrap')) ||
-      shown(document.getElementById('evbCk')) ||
-      !!document.querySelector('.evbs.is-open');
+      shown(document.getElementById('evbCk'));
   }
 
   function push(name, p) {
