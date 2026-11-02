@@ -221,7 +221,6 @@
       '<div class="acct-invited-text">' +
         '<b>' + (name ? name + ' invited you' : 'A friend invited you') + '</b>' +
         '<span>Spend <strong>' + min + '+</strong> on your first purchase, online or in the shop: you get <strong>' + num(info.friendPoints || 50) + ' points</strong>, ' + who + ' gets ' + num(info.points || 100) + '.</span>' +
-        '<small>Joining on another device? Add member number <strong>' + esc(code) + '</strong> after you sign up.</small>' +
       '</div>' +
     '</div>';
   }
@@ -1161,18 +1160,6 @@
           ? 'You got ' + friendPts + ' points for joining with ' + esc(rf.referredBy) + '’s invite.'
           : 'You joined with ' + esc(rf.referredBy) + '’s invite — you both get points after your first purchase' + min + '.') + '</p>'
       : '';
-    // For a new member who lost the link or signed up on another phone
-    // (panel 0081 says when it's still open to them).
-    var claim = rf.canLink && !rf.referredBy
-      ? '<form class="acct-invite-claim" id="acctInviteClaim" novalidate>' +
-          '<label for="acctInviteCode">Joined because a friend told you? Add their member number and you both get points' + min + '.</label>' +
-          '<div class="acct-invite">' +
-            '<span class="acct-invite-link">' + ICON.users + '<input id="acctInviteCode" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="M1024"></span>' +
-            '<button type="submit" class="acct-invite-btn">Add</button>' +
-          '</div>' +
-          '<p class="acct-invite-note" id="acctInviteClaimMsg" role="status" aria-live="polite"></p>' +
-        '</form>'
-      : '';
 
     return '<section class="acct-bonuses acct-rise" style="--d:220ms" aria-label="Bonus points">' +
       '<div class="acct-bonus acct-bonus--birthday' + (bd.thisMonth ? ' is-now' : '') + '">' +
@@ -1188,7 +1175,7 @@
           '<button type="button" class="acct-invite-btn" id="acctInviteCopy">Copy</button>' +
           '<button type="button" class="acct-invite-btn acct-invite-btn--share" id="acctInviteShare" hidden>' + ICON.share + 'Share</button>' +
         '</div>' +
-        stats + joinedWith + claim +
+        stats + joinedWith +
       '</div>' +
     '</section>';
   }
@@ -1224,43 +1211,6 @@
       });
     }
     input.addEventListener('focus', function () { input.select(); });
-    bindInviteClaim();
-  }
-
-  function bindInviteClaim() {
-    var form = document.getElementById('acctInviteClaim');
-    if (!form) return;
-    var code = document.getElementById('acctInviteCode');
-    var msg = document.getElementById('acctInviteClaimMsg');
-    var btn = form.querySelector('button');
-    form.addEventListener('submit', function (ev) {
-      ev.preventDefault();
-      var value = code.value.trim().toUpperCase();
-      if (!/^M\d+$/.test(value)) {
-        msg.textContent = 'Member numbers look like M1024.';
-        msg.classList.add('is-error');
-        code.focus();
-        return;
-      }
-      btn.disabled = true;
-      msg.classList.remove('is-error');
-      msg.textContent = 'Adding…';
-      sb.rpc('member_set_referrer', { p_code: value }).then(function (r) {
-        btn.disabled = false;
-        if (r.error) {
-          msg.textContent = r.error.message || 'That didn’t work. Try again.';
-          msg.classList.add('is-error');
-          return;
-        }
-        var who = r.data && r.data.referredBy;
-        form.outerHTML = '<p class="acct-invite-note">You joined with ' + (who ? esc(who) + '’s' : 'a friend’s') +
-          ' invite — you both get points after your first purchase.</p>';
-      }, function () {
-        btn.disabled = false;
-        msg.textContent = 'That didn’t work. Check your connection and try again.';
-        msg.classList.add('is-error');
-      });
-    });
   }
 
   /* "Happening now": orders on their way and buy-backs still open. */

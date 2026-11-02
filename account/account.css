@@ -996,13 +996,6 @@
 .acct-invite-stats { display: flex; align-items: center; gap: 7px; }
 .acct-invite-stats svg { flex-shrink: 0; width: 15px; height: 15px; }
 .acct-invite-stats b { color: var(--evb-ink); }
-.acct-invite-claim { grid-column: 1 / -1; display: grid; gap: 8px; margin: 4px 0 0; padding-top: 14px; border-top: 1px solid var(--evb-line-soft); }
-.acct-invite-claim label { font-size: 13.5px; line-height: 1.45; color: var(--evb-ink); font-weight: 500; }
-.acct-invite-claim input { text-transform: uppercase; }
-.acct-invite-claim input::placeholder { text-transform: none; color: #a39d96; }
-.acct-invite-claim .acct-invite-btn:disabled { opacity: 0.6; cursor: wait; }
-.acct-invite-claim .acct-invite-note:empty { display: none; }
-.acct-invite-note.is-error { color: var(--evb-red); }
 
 /* The birthday card: pink, with the cake in a scalloped badge that turns
    slowly and a little confetti drifting beside it, the words underneath. In the birthday
