@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the Google Merchant Center feeds from the live Square catalog.
 
-Two files, which Merchant Center fetches once a day:
+Two feeds, which Merchant Center fetches once a day, and a sitemap:
 
   store/google-products.xml         every piece in stock, linked to its page
                                     on the site (free listings in Google
@@ -9,6 +9,8 @@ Two files, which Merchant Center fetches once a day:
   store/google-local-inventory.xml  the same pieces as stock at 39 Avenue A
                                     (free local listings: "In stock" on the
                                     Maps listing and in "near me" searches)
+  store/sitemap-products.xml        every in-stock piece's page, so Google
+                                    Search crawls them (listed in robots.txt)
 
 The catalog comes from the evb-square Worker's /catalog, the same call the
 storefront makes, so prices (this week's deals included), stock and the
@@ -35,6 +37,7 @@ SITE = "https://eastvillagebuyers.com"
 CATALOG_URL = "https://evb-square.shama45haider.workers.dev/catalog"
 PRODUCTS_FEED = os.path.join(REPO_ROOT, "store", "google-products.xml")
 LOCAL_FEED = os.path.join(REPO_ROOT, "store", "google-local-inventory.xml")
+PRODUCTS_SITEMAP = os.path.join(REPO_ROOT, "store", "sitemap-products.xml")
 STORE_CONFIG = os.path.join(REPO_ROOT, "store", "store-config.js")
 
 # Must match the store code on the Google Business Profile, which is how
@@ -247,6 +250,27 @@ def local_xml(items):
     return "\n".join(out) + "\n"
 
 
+def sitemap_xml(items):
+    """Each in-stock piece's page, once (sizes share a page), for Google
+    Search. robots.txt points to it beside the main sitemap; sold pieces drop
+    out on the next run."""
+    pages = {}
+    for p in items:
+        url = p["link"].split("&v=")[0]
+        pages.setdefault(url, p["images"][0])
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+           '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
+    for url, img in sorted(pages.items()):
+        out.append("  <url>")
+        out.append(f"    <loc>{html.escape(url, quote=False)}</loc>")
+        out.append("    <changefreq>daily</changefreq>")
+        out.append(f"    <image:image><image:loc>{html.escape(img, quote=False)}</image:loc></image:image>")
+        out.append("  </url>")
+    out.append("</urlset>")
+    return "\n".join(out) + "\n"
+
+
 def main():
     check = "--check" in sys.argv[1:]
     try:
@@ -255,7 +279,8 @@ def main():
         sys.exit(f"couldn't load the catalog from {CATALOG_URL}: {e}")
 
     items = products(objects)
-    feeds = {PRODUCTS_FEED: products_xml(items, shipping_config()), LOCAL_FEED: local_xml(items)}
+    feeds = {PRODUCTS_FEED: products_xml(items, shipping_config()), LOCAL_FEED: local_xml(items),
+             PRODUCTS_SITEMAP: sitemap_xml(items)}
     print(f"{len(items)} pieces in stock")
     for p in items:
         print(f"  {p['id']:<14} {money(p['sale'] or p['price']):>12}  {p['title']}")

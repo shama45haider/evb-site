@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://eastvillagebuyers.com/sitemap.xml
+Sitemap: https://eastvillagebuyers.com/store/sitemap-products.xml

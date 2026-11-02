@@ -40,6 +40,15 @@ SKIP_DIRS = {".git", ".claude", ".github", ".well-known", "node_modules", "scrip
 # until ?id= picks a product, and turns itself noindex when there isn't one.
 SKIP_URLS = {"/store/product/"}
 
+# Pages on other hosts that belong in the sitemap: (url, changefreq,
+# priority). Google only takes these when the host is verified with this
+# site in Search Console (a Domain property for eastvillagebuyers.com covers
+# its subdomains). No <lastmod>: the repo can't see when they change.
+OUTSIDE_URLS = [
+    # The jewelry catalog on Gembox, linked from the home page (2026-11-02).
+    ("https://shop.eastvillagebuyers.com/catalog/ThZ7AuRQai", "weekly", "0.8"),
+]
+
 # Defaults for pages the sitemap doesn't list yet.
 DEFAULT_BLOG = ("monthly", "0.7")
 DEFAULT_PAGE = ("monthly", "0.8")
@@ -200,7 +209,7 @@ def main():
             order.append(url)
             settings[url] = (freq, prio)
     added = sorted(u for u in pages if u not in settings)
-    dropped = sorted({u for u, _, _ in existing_entries()} - set(pages))
+    dropped = sorted({u for u, _, _ in existing_entries()} - set(pages) - {u for u, _, _ in OUTSIDE_URLS})
     for url in added:
         order.append(url)
         settings[url] = DEFAULT_BLOG if url.startswith("/blog/") else DEFAULT_PAGE
@@ -223,6 +232,12 @@ def main():
         for img in page_images(text, url):
             out.append(f"    <image:image><image:loc>{html.escape(img, quote=False)}</image:loc></image:image>")
             images_total += 1
+        out.append("  </url>")
+    for url, freq, prio in OUTSIDE_URLS:
+        out.append("  <url>")
+        out.append(f"    <loc>{html.escape(url, quote=False)}</loc>")
+        out.append(f"    <changefreq>{freq}</changefreq>")
+        out.append(f"    <priority>{prio}</priority>")
         out.append("  </url>")
     out.append("</urlset>")
     xml = "\n".join(out) + "\n"
