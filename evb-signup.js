@@ -85,12 +85,12 @@
             '<input class="evbs-hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">' +
             '<p class="evbs-err" role="alert"></p>' +
           '</form>' +
-          '<p class="evbs-fine">Applies to standard shipping on your first online order. We only email about the store and offers.</p>' +
+          '<p class="evbs-fine">Takes up to $20 off standard shipping on your first online order. We only email about the store and offers.</p>' +
         '</div>' +
         '<div class="evbs-done-view" hidden>' +
           '<p class="evbs-kicker">You\'re in</p>' +
           '<p class="evbs-title">Free shipping is <em>saved</em></p>' +
-          '<p class="evbs-sub">It\'s linked to <strong class="evbs-done-email"></strong>. Use that email at checkout and standard shipping is on us.</p>' +
+          '<p class="evbs-sub">It\'s linked to <strong class="evbs-done-email"></strong>. Use that email at checkout and standard shipping is on us, up to $20.</p>' +
         '</div>' +
       '</div>';
     document.body.appendChild(root);

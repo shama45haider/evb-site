@@ -1253,7 +1253,7 @@
     var offer = t.prizeOffer;
     if (!offer) return '';
     var star = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-    var what = offer.kind === 'shipping' ? 'Free shipping' : String(offer.label || '').replace(/ an order$/, '');
+    var what = offer.kind === 'shipping' ? 'Free shipping (up to $' + (CFG.shippingOfferCap || 2000) / 100 + ')' : String(offer.label || '').replace(/ an order$/, '');
     if (t.prize) {
       return '<div class="evb-prize-row">' +
           '<div class="evb-sumrow evb-sumrow--prize"><span>' + star + 'EVB Rewards · ' + S.esc(what) + '</span>' +

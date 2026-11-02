@@ -40,6 +40,8 @@
     { code: 'off_20', label: '$20 off an order', short: '$20 off', points: 400 }
   ];
   var EXPIRE_DAYS = 60;
+  // The most free shipping takes off (the Worker's SHIPPING_OFFER_CAP).
+  var SHIP_CAP = '$20';
   // Points this close to lapsing get the warning colour.
   var EXPIRE_SOON_DAYS = 14;
   // Member levels, by lifetime points (what they've earned, not what's left
@@ -194,7 +196,7 @@
           '</em></h1>' +
         '<p class="acct-lede" style="--i:3">Earn <strong>1 point per $1</strong> when you buy from us, online or in the shop, or sell to us.</p>' +
         '<ul class="acct-perks">' +
-          perk(ICON.gift, 'Up to ' + topOff + ' off online orders', 'Free shipping from ' + num(PRIZES[0].points) + ' points.', 4) +
+          perk(ICON.gift, 'Up to ' + topOff + ' off online orders', 'Free shipping (up to ' + SHIP_CAP + ') from ' + num(PRIZES[0].points) + ' points.', 4) +
           perk(ICON.idcard, 'No ID needed to sell', 'Yours stays on file.', 5) +
           perk(ICON.cake, 'Birthday and invite bonuses', 'Plus members-only deals.', 6) +
           perk(ICON.key, 'No password', 'We email you a code.', 7) +
@@ -252,9 +254,16 @@
   // "100 points = $5 off, 200 = $10 off, 250 = free shipping, 400 = $20 off"
   function prizeLadder(prizes) {
     return (prizes || PRIZES).map(function (p, i) {
-      var what = p.code === 'free_shipping' ? 'free shipping' : p.label.replace(/ an order$/, '');
+      var what = p.code === 'free_shipping' ? 'free shipping (up to ' + SHIP_CAP + ')' : p.label.replace(/ an order$/, '');
       return num(p.points) + (i === 0 ? ' points' : '') + ' = ' + what;
     }).join(', ');
+  }
+  // "Use your points for free shipping or up to $20 off." The tickets above
+  // it show what each one costs.
+  function prizeSummary(prizes) {
+    var top = (/\$\d+/.exec(prizes[prizes.length - 1].label) || ['$20'])[0];
+    var ship = prizes.some(function (p) { return p.code === 'free_shipping'; });
+    return 'Use your points for ' + (ship ? 'free shipping or ' : '') + 'up to ' + top + ' off.';
   }
   // One prize as a ticket: the value big ("Free" shipping, "$10" off) over a
   // large faded icon, then its points under a perforation. Ready ones are
@@ -265,7 +274,7 @@
     var ship = p.code === 'free_shipping';
     var amount = /\$\d+/.exec(p.label);
     var big = ship ? 'Free' : amount ? amount[0] : p.short;
-    var small = ship ? 'shipping' : amount ? 'off an order' : '';
+    var small = ship ? 'shipping, up to ' + SHIP_CAP : amount ? 'off an order' : '';
     var icon = ship ? ICON.truck : ICON.tag;
     var state = have ? 'is-ready' : isNext ? 'is-next' : 'is-locked';
     var flag = have
@@ -732,7 +741,7 @@
           '<h2 class="acct-section-title">How it works</h2>' +
           '<ol class="acct-steps">' +
             '<li><span class="acct-step-n" aria-hidden="true">1</span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
-            '<li><span class="acct-step-n" aria-hidden="true">2</span><b>Get a prize</b><span>' + prizeLadder(prizes) + '. One per online order, shipped or picked up — text us after you order.</span></li>' +
+            '<li><span class="acct-step-n" aria-hidden="true">2</span><b>Get a prize</b><span>' + prizeSummary(prizes) + ' One per online order.</span></li>' +
             '<li><span class="acct-step-n" aria-hidden="true">3</span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
           '</ol>' +
         '</section>' +

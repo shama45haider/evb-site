@@ -31,7 +31,7 @@ window.EVB_STORE_CONFIG = {
   promoCodes: {
     'EVB10':     { type: 'percent', value: 10, label: '10% off your order' },
     'WALKIN25':  { type: 'fixed',   value: 2500, label: '$25 off orders over $250', minSubtotal: 25000 },
-    'FREESHIP':  { type: 'shipping', value: 0, label: 'Free standard shipping' }
+    'FREESHIP':  { type: 'shipping', value: 0, label: 'Free standard shipping, up to $20' }
   },
 
   business: {
