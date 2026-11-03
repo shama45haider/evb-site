@@ -9,11 +9,27 @@ const SQUARE_VERSION = '2024-10-17';
 
 const TAX_PERCENTAGE = '8.875';
 
-const PROMO_CODES = {
-  EVB10:    { type: 'percent',  value: 10 },
-  WALKIN25: { type: 'fixed',    value: 2500, minSubtotal: 25000 },
-  FREESHIP: { type: 'shipping' }
-};
+// Promo codes are the Worker secret PROMO_CODES, not this file, because this
+// file is public (the site and its GitHub repo). JSON, amounts in cents:
+//   {"CODE":{"type":"percent","value":10},
+//    "CODE2":{"type":"fixed","value":2500,"minSubtotal":25000},
+//    "CODE3":{"type":"shipping"}}
+// An optional "label" replaces the wording checkout shows. Change them in
+// the dashboard: evb-square -> Settings -> Variables and Secrets.
+function promoCodes(env) {
+  try {
+    const codes = JSON.parse(env.PROMO_CODES || '{}');
+    return codes && typeof codes === 'object' ? codes : {};
+  } catch (e) {
+    console.error('[evb-square] PROMO_CODES is not valid JSON');
+    return {};
+  }
+}
+
+function promoRule(env, code) {
+  const codes = promoCodes(env);
+  return code && Object.prototype.hasOwnProperty.call(codes, code) ? codes[code] : null;
+}
 
 const SHIPPING_RATES = {
   pickup:   { label: 'In-store pickup',   amount: 0 },
@@ -23,8 +39,8 @@ const SHIPPING_RATES = {
 
 const FREE_SHIPPING_THRESHOLD = 50000;
 
-// The most a free-shipping offer (the threshold, FREESHIP, the welcome
-// offer, a Rewards prize) takes off standard shipping. The usual $15 is still
+// The most a free-shipping offer (the threshold, a free-shipping promo code,
+// the welcome offer, a Rewards prize) takes off standard shipping. The usual $15 is still
 // free; an item the panel gave dearer shipping pays the rest (the owner's
 // call, 2026-10-29). store-config.js shippingOfferCap is the browser's copy.
 const SHIPPING_OFFER_CAP = 2000;
@@ -455,7 +471,7 @@ async function buildSquareOrder(env, payload, auth) {
   });
 
   const code = String((payload.order.totals && payload.order.totals.promoCode) || '').toUpperCase();
-  const promo = PROMO_CODES[code];
+  const promo = promoRule(env, code);
   let freeShipping = false;
   let promoOff = 0;
 
@@ -603,6 +619,33 @@ async function buildSquareOrder(env, payload, auth) {
       evb_order_id: String(payload.order.id).slice(0, 255)
     }
   } };
+}
+
+// Checkout asks about the one code a buyer typed, so the list never has to
+// reach the browser. PROMO_LIMITER (10 a minute per visitor) stops anyone
+// using this to guess codes; without the binding it isn't limited.
+async function handlePromo(request, env, origin) {
+  if (env.PROMO_LIMITER) {
+    const key = request.headers.get('CF-Connecting-IP') || 'anon';
+    try {
+      const { success } = await env.PROMO_LIMITER.limit({ key });
+      if (!success) return json({ error: 'Too many tries. Wait a minute and try again.' }, 429, origin);
+    } catch (e) { }
+  }
+  const body = await request.json().catch(() => ({}));
+  const code = String((body && body.code) || '').trim().toUpperCase().slice(0, 40);
+  const rule = promoRule(env, code);
+  if (!rule) return json({ error: 'That code is not valid.' }, 404, origin);
+
+  const dollars = c => '$' + (c % 100 ? (c / 100).toFixed(2) : c / 100);
+  const label = rule.label ||
+    (rule.type === 'percent' ? rule.value + '% off your order'
+      : rule.type === 'fixed' ? dollars(rule.value) + ' off ' + (rule.minSubtotal ? 'orders over ' + dollars(rule.minSubtotal) : 'your order')
+      : 'Free standard shipping, up to ' + dollars(SHIPPING_OFFER_CAP));
+  return json({
+    code,
+    rule: { type: rule.type, value: rule.value || 0, minSubtotal: rule.minSubtotal || 0, label }
+  }, 200, origin);
 }
 
 async function handleQuote(request, env, origin) {
@@ -1181,6 +1224,9 @@ export default {
     try {
       if (request.method === 'GET' && path === '/catalog') {
         return await handleCatalog(env, origin);
+      }
+      if (request.method === 'POST' && path === '/promo') {
+        return await handlePromo(request, env, origin);
       }
       if (request.method === 'POST' && path === '/quote') {
         return await handleQuote(request, env, origin);

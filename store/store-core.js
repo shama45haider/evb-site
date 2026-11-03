@@ -153,12 +153,34 @@
     }
   };
 
+  // The codes live on the Worker (its PROMO_CODES secret), so nobody can read
+  // them out of the site. check() asks it about one code and remembers the
+  // answer for this page; validate() works from what it has been told.
   var promo = {
+    rules: {},
+    check: function (code) {
+      var key = String(code || '').trim().toUpperCase();
+      var base = (CFG.apiBase || '').replace(/\/$/, '');
+      if (!key || promo.rules[key] || !base) return Promise.resolve(promo.validate(key));
+      return fetch(base + '/promo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: key })
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (d) {
+            if (r.ok && d.rule) promo.rules[key] = d.rule;
+            else if (r.status !== 404) return { ok: false, message: d.error || 'We couldn’t check that code. Try again.' };
+            return promo.validate(key);
+          });
+        })
+        .catch(function () { return { ok: false, message: 'We couldn’t check that code. Try again.' }; });
+    },
     validate: function (code) {
       var key = String(code || '').trim().toUpperCase();
       if (!key) return { ok: false, message: 'Enter a code.' };
 
-      var rule = (CFG.promoCodes || {})[key];
+      var rule = promo.rules[key];
       if (!rule) return { ok: false, message: 'That code is not valid.' };
 
       var sub = cart.subtotal();

@@ -1501,15 +1501,15 @@
     if (!promoBtn) return;
     var applyPromo = function () {
       var code = promoInput.value.trim().toUpperCase();
-      if (!code) {
-        state.data.promoCode = ''; state.promoMsg = null;
-      } else {
-        var v = S.promo.validate(code);
-        state.data.promoCode = v.ok ? v.code : '';
-        state.promoMsg = { ok: v.ok, text: v.message };
-      }
-      S.draft.set({ promoCode: state.data.promoCode });
-      refresh();
+      var done = function (v) {
+        state.data.promoCode = v && v.ok ? v.code : '';
+        state.promoMsg = v ? { ok: v.ok, text: v.message } : null;
+        S.draft.set({ promoCode: state.data.promoCode });
+        refresh();
+      };
+      if (!code) return done(null);
+      promoBtn.disabled = true;
+      S.promo.check(code).then(done);
     };
     promoBtn.addEventListener('click', applyPromo);
     promoInput.addEventListener('keydown', function (e) {
@@ -1569,7 +1569,9 @@
     var member = sb ? loadMember() : Promise.resolve().then(function () { state.member.status = 'error'; });
 
     var ready = false;
-    Promise.all([C.load(), member]).then(function () {
+    // A code from the saved draft counts once the Worker has said it's good.
+    var savedPromo = S.draft.get().promoCode;
+    Promise.all([C.load(), member, savedPromo ? S.promo.check(savedPromo) : null]).then(function () {
       var changes = S.cart.reconcile();
       restoreDraft();
       resumeCashApp();

@@ -17,8 +17,8 @@ window.EVB_STORE_CONFIG = {
 
   freeShippingThreshold: 50000,
 
-  // The most a free-shipping offer (the threshold, FREESHIP, the welcome
-  // offer, a Rewards prize) takes off. The usual $15 is still free; an item
+  // The most a free-shipping offer (the threshold, a free-shipping promo
+  // code, the welcome offer, a Rewards prize) takes off. The usual $15 is still free; an item
   // the panel gave dearer shipping pays the rest. Same as the Worker's.
   shippingOfferCap: 2000,
 
@@ -27,12 +27,6 @@ window.EVB_STORE_CONFIG = {
     { id: 'standard', label: 'Standard shipping', detail: 'Insured, signature on delivery',                  amount: 1500, days: '3–5 business days' },
     { id: 'express',  label: 'Express shipping',  detail: 'Insured, signature on delivery',                  amount: 3500, days: '1–2 business days' }
   ],
-
-  promoCodes: {
-    'EVB10':     { type: 'percent', value: 10, label: '10% off your order' },
-    'WALKIN25':  { type: 'fixed',   value: 2500, label: '$25 off orders over $250', minSubtotal: 25000 },
-    'FREESHIP':  { type: 'shipping', value: 0, label: 'Free standard shipping, up to $20' }
-  },
 
   business: {
     name: 'East Village Buyers',

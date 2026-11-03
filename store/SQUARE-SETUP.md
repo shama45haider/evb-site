@@ -41,13 +41,14 @@ encrypted secret on the Worker.
 1. <https://dash.cloudflare.com> → **Workers & Pages** → **Create** → **Create Worker**.
 2. Name it `evb-square`, deploy the default hello-world.
 3. **Edit code** → delete everything → paste the whole of `/square-worker.js` → **Deploy**.
-4. **Settings → Variables and Secrets** → add these three:
+4. **Settings → Variables and Secrets** → add these four:
 
    | Name | Type | Value |
    |---|---|---|
    | `SQUARE_ACCESS_TOKEN` | Secret | the access token from Step 1 |
    | `SQUARE_LOCATION_ID` | Text | the location ID from Step 1 |
    | `SQUARE_ENVIRONMENT` | Text | `sandbox` (later `production`) |
+   | `PROMO_CODES` | Secret | the promo codes as JSON (format at the top of `square-worker.js`); leave it out for none |
 
 5. Recommended, not required:
    - **Bindings → KV Namespace**, variable name `ORDERS`.
@@ -57,6 +58,9 @@ encrypted secret on the Worker.
    - **Bindings → Rate Limiting**, variable name `RATE_LIMITER`, e.g. 30
      requests per 60 seconds. If the binding is missing the check is skipped —
      it fails open, so deploying without it is safe.
+   - **Bindings → Rate Limiting**, variable name `PROMO_LIMITER`, 10 requests
+     per 60 seconds. Only the promo-code check uses it, so nobody can guess
+     codes by trying thousands of them.
 
 6. Copy the Worker URL, e.g. `https://evb-square.yourname.workers.dev`.
 
