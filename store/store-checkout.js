@@ -1222,7 +1222,8 @@
 
         '<div class="evb-review-block">' +
           '<p class="evb-review-label">All sales final</p>' +
-          '<p class="evb-review-value" style="color:var(--evb-ink-2)">' + S.esc(CFG.returnsPolicy) + '</p>' +
+          '<p class="evb-review-value" style="color:var(--evb-ink-2)">' + S.esc(CFG.returnsPolicy) +
+            ' <a href="' + S.esc(CFG.returnsPolicyUrl || '/return-policy/') + '" target="_blank" rel="noopener" style="color:var(--evb-orange-deep);font-weight:600;text-underline-offset:2px">Read the full return policy</a></p>' +
         '</div>' +
 
         '<label class="evb-check" style="margin-top:18px">' +

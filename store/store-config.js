@@ -38,5 +38,7 @@ window.EVB_STORE_CONFIG = {
     hours: 'Sun 12:30–6 PM · Mon–Thu 12:30–6:30 PM · Fri 12:30–4 PM · Sat Closed'
   },
 
-  returnsPolicy: 'All sales are final. We do not accept returns or exchanges. If an item arrives damaged or is not what you ordered, contact us within 48 hours of delivery.'
+  // Short version of /return-policy/, shown at checkout and on the receipt.
+  returnsPolicy: 'All sales are final, with no returns or refunds. Shipped orders can’t be exchanged, and once an order ships, any return or refund is solely at our discretion. Pickup orders can be exchanged for a different size within 24 hours of pickup. If an item arrives damaged or isn’t what you ordered, contact us within 48 hours of delivery.',
+  returnsPolicyUrl: '/return-policy/'
 };
