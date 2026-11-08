@@ -412,6 +412,49 @@
     document.title = 'Order ' + o.id + ' | East Village Buyers';
   }
 
+  // N business days (Mon–Fri) after an ISO date, as YYYY-MM-DD.
+  function businessDaysAfter(iso, n) {
+    var d = new Date(iso);
+    if (isNaN(d)) d = new Date();
+    while (n > 0) {
+      d.setDate(d.getDate() + 1);
+      if (d.getDay() !== 0 && d.getDay() !== 6) n--;
+    }
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+
+  // Google Customer Reviews (CFG.googleCustomerReviews): Google's opt-in asks
+  // the buyer to review us once the order should be in hand. Once per order
+  // in this browser, and not for demo or cancelled orders.
+  function offerGoogleReview(o) {
+    var g = CFG.googleCustomerReviews;
+    if (!g || !g.on || !g.merchantId || o.demo || o.status === 'CANCELLED' || !o.customer || !o.customer.email) return;
+    var seen = 'evb_gcr_' + o.id;
+    try { if (localStorage.getItem(seen)) return; localStorage.setItem(seen, '1'); } catch (e) {}
+    var f = o.fulfillment || {};
+    var pickup = f.type === 'PICKUP';
+    var express = !pickup && /express/i.test(f.method || '');
+    // A day for the stock check, then pickup the same day, express 1–2
+    // business days or standard 3–5 (shippingRates in store-config.js).
+    var eta = businessDaysAfter(o.createdAt, pickup ? 1 : express ? 3 : 6);
+    var country = String((!pickup && f.address && f.address.country) || 'US').toUpperCase();
+    window.renderOptIn = function () {
+      window.gapi.load('surveyoptin', function () {
+        window.gapi.surveyoptin.render({
+          merchant_id: g.merchantId,
+          order_id: String(o.id),
+          email: o.customer.email,
+          delivery_country: country,
+          estimated_delivery_date: eta
+        });
+      });
+    };
+    var s = document.createElement('script');
+    s.src = 'https://apis.google.com/js/platform.js?onload=renderOptIn';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
   S.mountCartUI('/');
 
   var id = new URLSearchParams(location.search).get('id');
@@ -420,6 +463,7 @@
   S.orders.fetch(id).then(function (o) {
     if (!o) { notFound(); return; }
     render(o);
+    try { offerGoogleReview(o); } catch (e) {} // never take the receipt down with it
   }).catch(notFound);
 })();
 </script>

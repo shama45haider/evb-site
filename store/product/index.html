@@ -485,25 +485,82 @@
     canon.setAttribute('href', 'https://eastvillagebuyers.com/store/product/?p=' + encodeURIComponent(product.slug));
 
     var v = currentVariant();
+    var CFG = S.config;
+    var currency = CFG.currency || 'USD';
+    var price = v ? v.price : product.price;
+
+    // The panel's details ("Men's|Size: Large|Color: Black|Ref EVB-L1004"),
+    // read the way scripts/build_google_feed.py reads them for the feed.
+    var details = (product.details || []).map(function (x) { return String(x).trim(); });
+    function detail(name) {
+      var hit = details.filter(function (x) { return x.toLowerCase().indexOf(name + ':') === 0; })[0];
+      return hit ? hit.slice(name.length + 1).trim() : '';
+    }
+    var GENDER = { "men's": 'male', "women's": 'female', 'unisex': 'unisex' };
+    var gender = details.map(function (x) { return GENDER[x.toLowerCase().replace(/’/g, "'")]; }).filter(Boolean)[0];
+    var multi = product.variants.length > 1;
+    var size = multi && v ? v.label
+      : detail('size') || (v && !/^(default|regular)?$/i.test(v.label) ? v.label : '');
+    var ref = (details.filter(function (x) { return /^ref\s/i.test(x); })[0] || '').slice(4).trim();
+
+    // Same rule as condition() in scripts/build_google_feed.py: Google
+    // limits products whose page condition disagrees with the feed.
+    var cond = String(product.condition || '');
+    var isNew = !/pre-?owned|used|worn/i.test(cond) && /\bnew\b|deadstock|sealed/i.test(cond);
+
+    var offer = {
+      '@type': 'Offer',
+      url: 'https://eastvillagebuyers.com/store/product/?p=' + product.slug,
+      priceCurrency: currency,
+      price: (price / 100).toFixed(2),
+      availability: (v && v.stock) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      seller: { '@type': 'Store', name: 'East Village Buyers' },
+      // All sales final (/return-policy/), as Merchant Center's return policy says.
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'US',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnNotPermitted',
+        merchantReturnLink: 'https://eastvillagebuyers.com' + (CFG.returnsPolicyUrl || '/return-policy/')
+      }
+    };
+    if (product.deal && product.deal.ends) offer.priceValidUntil = String(product.deal.ends).slice(0, 10);
+
+    // Standard shipping as the feed prices it: the item's own rate or the
+    // usual one, less the free-shipping offer over the threshold. Pickup-only
+    // items don't ship.
+    var ship = product.shipping || { delivery: 'both', cents: null };
+    if (ship.delivery !== 'pickup') {
+      var standard = (CFG.shippingRates || []).filter(function (r) { return r.id === 'standard'; })[0] || { amount: 0, days: '' };
+      var cost = ship.cents != null ? ship.cents : standard.amount;
+      if (CFG.freeShippingThreshold && price >= CFG.freeShippingThreshold) cost = Math.max(0, cost - (CFG.shippingOfferCap || cost));
+      var days = /(\d+)\D+(\d+)/.exec(standard.days || '') || [0, 3, 5];
+      offer.shippingDetails = {
+        '@type': 'OfferShippingDetails',
+        shippingRate: { '@type': 'MonetaryAmount', value: (cost / 100).toFixed(2), currency: currency },
+        shippingDestination: { '@type': 'DefinedRegion', addressCountry: 'US' },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          // Orders wait for a stock check, usually within a day.
+          handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 1, unitCode: 'DAY' },
+          transitTime: { '@type': 'QuantitativeValue', minValue: Number(days[1]), maxValue: Number(days[2]), unitCode: 'DAY' }
+        }
+      };
+    }
+
     var ld = {
       '@context': 'https://schema.org',
       '@type': 'Product',
       name: product.title,
       description: product.description,
       image: product.images.map(function (i) { return /^https?:/.test(i) ? i : 'https://eastvillagebuyers.com' + i; }),
-      sku: product.sku || product.id,
-      itemCondition: /Deadstock|Sealed/.test(product.condition)
-        ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
-      offers: {
-        '@type': 'Offer',
-        url: 'https://eastvillagebuyers.com/store/product/?p=' + product.slug,
-        priceCurrency: (S.config.currency || 'USD'),
-        price: ((v ? v.price : product.price) / 100).toFixed(2),
-        availability: (v && v.stock) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-        seller: { '@type': 'Store', name: 'East Village Buyers' }
-      }
+      sku: ref || product.sku || product.id,
+      itemCondition: isNew ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition',
+      offers: offer
     };
     if (product.brand) ld.brand = { '@type': 'Brand', name: product.brand };
+    if (detail('color')) ld.color = detail('color');
+    if (size) ld.size = size;
+    if (gender) ld.audience = { '@type': 'PeopleAudience', suggestedGender: gender };
 
     var tag = document.createElement('script');
     tag.type = 'application/ld+json';

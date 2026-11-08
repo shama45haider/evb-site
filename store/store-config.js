@@ -40,5 +40,11 @@ window.EVB_STORE_CONFIG = {
 
   // Short version of /return-policy/, shown at checkout and on the receipt.
   returnsPolicy: 'All sales are final, with no returns or refunds. Shipped orders can’t be exchanged, and once an order ships, any return or refund is solely at our discretion. Pickup orders can be exchanged for a different size within 24 hours of pickup. If an item arrives damaged or isn’t what you ordered, contact us within 48 hours of delivery.',
-  returnsPolicyUrl: '/return-policy/'
+  returnsPolicyUrl: '/return-policy/',
+
+  // Google Customer Reviews: the order page offers the buyer Google's review
+  // survey, which builds the seller rating on Google. Set `on: true` only
+  // after adding Google customer reviews in Merchant Center (Add-ons) and
+  // accepting its terms, and bump this file's ?v= in /store/order/.
+  googleCustomerReviews: { on: false, merchantId: 5752752250 }
 };

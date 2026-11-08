@@ -46,7 +46,7 @@ STORE_CODE = "EVB-AVE-A"
 
 # The storefront's departments (CATEGORIES in store/store-catalog.js): the
 # label shoppers see, Google's product category, and whether Google treats it
-# as clothing (which wants a size and an age group).
+# as clothing or shoes (which want a size).
 CATEGORIES = {
     "sneakers":     ("Sneakers", "Apparel & Accessories > Shoes", True),
     "watches":      ("Watches", "Apparel & Accessories > Jewelry > Watches", False),
@@ -99,6 +99,25 @@ def condition(text):
     return "used"
 
 
+def detail(details, name):
+    """A "Name: value" entry from the panel's details, e.g. "Color: Black"."""
+    prefix = name.lower() + ":"
+    return next((x.split(":", 1)[1].strip() for x in details if x.lower().startswith(prefix)), "")
+
+
+GENDERS = {"men's": "male", "women's": "female", "unisex": "unisex"}
+
+
+def gender(details):
+    """Google's gender, from the panel's department in the details: "Men's",
+    "Women's" or "Unisex" (departmentLabel in the panel's sizes.ts)."""
+    for value in details:
+        g = GENDERS.get(str(value or "").strip().lower().replace("’", "'"))
+        if g:
+            return g
+    return ""
+
+
 def money(cents):
     return f"{cents / 100:.2f} USD"
 
@@ -129,7 +148,8 @@ def products(objects):
         cat = (custom.get("category") or "").lower()
         label, google_cat, apparel = CATEGORIES.get(cat, ("", "", False))
         details = [x.strip() for x in str(custom.get("details") or "").split("|") if x.strip()]
-        size_detail = next((x.split(":", 1)[1].strip() for x in details if x.lower().startswith("size:")), "")
+        size_detail = detail(details, "size")
+        color = detail(details, "color")
         about = " ".join(p.rstrip(".") + "." for p in
                          [d.get("description_plaintext") or d.get("description") or custom.get("blurb") or title]
                          + [x for x in details if not x.lower().startswith("ref ")])
@@ -164,6 +184,8 @@ def products(objects):
                 "google_category": google_cat,
                 "apparel": apparel,
                 "size": size,
+                "color": color,
+                "gender": gender(details),
                 "delivery": delivery,
                 "ship_cents": ship_cents,
             })
@@ -205,10 +227,16 @@ def products_xml(items, shipping):
             out.append(tag("product_type", p["product_type"]))
         if p["google_category"]:
             out.append(tag("google_product_category", p["google_category"]))
-        if p["apparel"]:
+        if p["color"]:
+            out.append(tag("color", p["color"]))
+        if p["gender"]:
+            out.append(tag("gender", p["gender"]))
+        # Google wants an age group (with the color and gender above) on all
+        # of Apparel & Accessories: jewelry, watches and bags too.
+        if p["google_category"].startswith("Apparel & Accessories"):
             out.append(tag("age_group", "adult"))
-            if p["size"]:
-                out.append(tag("size", p["size"]))
+        if p["apparel"] and p["size"]:
+            out.append(tag("size", p["size"]))
         if p["delivery"] == "pickup":
             # Pickup only: list it as in-store stock, not as something to order online.
             out.append(tag("excluded_destination", "Free_listings"))
