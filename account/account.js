@@ -50,7 +50,7 @@
     { code: 'bronze', name: 'Bronze', min: 0 },
     { code: 'silver', name: 'Silver', min: 500 },
     { code: 'gold', name: 'Gold', min: 1500 },
-    { code: 'black', name: 'Black', min: 4000 }
+    { code: 'black', name: 'Diamond', min: 4000 }
   ];
   // Where an invite link's code waits until the friend is signed in (0080).
   var REF_KEY = 'evb_acct_ref';
@@ -989,7 +989,7 @@
 
       ['level', 'Silver level', 'Reach Silver at ' + num(TIERS[1].min) + ' lifetime points', 'workspace_premium', 'silver', [life, TIERS[1].min], 'points'],
       ['level', 'Gold level', 'Reach Gold at ' + num(TIERS[2].min) + ' lifetime points', 'workspace_premium', 'gold', [life, TIERS[2].min], 'points'],
-      ['level', 'Black level', 'Reach Black at ' + num(TIERS[3].min) + ' lifetime points', 'crown', 'black', [life, TIERS[3].min], 'points'],
+      ['level', 'Diamond level', 'Reach Diamond at ' + num(TIERS[3].min) + ' lifetime points', 'crown', 'black', [life, TIERS[3].min], 'points'],
       ['level', 'Settling in', 'Be a member for 3 months', 'event', 'teal', [memberMonths, 3], 'months'],
       ['level', 'Half a year', 'Be a member for 6 months', 'calendar_month', 'blue', [memberMonths, 6], 'months'],
       ['level', 'One year in', 'Be a member for a year', 'cake', 'pink', [memberMonths, 12], 'months'],
