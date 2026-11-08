@@ -43,8 +43,8 @@ window.EVB_STORE_CONFIG = {
   returnsPolicyUrl: '/return-policy/',
 
   // Google Customer Reviews: the order page offers the buyer Google's review
-  // survey, which builds the seller rating on Google. Set `on: true` only
-  // after adding Google customer reviews in Merchant Center (Add-ons) and
-  // accepting its terms, and bump this file's ?v= in /store/order/.
-  googleCustomerReviews: { on: false, merchantId: 5752752250 }
+  // survey, which builds the seller rating on Google. The add-on is on in
+  // Merchant Center and its agreement was signed 2026-11-08. Changing this
+  // means bumping this file's ?v= in /store/order/.
+  googleCustomerReviews: { on: true, merchantId: 5752752250 }
 };
