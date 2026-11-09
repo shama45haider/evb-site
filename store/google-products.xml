@@ -16,7 +16,6 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/2322329f167fbedc08fee82e1a49fd28b5c02d41/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>250.00 USD</g:price>
-<g:sale_price>230.00 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:brand>Lost intricacy</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
@@ -62,7 +61,7 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/454799e67613eb3573f7130cd3c302a06f088265/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>150.00 USD</g:price>
-<g:sale_price>142.50 USD</g:sale_price>
+<g:sale_price>141.00 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:brand>Vale</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
@@ -85,7 +84,6 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/c710a3c8cd0572787eaa763bbd80a55970db6849/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>225.00 USD</g:price>
-<g:sale_price>211.50 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:brand>Lost</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
@@ -108,6 +106,7 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/800ace2a807b3591a3cd3c553a30246f44749c77/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>150.00 USD</g:price>
+<g:sale_price>142.50 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:brand>Denim Tears</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
@@ -130,7 +129,7 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/63072fe96362b38eff8aca6713a5cdb2765ed32b/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>150.00 USD</g:price>
-<g:sale_price>138.00 USD</g:sale_price>
+<g:sale_price>139.50 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:brand>Denim Tears</g:brand>
 <g:identifier_exists>no</g:identifier_exists>
@@ -152,6 +151,7 @@
 <g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/a1589110471a30ef4dc7ce5dae890b4ee4aa8915/original.jpeg</g:additional_image_link>
 <g:availability>in_stock</g:availability>
 <g:price>150.00 USD</g:price>
+<g:sale_price>142.50 USD</g:sale_price>
 <g:condition>new</g:condition>
 <g:identifier_exists>no</g:identifier_exists>
 <g:product_type>Streetwear</g:product_type>
