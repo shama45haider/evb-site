@@ -196,6 +196,12 @@
 .acct-tier-bar::after { content: ''; flex: 1; border-radius: 99px; background: var(--t-track); }
 .acct-tier-next small { display: block; margin-top: 8px; font-size: 12.5px; color: var(--t-dim); }
 .acct-tier-next small b { color: var(--t-on); font-weight: 700; }
+/* What the level gives: tonal chips in the card's own colour. */
+.acct-tier-perks { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; font-family: 'Inter', sans-serif; }
+.acct-tier-perks li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px 5px 9px; border-radius: 99px; background: var(--t-track); font-size: 12.5px; line-height: 1.3; color: var(--t-on); }
+.acct-tier-perks li b { font-weight: 700; }
+.acct-tier-perks svg { display: block; width: 15px; height: 15px; }
+.acct-tier-boost { margin: 8px 0 0; font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600; color: var(--t-dim); }
 
 /* Balance: the number, what it gets you, and a ring toward the next prize. */
 .acct-points { display: flex; align-items: center; gap: 20px; padding: 24px 22px; }
@@ -538,7 +544,7 @@
 
 /* How it works: a real sequence, so the steps are numbered. */
 .acct-steps { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 16px; }
-@media (min-width: 600px) { .acct-steps { grid-template-columns: repeat(3, 1fr); gap: 22px; } }
+@media (min-width: 600px) { .acct-steps { grid-template-columns: repeat(2, 1fr); gap: 22px 28px; } }
 .acct-steps li { font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.55; color: var(--a-dim); }
 .acct-steps li > span:last-child { display: block; }
 .acct-steps b { display: block; margin-bottom: 2px; font-family: 'Montserrat', sans-serif; font-size: 14.5px; font-weight: 700; color: var(--evb-ink); }

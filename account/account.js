@@ -44,14 +44,20 @@
   var SHIP_CAP = '$20';
   // Points this close to lapsing get the warning colour.
   var EXPIRE_SOON_DAYS = 14;
-  // Member levels, by lifetime points (what they've earned, not what's left
-  // after expiry or prizes). Status only for now — no perks attached.
+  // Member levels, by lifetime points: what buying and selling has earned at
+  // 1 point per $1, not what's left after expiry or prizes, and not level
+  // boosts or bonuses. Each level up earns faster (mult) and gets more
+  // birthday points (bday) — panel migration 0090. member_me sends the real
+  // ones in rules.levels; these are for the signed-out pages and previews.
+  // The code is the card's colour class (Diamond's card is black).
   var TIERS = [
-    { code: 'bronze', name: 'Bronze', min: 0 },
-    { code: 'silver', name: 'Silver', min: 500 },
-    { code: 'gold', name: 'Gold', min: 1500 },
-    { code: 'black', name: 'Diamond', min: 4000 }
+    { code: 'bronze', name: 'Bronze', min: 0, mult: 1, bday: 50 },
+    { code: 'silver', name: 'Silver', min: 500, mult: 1.25, bday: 100 },
+    { code: 'gold', name: 'Gold', min: 1500, mult: 1.5, bday: 200 },
+    { code: 'black', name: 'Diamond', min: 4000, mult: 2, bday: 500 }
   ];
+  // The levels in use: TIERS with whatever member_me sent (levelsOf).
+  var LEVELS = TIERS;
   // Where an invite link's code waits until the friend is signed in (0080).
   var REF_KEY = 'evb_acct_ref';
   var store = window.EVB_STORE_CONFIG || {};
@@ -71,6 +77,35 @@
     return '$' + (n / 100).toLocaleString('en-US', { minimumFractionDigits: n % 100 ? 2 : 0, maximumFractionDigits: 2 });
   }
   function num(n) { return (Number(n) || 0).toLocaleString('en-US'); }
+  // A points multiplier: 1.25 → "1.25×", 2 → "2×".
+  function times(m) { return (Math.round((Number(m) || 1) * 100) / 100) + '×'; }
+  // ['a', 'b', 'c'] → "a, b and c"
+  function andList(a) { return a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1] : a.join(''); }
+  // "Silver, Gold and Diamond" and "1.25×, 1.5× and 2×": the levels above
+  // Bronze and what each earns.
+  function upperLevels(list) {
+    var up = (list || TIERS).slice(1);
+    return {
+      names: andList(up.map(function (t) { return t.name; })),
+      mults: andList(up.map(function (t) { return times(t.mult); }))
+    };
+  }
+  // TIERS with the levels member_me sent (0090), matched in order; ours when
+  // it sent none or a different number of them.
+  function levelsOf(rules) {
+    var sent = rules && rules.levels;
+    if (!sent || sent.length !== TIERS.length) return TIERS;
+    return TIERS.map(function (t, i) {
+      var s = sent[i] || {};
+      return { code: t.code, name: s.name || t.name, min: Number(s.minPoints) || 0,
+        mult: Number(s.multiplier) || 1, bday: Number(s.birthdayPoints) || t.bday };
+    });
+  }
+  // A level's name from member_me's code for it ('gold', 'diamond').
+  function levelName(code) {
+    var i = ['bronze', 'silver', 'gold', 'diamond'].indexOf(code);
+    return i >= 0 && LEVELS[i] ? LEVELS[i].name : '';
+  }
   function date(v) {
     var d = new Date(v);
     return isNaN(d) ? '' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -197,9 +232,11 @@
         '<p class="acct-lede" style="--i:3">Earn <strong>1 point per $1</strong> when you buy from us, online or in the shop, or sell to us.</p>' +
         '<ul class="acct-perks">' +
           perk(ICON.gift, 'Up to ' + topOff + ' off online orders', 'Free shipping (up to ' + SHIP_CAP + ') from ' + num(PRIZES[0].points) + ' points.', 4) +
-          perk(ICON.idcard, 'No ID needed to sell', 'Yours stays on file.', 5) +
-          perk(ICON.cake, 'Birthday and invite bonuses', 'Plus members-only deals.', 6) +
-          perk(ICON.key, 'No password', 'We email you a code.', 7) +
+          perk(ICON.award, 'Level up to earn up to ' + times(TIERS[TIERS.length - 1].mult) + ' points',
+            upperLevels().names + ' earn ' + upperLevels().mults + ', plus bigger birthday bonuses.', 5) +
+          perk(ICON.idcard, 'No ID needed to sell', 'Yours stays on file.', 6) +
+          perk(ICON.cake, 'Birthday and invite bonuses', 'Plus members-only deals.', 7) +
+          perk(ICON.key, 'No password', 'We email you a code.', 8) +
         '</ul>' +
       '</div>';
   }
@@ -532,14 +569,32 @@
   // the rest.
   function withVisits(me) {
     var visits = (me.activity || []).filter(function (a) { return a.kind === 'visit'; }).map(function (a) {
+      var boost = Math.max(Number(a.boostPoints) || 0, 0);
       return { kind: 'visit', visitKind: a.visitKind, reference: 'Scanned at the counter', occurredAt: a.createdAt,
-        items: [], totalCents: a.visitCents || 0, points: a.points };
+        items: [], totalCents: a.visitCents || 0, points: a.points + boost, boost: boost, boostLevel: a.boostLevel };
     }).concat(((me.bonuses && me.bonuses.history) || []).map(function (b) {
       return { kind: 'bonus', bonus: b.bonus, reference: BONUS_LABEL[b.bonus] || 'Bonus points', occurredAt: b.createdAt,
         items: [], totalCents: 0, points: b.points };
     }));
-    if (!visits.length) return me.history || [];
-    return (me.history || []).concat(visits).sort(function (a, b) { return new Date(b.occurredAt) - new Date(a.occurredAt); });
+    var history = withBoosts(me);
+    if (!visits.length) return history;
+    return history.concat(visits).sort(function (a, b) { return new Date(b.occurredAt) - new Date(a.occurredAt); });
+  }
+  // The history with each order's or counter sale's level boost (0090) added
+  // to its points, matched by its reference.
+  function withBoosts(me) {
+    var by = {};
+    (me.boosts || []).forEach(function (b) { if (b.reference) by[b.reference] = b; });
+    return (me.history || []).map(function (e) {
+      var b = e.kind !== 'sold' && by[e.reference];
+      if (!b || !(b.points > 0)) return e;
+      var c = {};
+      for (var k in e) c[k] = e[k];
+      c.points = (Number(e.points) || 0) + b.points;
+      c.boost = b.points;
+      c.boostLevel = b.level;
+      return c;
+    });
   }
 
   // A photo for every row: the item's own Square photo when it has one,
@@ -630,6 +685,7 @@
   function renderDash(me, opts) {
     opts = opts || {};
     var rules = me.rules || { pointsPerDollar: 1 };
+    LEVELS = levelsOf(rules);
     var prizes = prizesOf(rules);
     var expireDays = rules.expireDays || EXPIRE_DAYS;
     var bal = Math.max(Number(me.balance) || 0, 0);
@@ -743,6 +799,10 @@
             '<li><span class="acct-step-n" aria-hidden="true">1</span><b>Earn</b><span>' + rules.pointsPerDollar + ' point for every $1 when you buy from us online or in the shop, or sell to us.</span></li>' +
             '<li><span class="acct-step-n" aria-hidden="true">2</span><b>Get a prize</b><span>' + prizeSummary(prizes) + ' One per online order.</span></li>' +
             '<li><span class="acct-step-n" aria-hidden="true">3</span><b>Come back</b><span>Points last ' + expireDays + ' days from your last visit or order. Every visit resets the clock.</span></li>' +
+            '<li><span class="acct-step-n" aria-hidden="true">4</span><b>Level up</b><span>' +
+              andList(LEVELS.slice(1).map(function (t, j) { return esc(t.name) + ' at ' + num(t.min) + (j ? '' : ' lifetime points'); })) +
+              ' earn ' + upperLevels(LEVELS).mults + ' points, and get ' +
+              andList(LEVELS.slice(1).map(function (t) { return num(t.bday); })) + ' birthday points.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -771,30 +831,41 @@
 
   function tierOf(points) {
     var i = 0;
-    while (i + 1 < TIERS.length && points >= TIERS[i + 1].min) i++;
+    while (i + 1 < LEVELS.length && points >= LEVELS[i + 1].min) i++;
     return i;
   }
 
-  // The member's level as a coloured card under the greeting, with a bar to
-  // the next one.
+  // The member's level as a coloured card under the greeting: what it gives
+  // them (0090), and a bar to the next one with what that adds.
   function tierCard(me) {
     var pts = Math.max(Number(me.lifetimePoints) || 0, 0);
     var i = tierOf(pts);
-    var t = TIERS[i], next = TIERS[i + 1];
+    var t = LEVELS[i], next = LEVELS[i + 1];
     // Along the whole ladder, so the bar lines up with the level names above it.
-    var pct = next ? Math.round(((i + (pts - t.min) / (next.min - t.min)) / (TIERS.length - 1)) * 100) : 100;
+    var pct = next ? Math.round(((i + (pts - t.min) / (next.min - t.min)) / (LEVELS.length - 1)) * 100) : 100;
     var since = me.joinedAt ? new Date(me.joinedAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+    var boosted = Math.max(Number(me.boostPoints) || 0, 0);
+    var perks = [
+      [ICON.zap, t.mult > 1 ? '<b>' + times(t.mult) + '</b> points' : '<b>1</b> point per $1'],
+      [ICON.cake, '<b>' + num(t.bday) + '</b> birthday points']
+    ];
     return '<section class="acct-tier acct-tier--' + t.code + ' acct-rise" style="--d:30ms" aria-label="Member level">' +
       '<div class="acct-tier-main">' +
-        '<p class="acct-tier-name">' + t.name + ' member</p>' +
+        '<p class="acct-tier-name">' + esc(t.name) + ' member</p>' +
         '<p class="acct-tier-sub">' + num(pts) + ' lifetime points' + (since ? ' since ' + esc(since) : '') + '</p>' +
+        '<ul class="acct-tier-perks" aria-label="Your level’s perks">' + perks.map(function (p) {
+          return '<li><span aria-hidden="true">' + p[0] + '</span>' + p[1] + '</li>';
+        }).join('') + '</ul>' +
+        (boosted ? '<p class="acct-tier-boost">+' + num(boosted) + ' extra points from your level so far</p>' : '') +
       '</div>' +
       '<div class="acct-tier-next">' +
-        '<ol class="acct-tier-steps" aria-hidden="true">' + TIERS.map(function (x, j) {
-          return '<li class="' + (j < i ? 'is-past' : j === i ? 'is-now' : '') + '">' + x.name + '</li>';
+        '<ol class="acct-tier-steps" aria-hidden="true">' + LEVELS.map(function (x, j) {
+          return '<li class="' + (j < i ? 'is-past' : j === i ? 'is-now' : '') + '">' + esc(x.name) + '</li>';
         }).join('') + '</ol>' +
-        '<span class="acct-tier-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + (next ? 'Progress to ' + next.name : 'Top level') + '"><i style="--p:' + pct + '%"></i></span>' +
-        '<small>' + (next ? '<b>' + num(next.min - pts) + '</b> more points to ' + next.name : 'Top level — you’re one of our best') + '</small>' +
+        '<span class="acct-tier-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + (next ? 'Progress to ' + esc(next.name) : 'Top level') + '"><i style="--p:' + pct + '%"></i></span>' +
+        '<small>' + (next
+          ? '<b>' + num(next.min - pts) + '</b> more points to ' + esc(next.name) + ': ' + times(next.mult) + ' points and ' + num(next.bday) + ' on your birthday'
+          : 'Top level — you’re one of our best') + '</small>' +
       '</div>' +
     '</section>';
   }
@@ -987,9 +1058,9 @@
       ['prizes', 'Prize hunter', 'Use points for 5 prizes', 'card_giftcard', 'violet', [redeems.length, 5]],
       ['prizes', 'Smart saver', 'Save $50 with prizes', 'savings', 'green', [saved, 5000], 'money'],
 
-      ['level', 'Silver level', 'Reach Silver at ' + num(TIERS[1].min) + ' lifetime points', 'workspace_premium', 'silver', [life, TIERS[1].min], 'points'],
-      ['level', 'Gold level', 'Reach Gold at ' + num(TIERS[2].min) + ' lifetime points', 'workspace_premium', 'gold', [life, TIERS[2].min], 'points'],
-      ['level', 'Diamond level', 'Reach Diamond at ' + num(TIERS[3].min) + ' lifetime points', 'crown', 'black', [life, TIERS[3].min], 'points'],
+      ['level', LEVELS[1].name + ' level', 'Reach ' + LEVELS[1].name + ' at ' + num(LEVELS[1].min) + ' lifetime points', 'workspace_premium', 'silver', [life, LEVELS[1].min], 'points'],
+      ['level', LEVELS[2].name + ' level', 'Reach ' + LEVELS[2].name + ' at ' + num(LEVELS[2].min) + ' lifetime points', 'workspace_premium', 'gold', [life, LEVELS[2].min], 'points'],
+      ['level', LEVELS[3].name + ' level', 'Reach ' + LEVELS[3].name + ' at ' + num(LEVELS[3].min) + ' lifetime points', 'crown', 'black', [life, LEVELS[3].min], 'points'],
       ['level', 'Settling in', 'Be a member for 3 months', 'event', 'teal', [memberMonths, 3], 'months'],
       ['level', 'Half a year', 'Be a member for 6 months', 'calendar_month', 'blue', [memberMonths, 6], 'months'],
       ['level', 'One year in', 'Be a member for a year', 'cake', 'pink', [memberMonths, 12], 'months'],
@@ -1157,7 +1228,9 @@
       : bd.thisMonth
         ? '<b>Happy birthday month!</b><span>Your <strong>' + bdPts + ' birthday points</strong> arrive as soon as we’ve checked your ID.</span>'
         : '<b>Birthday points</b><span><strong>' + bdPts + ' points</strong> every year in your birthday month' +
-          (month ? ' — yours is ' + esc(month) : '') + '.' + (bd.eligible ? '' : ' They start once we’ve checked your ID.') + '</span>';
+          (bd.level ? ' as a ' + esc(bd.level) + ' member' : '') +
+          (month ? ' — yours is ' + esc(month) : '') + '.' + (bd.eligible ? '' : ' They start once we’ve checked your ID.') +
+          (bd.level && bd.level !== LEVELS[LEVELS.length - 1].name ? ' Higher levels get more.' : '') + '</span>';
 
     var friendPts = num(rf.friendPoints || 50), myPts = num(rf.points || 100);
     var min = rf.minCents ? ' of ' + money(rf.minCents) + ' or more' : '';
@@ -1386,7 +1459,10 @@
     }
 
     var meta = [esc(e.reference)];
-    if (e.points > 0) meta.push('Earned ' + num(e.points) + ' points');
+    if (e.points > 0) {
+      meta.push('Earned ' + num(e.points) + ' points' + (e.boost > 0
+        ? ', ' + num(e.boost) + ' of them for being ' + (levelName(e.boostLevel) || 'a member') : ''));
+    }
     out += '<p class="acct-d-meta">' + meta.join(' · ') + '</p>';
     return out;
   }
@@ -2054,6 +2130,8 @@
             '<li><b>Points</b><span>1 point for every $1 you spend with us, online or in the shop.</span></li>' +
             '<li><b>Prizes</b><span>' + prizeLadder() + '.</span></li>' +
             '<li><b>Your history</b><span>Everything you’ve bought, sold us and ordered online, in one place.</span></li>' +
+            '<li><b>Levels</b><span>' + upperLevels().names + ' members earn ' + upperLevels().mults +
+              ' points, with bigger birthday bonuses.</span></li>' +
           '</ol>' +
         '</section>' +
 
@@ -2214,14 +2292,17 @@
     balance: 410, lifetimePoints: 1765, lifetimeSpendCents: 176580, purchaseCount: 4,
     pointsExpireAt: daysAgo(-55), expiredPoints: 0,
     rules: { pointsPerDollar: 1, rewardPoints: 250, rewardCents: 1500, lookbackDays: 30, freeShippingPoints: 250, expireDays: EXPIRE_DAYS, dailyCapCents: 2000, prizes: PRIZES },
+    level: { code: 'gold', name: 'Gold', minPoints: 1500, multiplier: 1.5, birthdayPoints: 200 },
+    boostPoints: 385,
     purchases: [],
+    boosts: [{ source: 'online', reference: 'EVB-261019-7QX2', points: 225, level: 'gold', multiplier: 1.5, occurredAt: daysAgo(3) }],
     activity: [
-      { kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, createdAt: daysAgo(5) },
+      { kind: 'visit', visitKind: 'sold', visitCents: 32000, points: 320, boostPoints: 160, boostLevel: 'gold', createdAt: daysAgo(5) },
       { kind: 'redeem', points: -200, creditCents: 1000, prize: 'off_10', createdAt: daysAgo(63) }
     ],
     bonuses: {
       awarded: 0,
-      birthday: { points: 50, month: 5, thisMonth: false, eligible: false, receivedThisYear: false, receivedEver: false },
+      birthday: { points: 200, level: 'Gold', month: 5, thisMonth: false, eligible: false, receivedThisYear: false, receivedEver: false },
       referral: { code: 'M1024', points: 100, friendPoints: 50, minCents: 2500, max: 10, joined: 2, rewarded: 1, referredBy: null, friendBonus: false, canLink: true },
       history: [{ bonus: 'referral', points: 100, createdAt: daysAgo(12) }]
     },
@@ -2263,7 +2344,7 @@
   function previewAfterProfile(name) {
     var me = JSON.parse(JSON.stringify(SAMPLE));
     if (closed()) { me.fullName = name; return renderLocked(me, { preview: true }); }
-    me.fullName = name; me.balance = 0; me.history = [];
+    me.fullName = name; me.balance = 0; me.history = []; me.boosts = []; me.boostPoints = 0;
     renderDash(me, { preview: true });
   }
 
@@ -2282,8 +2363,8 @@
     if (mode === 'match') { var sm = JSON.parse(JSON.stringify(SAMPLE)); sm.idStatus = 'none'; sm.onboarded = false; return startOnboarding(sm, { step: 'match', previewMatch: true }); }
     if (mode === 'birthday') {
       var bday = JSON.parse(JSON.stringify(SAMPLE));
-      bday.bonuses.birthday = { points: 50, month: new Date().getMonth() + 1, thisMonth: true, eligible: true, receivedThisYear: true, receivedEver: true };
-      bday.bonuses.history.unshift({ bonus: 'birthday', points: 50, createdAt: daysAgo(0) });
+      bday.bonuses.birthday = { points: 200, level: 'Gold', month: new Date().getMonth() + 1, thisMonth: true, eligible: true, receivedThisYear: true, receivedEver: true };
+      bday.bonuses.history.unshift({ bonus: 'birthday', points: 200, createdAt: daysAgo(0) });
       return renderDash(bday, { preview: true });
     }
     // Partway up the prizes: two ready, one next, one locked.
