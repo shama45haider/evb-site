@@ -4,7 +4,7 @@
 
   <url>
     <loc>https://eastvillagebuyers.com/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
@@ -77,10 +77,11 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-calling-all-european-travelers-in-nyc-why-east-village-buyers-should-be-on-your-itinerary-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/blog-buy-sell-sb-studios-stainbandz-nyc-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/mixed-emotion.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/valeblog.webp</image:loc></image:image>
@@ -191,6 +192,7 @@
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-jewelry-nyc/</loc>
@@ -322,20 +324,34 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-sneakers-nyc/</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/jordan-12-taxi.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-high-chicago.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-dunk-low-panda-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-sb-dunk-low-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyshoe.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-air-max-90-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-boost-350-v2-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-boost-700-wave-runner-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-foam-runner-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-slide-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/bape-sta-sneakers-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/balenciaga-triple-s-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/rick-owens-jumbo-lace-sneakers.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/new-balance-sneakers-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/birkenstock-boston-clogs-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/travis-scott-air-jordan-1-low-mocha.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/off-white-air-jordan-1-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/union-la-air-jordan-1-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/kaws-air-jordan-4.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-3-doernbecher.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/dior-b22-sneakers.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/prada-americas-cup-sneakers.webp</image:loc></image:image>
-    <image:image><image:loc>https://eastvillagebuyers.com/rick-owens-jumbo-lace-sneakers.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/chanel-espadrille-slides.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/ugg-tasman-slippers.webp</image:loc></image:image>
-    <image:image><image:loc>https://eastvillagebuyers.com/travis-scott-air-jordan-1-low-mocha.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/we-buy-collectibles-nyc/</loc>
@@ -1315,14 +1331,110 @@
     <image:image><image:loc>https://eastvillagebuyers.com/valeblog.webp</image:loc></image:image>
   </url>
   <url>
-    <loc>https://shop.eastvillagebuyers.com/catalog/ThZ7AuRQai</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://eastvillagebuyers.com/blog/calling-all-european-travelers-in-nyc-why-east-village-buyers-should-be-on-your-itinerary/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-calling-all-european-travelers-in-nyc-why-east-village-buyers-should-be-on-your-itinerary-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-air-jordan-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-1-high-obsidian-unc-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/air-jordan-1-high-chicago.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-3-wizards-black-blue-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-4-cherry-sail-red-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-5-racer-blue-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-6-infrared-black-red-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-11-gamma-blue-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-12-taxi.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-air-jordan-4.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-balenciaga-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/balenciaga-triple-s.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-bape-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/bape-sta-sneakers.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-birkenstock-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/birkenstock-boston-clogs.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-new-balance-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/new-balance-sneakers.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-nike-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-dunk-low-panda.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyshoe.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-dunk-low-panda-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-sb-dunk-low-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/sneakers-main-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/nike-air-max-90-480.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-off-white-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/off-white-air-jordan-1.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-rick-owens-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/rick-owens-jumbo-lace-sneakers.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-travis-scott-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/travis-scott-air-jordan-1-low-mocha.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-union-la-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/union-la-air-jordan-1.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/sell-yeezy-sneakers-nyc/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-boost-350-v2.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/evb4.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-boost-350-v2-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-boost-700-wave-runner-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-foam-runner-480.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/yeezy-slide-480.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://shop.eastvillagebuyers.com/catalog/ThZ7AuRQai</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

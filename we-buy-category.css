@@ -938,6 +938,22 @@ a.brand-tile { text-decoration: none; }
 .brand-tile.has-photo .brand-name { color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.75); }
 .brand-tile.has-photo:hover .brand-name { color: #fdba74; }
 
+/* Photo brand tiles with a real <img> (alt text, lazy-loaded, sized), used
+   where each tile links to its own brand page. */
+.brand-tile--photo { aspect-ratio: 4 / 3; min-height: 0; padding: 12px 10px; align-items: flex-end; border-color: transparent; background: #1a1714; }
+.brand-tile-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.45s cubic-bezier(0.2, 0, 0, 1); }
+.brand-tile--photo::before { z-index: 2; }
+.brand-tile--photo::after { background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.78) 100%); opacity: 1; }
+.brand-tile--photo .brand-name { z-index: 2; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
+.brand-tile--photo:hover .brand-tile-img { transform: scale(1.06); }
+.brand-tile--photo:hover .brand-name { color: #fdba74; }
+a.brand-tile:focus-visible { outline: 3px solid #f97316; outline-offset: 3px; }
+.brand-tile--cta .brand-sub { display: block; margin-top: 4px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: none; color: #9a5b2a; }
+@media (max-width: 479px) { .brand-tile--photo { padding: 8px 6px; } .brand-tile--photo .brand-name { font-size: 9.5px; letter-spacing: 0.12em; } }
+@media (prefers-reduced-motion: reduce) { .brand-tile-img { transition: none; } .brand-tile--photo:hover .brand-tile-img { transform: none; } }
+a.cp-gal-brand { text-decoration: none; }
+a.cp-gal-brand:hover { text-decoration: underline; text-underline-offset: 3px; }
+
 /* Find-us details in the closing band: cross streets, subway, directions. */
 .evb-cta-band p.evb-cta-transit {
   margin: -18px 0 24px;
