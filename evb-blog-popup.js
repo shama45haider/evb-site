@@ -1,21 +1,28 @@
 /*
- * "We're always buying" pop-up for blog posts (/blog/<post>/).
+ * "We're always buying" pop-up for blog posts (/blog/<post>/) and the
+ * sneaker brand pages (/sell-*-sneakers-nyc/, /sell-birkenstock-nyc/).
  *
- * Opens a couple of seconds after someone lands on a post: the storefront
- * photo, a short line on what we buy, and a button to call for a free
+ * Opens a couple of seconds after someone lands on the page: the storefront
+ * photo, a short line on what we buy, and buttons to call or text for a free
  * appraisal. Shown once per visit (browser tab session), never on the blog
  * index, and it waits while another dialog is up (cookie notice, closure
  * notice, a workplace-panel pop-up from evb-popups.js).
  *
- * Material 3 look in EVB orange: a white 28px dialog on desktop, a bottom
- * sheet on phones, pill buttons, sentence-case text, no gradients.
+ * Same look as the home page's "What's New" pop-up (#wnWrap in index.html,
+ * also copied by evb-popups.js): a white card, the photo on the left with an
+ * orange badge (on top on a phone), a small orange tag, the title, an orange
+ * pill button, and the shop's address under a thin line. Keep them alike.
  */
 (function () {
   'use strict';
 
   var w = window;
-  // Posts only: /blog/<slug>/ (or /blog/<slug>/index.html), not /blog/ itself.
-  if (!/^\/blog\/[^/]+(\/(index\.html)?)?$/.test(location.pathname)) return;
+  var PATH = location.pathname;
+  // Blog posts: /blog/<slug>/ (or /blog/<slug>/index.html), not /blog/ itself.
+  var IS_POST = /^\/blog\/[^/]+(\/(index\.html)?)?$/.test(PATH);
+  // Sneaker brand pages.
+  var IS_SNEAKERS = /^\/(sell-[a-z0-9-]+-sneakers-nyc|sell-birkenstock-nyc)(\/(index\.html)?)?$/.test(PATH);
+  if (!IS_POST && !IS_SNEAKERS) return;
 
   var KEY = 'evb_blog_pop';
   var DELAY_MS = 1800;
@@ -24,16 +31,23 @@
   var COOKIE_WAIT_MS = 10000;
   var PHONE = '917-608-8939';
   var TEL = 'tel:9176088939';
+  var SMS = 'sms:9176088939';
   var PHOTO = '/east-village-buyers-storefront-39-avenue-a.webp';
   var ID = 'blog-always-buying';
+
+  var TEXT = IS_SNEAKERS
+    ? 'Sneakers, plus gold, diamonds, watches, designer bags, streetwear and electronics. Text photos or call ' + PHONE + ' for a free quote, no obligation.'
+    : 'Gold, diamonds, watches, sneakers, designer bags, streetwear and electronics. Call ' + PHONE + ' for a free appraisal, no obligation.';
 
   function seen() { try { return !!w.sessionStorage.getItem(KEY); } catch (e) { return false; } }
   function markSeen() { try { w.sessionStorage.setItem(KEY, '1'); } catch (e) {} }
   if (seen()) return;
 
-  function push(name) {
+  function push(name, button) {
     w.dataLayer = w.dataLayer || [];
-    w.dataLayer.push({ event: name, popup_id: ID, popup_title: "We're always buying", page_path: location.pathname });
+    var ev = { event: name, popup_id: ID, popup_title: "We're always buying", page_path: PATH };
+    if (button) ev.popup_button = button;
+    w.dataLayer.push(ev);
   }
 
   function shown(el) {
@@ -64,57 +78,49 @@
   }
 
   var CSS =
-    '.evbbp{--bp-pri:#f97316;--bp-pri-ink:#c2410c;--bp-pri-c:#ffdcc6;--bp-on-pri-c:#7a3000;--bp-on:#1c1b1a;--bp-dim:#5f5a54;--bp-s1:#f4f0eb;' +
-      'position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:24px;visibility:hidden;pointer-events:none}' +
+    '.evbbp{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:16px;visibility:hidden;pointer-events:none}' +
     '.evbbp.is-open{visibility:visible;pointer-events:auto}' +
     'html.evbbp-lock{overflow:hidden}' +
-    '.evbbp-scrim{position:absolute;inset:0;background:rgba(28,27,26,.5);opacity:0;transition:opacity .3s ease}' +
+    '.evbbp-scrim{position:absolute;inset:0;background:rgba(0,0,0,.65);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;transition:opacity .3s ease}' +
     '.evbbp.is-open .evbbp-scrim{opacity:1}' +
-    '.evbbp-card{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 48px);overflow-y:auto;background:#fff;border-radius:28px;padding:8px;' +
-      'box-shadow:0 8px 32px rgba(28,27,26,.18);opacity:0;transform:scale(.94);transform-origin:50% 60%;' +
-      'transition:opacity .25s ease,transform .45s cubic-bezier(.05,.7,.1,1)}' +
+    '.evbbp-card{position:relative;display:flex;width:100%;max-width:580px;max-height:calc(100vh - 32px);overflow:hidden;background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.35);' +
+      'opacity:0;transform:translateY(30px) scale(.97);transition:opacity .5s cubic-bezier(.22,1,.36,1),transform .5s cubic-bezier(.22,1,.36,1)}' +
     '.evbbp.is-open .evbbp-card{opacity:1;transform:none}' +
-    '.evbbp-media{position:relative;margin:0;border-radius:20px;overflow:hidden;background:var(--bp-s1);aspect-ratio:16/10}' +
-    '.evbbp-img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 45%}' +
-    '.evbbp-chip{position:absolute;left:12px;bottom:12px;display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 8px;border-radius:8px;' +
-      'background:rgba(255,255,255,.94);color:var(--bp-on);font:600 12px/1 "Inter","Montserrat",sans-serif}' +
-    '.evbbp-chip svg{width:18px;height:18px;color:var(--bp-pri-ink);flex:none}' +
-    '.evbbp-x{position:absolute;top:12px;right:12px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;' +
-      'background:rgba(255,255,255,.94);color:var(--bp-on);cursor:pointer;padding:0;transition:background .2s}' +
-    '.evbbp-x:hover{background:#fff}' +
-    '.evbbp-x svg{width:20px;height:20px}' +
-    '.evbbp-body{padding:20px 16px 8px}' +
-    '.evbbp-title{margin:0 0 8px;font:700 24px/1.25 "Montserrat",sans-serif;letter-spacing:-.01em;color:var(--bp-on)}' +
-    '.evbbp-text{margin:0 0 20px;font:400 15px/1.55 "Inter","Montserrat",sans-serif;color:var(--bp-dim)}' +
-    '.evbbp-text strong{font-weight:600;color:var(--bp-on);white-space:nowrap}' +
-    '.evbbp-acts{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}' +
-    '.evbbp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;border:0;border-radius:999px;' +
-      'font:600 15px/1 "Inter","Montserrat",sans-serif;text-decoration:none;cursor:pointer;transition:background .2s,box-shadow .2s}' +
-    '.evbbp-btn svg{width:20px;height:20px;flex:none}' +
-    '.evbbp-call{background:var(--bp-pri);color:#fff}' +
-    '.evbbp-call:hover{background:var(--bp-pri-ink);color:#fff;box-shadow:0 1px 3px rgba(28,27,26,.25)}' +
-    '.evbbp-later{background:transparent;color:var(--bp-pri-ink);padding:0 16px}' +
-    '.evbbp-later:hover{background:rgba(249,115,22,.08)}' +
-    '.evbbp-x:focus-visible,.evbbp-btn:focus-visible{outline:3px solid var(--bp-pri);outline-offset:2px}' +
-    '@media (max-width:600px){' +
-      '.evbbp{align-items:flex-end;padding:0}' +
-      '.evbbp-card{max-width:none;max-height:92vh;border-radius:28px 28px 0 0;padding:8px 8px calc(12px + env(safe-area-inset-bottom));transform:translateY(100%);' +
-        'transition:opacity .2s ease,transform .45s cubic-bezier(.05,.7,.1,1)}' +
-      '.evbbp-media{aspect-ratio:16/9}' +
-      '.evbbp-body{padding:18px 12px 4px}' +
-      '.evbbp-title{font-size:22px}' +
-      '.evbbp-acts{flex-direction:column-reverse;align-items:stretch}' +
-      '.evbbp-btn{width:100%}' +
+    '.evbbp-x{position:absolute;top:10px;right:12px;z-index:10;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;' +
+      'background:rgba(255,255,255,.9);color:#333;font-size:18px;line-height:1;cursor:pointer;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.12);transition:transform .2s}' +
+    '.evbbp-x:hover{transform:scale(1.1)}' +
+    '.evbbp-media{position:relative;flex:0 0 44%;min-height:260px;margin:0;overflow:hidden;background:#f3efe9}' +
+    '.evbbp-img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 45%}' +
+    '.evbbp-badge{position:absolute;top:14px;left:14px;z-index:2;padding:5px 10px;border-radius:6px;background:#f97316;color:#fff;font:800 10px/1.2 "Montserrat",sans-serif;letter-spacing:.1em}' +
+    '.evbbp-body{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow-x:hidden;overflow-y:auto;padding:28px 24px}' +
+    '.evbbp-mark{position:absolute;bottom:-10px;right:-10px;width:120px;opacity:.06;pointer-events:none}' +
+    '.evbbp-tag{margin:0 0 8px;font:800 10px/1.3 "Montserrat",sans-serif;letter-spacing:.15em;color:#f97316;text-transform:uppercase}' +
+    '.evbbp-title{margin:0 0 8px;padding-right:22px;font:900 20px/1.2 "Montserrat",sans-serif;letter-spacing:-.01em;color:#111}' +
+    '.evbbp-text{margin:0 0 16px;font:400 13px/1.6 "Poppins","Inter",sans-serif;color:#666}' +
+    '.evbbp-text strong{font-weight:600;color:#333;white-space:nowrap}' +
+    '.evbbp-btns{position:relative;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}' +
+    '.evbbp-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:50px;font:700 12px "Montserrat",sans-serif;letter-spacing:.02em;text-decoration:none;transition:background .2s,border-color .2s,color .2s,transform .2s}' +
+    '.evbbp-btn svg{width:15px;height:15px;flex-shrink:0}' +
+    '.evbbp-call{background:#f97316;color:#fff;box-shadow:0 4px 14px rgba(249,115,22,.3);animation:evbbpPulse 2s ease-in-out infinite}' +
+    '.evbbp-call:hover{background:#ea580c;color:#fff;animation:none;transform:translateY(-1px)}' +
+    '.evbbp-text-us{background:transparent;color:#333;border:1.5px solid #ddd;padding:8.5px 18.5px}' +
+    '.evbbp-text-us:hover{border-color:#f97316;color:#f97316}' +
+    '.evbbp-addr{position:relative;margin:0;padding-top:12px;border-top:1px solid #f0f0f0;font:500 12px "Poppins","Inter",sans-serif;color:#888}' +
+    '@keyframes evbbpPulse{0%,100%{box-shadow:0 4px 14px rgba(249,115,22,.3)}50%{box-shadow:0 4px 24px rgba(249,115,22,.6),0 0 0 6px rgba(249,115,22,.12)}}' +
+    '.evbbp-x:focus-visible,.evbbp-btn:focus-visible{outline:3px solid #f97316;outline-offset:3px}' +
+    '@media (max-width:520px){' +
+      '.evbbp-card{max-width:360px;flex-direction:column}' +
+      '.evbbp-media{flex:none;height:200px;min-height:0}' +
+      '.evbbp-body{padding:20px 18px}' +
+      '.evbbp-title{font-size:17px}' +
     '}' +
-    '@media (prefers-reduced-motion:reduce){.evbbp-card,.evbbp-scrim{transition:opacity .2s ease}.evbbp-card{transform:none}}';
+    '@media (prefers-reduced-motion:reduce){.evbbp-card,.evbbp-scrim{transition:none}.evbbp-call{animation:none}}';
 
-  // Material Symbols Rounded paths (call, location_on, close), inlined so the
-  // icon font isn't loaded on every post.
-  var ICON_CALL = '<svg viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true"><path d="M798-120q-125 0-247-54.5T329-329Q229-429 174.5-551T120-798q0-18 12-30t30-12h162q14 0 25 9.5t13 22.5l26 140q2 16-1 27t-11 19l-97 98q20 37 47.5 71.5T387-386q31 31 65 57.5t72 48.5l94-94q9-9 23.5-13.5T670-390l138 28q14 4 23 14.5t9 23.5v162q0 18-12 30t-30 12Z"/></svg>';
-  var ICON_PIN = '<svg viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 400Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Z"/></svg>';
-  var ICON_X = '<svg viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true"><path d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"/></svg>';
+  // The same stroke icons the home page pop-up and the nav buttons use.
+  var ICON_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>';
+  var ICON_TEXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
 
-  var root, card, lastFocus;
+  var root, lastFocus;
 
   function build() {
     var style = document.createElement('style');
@@ -127,26 +133,40 @@
     root.innerHTML =
       '<div class="evbbp-scrim" data-close></div>' +
       '<div class="evbbp-card" role="dialog" aria-modal="true" aria-labelledby="evbbpTitle" aria-describedby="evbbpText">' +
+        '<button type="button" class="evbbp-x" data-close aria-label="Close">&#10005;</button>' +
+        // The faint logo in the corner, on the card so the card's edge clips it.
+        '<img class="evbbp-mark" src="/evblogo.webp" alt="" aria-hidden="true">' +
         '<figure class="evbbp-media">' +
           '<img class="evbbp-img" src="' + PHOTO + '" width="960" height="675" alt="East Village Buyers storefront at 39 Avenue A, New York" decoding="async">' +
-          '<span class="evbbp-chip">' + ICON_PIN + '39 Avenue A, East Village</span>' +
-          '<button type="button" class="evbbp-x" data-close aria-label="Close">' + ICON_X + '</button>' +
+          '<span class="evbbp-badge">SAME-DAY CASH</span>' +
         '</figure>' +
         '<div class="evbbp-body">' +
-          '<h2 class="evbbp-title" id="evbbpTitle">We’re always buying</h2>' +
-          '<p class="evbbp-text" id="evbbpText">Gold, diamonds, watches, sneakers, designer bags, streetwear and electronics, every day at our East Village store. ' +
-            'Call <strong>' + PHONE + '</strong> for a free appraisal, no obligation.</p>' +
-          '<div class="evbbp-acts">' +
-            '<button type="button" class="evbbp-btn evbbp-later" data-close>Not now</button>' +
-            '<a class="evbbp-btn evbbp-call" href="' + TEL + '">' + ICON_CALL + 'Call for an appraisal</a>' +
+          '<p class="evbbp-tag">East Village Buyers</p>' +
+          '<h2 class="evbbp-title" id="evbbpTitle">We’re Always Buying</h2>' +
+          '<p class="evbbp-text" id="evbbpText"></p>' +
+          '<div class="evbbp-btns">' +
+            (IS_SNEAKERS
+              ? '<a class="evbbp-btn evbbp-call" href="' + SMS + '" data-btn="text">' + ICON_TEXT + 'Text Photos for a Quote</a>' +
+                '<a class="evbbp-btn evbbp-text-us" href="' + TEL + '" data-btn="call">' + ICON_PHONE + 'Call Us</a>'
+              : '<a class="evbbp-btn evbbp-call" href="' + TEL + '" data-btn="call">' + ICON_PHONE + 'Call for an Appraisal</a>' +
+                '<a class="evbbp-btn evbbp-text-us" href="' + SMS + '" data-btn="text">' + ICON_TEXT + 'Text Us</a>') +
           '</div>' +
+          '<p class="evbbp-addr">39 Avenue A, East Village, NYC</p>' +
         '</div>' +
       '</div>';
+    // The phone number in bold, the rest as plain text.
+    var text = root.querySelector('#evbbpText');
+    var parts = TEXT.split(PHONE);
+    text.appendChild(document.createTextNode(parts[0]));
+    var strong = document.createElement('strong');
+    strong.textContent = PHONE;
+    text.appendChild(strong);
+    text.appendChild(document.createTextNode(parts[1] || ''));
     document.body.appendChild(root);
-    card = root.querySelector('.evbbp-card');
 
     root.addEventListener('click', function (e) {
-      if (e.target.closest('.evbbp-call')) { push('popup_click'); close(); return; }
+      var btn = e.target.closest('.evbbp-btn');
+      if (btn) { push('popup_click', btn.getAttribute('data-btn')); close(); return; }
       if (e.target.closest('[data-close]')) close();
     });
     root.addEventListener('keydown', function (e) {
@@ -171,9 +191,9 @@
     root.classList.add('is-open');
     document.documentElement.classList.add('evbbp-lock');
     setTimeout(function () {
-      var call = root.querySelector('.evbbp-call');
-      if (call) call.focus({ preventScroll: true });
-    }, 200);
+      var x = root.querySelector('.evbbp-x');
+      if (x) x.focus({ preventScroll: true });
+    }, 250);
     push('popup_view');
   }
 
