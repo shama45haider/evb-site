@@ -188,6 +188,13 @@
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://eastvillagebuyers.com/privacy/</loc>
+    <lastmod>2026-11-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://eastvillagebuyers.com/return-policy/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
