@@ -12,6 +12,10 @@ Two feeds, which Merchant Center fetches once a day, and a sitemap:
   store/sitemap-products.xml        every in-stock piece's page, so Google
                                     Search crawls them (listed in robots.txt)
 
+and each piece's own page, store/item/<slug>/index.html, with its title,
+price, photos and Product markup in the HTML (see item_pages.py). The feeds
+and the sitemap link to those pages.
+
 The catalog comes from the evb-square Worker's /catalog, the same call the
 storefront makes, so prices (this week's deals included), stock and the
 panel's custom attributes match what the site shows. Sold pieces drop out.
@@ -31,6 +35,8 @@ import re
 import sys
 import urllib.request
 from urllib.parse import quote
+
+import item_pages
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://eastvillagebuyers.com"
@@ -167,7 +173,7 @@ def products(objects):
             name = (vd.get("name") or "").strip()
             multi = len(variations) > 1
             size = name if multi else size_detail or ("" if name.lower() in ("", "default", "regular") else name)
-            link = f"{SITE}/store/product/?p={quote(slug)}" + (f"&v={quote(v['id'])}" if multi else "")
+            link = item_pages.item_url(slug) + (f"?v={quote(v['id'])}" if multi else "")
             out.append({
                 "id": vd.get("sku") or v["id"],
                 "group": o["id"] if multi else None,
@@ -284,7 +290,7 @@ def sitemap_xml(items):
     out on the next run."""
     pages = {}
     for p in items:
-        url = p["link"].split("&v=")[0]
+        url = p["link"].split("?v=")[0]
         pages.setdefault(url, p["images"][0])
     out = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
@@ -313,7 +319,8 @@ def main():
     for p in items:
         print(f"  {p['id']:<14} {money(p['sale'] or p['price']):>12}  {p['title']}")
 
-    stale = []
+    in_stock, stale = item_pages.write_pages(objects, CATEGORIES, shipping_config(), check)
+    print(f"{len(in_stock)} item pages")
     for path, xml in feeds.items():
         old = open(path, encoding="utf-8").read() if os.path.exists(path) else None
         if xml != old:

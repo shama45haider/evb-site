@@ -231,7 +231,7 @@
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.7"></script>
 <script src="/store/store-catalog.js?v=1.9.4"></script>
-<script src="/store/store-core.js?v=1.9.7"></script>
+<script src="/store/store-core.js?v=1.9.8"></script>
 <script>
 (function () {
   'use strict';
@@ -249,6 +249,8 @@
   function currentVariant() { return C.variant(product, variantId); }
 
   function notFound() {
+    var canon = document.querySelector('link[rel="canonical"]');
+    if (canon) canon.parentNode.removeChild(canon);
     var robots = document.createElement('meta');
     robots.name = 'robots';
     robots.content = 'noindex, follow';
@@ -474,8 +476,9 @@
   function injectSeo() {
     document.title = product.title + ' | East Village Buyers Store';
 
+    // A piece's own page was built with its description; keep that one.
     var d = document.querySelector('meta[name="description"]');
-    if (d) d.setAttribute('content', (product.blurb || product.description).slice(0, 300));
+    if (d && !window.EVB_PDP_SLUG) d.setAttribute('content', (product.blurb || product.description).slice(0, 300));
 
     var canon = document.querySelector('link[rel="canonical"]');
     if (!canon) {
@@ -483,7 +486,8 @@
       canon.rel = 'canonical';
       document.head.appendChild(canon);
     }
-    canon.setAttribute('href', 'https://eastvillagebuyers.com/store/product/?p=' + encodeURIComponent(product.slug));
+    var pageUrl = 'https://eastvillagebuyers.com/store/item/' + encodeURIComponent(product.slug) + '/';
+    canon.setAttribute('href', pageUrl);
 
     var v = currentVariant();
     var CFG = S.config;
@@ -511,7 +515,7 @@
 
     var offer = {
       '@type': 'Offer',
-      url: 'https://eastvillagebuyers.com/store/product/?p=' + product.slug,
+      url: pageUrl,
       priceCurrency: currency,
       price: (price / 100).toFixed(2),
       availability: (v && v.stock) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
@@ -563,16 +567,29 @@
     if (size) ld.size = size;
     if (gender) ld.audience = { '@type': 'PeopleAudience', suggestedGender: gender };
 
-    var tag = document.createElement('script');
-    tag.type = 'application/ld+json';
+    // The piece's own page ships this markup already; refresh it with the
+    // live price and stock rather than adding a second copy.
+    var tag = document.getElementById('pdpLd');
+    if (!tag) {
+      tag = document.createElement('script');
+      tag.type = 'application/ld+json';
+      tag.id = 'pdpLd';
+      document.head.appendChild(tag);
+    }
     tag.textContent = JSON.stringify(ld);
-    document.head.appendChild(tag);
   }
 
   S.mountCartUI('/');
 
+  // On a piece's own page (/store/item/<slug>/) the slug comes from the page;
+  // here it comes from ?p=.
+  var slug = param('p') || window.EVB_PDP_SLUG || '';
+
   C.load().then(function () {
-    product = C.find(param('p'));
+    product = C.find(slug);
+    // If Square can't be reached, a piece's own page keeps the copy it was
+    // built with rather than calling the piece gone.
+    if (!product && C.source === 'offline' && window.EVB_PDP_SLUG) return;
     if (!product) { notFound(); return; }
 
     var wanted = param('v');

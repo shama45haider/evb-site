@@ -39,6 +39,9 @@ SKIP_DIRS = {".git", ".claude", ".github", ".well-known", "node_modules", "scrip
 # Indexable on paper but not real pages: the product page is an empty shell
 # until ?id= picks a product, and turns itself noindex when there isn't one.
 SKIP_URLS = {"/store/product/"}
+# One page per shop piece, written and retired every few hours by
+# scripts/build_google_feed.py, which lists them in store/sitemap-products.xml.
+SKIP_PREFIXES = ("/store/item/",)
 
 # Pages on other hosts that belong in the sitemap: (url, changefreq,
 # priority). Google only takes these when the host is verified with this
@@ -198,7 +201,7 @@ def main():
         url = page_url(rel)
         with open(os.path.join(REPO_ROOT, rel), encoding="utf-8-sig") as f:
             text = f.read()
-        if url not in SKIP_URLS and is_indexable(text, url):
+        if url not in SKIP_URLS and not url.startswith(SKIP_PREFIXES) and is_indexable(text, url):
             pages[url] = (rel, text)
 
     dates = content_dates([rel for rel, _ in pages.values()])

@@ -1,4 +1,5 @@
-/* Sneaker brand pages (/sell-*-sneakers-nyc/, /sell-birkenstock-nyc/).
+/* Brand, comparison and tool pages (/sell-*-nyc/, /*-vs-*-nyc/, price pages).
+   Started with the sneaker brand pages; the name stayed.
    Loaded after we-buy-category.css. Material-style surfaces in EVB orange. */
 
 .sbp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
@@ -58,6 +59,51 @@
 .sbp-links a:focus-visible, .sbp-model a:focus-visible { outline: 3px solid #f97316; outline-offset: 2px; }
 .sbp-links-label { margin: 22px 0 10px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #8a7d70; }
 .sbp-links-label:first-child { margin-top: 0; }
+
+.sbp-prose { max-width: 760px; }
+.sbp-prose p { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.75; color: #4a4540; margin: 0 0 14px; }
+.sbp-prose p:last-child { margin-bottom: 0; }
+.sbp-prose a, .sbp-note a, .sbp-table a { color: #c2410c; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.sbp-prose strong { color: #1c1b1a; }
+
+.sbp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid #e9e1d8; border-radius: 16px; background: #fff; }
+.sbp-table { width: 100%; min-width: 560px; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 13.5px; }
+.sbp-table caption { caption-side: bottom; text-align: left; padding: 10px 16px 12px; font-size: 12px; color: #6b6158; }
+.sbp-table thead th { background: #fff7ed; color: #7c2d12; font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; text-align: left; padding: 12px 16px; border-bottom: 1px solid #fed7aa; }
+.sbp-table tbody th { text-align: left; font-weight: 700; color: #111; white-space: nowrap; }
+.sbp-table tbody th, .sbp-table td { padding: 12px 16px; border-top: 1px solid #f0e9e1; vertical-align: top; line-height: 1.55; color: #4a4540; }
+.sbp-table tbody tr:first-child th, .sbp-table tbody tr:first-child td { border-top: 0; }
+.sbp-table tbody tr:nth-child(even) { background: #fcfaf7; }
+
+.sbp-tool { background: #fff; border: 1px solid #e9e1d8; border-radius: 20px; padding: 22px; max-width: 860px; }
+.sbp-tool-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 700px) { .sbp-tool-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .sbp-tool-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sbp-tool-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.sbp-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.sbp-field-label { font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7c2d12; }
+.sbp-field input, .sbp-field select { width: 100%; min-height: 48px; padding: 10px 12px; border: 1px solid #d9cdbf; border-radius: 10px; background: #fcfaf7; color: #111; font-family: 'Inter', sans-serif; font-size: 16px; }
+.sbp-field input:focus-visible, .sbp-field select:focus-visible { outline: 3px solid rgba(249,115,22,0.35); outline-offset: 0; border-color: #f97316; }
+.sbp-field-row { display: flex; gap: 8px; }
+.sbp-field-row input { flex: 1; min-width: 0; }
+.sbp-field-row select { width: auto; }
+.sbp-field-hint { font-family: 'Inter', sans-serif; font-size: 12px; line-height: 1.5; color: #6b6158; }
+.sbp-result { margin-top: 18px; padding: 16px 20px; border-radius: 14px; background: #fff7ed; border: 1px solid #fed7aa; }
+.sbp-result-label { font-family: 'Montserrat', sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #7c2d12; margin: 0; }
+.sbp-result-num { font-family: 'Montserrat', sans-serif; font-size: clamp(28px, 5vw, 40px); font-weight: 900; color: #111; margin: 2px 0; font-variant-numeric: tabular-nums; }
+.sbp-result-sub { font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.55; color: #4a4540; margin: 0; }
+.sbp-live { display: inline-flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; color: #6b6158; }
+.sbp-live::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #c9c2b8; }
+.sbp-live.is-live::before { background: #16a34a; }
+.sbp-tool-spot { margin-bottom: 18px; max-width: 320px; }
+.sbp-scrap-rows { display: grid; gap: 12px; }
+.sbp-scrap-row { display: grid; grid-template-columns: 1fr 48px; gap: 10px 12px; align-items: end; padding: 14px; border: 1px solid #efe7de; border-radius: 14px; background: #fcfaf7; }
+.sbp-scrap-row .sbp-field:nth-child(2) { grid-column: 1; }
+.sbp-scrap-row .sbp-remove { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+@media (min-width: 640px) { .sbp-scrap-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 48px; } .sbp-scrap-row .sbp-field:nth-child(2) { grid-column: 2; } .sbp-scrap-row .sbp-remove { grid-column: 3; grid-row: 1; align-self: end; } }
+.sbp-remove { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #e3d6c8; background: #fff; color: #6b6158; font-size: 22px; line-height: 1; cursor: pointer; }
+.sbp-remove:hover { border-color: #f97316; color: #c2410c; }
+.sbp-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: 12px; padding: 0 18px; border-radius: 999px; border: 1px solid #f97316; background: #fff; color: #c2410c; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; cursor: pointer; }
+.sbp-btn:hover { background: #fff7ed; }
+.sbp-remove:focus-visible, .sbp-btn:focus-visible { outline: 3px solid rgba(249,115,22,0.45); outline-offset: 2px; }
 
 .sw-faq { padding: 48px 20px; background: #f8f5f0; }
 .sw-faq-inner { max-width: 1000px; margin: 0 auto; }

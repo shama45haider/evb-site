@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <script>
+// A store piece listed since scripts/build_google_feed.py last ran has no
+// /store/item/<slug>/ page yet: show it on the product page instead.
+(function(l){var m=/^\/store\/item\/([a-z0-9-]+)\/?$/.exec(l.pathname);if(m)l.replace('/store/product/?p='+m[1]+(l.search?'&'+l.search.slice(1):''));})(location);
+</script>
+<script>
 (function(w){
   w.dataLayer = w.dataLayer || [];
   function gtag(){ w.dataLayer.push(arguments); }

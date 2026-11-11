@@ -403,11 +403,11 @@
 
     var rows = lines.map(function (l) {
       return '<li class="evb-mini-line">' +
-        '<a class="evb-mini-thumb" href="' + BASE + 'store/product/?p=' + encodeURIComponent(l.slug) + '">' +
+        '<a class="evb-mini-thumb" href="' + productUrl(l.slug) + '">' +
           '<img src="' + attr(l.image) + '" alt="' + attr(l.title) + '" loading="lazy" decoding="async">' +
         '</a>' +
         '<div class="evb-mini-info">' +
-          '<a class="evb-mini-title" href="' + BASE + 'store/product/?p=' + encodeURIComponent(l.slug) + '">' + esc(l.title) + '</a>' +
+          '<a class="evb-mini-title" href="' + productUrl(l.slug) + '">' + esc(l.title) + '</a>' +
           (l.variantLabel ? '<p class="evb-mini-variant">' + esc(l.variantLabel) + '</p>' : '') +
           '<div class="evb-mini-row">' +
             '<div class="evb-qty evb-qty--sm">' +
@@ -540,10 +540,17 @@
     return 'preowned';
   }
 
+  // Each piece's own page, /store/item/<slug>/, written by
+  // scripts/build_google_feed.py. A piece listed since the last run has no
+  // page yet; 404.html sends that URL on to /store/product/?p=<slug>.
+  function productUrl(slug, base) {
+    return (base == null ? BASE : base) + 'store/item/' + encodeURIComponent(slug) + '/';
+  }
+
   function productCard(p, base) {
     base = base == null ? BASE : base;
     var out = p.stock <= 0;
-    var href = base + 'store/product/?p=' + encodeURIComponent(p.slug);
+    var href = productUrl(p.slug, base);
     var save = (p.compareAt && p.compareAt > p.price)
       ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
 
@@ -597,6 +604,7 @@
     closeMiniCart: closeMini,
     syncCartUI: syncCartUI,
     productCard: productCard,
+    productUrl: productUrl,
     conditionShort: conditionShort,
     conditionGroup: conditionGroup,
     syncStickyOffsets: syncStickyOffsets,

@@ -905,7 +905,7 @@
   }
 
   function dealCard(p, i) {
-    var href = '/store/product/?p=' + encodeURIComponent(p.slug);
+    var href = '/store/item/' + encodeURIComponent(p.slug) + '/';
     return '<li class="acct-deal" style="--i:' + i + '"><a href="' + esc(href) + '">' +
       '<span class="acct-deal-img"><img src="' + esc(p.images[0]) + '" alt="" loading="lazy" decoding="async">' +
         '<span class="acct-deal-pct">' + p.deal.pct + '% off</span></span>' +

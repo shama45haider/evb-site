@@ -226,7 +226,7 @@
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.7"></script>
 <script src="/store/store-catalog.js?v=1.9.4"></script>
-<script src="/store/store-core.js?v=1.9.7"></script>
+<script src="/store/store-core.js?v=1.9.8"></script>
 <script>
 (function () {
   'use strict';
@@ -251,11 +251,11 @@
 
   function lineRow(l) {
     return '<div class="evb-cartline">' +
-      '<a class="evb-cartline-thumb" href="/store/product/?p=' + encodeURIComponent(l.slug) + '">' +
+      '<a class="evb-cartline-thumb" href="' + S.productUrl(l.slug, '/') + '">' +
         '<img src="' + S.attr(l.image) + '" alt="' + S.attr(l.title) + '" loading="lazy" decoding="async"></a>' +
       '<div>' +
         (l.brand ? '<p class="evb-cartline-brand">' + S.esc(l.brand) + '</p>' : '') +
-        '<p class="evb-cartline-title"><a href="/store/product/?p=' + encodeURIComponent(l.slug) + '">' + S.esc(l.title) + '</a></p>' +
+        '<p class="evb-cartline-title"><a href="' + S.productUrl(l.slug, '/') + '">' + S.esc(l.title) + '</a></p>' +
         (l.variantLabel ? '<p class="evb-cartline-variant">' + S.esc(l.variantLabel) + '</p>' : '') +
         '<div class="evb-cartline-controls">' +
           '<div class="evb-qty">' +
