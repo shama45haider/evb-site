@@ -148,19 +148,9 @@
 }
 .site-nav-drop-link:hover { background: #fff3ea; color: #e8690a; }
 
-.site-mob-drop { border-bottom: 1px solid #f2f2f2; }
-.site-mob-link--drop {
-  cursor: pointer;
-  list-style: none;
-}
-.site-mob-link--drop::-webkit-details-marker { display: none; }
-.site-mob-link--drop::after {
-  content: '+';
-  margin-left: auto;
-  font-size: 16px;
-  color: #e8690a;
-}
-.site-mob-drop[open] .site-mob-link--drop::after { content: '\2212'; }
+/* Mobile "What We Buy": a heading with every category listed under it, always open */
+.site-mob-label { margin: 0; cursor: default; }
+.site-mob-label:hover { color: #3a3a3a; background: none; }
 .site-mob-sublink {
   display: block;
   padding: 12px 18px 12px 32px;
