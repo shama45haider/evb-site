@@ -36,4 +36,9 @@
     <changefreq>daily</changefreq>
     <image:image><image:loc>https://items-images-production.s3.us-west-2.amazonaws.com/files/944390773b576e3c469824508bd3e288d5851d20/original.jpeg</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/store/item/vale-locker-room-t-shirt-pre-owned-small-l1017/</loc>
+    <changefreq>daily</changefreq>
+    <image:image><image:loc>https://items-images-production.s3.us-west-2.amazonaws.com/files/38c82a887c7f5d59e1c9b268a3a957b21f02d587/original.jpeg</image:loc></image:image>
+  </url>
 </urlset>

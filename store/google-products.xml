@@ -162,5 +162,27 @@
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
+<item>
+<g:id>EVB-L1017</g:id>
+<g:title>Vale “Locker Room” T Shirt - Pre owned - Small - Size S</g:title>
+<g:description>Shirt is in excellent condition with no xtra holes or stains. Unisex. Size: S. Color: White. Checked in-house at East Village Buyers, 39 Avenue A, New York. Pick up the same day or have it shipped insured.</g:description>
+<g:link>https://eastvillagebuyers.com/store/item/vale-locker-room-t-shirt-pre-owned-small-l1017/</g:link>
+<g:image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/38c82a887c7f5d59e1c9b268a3a957b21f02d587/original.jpeg</g:image_link>
+<g:additional_image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/5c5b53c4284cbc871a0b203a5a9bed8b28351686/original.jpeg</g:additional_image_link>
+<g:availability>in_stock</g:availability>
+<g:price>60.00 USD</g:price>
+<g:condition>used</g:condition>
+<g:brand>Vale</g:brand>
+<g:identifier_exists>no</g:identifier_exists>
+<g:product_type>Streetwear</g:product_type>
+<g:google_product_category>Apparel &amp; Accessories &gt; Clothing</g:google_product_category>
+<g:color>White</g:color>
+<g:gender>unisex</g:gender>
+<g:age_group>adult</g:age_group>
+<g:size>S</g:size>
+<g:shipping><g:country>US</g:country><g:service>Standard</g:service><g:price>8.00 USD</g:price></g:shipping>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
 </channel>
 </rss>

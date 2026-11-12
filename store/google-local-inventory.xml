@@ -71,5 +71,14 @@
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
+<item>
+<g:store_code>EVB-AVE-A</g:store_code>
+<g:id>EVB-L1017</g:id>
+<g:availability>in_stock</g:availability>
+<g:quantity>1</g:quantity>
+<g:price>60.00 USD</g:price>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
 </channel>
 </rss>
