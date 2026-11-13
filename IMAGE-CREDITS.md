@@ -63,5 +63,12 @@ Pexels License: https://www.pexels.com/license/
 | `drew-house-mascot-tee.webp`, `-480` | Woman in a blue Drew House tee with the yellow smiley mascot | Sylo Mkaleh | https://www.pexels.com/photo/young-woman-smiling-in-vibrant-chair-29894126/ | Pexels | 2026-11-12 |
 | `margiela-tabi-glam-slam-flatlay.webp`, `-480` | Maison Margiela Glam Slam bag, a white leather bag and Tabi Mary Janes on a grey floor | Максим Баглаев | https://www.pexels.com/photo/elegant-shoes-and-bags-standing-on-white-surface-18645340/ | Pexels | 2026-11-12 |
 | `rhude-quarter-zip.webp`, `-480` | Man in a Rhude color-block quarter-zip with the logo across the chest | Amir Abbaspoor | https://www.pexels.com/photo/black-and-white-portrait-of-a-bearded-man-with-glasses-30159694/ | Pexels | 2026-11-12 |
+| `ferragamo-boxyz-bag.webp` | Red Ferragamo Boxyz top-handle bag with the Gancini clasp | Arno Senoner | https://unsplash.com/photos/red-leather-handbag-on-white-table-oCXVxwTFwqE | Unsplash | 2026-11-12 |
+| `ferragamo-studio-bag.webp` | Floral print Ferragamo Studio bag with the Gancini clasp in a store display | Arno Senoner | https://unsplash.com/photos/white-and-red-floral-handbag-HFE2RyC76tw | Unsplash | 2026-11-12 |
+| `versace-medusa-watch.webp` | Gold Versace watch with the Medusa head and Versace logo on a black dial | Miquel Parera | https://unsplash.com/photos/silver-and-gold-chronograph-watch-YmUuEDC6NoE | Unsplash | 2026-11-12 |
+| `versace-medusa-sunglasses.webp` | Black Versace sunglasses with gold Medusa hardware on the temples | Laura Chouette | https://unsplash.com/photos/a-pair-of-sunglasses-laying-on-top-of-a-bed-UVLvQ5L5isE | Unsplash | 2026-11-12 |
+| `burberry-check-crossbody-bag.webp` | Burberry check crossbody bag on a stack of Burberry check scarves | Johnathan Kaufman | https://unsplash.com/photos/a-burberst-purse-sitting-on-top-of-a-stack-of-books-OPKsp1ubRz8 | Unsplash | 2026-11-12 |
+| `burberry-store-trench-window.webp` | Burberry store at night with trench coats in the windows | Joshua Lawrence | https://unsplash.com/photos/brown-wooden-door-with-black-steel-gate-HEeMAEpZW5g | Unsplash | 2026-11-12 |
+| `burberry-check-scarf.webp` | Woman in a red jacket wearing a Burberry check scarf | Daniel Stenholm | https://unsplash.com/photos/a-woman-wearing-a-red-jacket-and-scarf-0J7yD1fMeqI | Unsplash | 2026-11-12 |
 
 Unsplash usernames link as `https://unsplash.com/@<username>`.
