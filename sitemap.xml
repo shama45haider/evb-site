@@ -290,7 +290,6 @@
     <image:image><image:loc>https://eastvillagebuyers.com/lost-intricacy-rhinestone-zip-hoodie-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/trapstar-logo-hoodie-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/assc-camo-logo-hoodie-480.webp</image:loc></image:image>
-    <image:image><image:loc>https://eastvillagebuyers.com/bbc-astronaut-varsity-jacket-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/drew-house-mascot-tee-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/balenciaga-campaign-logo-hoodie-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/dior-b30-sneaker-sage-480.webp</image:loc></image:image>
@@ -1562,13 +1561,6 @@
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
   </url>
   <url>
-    <loc>https://eastvillagebuyers.com/sell-gallery-dept-nyc/</loc>
-    <lastmod>2026-11-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
-  </url>
-  <url>
     <loc>https://eastvillagebuyers.com/sell-hellstar-nyc/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>monthly</changefreq>
@@ -1707,13 +1699,6 @@
     <priority>0.8</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/bape-93-basketball-jersey.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/bape-camo-shark-hoodie.webp</image:loc></image:image>
-  </url>
-  <url>
-    <loc>https://eastvillagebuyers.com/sell-billionaire-boys-club-nyc/</loc>
-    <lastmod>2026-11-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image><image:loc>https://eastvillagebuyers.com/bbc-astronaut-varsity-jacket.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/sell-cactus-plant-flea-market-nyc/</loc>
