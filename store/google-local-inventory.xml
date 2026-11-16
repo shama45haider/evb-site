@@ -10,6 +10,7 @@
 <g:availability>in_stock</g:availability>
 <g:quantity>1</g:quantity>
 <g:price>250.00 USD</g:price>
+<g:sale_price>232.50 USD</g:sale_price>
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
@@ -28,7 +29,6 @@
 <g:availability>in_stock</g:availability>
 <g:quantity>1</g:quantity>
 <g:price>150.00 USD</g:price>
-<g:sale_price>141.00 USD</g:sale_price>
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
@@ -38,6 +38,7 @@
 <g:availability>in_stock</g:availability>
 <g:quantity>1</g:quantity>
 <g:price>225.00 USD</g:price>
+<g:sale_price>213.75 USD</g:sale_price>
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
@@ -57,7 +58,6 @@
 <g:availability>in_stock</g:availability>
 <g:quantity>1</g:quantity>
 <g:price>150.00 USD</g:price>
-<g:sale_price>139.50 USD</g:sale_price>
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
