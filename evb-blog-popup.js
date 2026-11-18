@@ -56,9 +56,11 @@
     return cs.display !== 'none' && cs.visibility !== 'hidden' && cs.opacity !== '0';
   }
 
-  // Dialogs we always wait out: the closure notice and a panel pop-up.
+  // Dialogs we always wait out: the closure notice, the welcome wheel
+  // (evb-spin.js) and a panel pop-up.
   function otherDialogOpen() {
     return !!document.getElementById('evbClosure') ||
+      document.documentElement.hasAttribute('data-evb-spin') ||
       !!document.querySelector('.evbp.is-open');
   }
 

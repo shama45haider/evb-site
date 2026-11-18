@@ -80,6 +80,7 @@
 
   function otherDialogOpen() {
     return !!document.getElementById('evbClosure') ||
+      document.documentElement.hasAttribute('data-evb-spin') ||
       !!document.querySelector('.evbbp.is-open') ||
       shown(document.getElementById('wnWrap')) ||
       shown(document.getElementById('evbCk'));

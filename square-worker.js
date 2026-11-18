@@ -16,14 +16,24 @@ const TAX_PERCENTAGE = '8.875';
 //    "CODE3":{"type":"shipping"}}
 // An optional "label" replaces the wording checkout shows. Change them in
 // the dashboard: evb-square -> Settings -> Variables and Secrets.
+//
+// Codes the site itself hands to every visitor have nothing to hide, so they
+// live here instead: SPIN120 and GIFT5 are the prizes of the welcome game
+// (evb-spin.js). A code of the same name in PROMO_CODES wins over these.
+const PUBLIC_PROMO_CODES = {
+  SPIN120: { type: 'shipping', minSubtotal: 12000, label: 'Free shipping on your first order over $120' },
+  GIFT5: { type: 'fixed', value: 500, label: '$5 off your order' }
+};
+
 function promoCodes(env) {
+  let secret = {};
   try {
     const codes = JSON.parse(env.PROMO_CODES || '{}');
-    return codes && typeof codes === 'object' ? codes : {};
+    if (codes && typeof codes === 'object') secret = codes;
   } catch (e) {
     console.error('[evb-square] PROMO_CODES is not valid JSON');
-    return {};
   }
+  return Object.assign({}, PUBLIC_PROMO_CODES, secret);
 }
 
 function promoRule(env, code) {
