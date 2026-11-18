@@ -5,11 +5,18 @@
  *
  * Three gift boxes shuffle; the visitor picks one. It holds one of WINNABLE,
  * at even odds (free shipping on a first order over $120, or $5 off), and
- * the other two then open to show what they "missed". Winning saves that
- * prize's code into the store's checkout draft (evb_checkout_v1, the same
- * one store-core.js keeps), so the bag and checkout fill it in by
- * themselves. The codes themselves are on the checkout Worker
- * (square-worker.js, PUBLIC_PROMO_CODES); change the two together.
+ * the other two then open to show what they "missed".
+ *
+ * The prize is locked until the visitor has an account: a signed-out winner
+ * is sent to /account/ to make one (evb_game_v1 = 'locked:CODE'), and the
+ * first page they see signed in, or their account page once it is past the
+ * sign-up steps, opens the box again with the code showing. Signed in means
+ * supabase-js has a session under 'evb-account' (account.js), the same test
+ * site-nav.js uses. Unlocking saves the code into the store's checkout draft
+ * (evb_checkout_v1, the same one store-core.js keeps), so the bag and
+ * checkout fill it in by themselves. The codes themselves are on the
+ * checkout Worker (square-worker.js, PUBLIC_PROMO_CODES); change the two
+ * together.
  *
  * While it is up (or about to be), <html data-evb-spin> tells the other
  * pop-ups (evb-popups.js, evb-blog-popup.js) to wait.
@@ -21,15 +28,17 @@
   var d = document;
   var KEY = 'evb_game_v1';
   var DRAFT_KEY = 'evb_checkout_v1';
+  var SESSION_KEY = 'evb-account';
   var DELAY_MS = 700;
   var PATH = location.pathname;
+  var ON_ACCOUNT = /^\/account\b/.test(PATH);
 
-  // Never in the middle of paying, on the account page, or on the 404 page.
-  if (/^\/(store\/(checkout|order)|account)\b/.test(PATH)) return;
+  // Never in the middle of paying, or on the 404 page.
+  if (/^\/store\/(checkout|order)\b/.test(PATH)) return;
   if (d.querySelector('.p404-ad')) return;
 
-  // Once per visitor. Without storage we can't remember, so we don't show it.
-  try { if (w.localStorage.getItem(KEY)) return; } catch (e) { return; }
+  function get(k) { try { return w.localStorage.getItem(k); } catch (e) { return null; } }
+  function signedIn() { return !!get(SESSION_KEY); }
 
   // What the picked box can hold. Each code must exist on the Worker.
   var WINNABLE = [
@@ -44,16 +53,35 @@
   function any(list) { return list[Math.floor(Math.random() * list.length)]; }
   var prize = null; // the one they won
 
+  // 'game': the first visit. 'unlock': a locked prize, now signed in.
+  // Once per visitor; without storage we can't remember, so we don't show it.
+  var saved;
+  try { saved = w.localStorage.getItem(KEY); } catch (e) { return; }
+  var mode = 'game';
+  var lockedCode = /^locked:([A-Z0-9]{2,20})$/.exec(saved || '');
+  if (lockedCode) {
+    prize = WINNABLE.filter(function (p) { return p.code === lockedCode[1]; })[0];
+    if (!prize) return;
+    // The account page waits for the sign-up steps (below, in start()).
+    if (!ON_ACCOUNT && !signedIn()) return;
+    mode = 'unlock';
+  } else if (saved || ON_ACCOUNT) {
+    return;
+  }
+
   var motion = !!(Element.prototype.animate) &&
     !(w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
-  // Hold the other pop-ups now, before they start counting down.
-  d.documentElement.setAttribute('data-evb-spin', '');
-  // The home page's "What's New" card opens on its own timer; keep it shut
-  // for this page view (the !important beats its inline display).
-  var hold = d.createElement('style');
-  hold.textContent = '#wnWrap{display:none!important}';
-  d.head.appendChild(hold);
+  // Hold the other pop-ups, before they start counting down.
+  function holdOthers() {
+    d.documentElement.setAttribute('data-evb-spin', '');
+    // The home page's "What's New" card opens on its own timer; keep it shut
+    // for this page view (the !important beats its inline display).
+    var hold = d.createElement('style');
+    hold.textContent = '#wnWrap{display:none!important}';
+    d.head.appendChild(hold);
+  }
+  if (!ON_ACCOUNT) holdOthers();
 
   var CSS =
     '.evbmb{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:16px;visibility:hidden;pointer-events:none}' +
@@ -115,7 +143,8 @@
     '.evbmb-btn:active{transform:scale(.97)}' +
     '.evbmb-btn[disabled]{background:#f3d9c6;color:#9a7b66;cursor:default;transform:none}' +
     '.evbmb-btn svg{width:18px;height:18px}' +
-    '.evbmb-text-btn{min-height:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:#9a3412;font:600 14px/1 "Inter",system-ui,sans-serif;cursor:pointer;transition:background .2s}' +
+    '.evbmb-text-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:0;border-radius:999px;background:transparent;color:#9a3412;font:600 14px/1 "Inter",system-ui,sans-serif;text-decoration:none;cursor:pointer;transition:background .2s}' +
+    '.evbmb-text-btn:hover{color:#9a3412}' +
     '.evbmb-text-btn:hover{background:#fff1e6}' +
     '.evbmb-code{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 10px;padding:12px 8px 12px 18px;background:#fff1e6;border-radius:16px;text-align:left}' +
     '.evbmb-code-txt{flex:1;min-width:0}' +
@@ -124,6 +153,10 @@
     '.evbmb-copy{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border:0;border-radius:999px;background:#fff;color:#9a3412;font:600 13px/1 "Inter",system-ui,sans-serif;cursor:pointer;transition:background .2s}' +
     '.evbmb-copy:hover{background:#ffe4cc}' +
     '.evbmb-copy svg{width:18px;height:18px}' +
+    '.evbmb-code.is-locked .evbmb-code-val{letter-spacing:.24em;color:#c4ab97}' +
+    '.evbmb-lockchip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:999px;background:#fff;color:#9a3412;font:600 13px/1 "Inter",system-ui,sans-serif;white-space:nowrap}' +
+    '.evbmb-lockchip svg{width:16px;height:16px}' +
+    '.evbmb-lockchip[hidden],.evbmb-copy[hidden],.evbmb-btn[hidden],.evbmb-text-btn[hidden]{display:none}' +
     '.evbmb-note{margin:0 0 18px;font:400 13px/1.5 "Inter",system-ui,sans-serif;color:#7a5a45}' +
     '.evbmb-x:focus-visible,.evbmb-btn:focus-visible,.evbmb-text-btn:focus-visible,.evbmb-copy:focus-visible{outline:3px solid #f97316;outline-offset:2px}' +
     '.evbmb-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}' +
@@ -141,6 +174,7 @@
   var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>';
   var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   var ICON_ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  var ICON_LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
 
   // A black gift box with a gold ribbon: the body, and the lid with its bow.
   var GOLD = '#e9a23b';
@@ -196,9 +230,12 @@
     } catch (e) {}
   }
 
-  function push(name) {
+  function push(name, withPrize, extra) {
+    var o = { event: name, popup_id: 'welcome_game', page_path: PATH };
+    if (withPrize && prize) o.prize_code = prize.code;
+    for (var k in extra) o[k] = extra[k];
     w.dataLayer = w.dataLayer || [];
-    w.dataLayer.push({ event: name, popup_id: 'welcome_game', page_path: PATH });
+    w.dataLayer.push(o);
   }
 
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -217,6 +254,7 @@
 
   var root, card, row, xBtn, live, lastFocus;
   var paneIntro, panePick, paneWon, shuffleBtn, pickTitle, wonTitle, wonText, codeVal;
+  var codeBox, copyBtn, lockChip, wonNote, shopBtn, joinBtn, haveBtn, doneBtn;
   var boxes = [];
   var state = 'ready'; // ready | shuffling | pick | opening | won
 
@@ -275,8 +313,9 @@
     card.appendChild(xBtn);
 
     var stage = el('div', 'evbmb-stage');
-    row = el('div', 'evbmb-row is-idle');
-    for (var i = 0; i < 3; i++) {
+    row = el('div', 'evbmb-row' + (mode === 'game' ? ' is-idle' : ''));
+    // Unlocking shows just the one box, in the middle.
+    for (var i = mode === 'game' ? 0 : 1; i < (mode === 'game' ? 3 : 2); i++) {
       var b = buildBox(i);
       boxes.push(b);
       row.appendChild(b.el);
@@ -330,34 +369,49 @@
     paneWon.appendChild(wonTitle);
     wonText = el('p', 'evbmb-text');
     paneWon.appendChild(wonText);
-    var code = el('div', 'evbmb-code');
+    codeBox = el('div', 'evbmb-code');
     var codeTxt = el('div', 'evbmb-code-txt');
     codeTxt.appendChild(el('span', 'evbmb-code-lbl', 'Your code'));
     codeVal = el('span', 'evbmb-code-val');
     codeTxt.appendChild(codeVal);
-    code.appendChild(codeTxt);
-    var copy = el('button', 'evbmb-copy');
-    copy.type = 'button';
-    copy.innerHTML = ICON_COPY + '<span>Copy</span>';
-    copy.addEventListener('click', function () { copyCode(copy); });
-    code.appendChild(copy);
-    paneWon.appendChild(code);
-    paneWon.appendChild(el('p', 'evbmb-note', 'It’s saved to your bag and applies at checkout.'));
+    codeBox.appendChild(codeTxt);
+    copyBtn = el('button', 'evbmb-copy');
+    copyBtn.type = 'button';
+    copyBtn.innerHTML = ICON_COPY + '<span>Copy</span>';
+    copyBtn.addEventListener('click', function () { copyCode(copyBtn); });
+    codeBox.appendChild(copyBtn);
+    lockChip = el('span', 'evbmb-lockchip');
+    lockChip.innerHTML = ICON_LOCK + '<span>Locked</span>';
+    codeBox.appendChild(lockChip);
+    paneWon.appendChild(codeBox);
+    wonNote = el('p', 'evbmb-note');
+    paneWon.appendChild(wonNote);
     var wonBtns = el('div', 'evbmb-btns');
+    // Locked: make an account (or sign in) to see the code.
+    joinBtn = el('a', 'evbmb-btn');
+    joinBtn.href = '/account/';
+    joinBtn.innerHTML = '<span>Create my free account</span>' + ICON_ARROW;
+    joinBtn.addEventListener('click', function () { push('game_join_click', true); });
+    wonBtns.appendChild(joinBtn);
+    haveBtn = el('a', 'evbmb-text-btn', 'I already have an account');
+    haveBtn.href = '/account/';
+    haveBtn.addEventListener('click', function () { push('game_signin_click', true); });
+    wonBtns.appendChild(haveBtn);
+    // Unlocked.
     var onStore = /^\/store(\/|$)/.test(PATH);
-    var shop = el('a', 'evbmb-btn');
-    shop.href = '/store/';
-    shop.innerHTML = '<span></span>' + ICON_ARROW;
-    shop.firstChild.textContent = onStore ? 'Keep shopping' : 'Shop the store';
-    shop.addEventListener('click', function (e) {
-      push('game_shop_click');
+    shopBtn = el('a', 'evbmb-btn');
+    shopBtn.href = '/store/';
+    shopBtn.innerHTML = '<span></span>' + ICON_ARROW;
+    shopBtn.firstChild.textContent = onStore ? 'Keep shopping' : 'Shop the store';
+    shopBtn.addEventListener('click', function (e) {
+      push('game_shop_click', true);
       if (onStore) { e.preventDefault(); close(); }
     });
-    wonBtns.appendChild(shop);
-    var done = el('button', 'evbmb-text-btn', 'Close');
-    done.type = 'button';
-    done.setAttribute('data-close', '');
-    wonBtns.appendChild(done);
+    wonBtns.appendChild(shopBtn);
+    doneBtn = el('button', 'evbmb-text-btn', 'Close');
+    doneBtn.type = 'button';
+    doneBtn.setAttribute('data-close', '');
+    wonBtns.appendChild(doneBtn);
     paneWon.appendChild(wonBtns);
     main.appendChild(paneWon);
 
@@ -560,18 +614,51 @@
       .then(won);
   }
 
+  // Signed out, the prize waits for an account; signed in, it's theirs now.
   function won() {
+    state = 'won';
+    var locked = !signedIn();
+    if (locked) remember('locked:' + prize.code);
+    else { remember('won:' + prize.code); saveCode(prize.code); }
+    push('game_win', true, { locked: locked });
+    showPrize(locked, prize.title);
+  }
+
+  // Back signed in, with a locked prize: the box opens again, code showing.
+  function unlock() {
     state = 'won';
     remember('won:' + prize.code);
     saveCode(prize.code);
-    w.dataLayer = w.dataLayer || [];
-    w.dataLayer.push({ event: 'game_win', popup_id: 'welcome_game', prize_code: prize.code, page_path: PATH });
-    wonTitle.textContent = prize.title;
+    push('game_unlock', true);
+    var box = boxes[0];
+    fill(box, prize.card, false);
+    showPrize(false, 'Your prize is unlocked');
+    wait(motion ? 380 : 0).then(function () {
+      if (!root) return;
+      celebrate(box);
+      openBox(box, true);
+    });
+  }
+
+  function showPrize(locked, title) {
+    wonTitle.textContent = title;
     wonText.textContent = prize.text;
-    codeVal.textContent = prize.code;
+    codeBox.classList.toggle('is-locked', locked);
+    codeVal.textContent = locked ? '••••••' : prize.code;
+    if (locked) codeVal.setAttribute('aria-hidden', 'true');
+    else codeVal.removeAttribute('aria-hidden');
+    copyBtn.hidden = locked;
+    lockChip.hidden = !locked;
+    wonNote.textContent = locked
+      ? 'Create a free account to unlock your code. Members earn points on every purchase, too.'
+      : 'It’s saved to your bag and applies at checkout.';
+    joinBtn.hidden = haveBtn.hidden = !locked;
+    shopBtn.hidden = doneBtn.hidden = locked;
     xBtn.disabled = false;
     showPane(paneWon, 'evbmbWonTitle');
-    live.textContent = prize.title + '. ' + prize.text + ' Code ' + prize.code + ' is saved to your bag.';
+    live.textContent = title + '. ' + prize.text + (locked
+      ? ' Create a free account to unlock your code.'
+      : ' Code ' + prize.code + ' is saved to your bag.');
     wonTitle.focus({ preventScroll: true });
   }
 
@@ -604,9 +691,10 @@
       place();
       root.classList.add('is-open');
       d.documentElement.classList.add('evbmb-lock');
+      if (mode === 'unlock') return unlock();
       setTimeout(function () { shuffleBtn.focus({ preventScroll: true }); }, 250);
     });
-    push('game_view');
+    if (mode === 'game') push('game_view');
   }
 
   function close() {
@@ -623,10 +711,18 @@
     }, 450);
   }
 
+  // The account page is ready for it once the member is signed in and past
+  // the sign-up steps (account.js: the dashboard's points, no .acct-ob).
+  function accountReady() {
+    return signedIn() && d.querySelector('.acct-points') && !d.querySelector('.acct-ob');
+  }
+
   function start() {
     // Wait out the shop's closure notice (site-nav.js) if it is up.
     (function fire() {
       if (d.getElementById('evbClosure')) return setTimeout(fire, 1000);
+      if (ON_ACCOUNT && !accountReady()) return setTimeout(fire, 1000);
+      if (ON_ACCOUNT) holdOthers();
       open();
     })();
   }
