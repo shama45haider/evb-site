@@ -1,7 +1,8 @@
 /*
- * The welcome game: a mystery-box dialog shown once per visitor, 13 seconds
- * after they first scroll, once no other pop-up is up (so a first visit to
- * the home page still opens on the gold What's New card). (The file keeps
+ * The welcome game: a mystery-box dialog shown once per visitor. On the home
+ * page it comes 13 seconds after the visitor closes the gold What's New card;
+ * elsewhere 13 seconds after they first scroll, once no other pop-up is up.
+ * (The file keeps
  * its first name, evb-spin.js, because every page already loads it under
  * that name.)
  *
@@ -788,7 +789,21 @@
   // across the pages of one visit (sessionStorage), once nothing else is up.
   var GAME_AFTER_MS = 13000;
   var SCROLL_KEY = 'evb_game_scroll';
+  // On the home page the gold What's New card (#wnWrap) comes first; it shows
+  // once per visit and its close button sets evb_wn_v1 (index.html). The game
+  // then follows GAME_AFTER_MS after the visitor closes that card.
+  function goldCardPending() {
+    if (!d.getElementById('wnWrap')) return false;
+    try { return !w.sessionStorage.getItem('evb_wn_v1'); } catch (e) { return false; }
+  }
   function startGame() {
+    if (goldCardPending()) {
+      (function waitForGold() {
+        if (goldCardPending()) return setTimeout(waitForGold, 500);
+        setTimeout(start, GAME_AFTER_MS);
+      })();
+      return;
+    }
     var began = 0;
     try { began = Number(w.sessionStorage.getItem(SCROLL_KEY)) || 0; } catch (e) {}
     function arm(since) {
