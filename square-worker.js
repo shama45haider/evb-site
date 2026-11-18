@@ -1127,6 +1127,138 @@ async function markEmailed(env, order, result) {
   return order;
 }
 
+/* ===========================================================================
+   Welcome game prize email
+   ---------------------------------------------------------------------------
+   POST /game-email {code}, with the member's Supabase session as a Bearer
+   token. evb-spin.js calls it once a prize is theirs (they won it signed in,
+   or made an account to unlock it). The address comes from Supabase, never
+   from the request, so nobody can use this to mail a stranger; each account
+   gets one prize email (SUBSCRIBERS: game:<email>). Sent through Resend with
+   the same RESEND_API_KEY as order confirmations; GAME_FROM (Text, optional)
+   replaces the sender below.
+=========================================================================== */
+
+const GAME_FROM_DEFAULT = 'East Village Buyers <rewards@eastvillagebuyers.com>';
+const GAME_PRIZES = {
+  SPIN120: { headline: 'Free shipping is yours', detail: 'Free standard shipping on your first order over $120.' },
+  GIFT5: { headline: '$5 off is yours', detail: '$5 off your order, any amount.' }
+};
+
+function gameEmailText(code, prize) {
+  return [
+    prize.headline + '.',
+    '',
+    prize.detail,
+    '',
+    'Your code: ' + code,
+    '',
+    'It is already in your bag on the device you played on. On any other device, enter it at checkout.',
+    'Shop the store: ' + SITE_URL + '/store/',
+    '',
+    'Questions? Call or text 917-608-8939.',
+    'East Village Buyers - 39 Avenue A, New York, NY 10009'
+  ].join('\n');
+}
+
+function gameEmailHtml(code, prize) {
+  const font = '-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  return `<!doctype html><html><body style="margin:0;background:#f8f5f0;padding:24px 12px">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e7e1d8;border-radius:12px;overflow:hidden">
+    <tr><td style="height:5px;background:#f97316"></td></tr>
+    <tr><td style="padding:26px 26px 8px">
+      <p style="margin:0 0 6px;font:800 10px ${font};letter-spacing:.18em;text-transform:uppercase;color:#f97316">Your welcome gift</p>
+      <h1 style="margin:0 0 10px;font:900 24px ${font};color:#111;letter-spacing:-.02em">${esc(prize.headline)}</h1>
+      <p style="margin:0 0 20px;font:15px/1.6 ${font};color:#555">${esc(prize.detail)}</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff1e6;border-radius:12px">
+        <tr><td style="padding:16px 20px">
+          <p style="margin:0 0 4px;font:600 12px ${font};color:#7a5a45">Your code</p>
+          <p style="margin:0;font:900 26px ${font};letter-spacing:.1em;color:#1f1b16">${esc(code)}</p>
+        </td></tr>
+      </table>
+      <p style="margin:16px 0 22px;font:14px/1.6 ${font};color:#555">
+        It’s already in your bag on the device you played on. On any other device, enter it at checkout.
+      </p>
+      <p style="margin:0 0 24px">
+        <a href="${SITE_URL}/store/" style="display:inline-block;background:#f97316;color:#fff;text-decoration:none;font:800 12px ${font};letter-spacing:.06em;text-transform:uppercase;padding:14px 24px;border-radius:999px">Shop the store</a>
+      </p>
+    </td></tr>
+    <tr><td style="padding:0 26px 26px">
+      <p style="margin:0;font:13px/1.6 ${font};color:#777">
+        Questions? Call or text <a href="tel:9176088939" style="color:#ea580c;text-decoration:none">917-608-8939</a>.<br>
+        East Village Buyers &middot; 39 Avenue A, New York, NY 10009
+      </p>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+async function handleGameEmail(request, env, origin) {
+  if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed.' }, 403, origin);
+  if (env.PROMO_LIMITER) {
+    const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+    try {
+      const { success } = await env.PROMO_LIMITER.limit({ key: 'mail:' + ip });
+      if (!success) return json({ error: 'Too many tries. Wait a minute and try again.' }, 429, origin);
+    } catch (e) { }
+  }
+  const auth = request.headers.get('Authorization') || '';
+  if (!/^Bearer\s+\S{20,}$/.test(auth)) return json({ error: 'Sign in first.' }, 401, origin);
+
+  const body = await request.json().catch(() => ({}));
+  const code = String((body && body.code) || '').trim().toUpperCase().slice(0, 40);
+  const prize = GAME_PRIZES[code];
+  if (!prize) return json({ error: 'That is not a game prize.' }, 400, origin);
+  if (!env.RESEND_API_KEY) return json({ error: 'Email is not set up.', status: 'not-configured' }, 503, origin);
+
+  // Whose session this is, from Supabase itself.
+  const base = (env.SUPABASE_URL || SUPABASE_URL_DEFAULT).replace(/\/+$/, '');
+  const res = await fetch(base + '/auth/v1/user', {
+    headers: { apikey: env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT, Authorization: auth }
+  });
+  if (res.status === 401 || res.status === 403) return json({ error: 'Your sign-in expired.' }, 401, origin);
+  const user = res.ok ? await res.json().catch(() => null) : null;
+  if (!res.ok) {
+    console.error('[evb-square] game email: user lookup failed', res.status);
+    return json({ error: 'Could not check your account.' }, 502, origin);
+  }
+  const email = normEmail(user && user.email);
+  if (!RE_EMAIL.test(email)) return json({ error: 'This account has no email address.' }, 400, origin);
+
+  // One prize email per account.
+  const key = 'game:' + email;
+  if (env.SUBSCRIBERS) {
+    const had = await env.SUBSCRIBERS.getWithMetadata(key).catch(() => null);
+    if (had && had.metadata && had.metadata.s === 'sent') return json({ ok: true, already: true }, 200, origin);
+  }
+
+  let result = 'failed';
+  try {
+    const sent = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: env.GAME_FROM || GAME_FROM_DEFAULT,
+        to: [email],
+        subject: 'Your East Village Buyers code: ' + code,
+        html: gameEmailHtml(code, prize),
+        text: gameEmailText(code, prize),
+        reply_to: 'help@eastvillagebuyers.com'
+      })
+    });
+    if (sent.ok) result = 'sent';
+    else console.error('[evb-square] game email failed', sent.status, (await sent.text().catch(() => '')).slice(0, 300));
+  } catch (err) {
+    console.error('[evb-square] game email error', err.message);
+  }
+
+  if (env.SUBSCRIBERS) {
+    await env.SUBSCRIBERS.put(key, '1', { metadata: { e: email, c: code, t: Date.now(), s: result } }).catch(() => {});
+  }
+  if (result !== 'sent') return json({ error: 'We could not send the email just now.', status: result }, 502, origin);
+  return json({ ok: true, sent: true }, 200, origin);
+}
+
 /**
  * POST /orders/:id/resend  — re-send the confirmation for an order that
  * already exists. Authenticated with the panel key, so it cannot be used to
@@ -1223,6 +1355,16 @@ export default {
         return json({ error: 'Not found.' }, 404, origin);
       } catch (err) {
         console.error('[evb-square] signup', err.message);
+        return json({ error: 'Something went wrong. Please try again.' }, 500, origin);
+      }
+    }
+
+    if (path === '/game-email') {
+      if (request.method !== 'POST') return json({ error: 'Not found.' }, 404, origin);
+      try {
+        return await handleGameEmail(request, env, origin);
+      } catch (err) {
+        console.error('[evb-square] game email', err.message);
         return json({ error: 'Something went wrong. Please try again.' }, 500, origin);
       }
     }

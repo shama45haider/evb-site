@@ -1,7 +1,9 @@
 /*
- * The welcome game: a mystery-box dialog shown once, on a visitor's first
- * page of the site. (The file keeps its first name, evb-spin.js, because
- * every page already loads it under that name.)
+ * The welcome game: a mystery-box dialog shown once per visitor, 13 seconds
+ * after they first scroll, once no other pop-up is up (so a first visit to
+ * the home page still opens on the gold What's New card). (The file keeps
+ * its first name, evb-spin.js, because every page already loads it under
+ * that name.)
  *
  * Three gift boxes shuffle; the visitor picks one. It holds one of WINNABLE,
  * at even odds (free shipping on a first order over $120, or $5 off), and
@@ -18,8 +20,8 @@
  * checkout Worker (square-worker.js, PUBLIC_PROMO_CODES); change the two
  * together.
  *
- * While it is up (or about to be), <html data-evb-spin> tells the other
- * pop-ups (evb-popups.js, evb-blog-popup.js) to wait.
+ * While it is up (or, for an unlock, about to be), <html data-evb-spin>
+ * tells the other pop-ups (evb-popups.js, evb-blog-popup.js) to wait.
  */
 (function () {
   'use strict';
@@ -39,6 +41,40 @@
 
   function get(k) { try { return w.localStorage.getItem(k); } catch (e) { return null; } }
   function signedIn() { return !!get(SESSION_KEY); }
+
+  // The prize is also emailed to the member (the checkout Worker's
+  // /game-email, which reads the address from their session). MAIL_KEY holds
+  // the code until it has gone; with no fresh session on this page (only
+  // account.js and checkout refresh it), a later page sends it.
+  var MAIL_KEY = 'evb_game_mail';
+  var API = 'https://evb-square.shama45haider.workers.dev';
+  function session() {
+    try {
+      var s = JSON.parse(get(SESSION_KEY) || 'null');
+      if (!s || !s.access_token) return null;
+      if (s.expires_at && s.expires_at * 1000 < Date.now() + 60000) return null;
+      return s;
+    } catch (e) { return null; }
+  }
+  function mailCode(code, onSent) {
+    var s = session();
+    if (!s || !w.fetch) return;
+    // A server that can't send right now isn't asked again this visit.
+    try { if (w.sessionStorage.getItem(MAIL_KEY + '_wait')) return; } catch (e) {}
+    w.fetch(API + '/game-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + s.access_token },
+      body: JSON.stringify({ code: code })
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.ok || r.status === 400) { try { w.localStorage.removeItem(MAIL_KEY); } catch (e) {} }
+        else if (r.status !== 401) { try { w.sessionStorage.setItem(MAIL_KEY + '_wait', '1'); } catch (e) {} }
+        if (r.ok && j.sent && onSent) onSent(s.user && s.user.email);
+      });
+    }, function () {});
+  }
+  var pendingMail = get(MAIL_KEY);
+  if (pendingMail) mailCode(pendingMail);
 
   // What the picked box can hold. Each code must exist on the Worker.
   var WINNABLE = [
@@ -81,7 +117,9 @@
     hold.textContent = '#wnWrap{display:none!important}';
     d.head.appendChild(hold);
   }
-  if (!ON_ACCOUNT) holdOthers();
+  // The game waits its turn (startGame), so a first visit sees the usual
+  // pop-ups first; an unlock opens straight away and holds them back.
+  if (mode === 'unlock' && !ON_ACCOUNT) holdOthers();
 
   var CSS =
     '.evbmb{position:fixed;inset:0;z-index:100001;display:flex;align-items:center;justify-content:center;padding:16px;visibility:hidden;pointer-events:none}' +
@@ -622,6 +660,15 @@
     else { remember('won:' + prize.code); saveCode(prize.code); }
     push('game_win', true, { locked: locked });
     showPrize(locked, prize.title);
+    if (!locked) emailPrize();
+  }
+
+  function emailPrize() {
+    try { w.localStorage.setItem(MAIL_KEY, prize.code); } catch (e) {}
+    mailCode(prize.code, function (email) {
+      if (!root || state !== 'won') return;
+      wonNote.textContent = 'It’s saved to your bag, and we emailed it to ' + (email || 'you') + '.';
+    });
   }
 
   // Back signed in, with a locked prize: the box opens again, code showing.
@@ -633,6 +680,7 @@
     var box = boxes[0];
     fill(box, prize.card, false);
     showPrize(false, 'Your prize is unlocked');
+    emailPrize();
     wait(motion ? 380 : 0).then(function () {
       if (!root) return;
       celebrate(box);
@@ -650,7 +698,7 @@
     copyBtn.hidden = locked;
     lockChip.hidden = !locked;
     wonNote.textContent = locked
-      ? 'Create a free account to unlock your code. Members earn points on every purchase, too.'
+      ? 'Create a free account to unlock your code, and we’ll email it to you. Members earn points on every purchase, too.'
       : 'It’s saved to your bag and applies at checkout.';
     joinBtn.hidden = haveBtn.hidden = !locked;
     shopBtn.hidden = doneBtn.hidden = locked;
@@ -717,17 +765,48 @@
     return signedIn() && d.querySelector('.acct-points') && !d.querySelector('.acct-ob');
   }
 
+  // Another pop-up that's up: the shop's closure notice (site-nav.js), the
+  // home page's What's New card (#wnWrap), a panel pop-up (evb-popups.js) or
+  // the blog's "always buying" one (evb-blog-popup.js).
+  function otherDialogUp() {
+    var wn = d.getElementById('wnWrap');
+    return !!d.getElementById('evbClosure') ||
+      !!d.querySelector('.evbp.is-open, .evbbp.is-open') ||
+      !!(wn && w.getComputedStyle(wn).display !== 'none');
+  }
+
   function start() {
-    // Wait out the shop's closure notice (site-nav.js) if it is up.
     (function fire() {
-      if (d.getElementById('evbClosure')) return setTimeout(fire, 1000);
+      if (otherDialogUp()) return setTimeout(fire, 1000);
       if (ON_ACCOUNT && !accountReady()) return setTimeout(fire, 1000);
-      if (ON_ACCOUNT) holdOthers();
+      if (mode === 'game' || ON_ACCOUNT) holdOthers();
       open();
     })();
   }
 
-  function later() { setTimeout(start, DELAY_MS); }
+  // The game comes GAME_AFTER_MS after the visitor first scrolls, counted
+  // across the pages of one visit (sessionStorage), once nothing else is up.
+  var GAME_AFTER_MS = 13000;
+  var SCROLL_KEY = 'evb_game_scroll';
+  function startGame() {
+    var began = 0;
+    try { began = Number(w.sessionStorage.getItem(SCROLL_KEY)) || 0; } catch (e) {}
+    function arm(since) {
+      setTimeout(start, Math.max(GAME_AFTER_MS - (Date.now() - since), DELAY_MS));
+    }
+    if (began) return arm(began);
+    w.addEventListener('scroll', function first() {
+      w.removeEventListener('scroll', first);
+      var now = Date.now();
+      try { w.sessionStorage.setItem(SCROLL_KEY, String(now)); } catch (e) {}
+      arm(now);
+    }, { passive: true });
+  }
+
+  function later() {
+    if (mode === 'game') startGame();
+    else setTimeout(start, DELAY_MS);
+  }
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', later);
   else later();
 })();
