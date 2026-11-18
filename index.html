@@ -1913,6 +1913,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     .store-map-embed iframe { display: block; }
 
+    .carousel-slide--pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); gap: 6px; background: #fff; overflow: hidden; }
+    .carousel-slide--pair img { min-width: 0; min-height: 0; }
+    @media (max-width: 767px) { .carousel-slide--pair { gap: 4px; } }
+    #dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+    .store-dot { position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: rgba(0,0,0,0.2); cursor: pointer; transition: width 0.3s ease, background-color 0.3s ease; }
+    .store-dot::before { content: ''; position: absolute; inset: -10px -4px; }
+    .store-dot.is-active { width: 24px; background: #f97316; }
+    @media (prefers-reduced-motion: reduce) { .store-dot { transition: none; } }
+
     .store-carousel { position: relative; overflow: hidden; border-radius: 20px; }
     .carousel-track { display: flex; transition: transform .45s ease; }
     .carousel-slide { min-width: 100%; height: 380px; position: relative; }
@@ -4845,6 +4854,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="store-carousel">
       <button class="carousel-btn prev" onclick="moveSlide(-1)">&#10094;</button>
       <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide carousel-slide--pair">
+          <img src="shoppers-east-village-buyers-mural.webp" srcset="shoppers-east-village-buyers-mural-480.webp 480w, shoppers-east-village-buyers-mural.webp 720w, shoppers-east-village-buyers-mural-1200.webp 1200w" sizes="(max-width: 767px) 46vw, 600px" alt="Shoppers browsing clothing racks under the East Village Buyers graffiti mural" width="720" height="960" loading="lazy" decoding="async" style="object-position:center 18%;">
+          <img src="shoppers-hoodie-racks-avenue-a.webp" srcset="shoppers-hoodie-racks-avenue-a-480.webp 480w, shoppers-hoodie-racks-avenue-a.webp 720w, shoppers-hoodie-racks-avenue-a-1200.webp 1200w" sizes="(max-width: 767px) 46vw, 600px" alt="Customers looking through hoodie racks inside East Village Buyers on Avenue A" width="720" height="960" loading="lazy" decoding="async" style="object-position:center 50%;">
+        </div>
+        <div class="carousel-slide carousel-slide--pair">
+          <img src="shopper-bape-camo-hoodie-rack.webp" srcset="shopper-bape-camo-hoodie-rack-480.webp 480w, shopper-bape-camo-hoodie-rack.webp 720w, shopper-bape-camo-hoodie-rack-1200.webp 1200w" sizes="(max-width: 767px) 46vw, 600px" alt="Shopper checking the sneaker shelves next to a BAPE camo hoodie rack" width="720" height="960" loading="lazy" decoding="async" style="object-position:center 35%;">
+          <img src="shoppers-sneaker-wall-counter.webp" srcset="shoppers-sneaker-wall-counter-480.webp 480w, shoppers-sneaker-wall-counter.webp 720w, shoppers-sneaker-wall-counter-1200.webp 1200w" sizes="(max-width: 767px) 46vw, 600px" alt="Customers shopping at the counter in front of the sneaker wall at East Village Buyers" width="720" height="960" loading="lazy" decoding="async" style="object-position:center 35%;">
+        </div>
         <div class="carousel-slide"><img src="evb1.webp" alt="East Village Buyers — Store" width="600" height="400" loading="lazy" decoding="async"></div>
         <div class="carousel-slide"><img src="evb2.webp" alt="East Village Buyers — Store" width="600" height="400" loading="lazy" decoding="async"></div>
         <div class="carousel-slide"><img src="evb3.webp" alt="East Village Buyers — Store" width="600" height="400" loading="lazy" decoding="async"></div>
@@ -5579,13 +5596,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const dotsEl  = document.getElementById('dots');
     slides.forEach((_, i) => {
       const d = document.createElement('button');
-      d.className = 'h-2 rounded-full transition-all duration-300 ' + (i === 0 ? 'w-6 bg-orange-500' : 'w-2 bg-black/20');
+      d.type = 'button';
+      d.className = 'store-dot' + (i === 0 ? ' is-active' : '');
+      d.setAttribute('aria-label', 'Show slide ' + (i + 1));
       d.addEventListener('click', () => goTo(i));
       dotsEl.appendChild(d);
     });
     function updateDots() {
       dotsEl.querySelectorAll('button').forEach((d, i) => {
-        d.className = 'h-2 rounded-full transition-all duration-300 ' + (i === currentSlide ? 'w-6 bg-orange-500' : 'w-2 bg-black/20');
+        d.classList.toggle('is-active', i === currentSlide);
       });
     }
     function goTo(n) {
@@ -6178,7 +6197,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="evb-assistant.js?v=20261005" defer data-evb-assistant></script>
 <script src="/site-analytics.js?v=1" defer></script>
 <script src="/evb-popups.js?v=4" defer></script>
-<script src="/thanksgiving.js" defer></script>
-<script src="/evb-spin.js?v=3" defer></script>
+<script src="/thanksgiving.js?v=2" defer></script>
+<script src="/evb-spin.js?v=4" defer></script>
 </body>
 </html>
