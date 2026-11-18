@@ -33,6 +33,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           NEW_COUNT=$(grep -o '[0-9]\{3,4\} reviews' index.html | head -1 | grep -o '[0-9]*')
-          git add index.html reviews/index.html we-buy-sneakers-nyc/index.html
+          git add index.html reviews/index.html we-buy-sneakers-nyc/index.html neighborhoods
           git commit -m "Update Google review count to ${NEW_COUNT}"
           git push

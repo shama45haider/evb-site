@@ -8,6 +8,7 @@ explicit values (used for local/manual updates).
 
 Requires the GOOGLE_PLACES_API_KEY environment variable unless --set is used.
 """
+import glob
 import json
 import os
 import re
@@ -21,7 +22,12 @@ FILES = [
     "index.html",
     os.path.join("reviews", "index.html"),
     os.path.join("we-buy-sneakers-nyc", "index.html"),
-]
+    # Neighborhood landing pages ("4.8 Stars From 562 Google Reviews").
+    os.path.join("neighborhoods", "index.html"),
+] + sorted(
+    os.path.relpath(p, REPO_ROOT)
+    for p in glob.glob(os.path.join(REPO_ROOT, "neighborhoods", "*", "index.html"))
+)
 
 SEARCH_QUERY = "East Village Buyers, 39 Avenue A, New York, NY 10009"
 EXPECTED_NAME = "east village buyers"
