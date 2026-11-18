@@ -5599,7 +5599,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       d.type = 'button';
       d.className = 'store-dot' + (i === 0 ? ' is-active' : '');
       d.setAttribute('aria-label', 'Show slide ' + (i + 1));
-      d.addEventListener('click', () => goTo(i));
+      d.addEventListener('click', () => { goTo(i); restartAutoplay(); });
       dotsEl.appendChild(d);
     });
     function updateDots() {
@@ -5612,12 +5612,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('carouselTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
       updateDots();
     }
-    function moveSlide(dir) { goTo(currentSlide + dir); }
-    let carouselTimer = setInterval(() => { if (!document.hidden) moveSlide(1); }, 4000);
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { clearInterval(carouselTimer); }
-      else { carouselTimer = setInterval(() => { if (!document.hidden) moveSlide(1); }, 4000); }
-    });
+    function moveSlide(dir) { goTo(currentSlide + dir); restartAutoplay(); }
+    // Auto-advance only while the slideshow is on screen, so a visitor who
+    // scrolls down to it still starts on the first slide.
+    let carouselTimer = null, carouselInView = false;
+    function restartAutoplay() {
+      clearInterval(carouselTimer);
+      carouselTimer = null;
+      if (carouselInView && !document.hidden) carouselTimer = setInterval(() => goTo(currentSlide + 1), 4000);
+    }
+    const carouselEl = document.querySelector('.store-carousel');
+    if ('IntersectionObserver' in window && carouselEl) {
+      new IntersectionObserver((entries) => {
+        carouselInView = entries[0].isIntersecting;
+        restartAutoplay();
+      }, { threshold: 0.5 }).observe(carouselEl);
+    } else {
+      carouselInView = true;
+      restartAutoplay();
+    }
+    document.addEventListener('visibilitychange', restartAutoplay);
 
     (function() {
       var mapFrame = document.getElementById('storeMapFrame');
