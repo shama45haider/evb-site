@@ -151,6 +151,7 @@
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
     phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
     bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>',
     calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
     layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>',
@@ -779,6 +780,7 @@
         '<div id="acctDeals"></div>' +
         badgesSection(me, sum, history) +
         bonusSection(me) +
+        '<div id="acctTexts"></div>' +
 
         '<section class="acct-section acct-rise" style="--d:220ms">' +
           '<div class="acct-section-head">' +
@@ -825,6 +827,139 @@
       sb.auth.signOut().then(function () { forgetMember(); renderEmail(); }, function () { forgetMember(); renderEmail(); });
     });
     dealsSection(opts);
+    textsSection(me);
+  }
+
+  /* ------------------------------------------------------------ deals by text */
+
+  // Deals, new arrivals and order updates by text from the shop's texting
+  // number (panel migration 0092, /api/member-texts). Separate from the
+  // new-arrival emails (marketingOptIn). Nothing shows until the panel says
+  // where the member stands, so a panel without 0092 shows nothing at all.
+  // Keep TEXTS_CONSENT word for word the same as TEXT_SIGNUP_CONSENT in the
+  // panel (src/lib/sms/consent.ts) and on /text-deals/: it's what gets stored.
+  var TEXTS_FROM = '(914) 800-0220';
+  var TEXTS_CONSENT = 'Yes, send me recurring automated texts with deals, new arrivals and order updates from East Village Buyers at the number I entered. Msg frequency varies. Msg & data rates may apply. Reply HELP for help, STOP to opt out. Consent is not a condition of purchase.';
+  var TEXTS_DOWN = 'Texts can’t be changed just now. Try again later.';
+
+  function phoneDigits(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    return d.length === 11 && d.charAt(0) === '1' ? d.slice(1) : d;
+  }
+
+  function prettyPhone(v) {
+    var d = phoneDigits(v);
+    return d.length === 10 ? '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6) : String(v || '');
+  }
+
+  // The previews (no Supabase) answer after a moment, as if the panel had.
+  function textsCall(body) {
+    if (!sb) {
+      return new Promise(function (resolve) {
+        setTimeout(function () {
+          resolve(body.action === 'on' ? { subscribed: true, status: 'subscribed', phone: '+1' + phoneDigits(body.phone) }
+            : body.action === 'off' ? { subscribed: false } : { subscribed: false, phone: null });
+        }, body.action === 'status' ? 0 : 600);
+      });
+    }
+    return panelPost('/api/member-texts', body, TEXTS_DOWN);
+  }
+
+  function textsSection(me) {
+    var slot = document.getElementById('acctTexts');
+    if (!slot) return;
+    textsCall({ action: 'status' }).then(function (state) {
+      if (slot.isConnected) drawTexts(slot, me, state, '');
+    }, function () {});
+  }
+
+  function drawTexts(slot, me, state, note) {
+    var on = !!state.subscribed;
+    var wrap = document.createElement('div');
+    wrap.innerHTML = '<section class="acct-section acct-texts' + (on ? ' is-on' : '') + '" id="acctTexts" aria-labelledby="acctTextsTitle">' +
+      '<div class="acct-texts-head">' +
+        '<span class="acct-texts-icon" aria-hidden="true">' + ICON.chat + '</span>' +
+        '<div class="acct-texts-copy">' +
+          '<h2 class="acct-section-title" id="acctTextsTitle">Deals by text' + (on ? '<span class="acct-texts-on">On</span>' : '') + '</h2>' +
+          '<p>' + (on
+            ? 'We text <b>' + esc(prettyPhone(state.phone)) + '</b> from ' + TEXTS_FROM + ' with deals, new arrivals and order updates.'
+            : 'Get deals, new arrivals and updates on your online orders, texted to you from ' + TEXTS_FROM + '.') + '</p>' +
+        '</div>' +
+      '</div>' +
+      (note ? '<p class="acct-texts-note" role="status">' + esc(note) + '</p>' : '') +
+      (on
+        ? '<button type="button" class="acct-textbtn acct-texts-stop" id="acctTextsStop">Stop texts</button>'
+        : '<button type="button" class="acct-invite-btn acct-texts-open" id="acctTextsOpen" aria-expanded="false" aria-controls="acctTextsForm">Sign up for texts</button>' +
+          '<form class="acct-texts-form" id="acctTextsForm" hidden novalidate>' +
+            '<label class="acct-label" for="acctTextsPhone">Mobile number</label>' +
+            '<input class="acct-input" id="acctTextsPhone" type="tel" inputmode="tel" autocomplete="tel-national" maxlength="20" placeholder="(212) 555-0123" value="' + esc(prettyPhone(state.phone || me.phone)) + '">' +
+            '<label class="acct-check"><input type="checkbox" id="acctTextsAgree"><span>' + esc(TEXTS_CONSENT) +
+              ' See our <a href="/privacy/">Privacy Policy</a> and <a href="/privacy/#text-messages">Text Terms</a>.</span></label>' +
+            '<button type="submit" class="evb-btn evb-btn--primary acct-btn" id="acctTextsGo">Sign me up</button>' +
+          '</form>') +
+      '<p class="acct-error" id="acctTextsErr" role="alert"></p>' +
+    '</section>';
+    var sec = wrap.firstChild;
+    slot.parentNode.replaceChild(sec, slot);
+
+    var err = document.getElementById('acctTextsErr');
+    function fail(e) { err.textContent = e && e.shown ? e.message : TEXTS_DOWN; }
+
+    if (on) {
+      var stop = document.getElementById('acctTextsStop');
+      stop.addEventListener('click', function () {
+        err.textContent = '';
+        setBusy(stop, true, 'Stopping…');
+        textsCall({ action: 'off' }).then(function () {
+          drawTexts(sec, me, { subscribed: false, phone: state.phone }, 'Texts are off. We won’t text you deals or order updates.');
+          var again = document.getElementById('acctTextsOpen');
+          if (again) again.focus();
+        }, function (e) { setBusy(stop, false, 'Stop texts'); fail(e); });
+      });
+      return;
+    }
+
+    var open = document.getElementById('acctTextsOpen');
+    var form = document.getElementById('acctTextsForm');
+    var phone = document.getElementById('acctTextsPhone');
+    var agree = document.getElementById('acctTextsAgree');
+    var go = document.getElementById('acctTextsGo');
+    open.addEventListener('click', function () {
+      var show = form.hidden;
+      form.hidden = !show;
+      open.setAttribute('aria-expanded', String(show));
+      if (show) (phoneDigits(phone.value).length === 10 ? agree : phone).focus();
+    });
+    phone.addEventListener('input', function () { phone.removeAttribute('aria-invalid'); err.textContent = ''; });
+    agree.addEventListener('change', function () { if (agree.checked) err.textContent = ''; });
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (go.disabled) return;
+      if (phoneDigits(phone.value).length !== 10) {
+        phone.setAttribute('aria-invalid', 'true');
+        err.textContent = 'Enter a 10-digit US mobile number.';
+        phone.focus();
+        return;
+      }
+      if (!agree.checked) {
+        err.textContent = 'Tick the box to agree to get texts.';
+        agree.focus();
+        return;
+      }
+      err.textContent = '';
+      setBusy(go, true, 'Signing you up…');
+      textsCall({ action: 'on', phone: phone.value }).then(function (j) {
+        if (j.status === 'blocked') {
+          setBusy(go, false, 'Sign me up');
+          err.textContent = 'That number replied STOP to our texts before, so we can’t text it. To get texts again, text START to ' + TEXTS_FROM + '.';
+          return;
+        }
+        drawTexts(sec, me, { subscribed: true, phone: j.phone || phone.value },
+          j.status === 'already' ? 'That number already gets our texts.' : 'You’re signed up. We’ll text you from ' + TEXTS_FROM + ' to confirm.');
+        var title = document.getElementById('acctTextsTitle');
+        if (title) { title.setAttribute('tabindex', '-1'); title.focus(); }
+      }, function (e) { setBusy(go, false, 'Sign me up'); fail(e); });
+    });
   }
 
   /* ------------------------------------------------------------ level, stats, badges, bonuses */

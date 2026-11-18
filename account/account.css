@@ -1003,6 +1003,36 @@
 .acct-invite-stats svg { flex-shrink: 0; width: 15px; height: 15px; }
 .acct-invite-stats b { color: var(--evb-ink); }
 
+/* Deals by text (panel 0092): icon, title and one line, then a button that
+   opens the sign-up, or "Stop texts" once they're on. Green only means on. */
+.acct-texts-head { display: flex; gap: 14px; align-items: flex-start; }
+.acct-texts-icon {
+  flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--a-pri-c); color: var(--a-on-pri-c);
+}
+.acct-texts-icon svg { width: 21px; height: 21px; }
+.acct-texts.is-on .acct-texts-icon { background: #d7f5e1; color: #14532d; }
+.acct-texts-copy { min-width: 0; }
+.acct-texts .acct-section-title { margin: 2px 0 4px; gap: 10px; }
+.acct-texts-copy p { margin: 0; font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.5; color: var(--a-dim); }
+.acct-texts-copy b { color: var(--evb-ink); font-weight: 600; white-space: nowrap; }
+.acct-texts-on {
+  font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0;
+  padding: 3px 10px; border-radius: 99px; background: #d7f5e1; color: #14532d;
+}
+.acct-texts-note {
+  margin: 14px 0 0; padding: 10px 14px; border-radius: 14px; background: var(--a-s1);
+  font-family: 'Inter', sans-serif; font-size: 13.5px; line-height: 1.45; color: var(--evb-ink);
+}
+.acct-texts-open { margin: 16px 0 6px; }
+.acct-texts-stop { margin: 10px 0 2px 56px; color: var(--a-pri-ink); text-decoration: underline; text-underline-offset: 3px; }
+.acct-texts-form { margin: 18px 0 4px; padding-top: 18px; border-top: 1px solid var(--a-s2); }
+.acct-texts-form .acct-check { font-size: 13px; color: var(--a-dim); }
+.acct-texts-form .acct-check a { color: var(--a-pri-ink); }
+.acct-texts-form[hidden] { display: none; }
+.acct-texts .acct-error { margin-bottom: 6px; }
+@media (max-width: 420px) { .acct-texts-stop { margin-left: 0; } }
+
 /* The birthday card: pink, with the cake in a scalloped badge that turns
    slowly and a little confetti drifting beside it, the words underneath. In the birthday
    month it gets a shade deeper. All of it stops for reduced motion. */
