@@ -22,6 +22,9 @@ FILES = [
     "index.html",
     os.path.join("reviews", "index.html"),
     os.path.join("we-buy-sneakers-nyc", "index.html"),
+    os.path.join("we-buy-gold-nyc", "index.html"),
+    os.path.join("we-buy-diamonds-nyc", "index.html"),
+    "404.html",
     # Neighborhood landing pages ("4.8 Stars From 562 Google Reviews").
     os.path.join("neighborhoods", "index.html"),
 ] + sorted(
