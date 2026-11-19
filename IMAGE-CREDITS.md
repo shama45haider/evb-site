@@ -72,3 +72,12 @@ Pexels License: https://www.pexels.com/license/
 | `burberry-check-scarf.webp` | Woman in a red jacket wearing a Burberry check scarf | Daniel Stenholm | https://unsplash.com/photos/a-woman-wearing-a-red-jacket-and-scarf-0J7yD1fMeqI | Unsplash | 2026-11-12 |
 
 Unsplash usernames link as `https://unsplash.com/@<username>`.
+
+## Our own photos from the Google listing
+
+The `evb-photo-*.webp` files (and their `-480` versions) are East Village
+Buyers' own photos, taken from the "By owner" photos on the store's Google
+Business Profile on 2026-11-19. They were resized, saved as WebP with the
+EXIF/GPS data stripped, and the Moncler shot was cropped to remove the
+"Shipping Available / $600" listing text. They're used on `/photos/` and the
+pages under it.
