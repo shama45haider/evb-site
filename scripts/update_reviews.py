@@ -27,9 +27,12 @@ FILES = [
     "404.html",
     # Neighborhood landing pages ("4.8 Stars From 562 Google Reviews").
     os.path.join("neighborhoods", "index.html"),
+    # Photo pages built from the Google listing photos.
+    os.path.join("photos", "index.html"),
 ] + sorted(
     os.path.relpath(p, REPO_ROOT)
     for p in glob.glob(os.path.join(REPO_ROOT, "neighborhoods", "*", "index.html"))
+    + glob.glob(os.path.join(REPO_ROOT, "photos", "*", "index.html"))
 )
 
 SEARCH_QUERY = "East Village Buyers, 39 Avenue A, New York, NY 10009"
