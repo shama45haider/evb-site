@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(w){
+  w.dataLayer = w.dataLayer || [];
+  function gtag(){ w.dataLayer.push(arguments); }
+  w.gtag = w.gtag || gtag;
+  var granted = false;
+  try {
+    var v = w.localStorage.getItem('evb_consent_v1');
+    if (v === null && w.localStorage.getItem('evb_ck6') === 'accepted') {
+      v = 'granted';
+      w.localStorage.setItem('evb_consent_v1', 'granted');
+    }
+    granted = (v === 'granted');
+  } catch (e) {}
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500
+  });
+  if (granted) {
+    gtag('consent', 'update', {
+      ad_storage: 'granted', ad_user_data: 'granted',
+      ad_personalization: 'granted', analytics_storage: 'granted'
+    });
+  }
+  gtag('set', 'ads_data_redaction', !granted);
+  gtag('set', 'url_passthrough', true);
+  w.evbConsentGranted = granted;
+})(window);
+</script>
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('consent', window.evbConsentGranted ? 'grant' : 'revoke');
+fbq('init', '869234452921811');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=869234452921811&ev=PageView&noscript=1"
+/></noscript>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MGZ7DGKM');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>East Village Resale Index: What NYC Sells for Cash | EVB</title>
+  <meta name="description" content="What New Yorkers sold us from August to November 2026, in 1,556 items: streetwear beats gold, Jordans lead, Chrome Hearts pays the most. Free data to download.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://eastvillagebuyers.com/resale-index/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="East Village Buyers">
+  <meta property="og:title" content="East Village Resale Index: what New York sells for cash">
+  <meta property="og:description" content="1,556 items bought at one East Village counter, Aug–Nov 2026. Streetwear takes 44% of the money, gold 20%. Jordans lead, Chrome Hearts pays the most, and jacket buys rose ninefold.">
+  <meta property="og:url" content="https://eastvillagebuyers.com/resale-index/">
+  <meta property="og:image" content="https://eastvillagebuyers.com/east-village-buyers-storefront-39-avenue-a.webp">
+  <meta property="og:image:width" content="960">
+  <meta property="og:image:height" content="675">
+  <meta property="article:published_time" content="2026-11-20">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="East Village Resale Index: what New York sells for cash">
+  <meta name="twitter:description" content="1,556 items bought at one East Village counter, Aug–Nov 2026. Streetwear takes 44% of the money, gold 20%. Jordans lead, Chrome Hearts pays the most.">
+  <meta name="twitter:image" content="https://eastvillagebuyers.com/east-village-buyers-storefront-39-avenue-a.webp">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://eastvillagebuyers.com/resale-index/#page",
+  "name": "East Village Resale Index",
+  "description": "What New Yorkers sold East Village Buyers from August 1 to November 20, 2026: 1,211 purchases and 1,556 items, by category, brand, month and weekday.",
+  "url": "https://eastvillagebuyers.com/resale-index/",
+  "image": "https://eastvillagebuyers.com/east-village-buyers-storefront-39-avenue-a.webp",
+  "datePublished": "2026-11-20",
+  "dateModified": "2026-11-20",
+  "publisher": {
+    "@id": "https://eastvillagebuyers.com/#store"
+  },
+  "mainEntity": {
+    "@id": "https://eastvillagebuyers.com/resale-index/#dataset"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "https://eastvillagebuyers.com/resale-index/#dataset",
+  "name": "East Village Resale Index, Fall 2026",
+  "description": "Aggregate figures from every completed purchase East Village Buyers made from the public at 39 Avenue A, New York, between August 1 and November 20, 2026: 1,211 purchases and 1,556 items. Includes each category's share of money paid out, median and interquartile payout per item by category and by brand (brands with 15 or more items), jacket purchases by month, and purchases per open day by weekday. Amounts are in US dollars, rounded to $5. No seller information is included.",
+  "url": "https://eastvillagebuyers.com/resale-index/",
+  "keywords": ["resale", "secondhand", "streetwear", "sneakers", "gold buying", "pawn", "New York City", "East Village", "resale prices"],
+  "temporalCoverage": "2026-08-01/2026-11-20",
+  "spatialCoverage": {
+    "@type": "Place",
+    "name": "East Village Buyers, 39 Avenue A, New York, NY 10009",
+    "geo": { "@type": "GeoCoordinates", "latitude": 40.7235953, "longitude": -73.9855773 }
+  },
+  "variableMeasured": ["Items bought", "Share of money paid out", "Median payout per item (USD)", "25th percentile payout (USD)", "75th percentile payout (USD)", "Purchases per open day"],
+  "measurementTechnique": "Totals of completed purchase records from the shop's point-of-sale system; medians and percentiles per item.",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": { "@id": "https://eastvillagebuyers.com/#store" },
+  "datePublished": "2026-11-20",
+  "distribution": [
+    {
+      "@type": "DataDownload",
+      "encodingFormat": "text/csv",
+      "contentUrl": "https://eastvillagebuyers.com/resale-index/fall-2026.csv"
+    }
+  ]
+}
+  </script>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../android-chrome-512x512.png">
+  <meta name="theme-color" content="#f97316">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../site-nav.css?v=20261112">
+  <link rel="stylesheet" href="../we-buy-category.css?v=20261109">
+  <link rel="stylesheet" href="../site-mobile.css">
+  <link rel="stylesheet" href="../site-ticker.css">
+  <link rel="stylesheet" href="../site-footer.css">
+  <link rel="stylesheet" href="../sneaker-brand.css?v=20261111">
+  <style>
+    /* Resale Index. One series per chart, one color: --ri-bar. Every value is
+       printed beside its bar, so nothing depends on color or hover. */
+    .ri-page { --ri-bar: #ea580c; --ri-bar-soft: #fdba74; --ri-ink: #111; --ri-body: #4a4540; --ri-muted: #6b6158; --ri-line: #efe7de; --ri-base: #d9cdbf; }
+    .ri-edition { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: var(--ri-muted); margin: -4px 0 14px; }
+    .ri-page .sbp-sec h2 { letter-spacing: -0.015em; }
+
+    .ri-findings { list-style: none; margin: 0; padding: 0; max-width: 920px; border-top: 1px solid var(--ri-line); }
+    .ri-finding { display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--ri-line); }
+    .ri-finding-num { white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: clamp(30px, 4.4vw, 42px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; color: var(--ri-ink); margin: 0; }
+    .ri-finding-text { font-family: 'Inter', sans-serif; font-size: 15.5px; line-height: 1.65; color: var(--ri-body); margin: 0; }
+    .ri-finding-text strong { color: var(--ri-ink); }
+    .ri-finding-text a { color: #c2410c; font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+    .ri-card { background: #fff; border-radius: 20px; padding: 22px 24px; max-width: 860px; }
+    .ri-bars { margin: 0; padding: 0; list-style: none; }
+    .ri-bar-row { display: grid; grid-template-columns: minmax(150px, 250px) 1fr 70px; gap: 16px; align-items: center; padding: 9px 0; }
+    .ri-bar-label { font-family: 'Montserrat', sans-serif; font-size: 13.5px; font-weight: 700; color: var(--ri-ink); }
+    .ri-bar-track { display: block; border-left: 1px solid var(--ri-base); padding: 3px 0; }
+    .ri-bar-fill { display: block; height: 12px; width: var(--w); min-width: 3px; background: var(--ri-bar); border-radius: 0 4px 4px 0; }
+    .ri-bar-val { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: var(--ri-ink); text-align: right; font-variant-numeric: tabular-nums; }
+    .ri-bar-row.is-closed .ri-bar-label, .ri-bar-row.is-closed .ri-bar-val { color: var(--ri-muted); font-weight: 600; }
+    .ri-card-note { margin: 14px 0 0; font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.6; color: var(--ri-muted); }
+    @media (max-width: 600px) {
+      .ri-card { padding: 18px 16px; }
+      .ri-finding { grid-template-columns: 1fr; gap: 6px; padding: 16px 0; }
+      .ri-bar-row { grid-template-columns: 1fr 58px; gap: 6px 12px; padding: 8px 0; }
+      .ri-bar-label { grid-column: 1 / -1; }
+    }
+
+    .ri-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; max-width: 520px; margin: 0; padding: 0; list-style: none; }
+    .ri-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+    .ri-col-plot { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 180px; width: 100%; border-bottom: 1px solid var(--ri-base); }
+    .ri-col-val { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; color: var(--ri-ink); margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+    .ri-col-bar { display: block; width: 100%; max-width: 56px; height: var(--h); min-height: 3px; background: var(--ri-bar); border-radius: 4px 4px 0 0; }
+    .ri-col.is-partial .ri-col-bar { background: var(--ri-bar-soft); }
+    .ri-col-label { margin-top: 8px; font-family: 'Montserrat', sans-serif; font-size: 12.5px; font-weight: 700; color: var(--ri-ink); text-align: center; line-height: 1.3; }
+    .ri-col-label small { display: block; font-family: 'Inter', sans-serif; font-size: 11.5px; font-weight: 500; color: var(--ri-muted); }
+    .ri-split { display: grid; gap: 24px; align-items: start; }
+    @media (min-width: 900px) { .ri-split { grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: 40px; } }
+
+    .ri-page .sbp-table td.ri-num, .ri-page .sbp-table th.ri-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .ri-mini { display: inline-flex; align-items: center; justify-content: flex-end; gap: 10px; width: 100%; }
+    .ri-mini::before { content: ''; display: block; width: calc(var(--w) * 0.9px); height: 8px; border-radius: 0 3px 3px 0; background: var(--ri-bar); flex-shrink: 0; order: -1; margin-right: auto; }
+    /* site-mobile.css makes every table display:block, which stops it filling
+       its box; the wrapper already scrolls sideways on small screens. */
+    .ri-page .sbp-table { display: table; min-width: 520px; }
+
+    .ri-method { margin: 0; padding: 0 0 0 20px; max-width: 760px; font-family: 'Inter', sans-serif; font-size: 14.5px; line-height: 1.7; color: var(--ri-body); }
+    .ri-method li { margin: 0 0 8px; }
+    .ri-method li::marker { color: var(--ri-muted); }
+    .ri-press-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .ri-press-actions a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 800; text-decoration: none; }
+    .ri-press-actions .is-primary { background: var(--ri-bar); color: #fff; }
+    .ri-press-actions .is-primary:hover { background: #c2410c; }
+    .ri-press-actions .is-ghost { background: #fff; color: #c2410c; box-shadow: inset 0 0 0 1px #e3d6c8; }
+    .ri-press-actions .is-ghost:hover { box-shadow: inset 0 0 0 1px #f97316; background: #fff7ed; }
+    .ri-press-actions a:focus-visible { outline: 3px solid rgba(249,115,22,0.45); outline-offset: 2px; }
+  </style>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://eastvillagebuyers.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Resale Index",
+      "item": "https://eastvillagebuyers.com/resale-index/"
+    }
+  ]
+}
+  </script>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://eastvillagebuyers.com/resale-index/#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does East Village Buyers pay for sneakers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "From August to November 2026 the typical pair got $100, and the middle half of pairs got between $50 and $160. Jordans typically got $70 and Nike $80. The model, size and condition move the number most, so text photos of yours for an actual offer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which brand gets the most per piece?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Chrome Hearts: a typical piece got $350, the most of any brand we bought 15 times or more. Louis Vuitton and Moncler came next at $200."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this all of New York?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It is one shop: everything people sold to East Village Buyers at 39 Avenue A. It shows what walks into a busy Manhattan buy counter, not the whole resale market."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use these numbers in an article?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Quote or chart any figure with a link to this page. The data is under a Creative Commons Attribution license, and the CSV is free to download."
+      }
+    }
+  ]
+}
+  </script>
+<script async src="https://news.google.com/swg/js/v1/publisher.js"></script>
+</head>
+<body class="cp-we-buy-page">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MGZ7DGKM"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <div class="site-topbar"><div class="site-topbar-inner"><a href="https://maps.google.com/?q=39+Avenue+A+New+York+NY+10009" class="site-topbar-item" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>39 Avenue A, New York, NY 10009</a><span class="site-topbar-sep">·</span><span class="site-topbar-item site-topbar-item--hours"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Sun 12:30–6 PM &nbsp;·&nbsp; Mon–Thu 12:30–6:30 PM &nbsp;·&nbsp; Fri 12:30–4 PM &nbsp;·&nbsp; Sat Closed</span></div></div>
+  <header class="site-nav" id="evbNav">
+    <div class="site-nav-inner">
+      <a href="../" class="site-nav-logo">
+        <img src="../evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='../evblogo.webp';">
+      </a>
+      <nav class="site-nav-links" aria-label="Main navigation">
+        <a href="../" class="site-nav-link">Home</a>
+        <a href="/store/" class="site-nav-link site-nav-link--store">Store</a>
+        <a href="../about/" class="site-nav-link">About</a>
+        <a href="../blog/" class="site-nav-link">Blog</a>
+        <div class="site-nav-drop">
+          <button class="site-nav-link site-nav-link--drop" aria-haspopup="true" aria-expanded="false">What We Buy
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="site-nav-drop-caret"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="site-nav-drop-menu">
+            <a href="/we-buy-gold-nyc/" class="site-nav-drop-link">Gold</a>
+            <a href="/we-buy-silver/" class="site-nav-drop-link">Silver</a>
+            <a href="/we-buy-diamonds-nyc/" class="site-nav-drop-link">Diamonds</a>
+            <a href="/we-buy-jewelry-nyc/" class="site-nav-drop-link">Jewelry</a>
+            <a href="/we-buy-watches-nyc/" class="site-nav-drop-link">Watches</a>
+            <a href="/we-buy-designer-nyc/" class="site-nav-drop-link">Designer Bags</a>
+            <a href="/we-buy-streetwear-nyc/" class="site-nav-drop-link">Streetwear</a>
+            <a href="/we-buy-sneakers-nyc/" class="site-nav-drop-link">Sneakers</a>
+            <a href="/we-buy-electronics-nyc/" class="site-nav-drop-link">Electronics</a>
+            <a href="/we-buy-collectibles-nyc/" class="site-nav-drop-link">Collectibles</a>
+            <a href="/we-buy-accessories-nyc/" class="site-nav-drop-link">Accessories</a>
+          </div>
+        </div>
+      </nav>
+      <div class="site-nav-right">
+        <div class="site-nav-phone">
+          <span class="site-nav-phone-label">Call or Text</span>
+          <span class="site-nav-phone-num">917-608-8939</span>
+        </div>
+        <a href="sms:9176088939" class="site-btn site-btn-sms">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Send a Text</span><span class="site-btn-sub">Get a Quote Fast</span></div>
+        </a>
+        <a href="tel:9176088939" class="site-btn site-btn-call">
+          <div class="site-btn-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></div>
+          <div class="site-btn-copy"><span class="site-btn-label">Call Us Now</span><span class="site-btn-sub">917-608-8939</span></div>
+        </a>
+        <button class="site-ham" id="evbHam" onclick="toggleEvbNav()" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="site-mob-overlay" id="evbOverlay" onclick="toggleEvbNav()"></div>
+  <div class="site-mob-drawer" id="evbDrawer">
+    <div class="site-mob-head">
+      <img src="../evbbanner.webp" alt="East Village Buyers" onerror="this.onerror=null;this.src='../evblogo.webp';">
+      <button class="site-mob-x" onclick="toggleEvbNav()" aria-label="Close">&times;</button>
+    </div>
+    <nav class="site-mob-links" aria-label="Mobile navigation">
+      <a href="../" class="site-mob-link" onclick="toggleEvbNav()">Home</a>
+      <a href="/store/" class="site-mob-link site-mob-link--store" onclick="toggleEvbNav()">Store</a>
+      <a href="../about/" class="site-mob-link" onclick="toggleEvbNav()">About</a>
+      <a href="../blog/" class="site-mob-link" onclick="toggleEvbNav()">Blog</a>
+      <div class="site-mob-drop">
+        <p class="site-mob-link site-mob-label">What We Buy</p>
+        <a href="/we-buy-gold-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Gold</a>
+        <a href="/we-buy-silver/" class="site-mob-sublink" onclick="toggleEvbNav()">Silver</a>
+        <a href="/we-buy-diamonds-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Diamonds</a>
+        <a href="/we-buy-jewelry-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Jewelry</a>
+        <a href="/we-buy-watches-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Watches</a>
+        <a href="/we-buy-designer-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Designer Bags</a>
+        <a href="/we-buy-streetwear-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Streetwear</a>
+        <a href="/we-buy-sneakers-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Sneakers</a>
+        <a href="/we-buy-electronics-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Electronics</a>
+        <a href="/we-buy-collectibles-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Collectibles</a>
+        <a href="/we-buy-accessories-nyc/" class="site-mob-sublink" onclick="toggleEvbNav()">Accessories</a>
+      </div>
+    </nav>
+    <div class="site-mob-footer">
+      <div class="site-mob-addr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>39 Avenue A, New York, NY 10009</div>
+      <a href="tel:9176088939" class="site-mob-btn site-mob-btn-call">
+        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        Call 917-608-8939
+      </a>
+      <a href="sms:9176088939" class="site-mob-btn site-mob-btn-sms">
+        <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Text for a Quote
+      </a>
+    </div>
+  </div>
+  <script src="../site-nav.js?v=20261005"></script>
+  <script src="../site-reveal.js" defer></script>
+  <script src="../site-ticker.js"></script>
+
+<article class="cp-article cp-layout-flow sbp-page ri-page" id="top">
+    <p class="cp-breadcrumb"><a href="../">Home</a> &rsaquo; Resale Index</p>
+
+    <div class="wb-block">
+      <div class="wb-intro">
+        <div class="wb-intro-text">
+          <h1>East Village Resale Index</h1>
+          <p class="ri-edition">Fall 2026 edition &middot; August 1 to November 20, 2026</p>
+          <p class="wb-lead">We run a buy counter at 39 Avenue A. Every piece we buy gets logged: what it is, the brand and what we paid. This index adds those records up. The first edition covers 1,211 purchases and 1,556 items, and it shows that New York cashes in its closet long before its jewelry box.</p>
+          <div class="ri-press-actions">
+            <a class="is-primary" href="fall-2026.csv" download>Download the data (CSV)</a>
+            <a class="is-ghost" href="#press">For reporters</a>
+          </div>
+        </div>
+        <figure class="sbp-hero"><img src="../east-village-buyers-storefront-39-avenue-a.webp" alt="The East Village Buyers storefront at 39 Avenue A, with sneakers and designer goods in the windows" width="960" height="675" fetchpriority="high" decoding="async"></figure>
+      </div>
+    </div>
+
+    <section class="sbp-sec" id="findings" aria-labelledby="findings-h">
+      <div class="sbp-inner">
+        <h2 id="findings-h">The short version</h2>
+        <ol class="ri-findings">
+          <li class="ri-finding"><p class="ri-finding-num">44%</p><p class="ri-finding-text">of the money we paid out went to <strong>streetwear and outerwear</strong>: hoodies, tees, jeans and jackets. Gold, silver, jewelry and watches together took 20%, and sneakers 22%.</p></li>
+          <li class="ri-finding"><p class="ri-finding-num">167</p><p class="ri-finding-text">pairs of <strong>Jordans</strong>, the brand we bought most. The typical pair got $70. Nike came second with 133 items at $80.</p></li>
+          <li class="ri-finding"><p class="ri-finding-num">$350</p><p class="ri-finding-text">for a typical <strong>Chrome Hearts</strong> piece, the most of any brand we bought 15 times or more. A typical Supreme piece got $50.</p></li>
+          <li class="ri-finding"><p class="ri-finding-num">6&nbsp;&rarr;&nbsp;54</p><p class="ri-finding-text">jackets and coats bought in August, then in October. <strong>Puffer season</strong> starts in October, led by Moose Knuckles, Moncler and Mackage.</p></li>
+          <li class="ri-finding"><p class="ri-finding-num">Monday</p><p class="ri-finding-text">is the <strong>busiest day to sell</strong>: 16.6 purchases per day open, against about 12 midweek. Two thirds of all purchases happen between 1 and 5 PM.</p></li>
+          <li class="ri-finding"><p class="ri-finding-num">$130</p><p class="ri-finding-text">is the <strong>typical deal</strong>, and 83% of sellers bring in a single item.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="sbp-sec sbp-sec--tint" id="money" aria-labelledby="money-h">
+      <div class="sbp-inner">
+        <h2 id="money-h">Where the money goes</h2>
+        <p class="sbp-intro">Each category&rsquo;s share of everything we paid out, August 1 to November 20.</p>
+        <div class="ri-card">
+          <ul class="ri-bars">
+            <li class="ri-bar-row"><span class="ri-bar-label">Streetwear &amp; outerwear</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:100%"></span></span><span class="ri-bar-val">44.4%</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Sneakers</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:48.9%"></span></span><span class="ri-bar-val">21.7%</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Gold, silver, jewelry &amp; watches</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:45%"></span></span><span class="ri-bar-val">20.0%</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Designer handbags</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:12.8%"></span></span><span class="ri-bar-val">5.7%</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Electronics</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:7.4%"></span></span><span class="ri-bar-val">3.3%</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Everything else</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:11%"></span></span><span class="ri-bar-val">4.9%</span></li>
+          </ul>
+          <p class="ri-card-note">Streetwear &amp; outerwear includes jackets, belts and beanies. Everything else is collectibles, eyewear and odds and ends.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sbp-sec" id="categories" aria-labelledby="categories-h">
+      <div class="sbp-inner">
+        <h2 id="categories-h">What a typical item gets</h2>
+        <p class="sbp-intro">What we paid per item in each category we bought at least 15 times. The typical payout is the median: half the items got more and half got less. The middle half runs from the 25th to the 75th percentile.</p>
+        <div class="sbp-table-wrap">
+          <table class="sbp-table">
+            <caption>August 1 to November 20, 2026. Rounded to $5. What was paid for what came in, mostly pre-owned and in mixed condition, so these are not quotes.</caption>
+            <thead><tr><th scope="col">Category</th><th scope="col" class="ri-num">Items</th><th scope="col" class="ri-num">Typical payout</th><th scope="col" class="ri-num">Middle half</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><a href="../we-buy-streetwear-nyc/">Streetwear (tops, bottoms)</a></th><td class="ri-num">655</td><td class="ri-num">$80</td><td class="ri-num">$40&ndash;$160</td></tr>
+              <tr><th scope="row"><a href="../we-buy-sneakers-nyc/">Sneakers</a></th><td class="ri-num">444</td><td class="ri-num">$100</td><td class="ri-num">$50&ndash;$160</td></tr>
+              <tr><th scope="row">Jackets &amp; coats</th><td class="ri-num">104</td><td class="ri-num">$115</td><td class="ri-num">$60&ndash;$200</td></tr>
+              <tr><th scope="row"><a href="../we-buy-jewelry-nyc/">Jewelry</a></th><td class="ri-num">59</td><td class="ri-num">$110</td><td class="ri-num">$65&ndash;$360</td></tr>
+              <tr><th scope="row"><a href="../we-buy-electronics-nyc/">Electronics</a></th><td class="ri-num">58</td><td class="ri-num">$120</td><td class="ri-num">$100&ndash;$185</td></tr>
+              <tr><th scope="row"><a href="../we-buy-designer-nyc/">Handbags</a></th><td class="ri-num">56</td><td class="ri-num">$110</td><td class="ri-num">$60&ndash;$250</td></tr>
+              <tr><th scope="row"><a href="../we-buy-gold-nyc/">Gold</a></th><td class="ri-num">55</td><td class="ri-num">$220</td><td class="ri-num">$100&ndash;$700</td></tr>
+              <tr><th scope="row"><a href="../we-buy-collectibles-nyc/">Collectibles</a></th><td class="ri-num">29</td><td class="ri-num">$100</td><td class="ri-num">$60&ndash;$165</td></tr>
+              <tr><th scope="row"><a href="../we-buy-watches-nyc/">Watches</a></th><td class="ri-num">26</td><td class="ri-num">$100</td><td class="ri-num">$50&ndash;$315</td></tr>
+              <tr><th scope="row"><a href="../we-buy-accessories-nyc/">Belts</a></th><td class="ri-num">18</td><td class="ri-num">$100</td><td class="ri-num">$50&ndash;$115</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="sbp-note">Gold is paid by weight and karat, so a single earring and a heavy chain sit in the same row. For your own pieces, the <a href="../scrap-gold-calculator/">scrap gold calculator</a> works it out at today&rsquo;s price.</p>
+      </div>
+    </section>
+
+    <section class="sbp-sec sbp-sec--tint" id="brands" aria-labelledby="brands-h">
+      <div class="sbp-inner">
+        <h2 id="brands-h">The brands we buy most</h2>
+        <p class="sbp-intro">Every brand we bought 15 times or more, by how many pieces came in. Chrome Hearts is in a league of its own: a typical piece got seven times what a Supreme piece did.</p>
+        <div class="sbp-table-wrap">
+          <table class="sbp-table">
+            <caption>August 1 to November 20, 2026. Rounded to $5. Brands as logged at the counter; Jordan and Air Jordan are counted together. Louis Vuitton covers sneakers, belts and bags.</caption>
+            <thead><tr><th scope="col">Brand</th><th scope="col" class="ri-num">Items</th><th scope="col" class="ri-num">Typical payout</th><th scope="col" class="ri-num">Top quarter got</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><a href="../sell-jordans-nyc/">Jordan</a></th><td class="ri-num">167</td><td class="ri-num"><span class="ri-mini" style="--w:20">$70</span></td><td class="ri-num">$130+</td></tr>
+              <tr><th scope="row"><a href="../sell-nike-sneakers-nyc/">Nike</a></th><td class="ri-num">133</td><td class="ri-num"><span class="ri-mini" style="--w:22.9">$80</span></td><td class="ri-num">$155+</td></tr>
+              <tr><th scope="row"><a href="../sell-amiri-nyc/">Amiri</a></th><td class="ri-num">60</td><td class="ri-num"><span class="ri-mini" style="--w:42.9">$150</span></td><td class="ri-num">$260+</td></tr>
+              <tr><th scope="row"><a href="../sell-supreme-nyc/">Supreme</a></th><td class="ri-num">47</td><td class="ri-num"><span class="ri-mini" style="--w:14.3">$50</span></td><td class="ri-num">$60+</td></tr>
+              <tr><th scope="row"><a href="../sell-chrome-hearts-nyc/">Chrome Hearts</a></th><td class="ri-num">45</td><td class="ri-num"><span class="ri-mini" style="--w:100">$350</span></td><td class="ri-num">$500+</td></tr>
+              <tr><th scope="row"><a href="../sell-louis-vuitton-nyc/">Louis Vuitton</a></th><td class="ri-num">42</td><td class="ri-num"><span class="ri-mini" style="--w:57.1">$200</span></td><td class="ri-num">$300+</td></tr>
+              <tr><th scope="row"><a href="../sell-sp5der-nyc/">Sp5der</a></th><td class="ri-num">31</td><td class="ri-num"><span class="ri-mini" style="--w:15.7">$55</span></td><td class="ri-num">$75+</td></tr>
+              <tr><th scope="row"><a href="../sell-eric-emanuel-nyc/">Eric Emanuel</a></th><td class="ri-num">29</td><td class="ri-num"><span class="ri-mini" style="--w:22.9">$80</span></td><td class="ri-num">$120+</td></tr>
+              <tr><th scope="row"><a href="../sell-gucci-nyc/">Gucci</a></th><td class="ri-num">20</td><td class="ri-num"><span class="ri-mini" style="--w:18.6">$65</span></td><td class="ri-num">$100+</td></tr>
+              <tr><th scope="row">Alo</th><td class="ri-num">20</td><td class="ri-num"><span class="ri-mini" style="--w:32.9">$115</span></td><td class="ri-num">$180+</td></tr>
+              <tr><th scope="row">Lululemon</th><td class="ri-num">19</td><td class="ri-num"><span class="ri-mini" style="--w:28.6">$100</span></td><td class="ri-num">$215+</td></tr>
+              <tr><th scope="row">Apple</th><td class="ri-num">18</td><td class="ri-num"><span class="ri-mini" style="--w:42.9">$150</span></td><td class="ri-num">$225+</td></tr>
+              <tr><th scope="row"><a href="../sell-prada-nyc/">Prada</a></th><td class="ri-num">17</td><td class="ri-num"><span class="ri-mini" style="--w:28.6">$100</span></td><td class="ri-num">$200+</td></tr>
+              <tr><th scope="row">Purple Brand</th><td class="ri-num">17</td><td class="ri-num"><span class="ri-mini" style="--w:7.1">$25</span></td><td class="ri-num">$60+</td></tr>
+              <tr><th scope="row"><a href="../sell-balenciaga-nyc/">Balenciaga</a></th><td class="ri-num">17</td><td class="ri-num"><span class="ri-mini" style="--w:31.4">$110</span></td><td class="ri-num">$200+</td></tr>
+              <tr><th scope="row"><a href="../sell-dior-nyc/">Dior</a></th><td class="ri-num">15</td><td class="ri-num"><span class="ri-mini" style="--w:42.9">$150</span></td><td class="ri-num">$225+</td></tr>
+              <tr><th scope="row"><a href="../sell-moncler-nyc/">Moncler</a></th><td class="ri-num">15</td><td class="ri-num"><span class="ri-mini" style="--w:57.1">$200</span></td><td class="ri-num">$335+</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="sbp-sec" id="seasons" aria-labelledby="seasons-h">
+      <div class="sbp-inner">
+        <h2 id="seasons-h">Puffer season arrives in October</h2>
+        <div class="ri-split">
+          <div class="ri-card" style="padding-left:0;padding-right:0">
+            <ol class="ri-cols" aria-label="Jackets and coats bought per month">
+              <li class="ri-col"><span class="ri-col-plot"><span class="ri-col-val">6</span><span class="ri-col-bar" style="--h:11.1%"></span></span><span class="ri-col-label">Aug</span></li>
+              <li class="ri-col"><span class="ri-col-plot"><span class="ri-col-val">19</span><span class="ri-col-bar" style="--h:35.2%"></span></span><span class="ri-col-label">Sep</span></li>
+              <li class="ri-col"><span class="ri-col-plot"><span class="ri-col-val">54</span><span class="ri-col-bar" style="--h:100%"></span></span><span class="ri-col-label">Oct</span></li>
+              <li class="ri-col is-partial"><span class="ri-col-plot"><span class="ri-col-val">25</span><span class="ri-col-bar" style="--h:46.3%"></span></span><span class="ri-col-label">Nov<small>1st to 20th</small></span></li>
+            </ol>
+            <p class="ri-card-note">Jackets and coats bought per month. November is shown lighter because it covers 20 days.</p>
+          </div>
+          <div class="sbp-prose">
+            <p>Jacket and coat purchases went from 6 in August to 19 in September and 54 in October, nine times the August count. By November 20 we had bought 25 more.</p>
+            <p>In October and November the jacket brands we bought most were Moose Knuckles (10), <a href="../sell-moncler-nyc/">Moncler</a> (9) and Mackage (5). Across the whole period a typical Moncler got $200, Moose Knuckles $150 and Mackage about $170.</p>
+            <p>Collectibles moved too: 15 came in during October, against 3 in each of August and September, led by Pok&eacute;mon cards.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sbp-sec sbp-sec--tint" id="when" aria-labelledby="when-h">
+      <div class="sbp-inner">
+        <h2 id="when-h">When New York sells</h2>
+        <p class="sbp-intro">Purchases per day the shop was open, by day of the week. Two thirds of all purchases happen between 1 and 5 PM.</p>
+        <div class="ri-card">
+          <ul class="ri-bars">
+            <li class="ri-bar-row"><span class="ri-bar-label">Sunday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:84.9%"></span></span><span class="ri-bar-val">14.1</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Monday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:100%"></span></span><span class="ri-bar-val">16.6</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Tuesday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:83.7%"></span></span><span class="ri-bar-val">13.9</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Wednesday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:73.5%"></span></span><span class="ri-bar-val">12.2</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Thursday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:72.9%"></span></span><span class="ri-bar-val">12.1</span></li>
+            <li class="ri-bar-row"><span class="ri-bar-label">Friday</span><span class="ri-bar-track"><span class="ri-bar-fill" style="--w:69.3%"></span></span><span class="ri-bar-val">11.5</span></li>
+            <li class="ri-bar-row is-closed"><span class="ri-bar-label">Saturday</span><span class="ri-bar-track"></span><span class="ri-bar-val">Closed</span></li>
+          </ul>
+          <p class="ri-card-note">Fridays close at 4 PM, so Friday is the slowest day but the busiest hour for hour: about 3.3 purchases an hour, against 2.8 on a Monday.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sbp-sec" id="method" aria-labelledby="method-h">
+      <div class="sbp-inner">
+        <h2 id="method-h">How we count</h2>
+        <ul class="ri-method">
+          <li>Every completed purchase logged in our point-of-sale system from August 1 to November 20, 2026, New York time: 1,211 purchases, 1,556 items, 91 days open.</li>
+          <li>Only what we bought from the public. Our own sales, trades and cancelled tickets are left out.</li>
+          <li>Amounts are what we paid per item, rounded to $5. We use medians, not averages, so one big buy can&rsquo;t skew a row.</li>
+          <li>Categories and brands are what staff entered at the counter. We merged obvious duplicates, such as Air Jordan into Jordan. About 30% of items have no brand logged.</li>
+          <li>No seller information is used or published.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="sbp-sec sbp-sec--tint" id="press" aria-labelledby="press-h">
+      <div class="sbp-inner">
+        <h2 id="press-h">For reporters</h2>
+        <div class="sbp-prose">
+          <p>Quote or chart any figure on this page with a link back to it. The numbers are free to use under a <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">Creative Commons Attribution license</a>, and the CSV has every table above.</p>
+          <p>For questions, more detail on a category, or an interview at the counter, call or text <strong>917-608-8939</strong> or email <a href="mailto:help@eastvillagebuyers.com?subject=Resale%20Index">help@eastvillagebuyers.com</a>.</p>
+        </div>
+        <div class="ri-press-actions">
+          <a class="is-primary" href="fall-2026.csv" download>Download the data (CSV)</a>
+          <a class="is-ghost" href="mailto:help@eastvillagebuyers.com?subject=Resale%20Index">Email us</a>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+<section class="sw-faq" id="faq" aria-labelledby="faq-h">
+  <div class="sw-faq-inner">
+    <div class="sw-faq-head">
+      <h2 id="faq-h">Questions about the index</h2>
+      <p>Quick answers about the numbers and how to use them.</p>
+    </div>
+    <div class="sw-faq-grid">
+      <details class="sw-faq-card"><summary>What does East Village Buyers pay for sneakers?</summary><div class="sw-faq-ans">From August to November 2026 the typical pair got $100, and the middle half of pairs got between $50 and $160. Jordans typically got $70 and Nike $80. The model, size and condition move the number most, so text photos of yours for an actual offer.</div></details>
+      <details class="sw-faq-card"><summary>Which brand gets the most per piece?</summary><div class="sw-faq-ans">Chrome Hearts: a typical piece got $350, the most of any brand we bought 15 times or more. Louis Vuitton and Moncler came next at $200.</div></details>
+      <details class="sw-faq-card"><summary>Is this all of New York?</summary><div class="sw-faq-ans">No. It is one shop: everything people sold to East Village Buyers at 39 Avenue A. It shows what walks into a busy Manhattan buy counter, not the whole resale market.</div></details>
+      <details class="sw-faq-card"><summary>Can I use these numbers in an article?</summary><div class="sw-faq-ans">Yes. Quote or chart any figure with a link to this page. The data is under a Creative Commons Attribution license, and the CSV is free to download.</div></details>
+    </div>
+  </div>
+</section>
+
+  <section class="evb-cta-band">
+    <h2>Selling Something?</h2>
+    <p>39 Avenue A (between E 2nd &amp; E 3rd St), East Village · Walk-ins welcome · Sun 12:30–6 · Mon–Thu 12:30–6:30 · Fri 12:30–4</p>
+    <p class="evb-cta-transit">F train to 2nd Avenue or the 6 to Astor Place, a short walk</p>
+    <div class="evb-cta-btns">
+      <a href="sms:9176088939" class="evb-cta-solid"><span class="cta-btn-copy"><span class="cta-btn-label">Text Photos for a Quote</span><span class="cta-btn-sub">39 Avenue A, New York, NY 10009</span></span></a>
+      <a href="tel:9176088939" class="evb-cta-ghost">Call 917-608-8939</a>
+      <a href="https://maps.app.goo.gl/X5ov5HtS6mGtD7rH6" class="evb-cta-ghost" target="_blank" rel="noopener noreferrer" data-track="Get directions">Get Directions</a></div>
+  </section>
+
+  <footer class="evb-footer">
+
+    <div class="evb-footer-topbar"></div>
+
+    <div class="evb-footer-main">
+
+      <div class="evb-footer-brand">
+        <div class="evb-footer-logo-row">
+          <img src="../evblogo.webp" class="evb-footer-logo-img" alt="East Village Buyers Logo" loading="lazy" decoding="async">
+          <div class="evb-footer-logo-text">
+            <div class="evb-footer-logo-name">East Village Buyers</div>
+            <div class="evb-footer-logo-sub">New York City</div>
+          </div>
+        </div>
+        <div class="evb-footer-divider"></div>
+        <p class="evb-footer-tagline">NYC's trusted destination for authenticated luxury goods, fine jewelry, sneakers, watches, gold, silver, and designer fashion. Walk in for an on-the-spot offer.</p>
+        <div class="evb-footer-social">
+          <a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src="../icon-instagram.webp" alt="Instagram" width="24" height="24" loading="lazy" decoding="async">
+          </a>
+          <a href="https://tiktok.com/@eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <img src="../icon-tiktok.webp" alt="TikTok" width="24" height="24" loading="lazy" decoding="async">
+          </a>
+          <a href="https://youtube.com/@eastvillagebuyers" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <img src="../icon-youtube.webp" alt="YouTube" width="24" height="24" loading="lazy" decoding="async">
+          </a>
+          <a href="https://www.google.com/search?q=East+Village+Buyers+reviews" target="_blank" rel="noopener noreferrer" aria-label="Google Reviews">
+            <img src="../icon-google.webp" alt="Google Reviews" width="24" height="24" loading="lazy" decoding="async">
+          </a>
+        </div>
+        <div style="text-align: center; margin-top: 24px;">
+          <div google-add-preferred-source-btn data-theme="dark"></div>
+        </div>
+      </div>
+
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">Company</p>
+        <ul>
+          <li><a href="../about/">About Us</a></li>
+          <li><a href="../reviews/">Reviews</a></li>
+          <li><a href="../#store">Our Location</a></li>
+          <li><a href="sms:9176088939">Get a Quote</a></li>
+          <li><a href="https://instagram.com/eastvillagebuyers" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+          <li><a href="tel:9176088939">Contact</a></li>
+          <li><a href="/return-policy/">Return Policy</a></li>
+          <li><a href="/privacy/">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">What We Buy</p>
+        <ul>
+          <li><a href="../we-buy-gold-nyc/">Gold</a></li>
+          <li><a href="../we-buy-jewelry-nyc/">Jewelry</a></li>
+          <li><a href="../we-buy-designer-nyc/">Designer</a></li>
+          <li><a href="../we-buy-accessories-nyc/">Accessories</a></li>
+          <li><a href="../we-buy-streetwear-nyc/">Streetwear</a></li>
+          <li><a href="../we-buy-sneakers-nyc/">Sneakers</a></li>
+          <li><a href="../we-buy-watches-nyc/">Watches</a></li>
+          <li><a href="../we-buy-electronics-nyc/">Electronics</a></li>
+        </ul>
+      </div>
+
+      <div class="evb-footer-col">
+        <p class="footer-heading" role="heading" aria-level="2">Visit Us</p>
+        <div class="evb-footer-contact-list">
+
+          <a href="tel:9176088939" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label">Phone</div>
+              917-608-8939
+            </div>
+          </a>
+
+          <a href="https://www.google.com/maps/place/East+Village+Buyers/@40.7235953,-73.9855773,17z" target="_blank" rel="noopener noreferrer" class="evb-footer-contact-item">
+            <div class="evb-footer-contact-icon">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label">Address</div>
+              39 Avenue A, New York, NY 10009
+            </div>
+          </a>
+
+          <div class="evb-footer-contact-item" style="cursor:default;">
+            <div class="evb-footer-contact-icon">
+              <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div class="evb-footer-contact-label evb-footer-contact-label--spaced">Hours</div>
+              <div class="evb-hours-grid">
+                <div class="evb-hours-row"><span>Sunday</span><span>12:30 – 6 PM</span></div>
+                <div class="evb-hours-row"><span>Mon – Thu</span><span>12:30 – 6:30 PM</span></div>
+                <div class="evb-hours-row"><span>Friday</span><span>12:30 – 4 PM</span></div>
+                <div class="evb-hours-row"><span>Saturday</span><span class="evb-hours-closed">Closed</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="evb-footer-bottom">
+      <p class="evb-footer-copy">© 2026 East Village Buyers. All rights reserved.</p>
+      <p class="evb-footer-legal">Vintage USA Inc<span>·</span>DBA East Village Buyers<span>·</span>DCA Lic. #2070477</p>
+    </div>
+
+  </footer>
+<link rel="stylesheet" href="../evb-assistant.css">
+  <script src="../we-buy-category.js"></script>
+  <script src="../evb-assistant.js?v=20261005" defer data-evb-assistant></script>
+
+<style>
+  #evbCk{--evb-ck-mb:0px;position:fixed;z-index:100000;font-family:'Montserrat',sans-serif;bottom:24px;right:24px;left:auto;width:min(400px,calc(100vw - 48px));opacity:0;transform:translateY(16px) scale(0.98);transition:opacity 0.4s cubic-bezier(0.22,1,0.36,1),transform 0.45s cubic-bezier(0.22,1,0.36,1);pointer-events:none}
+  #evbCk.evb-show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+  .evb-ck-panel{position:relative;border-radius:16px;overflow:hidden;background:rgba(14,13,12,0.94);border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 0 1px rgba(249,115,22,0.12),0 24px 60px rgba(0,0,0,0.45),0 8px 20px rgba(0,0,0,0.25);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+  .evb-ck-accent{height:3px;background:linear-gradient(90deg,transparent 0%,#f97316 25%,#ff9a4d 50%,#f97316 75%,transparent 100%)}
+  .evb-ck-body{padding:18px 20px 20px}
+  .evb-ck-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .evb-ck-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .evb-ck-icon{flex-shrink:0;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(249,115,22,0.14);border:1px solid rgba(249,115,22,0.28);color:#f97316}
+  .evb-ck-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+  .evb-ck-titles{display:flex;flex-direction:column;gap:2px}
+  .evb-ck-title{font-size:11px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;color:#f97316;line-height:1.2}
+  .evb-ck-sub{font-size:13px;font-weight:700;color:rgba(255,255,255,0.92);letter-spacing:0.02em;line-height:1.25}
+  .evb-ck-x{flex-shrink:0;width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background 0.2s,color 0.2s,border-color 0.2s}
+  .evb-ck-x:hover{background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.18)}
+  .evb-ck-desc{font-size:12.5px;font-weight:500;color:rgba(255,255,255,0.58);line-height:1.65;margin:0 0 16px}
+  .evb-ck-actions{display:grid;grid-template-columns:1fr 1.15fr;gap:10px}
+  .evb-ck-btn{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;border-radius:10px;padding:14px 16px;min-height:44px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,background 0.15s,border-color 0.15s;text-align:center;border:none}
+  .evb-ck-btn:active{transform:scale(0.98)}
+  #evbCkNo{background:transparent;color:rgba(255,255,255,0.72);border:1px solid rgba(255,255,255,0.16)}
+  #evbCkNo:hover{background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.28)}
+  #evbCkYes{background:linear-gradient(135deg,#f97316 0%,#ea580c 100%);color:#fff;box-shadow:0 4px 18px rgba(249,115,22,0.4)}
+  #evbCkYes:hover{box-shadow:0 6px 24px rgba(249,115,22,0.5);filter:brightness(1.05)}
+  @media(max-width:768px){#evbCk{left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));width:auto}body.evb-ck-visible{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}.evb-ck-body{padding:14px 16px 16px}.evb-ck-head{margin-bottom:10px}.evb-ck-icon{width:36px;height:36px;border-radius:10px}.evb-ck-icon svg{width:18px;height:18px}.evb-ck-sub{font-size:12px}.evb-ck-desc{font-size:11.5px;margin-bottom:14px}.evb-ck-actions{grid-template-columns:1fr 1.2fr;gap:8px}.evb-ck-btn{padding:11px 12px;font-size:9.5px;border-radius:9px}}
+  @media(max-width:380px){.evb-ck-brand{gap:10px}.evb-ck-sub{display:none}.evb-ck-actions{grid-template-columns:1fr 1fr}}
+  @media(prefers-reduced-motion:reduce){#evbCk{transition:opacity 0.2s ease;transform:none}#evbCk.evb-show{transform:none}.evb-ck-btn:active{transform:none}}
+</style>
+<div id="evbCk" role="dialog" aria-label="Cookie consent" aria-live="polite">
+  <div class="evb-ck-panel">
+    <div class="evb-ck-accent" aria-hidden="true"></div>
+    <div class="evb-ck-body">
+      <div class="evb-ck-head">
+        <div class="evb-ck-brand">
+          <span class="evb-ck-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/><path d="M8.5 8.5v.01M15.5 8.5v.01M12 12v.01M8.5 15.5v.01M15.5 15.5v.01"/></svg>
+          </span>
+          <div class="evb-ck-titles">
+            <span class="evb-ck-title">Privacy</span>
+            <span class="evb-ck-sub">East Village Buyers</span>
+          </div>
+        </div>
+        <button type="button" class="evb-ck-x" onclick="evbCk('dismissed')" aria-label="Dismiss cookie notice">&times;</button>
+      </div>
+      <p class="evb-ck-desc">We use essential cookies and may use analytics &amp; advertising cookies (Google, Meta) to improve your experience. <a href="../cookie-policy/" style="color:#f97316;text-decoration:underline;text-underline-offset:2px;font-weight:600;">Cookie Policy</a></p>
+      <div class="evb-ck-actions">
+        <button type="button" id="evbCkNo" class="evb-ck-btn" onclick="evbCk('rejected')">Essential only</button>
+        <button type="button" id="evbCkYes" class="evb-ck-btn" onclick="evbCk('accepted')">Accept all</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='evb_ck6';var el=document.getElementById('evbCk');
+  if(!el||localStorage.getItem(KEY))return;
+  var show=function(){el.classList.add('evb-show');document.body.classList.add('evb-ck-visible');};
+  var hide=function(){el.classList.remove('evb-show');document.body.classList.remove('evb-ck-visible');setTimeout(function(){if(el.parentNode)el.remove();},420);};
+  setTimeout(show,1400);
+  window.evbCk=function(v){localStorage.setItem(KEY,v);hide();};
+})();
+</script>
+<script src="/site-analytics.js?v=1" defer></script>
+<script src="/evb-popups.js?v=4" defer></script>
+<script src="/evb-blog-popup.js?v=3" defer></script>
+<script src="/thanksgiving.js" defer></script>
+<script src="/evb-spin.js?v=3" defer></script>
+</body>
+</html>

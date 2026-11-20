@@ -1514,6 +1514,13 @@
     <image:image><image:loc>https://eastvillagebuyers.com/goldbundled.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://eastvillagebuyers.com/resale-index/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/east-village-buyers-storefront-39-avenue-a.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://eastvillagebuyers.com/sell-amiri-nyc/</loc>
     <lastmod>2026-11-16</lastmod>
     <changefreq>monthly</changefreq>
