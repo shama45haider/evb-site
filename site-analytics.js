@@ -6,13 +6,17 @@
  * the page the visitor got, and which links and buttons they clicked. Sent to
  * the panel's /api/site-events with navigator.sendBeacon.
  *
- * Anonymous: no cookies, no names, no form contents, no phone numbers or email
- * addresses (a tel:/mailto: link reports only "tel:"/"mailto:"). A visit is a
- * random id kept in localStorage that is replaced after 30 idle minutes.
+ * Anonymous: sets no cookies, sends no names, no form contents, no phone
+ * numbers or email addresses (a tel:/mailto: link reports only
+ * "tel:"/"mailto:"). A visit is a random id kept in localStorage that is
+ * replaced after 30 idle minutes.
  *
  * Not tracked at all when the visitor chose "Essential only" on the cookie
- * notice, sends Global Privacy Control, is a bot, or the page isn't on
- * eastvillagebuyers.com (local copies and previews stay out of the numbers).
+ * notice, sends Global Privacy Control, is a bot, the page isn't on
+ * eastvillagebuyers.com (local copies and previews stay out of the numbers),
+ * or the browser is one the shop's staff use: opening the panel leaves an
+ * evb_staff cookie for the whole domain (panel staff-mark.ts), so staff
+ * checking the site don't count as visitors.
  *
  * Give a button or link a clearer name in the report with data-track="…".
  */
@@ -37,8 +41,18 @@
   if (nav.webdriver || /bot|crawl|spider|slurp|headless|lighthouse|preview/i.test(nav.userAgent || '')) return;
   if (nav.globalPrivacyControl === true) return;
 
-  /** Checked before every send: "Essential only" can be chosen mid-visit. */
+  /** A browser the shop's staff use: it has opened the panel. */
+  function staffDevice() {
+    try {
+      return /(?:^|;\s*)evb_staff=1(?:;|$)/.test(d.cookie || '');
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** Checked before every send: "Essential only" can be chosen, or the panel opened, mid-visit. */
   function declined() {
+    if (staffDevice()) return true;
     try {
       return w.localStorage.getItem('evb_ck6') === 'rejected' ||
         w.localStorage.getItem('evb_consent_v1') === 'denied';
