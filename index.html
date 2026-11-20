@@ -1926,7 +1926,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     @media (prefers-reduced-motion: reduce) { .store-dot { transition: none; } }
 
     .store-carousel { position: relative; overflow: hidden; border-radius: 20px; }
-    .carousel-track { display: flex; transition: transform .45s ease; }
+    .carousel-track { display: flex; transition: transform .6s ease; }
     .carousel-slide { min-width: 100%; height: 380px; position: relative; }
     .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
     .carousel-slide::after {
@@ -5622,7 +5622,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function restartAutoplay() {
       clearInterval(carouselTimer);
       carouselTimer = null;
-      if (carouselInView && !document.hidden) carouselTimer = setInterval(() => goTo(currentSlide + 1), 4000);
+      if (carouselInView && !document.hidden) carouselTimer = setInterval(() => goTo(currentSlide + 1), 6000);
     }
     const carouselEl = document.querySelector('.store-carousel');
     if ('IntersectionObserver' in window && carouselEl) {
