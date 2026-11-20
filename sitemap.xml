@@ -4,7 +4,7 @@
 
   <url>
     <loc>https://eastvillagebuyers.com/</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
@@ -25,7 +25,8 @@
     <image:image><image:loc>https://eastvillagebuyers.com/indeximagewatch3.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/jewelrybanner.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/jewelry-hover.webp</image:loc></image:image>
-    <image:image><image:loc>https://eastvillagebuyers.com/tiffanyshoe.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/jordan-4-cherry-sail-red.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/kaws-air-jordan-4.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/streetwear-main.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/evb8.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/watches-hover.webp</image:loc></image:image>
@@ -81,10 +82,15 @@
   </url>
   <url>
     <loc>https://eastvillagebuyers.com/blog/</loc>
-    <lastmod>2026-11-18</lastmod>
+    <lastmod>2026-11-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image><image:loc>https://eastvillagebuyers.com/evbstorefront.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-chrome-hearts-in-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-a-rolex-in-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-silver-in-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-an-engagement-ring-in-nyc-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-clothes-in-the-east-village-hero.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/buying-gold-and-silver.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/sell-gold-nyc-gold-jewelry-pile.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/east-village-buyers-storefront-39-avenue-a.webp</image:loc></image:image>
@@ -2243,6 +2249,41 @@
     <image:image><image:loc>https://eastvillagebuyers.com/evb-photo-mixed-emotion-rhinestone-hoodie-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/evb-photo-kennedy-half-dollars-480.webp</image:loc></image:image>
     <image:image><image:loc>https://eastvillagebuyers.com/evb-photo-american-silver-eagle-proof-480.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/top-5-places-to-sell-a-rolex-in-nyc/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-a-rolex-in-nyc-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/top-5-places-to-sell-an-engagement-ring-in-nyc/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-an-engagement-ring-in-nyc-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/top-5-places-to-sell-chrome-hearts-in-nyc/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-chrome-hearts-in-nyc-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/top-5-places-to-sell-clothes-in-the-east-village/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-clothes-in-the-east-village-hero.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://eastvillagebuyers.com/blog/top-5-places-to-sell-silver-in-nyc/</loc>
+    <lastmod>2026-11-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image><image:loc>https://eastvillagebuyers.com/blog-top-5-places-to-sell-silver-in-nyc-hero.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://shop.eastvillagebuyers.com/catalog/ThZ7AuRQai</loc>
