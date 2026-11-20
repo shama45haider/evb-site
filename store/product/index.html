@@ -21,6 +21,21 @@
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
 <link rel="stylesheet" href="/store/store.css?v=1.9.7">
+<!-- Google store widget (Merchant Center 5752752250): Google's badge with
+     the store's rating and shipping/returns quality. Bottom left, clear of the
+     chat bubble; on phones Google centres it, so it sits above the call/text
+     bar (68px). Shows nothing until Google has enough data on the store. -->
+<script id="merchantWidgetScript" src="https://www.gstatic.com/shopping/merchant/merchantwidget.js" defer></script>
+<script>
+  document.getElementById('merchantWidgetScript').addEventListener('load', function () {
+    merchantwidget.start({
+      merchant_id: 5752752250,
+      position: 'LEFT_BOTTOM',
+      region: 'US',
+      mobileBottomMargin: 84
+    });
+  });
+</script>
 </head>
 
 <body class="evb-store evb-store-page">
