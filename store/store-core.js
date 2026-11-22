@@ -547,12 +547,32 @@
     return (base == null ? BASE : base) + 'store/item/' + encodeURIComponent(slug) + '/';
   }
 
+  // Square variation names as they're typed at the counter ("Large", "xl",
+  // "Regular"), shortened for the size tag on a card's photo.
+  var SIZE_WORDS = {
+    'x-small': 'XS', 'xsmall': 'XS', 'extra small': 'XS', 'small': 'S', 'medium': 'M',
+    'large': 'L', 'x-large': 'XL', 'xlarge': 'XL', 'extra large': 'XL',
+    'xx-large': 'XXL', 'xxlarge': 'XXL', 'one size': 'One size'
+  };
+  function sizeTag(label) {
+    var s = String(label || '').trim(), k = s.toLowerCase();
+    if (!s || /^(regular|default|default title|standard)$/.test(k)) return '';
+    if (SIZE_WORDS[k]) return SIZE_WORDS[k];
+    return s.length <= 4 ? s.toUpperCase() : s;
+  }
+  function cardSizes(p) {
+    var tags = (p.variants || []).filter(function (v) { return v.stock > 0; })
+      .map(function (v) { return sizeTag(v.label); }).filter(Boolean);
+    if (tags.length <= 3) return tags.join(' · ');
+    return tags[0] + ' – ' + tags[tags.length - 1];
+  }
+
   function productCard(p, base) {
     base = base == null ? BASE : base;
     var out = p.stock <= 0;
     var href = productUrl(p.slug, base);
-    var save = (p.compareAt && p.compareAt > p.price)
-      ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
+    var onSale = !!(p.compareAt && p.compareAt > p.price);
+    var save = onSale ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
 
     var badge = '';
     if (out) badge = '<span class="evb-badge evb-badge--out">Sold</span>';
@@ -562,26 +582,24 @@
     var price = money(p.price);
     if (p.minPrice !== p.maxPrice) price = money(p.minPrice) + '+';
 
-    var sizes = p.variantLabel && p.variants.length > 1
-      ? p.variants.filter(function (v) { return v.stock > 0; }).length + ' ' + p.variantLabel.toLowerCase() + 's'
-      : '';
+    var sizes = out ? '' : cardSizes(p);
 
     return '<article class="evb-card' + (out ? ' is-out' : '') + '">' +
       '<a class="evb-card-media" href="' + attr(href) + '">' +
         (badge ? '<div class="evb-card-badges">' + badge + '</div>' : '') +
         '<img src="' + attr(p.images[0]) + '" alt="' + attr(p.title) + '" loading="lazy" decoding="async">' +
+        (sizes ? '<span class="evb-card-size">' + esc(sizes) + '</span>' : '') +
       '</a>' +
       '<a class="evb-card-body" href="' + attr(href) + '">' +
         (p.brand ? '<p class="evb-card-brand">' + esc(p.brand) + '</p>' : '') +
         '<h3 class="evb-card-title">' + esc(p.title) + '</h3>' +
         '<div class="evb-card-foot">' +
           '<p class="evb-card-label">' + esc(out ? 'Sold' : conditionShort(p.condition)) + '</p>' +
-          '<p class="evb-card-pricerow">' +
+          '<p class="evb-card-pricerow' + (onSale && !out ? ' is-sale' : '') + '">' +
             '<span class="evb-card-price">' + price + '</span>' +
-            (p.compareAt && p.compareAt > p.price ? '<span class="evb-card-compare">' + money(p.compareAt) + '</span>' : '') +
+            (onSale ? '<span class="evb-card-compare">' + money(p.compareAt) + '</span>' : '') +
           '</p>' +
         '</div>' +
-        (sizes ? '<p class="evb-card-sizes">' + esc(sizes) + ' available</p>' : '') +
       '</a>' +
     '</article>';
   }

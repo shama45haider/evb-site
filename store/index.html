@@ -46,11 +46,11 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site-nav.css?v=20261112">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.9.7">
+<link rel="stylesheet" href="/store/store.css?v=1.9.8">
 <!-- Google store widget (Merchant Center 5752752250): Google's badge with
      the store's rating and shipping/returns quality. Bottom left, clear of the
      chat bubble; on phones Google centres it, so it sits above the call/text
@@ -196,12 +196,19 @@
   </div>
 </section>
 
-<section class="evb-section" id="shop">
+<section class="evb-section evb-floor" id="shop">
   <div class="evb-wrap">
-    <div class="evb-section-head">
-      <div>
-        <p class="evb-eyebrow">The floor</p>
-        <h2 class="evb-h2">Everything in stock</h2>
+    <div class="evb-floor-head">
+      <div class="evb-floor-copy">
+        <p class="evb-floor-kicker">The floor</p>
+        <h2 class="evb-floor-title">Everything in <span>stock</span></h2>
+        <p class="evb-floor-sub">Authenticated at our counter on Avenue A before it goes up.<span class="evb-floor-sub-more"> Most pieces are one of a kind.</span></p>
+      </div>
+      <div class="evb-floor-actions">
+        <a class="evb-pillbtn evb-pillbtn--light" href="sms:9176088939" data-track="Shop request a piece">Request a piece
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="evb-pillbtn evb-pillbtn--outline" href="#visit">Visit the shop</a>
       </div>
     </div>
 
@@ -246,18 +253,21 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
             Filters<span id="filterBadge" hidden></span>
           </button>
-          <select class="evb-select" id="sort" aria-label="Sort products">
-            <option value="featured">Featured</option>
-            <option value="price-asc">Price: Low to high</option>
-            <option value="price-desc">Price: High to low</option>
-            <option value="name">Name: A&ndash;Z</option>
-            <option value="brand">Brand: A&ndash;Z</option>
-          </select>
         </div>
 
         <div class="evb-results-meta">
           <span class="evb-toolbar-count" id="resultCount"></span>
           <div class="evb-active" id="activeFilters"></div>
+          <label class="evb-sort">
+            <span class="evb-sort-label">Sort</span>
+            <select class="evb-select evb-select--bare" id="sort" aria-label="Sort products">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to high</option>
+              <option value="price-desc">Price: High to low</option>
+              <option value="name">Name: A&ndash;Z</option>
+              <option value="brand">Brand: A&ndash;Z</option>
+            </select>
+          </label>
         </div>
 
         <div id="gridHost">
@@ -398,7 +408,7 @@
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.7"></script>
 <script src="/store/store-catalog.js?v=1.9.4"></script>
-<script src="/store/store-core.js?v=1.9.8"></script>
+<script src="/store/store-core.js?v=1.9.9"></script>
 <script>
 (function () {
   'use strict';
