@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css?v=20261112">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.9.8">
+<link rel="stylesheet" href="/store/store.css?v=1.9.9">
 <!-- Google store widget (Merchant Center 5752752250): Google's badge with
      the store's rating and shipping/returns quality. Bottom left, clear of the
      chat bubble; on phones Google centres it, so it sits above the call/text
@@ -199,6 +199,12 @@
 <section class="evb-section evb-floor" id="shop">
   <div class="evb-wrap">
     <div class="evb-floor-head">
+      <div class="evb-floor-media" aria-hidden="true">
+        <video id="floorVideo" autoplay muted loop playsinline disablepictureinpicture poster="/store/floor-streetwear.webp">
+          <source src="/store/floor-streetwear-sm.mp4" type="video/mp4" media="(max-width: 560px)">
+          <source src="/store/floor-streetwear.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="evb-floor-copy">
         <p class="evb-floor-kicker">The floor</p>
         <h2 class="evb-floor-title">Everything in <span>stock</span></h2>
@@ -777,6 +783,15 @@
   }
 
   S.mountCartUI('/');
+
+  // The header's streetwear loop holds on its first frame for people who
+  // ask their device for less motion.
+  var floorVideo = el('floorVideo');
+  if (floorVideo && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    floorVideo.removeAttribute('autoplay');
+    floorVideo.pause();
+  }
+
   readUrl();
   renderStatus();
   setInterval(renderStatus, 60000);
