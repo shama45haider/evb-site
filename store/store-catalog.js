@@ -774,6 +774,16 @@
     return { delivery: m[1], cents: m[1] === 'pickup' || !m[2] ? null : m[2] === 'free' ? 0 : Number(m[2]) };
   }
 
+  // Photos the buyer sends with the order, from the panel (migration 0102):
+  // the Square item's `verify` attribute, "id", "card" or "id,card". Null
+  // when it needs none. square-worker.js reads it too, and refuses an order
+  // without the photos.
+  function parseVerify(v) {
+    var parts = String(v || '').split(',').map(function (p) { return p.trim(); });
+    var c = { id: parts.indexOf('id') !== -1, card: parts.indexOf('card') !== -1 };
+    return c.id || c.card ? c : null;
+  }
+
   function fromSquare(payload) {
     var objects = (payload && payload.objects) || [];
     var images = {};
@@ -832,6 +842,7 @@
         variants: vars.length ? vars : one(1),
         taxable: d.is_taxable !== false,
         shipping: parseShipping(custom.shipping),
+        checks: parseVerify(custom.verify),
         featured: custom.featured === true || custom.featured === 'true',
         tags: custom.tags ? String(custom.tags).split(',').map(function (t) { return t.trim(); }) : [],
         sku: (vars[0] && vars[0].sku) || '',

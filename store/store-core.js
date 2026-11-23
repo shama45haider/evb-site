@@ -93,7 +93,9 @@
           price: variant.price,
           qty: want,
           taxable: product.taxable !== false,
+          category: product.category || '',
           shipping: product.shipping || null,
+          checks: product.checks || null,
           maxStock: variant.stock,
           squareVariationId: variant.squareVariationId || null
         };
@@ -145,7 +147,9 @@
         l.title = p.title;
         l.slug = p.slug;
         l.taxable = p.taxable !== false;
+        l.category = p.category || '';
         l.shipping = p.shipping || null;
+        l.checks = p.checks || null;
         kept.push(l);
       });
       if (changes.length) { lines = kept; persist(); }
@@ -249,14 +253,30 @@
     return rate.id === 'standard' ? standard : standard + Math.max((rate.amount || 0) - std, 0);
   }
 
-  // NY taxes shipping on taxable goods (TB-ST-838): the share of shipping
-  // that goes with them is taxed along with the goods, after discounts.
+  // Sales tax by where the order goes, from ny-tax.js (the same table the
+  // Worker charges by): t.taxArea, or the shop's own New York City rate for
+  // pickup. Clothing and footwear under $110 an item, after the store's own
+  // discounts, has its own rate. NY taxes shipping with the goods it carries
+  // (TB-ST-838), so each rate takes its goods' share of the shipping.
+  // Without ny-tax.js, everything taxable at CFG.taxRate.
   function taxFor(t) {
-    var share = t.subtotal > 0 ? t.taxableSubtotal / t.subtotal : 0;
-    var goods = t.subtotal > 0
-      ? Math.max(0, t.taxableSubtotal - Math.round(t.discount * share))
-      : 0;
-    return Math.round((goods + Math.round(t.shipping * share)) * (CFG.taxRate || 0));
+    if (!(t.subtotal > 0)) return 0;
+    var NY = window.EVB_NY_TAX;
+    var area = t.taxArea || (NY ? NY.pickup : { rate: (CFG.taxRate || 0) * 100, clothing: (CFG.taxRate || 0) * 100 });
+    var keep = Math.max(0, 1 - t.discount / t.subtotal);
+    var full = 0, clothing = 0;
+    (t.taxLines || []).forEach(function (l) {
+      if (!l.taxable) return;
+      var isClothing = NY ? NY.isClothing(l.category, l.amount * keep / l.qty) : false;
+      if (!(isClothing ? area.clothing : area.rate)) return;
+      if (isClothing) clothing += l.amount; else full += l.amount;
+    });
+    var shipFull = Math.round(t.shipping * full / t.subtotal);
+    var shipClothing = Math.min(Math.round(t.shipping * clothing / t.subtotal), t.shipping - shipFull);
+    var goodsFull = Math.max(0, full - Math.round(t.discount * full / t.subtotal));
+    var goodsClothing = Math.max(0, clothing - Math.round(t.discount * clothing / t.subtotal));
+    return Math.round((goodsFull + shipFull) * area.rate / 100) +
+      Math.round((goodsClothing + shipClothing) * area.clothing / 100);
   }
 
   function totals(opts) {
@@ -264,10 +284,11 @@
     var ls = lines;
 
     var subtotal = 0, taxableSub = 0;
-    ls.forEach(function (l) {
+    var taxLines = ls.map(function (l) {
       var amt = l.price * l.qty;
       subtotal += amt;
       if (l.taxable) taxableSub += amt;
+      return { amount: amt, qty: l.qty, taxable: !!l.taxable, category: l.category || '' };
     });
 
     var discount = 0, freeShip = false, promoLabel = '';
@@ -299,7 +320,8 @@
     shipping -= shippingOff;
     var shippingFree = shippingOff > 0 && shipping === 0;
 
-    var tax = taxFor({ subtotal: subtotal, taxableSubtotal: taxableSub, discount: discount, shipping: shipping });
+    var taxArea = opts.taxArea || (window.EVB_NY_TAX ? window.EVB_NY_TAX.pickup : null);
+    var tax = taxFor({ subtotal: subtotal, discount: discount, shipping: shipping, taxLines: taxLines, taxArea: taxArea });
 
     var total = Math.max(0, subtotal - discount + shipping + tax);
 
@@ -317,6 +339,8 @@
       shippingRate: rate,
       tax: tax,
       taxRate: CFG.taxRate || 0,
+      taxLines: taxLines,
+      taxArea: taxArea,
       total: total,
       count: cart.count()
     };

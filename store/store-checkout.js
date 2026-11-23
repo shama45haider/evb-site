@@ -6,8 +6,10 @@
   var PANEL = String(ACCT.panelUrl || 'https://panel.eastvillagebuyers.com').replace(/\/+$/, '');
   var SIGN_IN_URL = '/account/?next=' + encodeURIComponent('/store/checkout/');
 
-  var STEPS = ['contact', 'delivery', 'payment', 'review'];
-  var STEP_LABELS = { contact: 'Contact', delivery: 'Delivery', payment: 'Payment', review: 'Review' };
+  var BASE_STEPS = ['contact', 'delivery', 'payment', 'review'];
+  // Gains a Photos step before Payment when the bag needs one (syncSteps).
+  var STEPS = BASE_STEPS.slice();
+  var STEP_LABELS = { contact: 'Contact', delivery: 'Delivery', photos: 'Photos', payment: 'Payment', review: 'Review' };
 
   var state = {
     step: 'contact',
@@ -33,7 +35,10 @@
     // only to the address on their ID. status: loading | signedOut | ready |
     // error. check is member_checkout_check(): who they are, their ID address
     // and whether they can ship.
-    member: { status: 'loading', token: null, check: null },
+    member: { status: 'loading', token: null, uid: null, check: null },
+    // Photos some pieces need with the order (panel 0102), by kind: null or
+    // { status: uploading | done | error, path, preview, error }.
+    photos: { id: null, card: null },
     // Their points prize for this cart (see currentTotals). use: false once
     // they choose to save their points.
     prize: { use: true, key: null, data: null, promise: null }
@@ -56,6 +61,7 @@
     return sb.auth.getSession().then(function (res) {
       var session = res.data && res.data.session;
       state.member.token = session ? session.access_token : null;
+      state.member.uid = session && session.user ? session.user.id : null;
       return state.member.token;
     }, function () { return state.member.token; });
   }
@@ -246,8 +252,246 @@
     return true;
   }
 
+  /* ------------------------------------------------------- photo checks */
+
+  // Some pieces need photos sent with the order (panel 0102): a photo of the
+  // buyer's ID, and/or a picture of the physical card they pay with. They go
+  // to the private order-checks bucket, in the member's own folder; the order
+  // carries only the paths, square-worker.js checks each one really is this
+  // member's, and only the shop's admins can open them in the panel.
+  var PHOTO_BUCKET = 'order-checks';
+  var PHOTOS_KEY = 'evb_order_photos';
+  var PHOTOS_TTL = 6 * 60 * 60 * 1000;
+  var PHOTO_ERR = { id: 'photoId', card: 'photoCard' };
+
+  // Which photos the bag needs, each with the titles that need it (or null).
+  function needs() {
+    var n = { id: null, card: null };
+    S.cart.lines.forEach(function (l) {
+      var c = l.checks;
+      if (!c) return;
+      ['id', 'card'].forEach(function (k) {
+        if (!c[k]) return;
+        n[k] = n[k] || [];
+        if (n[k].indexOf(l.title) === -1) n[k].push(l.title);
+      });
+    });
+    return n;
+  }
+
+  function needsPhotos() { var n = needs(); return !!(n.id || n.card); }
+
+  // The Photos step comes between Delivery and Payment, only when needed. A
+  // picture of the card means typing that card in: an Apple Pay or Google Pay
+  // card number isn't the one on the card, and Cash App Pay and Afterpay
+  // have no card at all.
+  function syncSteps() {
+    STEPS = needsPhotos() ? ['contact', 'delivery', 'photos', 'payment', 'review'] : BASE_STEPS.slice();
+    if (STEPS.indexOf(state.step) === -1) state.step = 'payment';
+    if (needs().card && state.payMethod !== 'card') state.payMethod = 'card';
+  }
+
+  function photoDone(kind) {
+    var p = state.photos[kind];
+    return !!(p && p.status === 'done' && p.path);
+  }
+
+  // A photo from the camera or library → a JPEG no bigger than maxSide.
+  function prepareImage(file, maxSide, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file || !/^image\//.test(file.type || 'image/')) return reject(new Error('That file isn’t a photo.'));
+      if (file.size > 30 * 1024 * 1024) return reject(new Error('That photo is too big. Try another.'));
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        var scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+        var w = Math.round(img.naturalWidth * scale), h = Math.round(img.naturalHeight * scale);
+        var c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        c.toBlob(function (blob) {
+          if (blob) resolve(blob); else reject(new Error('Couldn’t read that photo. Try another.'));
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Couldn’t read that photo. Try another.')); };
+      img.src = url;
+    });
+  }
+
+  function randomName() {
+    var a = new Uint8Array(12);
+    (window.crypto || window.msCrypto).getRandomValues(a);
+    return Array.prototype.map.call(a, function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+  }
+
+  function rerenderPhotos() { if (state.step === 'photos') render(); }
+
+  function uploadOrderPhoto(kind, file) {
+    var old = state.photos[kind];
+    if (old && old.preview) URL.revokeObjectURL(old.preview);
+    var slot = { status: 'uploading', path: null, preview: null, error: '' };
+    state.photos[kind] = slot;
+    delete state.errors[PHOTO_ERR[kind]];
+    delete state.errors.photos;
+    rerenderPhotos();
+
+    prepareImage(file, 2000, 0.85).then(function (blob) {
+      if (state.photos[kind] !== slot) return null;
+      slot.preview = URL.createObjectURL(blob);
+      return freshToken().then(function () {
+        var uid = state.member.uid;
+        if (!sb || !uid) throw new Error('Your sign-in expired. Sign in again, then add the photo.');
+        var path = uid + '/' + randomName() + '.jpg';
+        return sb.storage.from(PHOTO_BUCKET).upload(path, blob, { contentType: 'image/jpeg', upsert: false }).then(function (r) {
+          if (r.error) {
+            console.info('[checkout] photo upload failed: ' + (r.error.message || r.error));
+            throw new Error('We couldn’t save that photo. Try again.');
+          }
+          return path;
+        });
+      });
+    }).then(function (path) {
+      if (!path || state.photos[kind] !== slot) return;
+      slot.status = 'done';
+      slot.path = path;
+      savePhotos();
+      rerenderPhotos();
+    }).catch(function (err) {
+      if (state.photos[kind] !== slot) return;
+      slot.status = 'error';
+      slot.error = (err && err.message) || 'That photo didn’t upload. Try again.';
+      rerenderPhotos();
+    });
+  }
+
+  // Kept for this tab (paths only, never the pictures), so a refresh or the
+  // trip out to Cash App doesn't lose them.
+  function savePhotos() {
+    var paths = {};
+    ['id', 'card'].forEach(function (k) { if (photoDone(k)) paths[k] = state.photos[k].path; });
+    try { sessionStorage.setItem(PHOTOS_KEY, JSON.stringify({ uid: state.member.uid, paths: paths, at: Date.now() })); } catch (e) { }
+  }
+
+  function restorePhotos() {
+    try {
+      var saved = JSON.parse(sessionStorage.getItem(PHOTOS_KEY) || 'null');
+      if (!saved || Date.now() - saved.at > PHOTOS_TTL || !state.member.uid || saved.uid !== state.member.uid) return;
+      ['id', 'card'].forEach(function (k) {
+        var p = saved.paths && saved.paths[k];
+        if (typeof p === 'string' && p.indexOf(saved.uid + '/') === 0) {
+          state.photos[k] = { status: 'done', path: p, preview: null, error: '' };
+        }
+      });
+    } catch (e) { }
+  }
+
+  function clearPhotos() {
+    ['id', 'card'].forEach(function (k) {
+      var p = state.photos[k];
+      if (p && p.preview) URL.revokeObjectURL(p.preview);
+    });
+    state.photos = { id: null, card: null };
+    try { sessionStorage.removeItem(PHOTOS_KEY); } catch (e) { }
+  }
+
+  // What the order sends: the path of each photo the bag needs.
+  function photosForOrder() {
+    var n = needs(), out = {};
+    if (n.id && photoDone('id')) out.id = state.photos.id.path;
+    if (n.card && photoDone('card')) out.card = state.photos.card.path;
+    return out;
+  }
+
+  var PHOTO_ICONS = {
+    id: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><path d="M13 10h5M13 14h4"/></svg>',
+    card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>'
+  };
+
+  var PHOTO_CSS = ".evb-photo-intro{margin:-4px 0 16px;font-size:14px;color:#57534e;line-height:1.5}.evb-photo{border:1px solid #e7e1d8;border-radius:12px;padding:16px;background:#fff}.evb-photo+.evb-photo{margin-top:12px}.evb-photo.is-done{border-color:#bbf7d0;background:#f7fdf9}.evb-photo.is-bad{border-color:#fca5a5}.evb-photo-head{display:flex;gap:12px;align-items:flex-start}.evb-photo-icon{flex:0 0 40px;width:40px;height:40px;border-radius:10px;background:#fff7ed;color:#ea580c;display:flex;align-items:center;justify-content:center}.evb-photo-icon svg{width:22px;height:22px}.evb-photo-title{margin:0;font-size:15px;font-weight:700;color:#1c1917;line-height:1.3}.evb-photo-sub{margin:4px 0 0;font-size:13px;color:#57534e;line-height:1.5}.evb-photo-for{margin:6px 0 0;font-size:12px;color:#78716c;line-height:1.4}.evb-photo-body{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.evb-photo-thumb{display:block;width:96px;height:64px;border-radius:8px;object-fit:cover;border:1px solid #e7e1d8;background:#f5f5f4}.evb-photo-status{margin:0;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:#15803d}.evb-photo-status svg{width:16px;height:16px}.evb-photo-status.is-busy{color:#78716c}.evb-photo-spin{width:14px;height:14px;border-radius:50%;border:2px solid #d6d3d1;border-top-color:#f97316;animation:evb-photo-spin .8s linear infinite}@keyframes evb-photo-spin{to{transform:rotate(360deg)}}.evb-photo-pick{position:relative;overflow:hidden;cursor:pointer;margin-left:auto}.evb-photo-pick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}.evb-photo-pick:focus-within{outline:2px solid #f97316;outline-offset:2px}.evb-photo-pick.is-busy{opacity:.55;pointer-events:none}.evb-photo .evb-error:empty{display:none}.evb-photo-fine{margin:14px 0 0;font-size:12px;color:#78716c;line-height:1.5}@media (prefers-reduced-motion:reduce){.evb-photo-spin{animation:none}}";
+
+  function ensurePhotoStyles() {
+    if (document.getElementById('evbPhotoStyles')) return;
+    var s = document.createElement('style');
+    s.id = 'evbPhotoStyles';
+    s.textContent = PHOTO_CSS;
+    document.head.appendChild(s);
+  }
+
+  function photoTile(kind, title, text, forTitles) {
+    var p = state.photos[kind];
+    var busy = !!(p && p.status === 'uploading'), done = photoDone(kind);
+    var message = (p && p.status === 'error' ? p.error : '') || state.errors[PHOTO_ERR[kind]] || '';
+    var noun = kind === 'id' ? 'ID' : 'card';
+    var status = busy
+      ? '<p class="evb-photo-status is-busy" role="status"><span class="evb-photo-spin" aria-hidden="true"></span>Uploading…</p>'
+      : done
+        ? '<p class="evb-photo-status" role="status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Photo added</p>'
+        : '';
+    return '<div class="evb-photo' + (message ? ' is-bad' : done ? ' is-done' : '') + '">' +
+        '<div class="evb-photo-head">' +
+          '<span class="evb-photo-icon">' + PHOTO_ICONS[kind] + '</span>' +
+          '<div style="min-width:0">' +
+            '<p class="evb-photo-title">' + S.esc(title) + '</p>' +
+            '<p class="evb-photo-sub">' + S.esc(text) + '</p>' +
+            '<p class="evb-photo-for">Needed for ' + S.esc(listNames(forTitles)) + '</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="evb-photo-body">' +
+          (p && p.preview ? '<img class="evb-photo-thumb" src="' + S.attr(p.preview) + '" alt="Your ' + noun + ' photo">' : '') +
+          status +
+          '<label class="evb-btn evb-btn--' + (done ? 'ghost' : 'primary') + ' evb-btn--sm evb-photo-pick' + (busy ? ' is-busy' : '') + '">' +
+            // The card is a picture taken now; the ID can come from the library.
+            '<input type="file" accept="image/*"' + (kind === 'card' ? ' capture="environment"' : '') +
+              ' data-photo="' + kind + '"' + (busy ? ' disabled' : '') + '>' +
+            (done ? 'Retake' : kind === 'card' ? 'Take a picture' : 'Add a photo') +
+          '</label>' +
+        '</div>' +
+        '<p class="evb-error" role="alert">' + S.esc(message) + '</p>' +
+      '</div>';
+  }
+
+  function photosStep() {
+    ensurePhotoStyles();
+    var n = needs(), d = state.data;
+    var name = (d.firstName + ' ' + d.lastName).trim();
+    var what = n.id && n.card ? 'a photo of your ID and a picture of the card you’ll pay with'
+      : n.id ? 'a photo of your ID' : 'a picture of the card you’ll pay with';
+    return '<div class="evb-panel">' +
+        '<p class="evb-panel-title">Photos for this order</p>' +
+        '<p class="evb-photo-intro">Something in your bag needs ' + what + '. Only our staff see them, to make sure the order is really yours.</p>' +
+        (state.errors.photos ? '<div class="evb-notice evb-notice--error">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16.5v.01"/></svg>' +
+          '<span>' + S.esc(state.errors.photos) + '</span></div>' : '') +
+        (n.id ? photoTile('id', 'Photo of your ID',
+          'A driver’s license, state ID or passport, with the whole front in the frame. The name has to match the name on this order' +
+          (name ? ' (' + name + ')' : '') + '.', n.id) : '') +
+        (n.card ? photoTile('card', 'Picture of your card',
+          'The front of the card you’ll pay with. Cover all but the last 4 digits with your finger or a sticky note — we only need the name and the last 4. Then type that same card in on the next step.', n.card) : '') +
+        (n.card ? '<p class="evb-photo-fine">Because of this, the order is paid by typing the card in: Apple Pay, Google Pay, Cash App Pay and Afterpay aren’t available for it.</p>' : '') +
+      '</div>';
+  }
+
+  function photosSummary() {
+    var n = needs(), parts = [];
+    if (n.id) parts.push(photoDone('id') ? 'ID photo added' : 'ID photo missing');
+    if (n.card) parts.push(photoDone('card') ? 'Card picture added' : 'Card picture missing');
+    return parts.join(' · ');
+  }
+
   function validate(step) {
     var d = state.data, e = {};
+
+    if (step === 'photos') {
+      var need = needs();
+      ['id', 'card'].forEach(function (k) {
+        if (!need[k] || photoDone(k)) return;
+        var p = state.photos[k];
+        e[PHOTO_ERR[k]] = p && p.status === 'uploading'
+          ? 'Still uploading — give it a moment.'
+          : k === 'id' ? 'Add a photo of your ID to continue.' : 'Add a picture of your card to continue.';
+      });
+    }
 
     if (step === 'contact') {
       if (!d.firstName.trim()) e.firstName = 'Required';
@@ -501,9 +745,26 @@
     return state.prize.promise || Promise.resolve();
   }
 
+  // Where the order goes, for its sales tax (ny-tax.js, the table the Worker
+  // charges by): the shop for pickup, else the shipping address. Until a ZIP
+  // is in, a New York address is estimated at New York City's rate.
+  function taxArea() {
+    var NY = window.EVB_NY_TAX, d = state.data;
+    if (!NY) return null;
+    if (d.shippingId === 'pickup') return NY.pickup;
+    var a = NY.forAddress({ country: d.country, region: d.region, postal: d.postal, city: d.city });
+    return Object.assign({ estimated: a.ny && !/^\d{5}/.test(String(d.postal || '').trim()) }, a);
+  }
+
+  function taxLabel(t) {
+    var a = t.taxArea;
+    if (!a || a.estimated) return 'Estimated tax';
+    return 'Sales tax (' + (a.ny ? a.name : 'outside New York') + ')';
+  }
+
   function currentTotals() {
     var d = state.data;
-    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip });
+    var t = S.totals({ shippingId: d.shippingId, promoCode: d.promoCode, welcomeShip: state.welcomeShip, taxArea: taxArea() });
     t.promoDiscount = t.discount;
     t.prize = null;
     t.prizeOffer = null;
@@ -529,7 +790,8 @@
     var d = state.data;
     return JSON.stringify([
       S.cart.lines.map(function (l) { return [l.squareVariationId || l.variantId, l.qty]; }),
-      d.shippingId, d.promoCode, d.email.trim().toLowerCase(), state.welcomeShip, state.prize.use
+      d.shippingId, d.promoCode, d.email.trim().toLowerCase(), state.welcomeShip, state.prize.use,
+      (taxArea() || {}).name || ''
     ]);
   }
 
@@ -677,8 +939,10 @@
       .catch(function () { return {}; })
       .then(function (available) {
         if (gen !== state.wallet.detectGen || state.step !== 'payment') return;
-        var ids = WALLETS.filter(function (w) { return available[w.id]; });
-        if (state.payMethod !== 'card' && !available[state.payMethod]) setPayMethod('card');
+        // A picture of the card means typing that card in (see syncSteps).
+        var cardOnly = !!needs().card;
+        var ids = WALLETS.filter(function (w) { return available[w.id] && !cardOnly; });
+        if (state.payMethod !== 'card' && (cardOnly || !available[state.payMethod])) setPayMethod('card');
         var box = document.getElementById('payMethods');
         if (!box || !ids.length) return;
         ensurePayStyles();
@@ -906,12 +1170,24 @@
       },
 
       payment: payment,
+      // Paths of the photos the bag needs (panel 0102); the Worker refuses
+      // the order without them.
+      photos: photosForOrder(),
       marketingOptIn: !!d.marketing
     };
   }
 
   function submit() {
     if (state.submitting) return;
+    // The bag can change in another tab after the Photos step.
+    syncSteps();
+    if (!validate('photos')) { state.step = 'photos'; render(); return; }
+    if (needs().card && state.payMethod !== 'card') {
+      state.step = 'payment';
+      state.errors = { card: 'This order is paid by typing in the card you took a picture of.' };
+      render();
+      return;
+    }
     if (!validate('review')) { render(); return; }
     if (S.isLive() && !state.square.token) {
       state.step = 'payment';
@@ -967,7 +1243,12 @@
           });
         }).then(function (r) {
           return r.json().catch(function () { return {}; }).then(function (json) {
-            if (!r.ok) throw new Error(json.error || ('Payment failed (' + r.status + ')'));
+            if (!r.ok) {
+              var failed = new Error(json.error || ('Payment failed (' + r.status + ')'));
+              // The Worker couldn't find the photos: they go again.
+              failed.photos = !!json.photos;
+              throw failed;
+            }
             return json.order || json;
           });
         });
@@ -976,6 +1257,7 @@
         S.orders.save(order);
         S.cart.clear();
         S.draft.clear();
+        clearPhotos();
         location.href = '/store/order/?id=' + encodeURIComponent(order.id);
       })
       .catch(function (err) {
@@ -986,7 +1268,12 @@
         state.prize.key = null;
         state.prize.promise = null;
         state.quote.key = null;
-        if (S.isLive() && state.payMethod !== 'card') {
+        if (err.photos) {
+          clearPhotos();
+          state.square.token = null;
+          state.step = 'photos';
+          state.errors = { photos: message };
+        } else if (S.isLive() && state.payMethod !== 'card') {
           state.square.token = null;
           state.errors = { wallet: message };
         } else if (S.isLive()) {
@@ -1214,6 +1501,12 @@
           (d.note ? '<p class="evb-review-value" style="color:var(--evb-muted);margin-top:6px">Note: ' + S.esc(d.note) + '</p>' : '') +
         '</div>' +
 
+        (needsPhotos() ? '<div class="evb-review-block">' +
+          '<div class="evb-review-head"><p class="evb-review-label">Photos</p>' +
+            '<button type="button" class="evb-review-edit" data-goto="photos">Edit</button></div>' +
+          '<p class="evb-review-value">' + S.esc(photosSummary()) + '</p>' +
+        '</div>' : '') +
+
         '<div class="evb-review-block">' +
           '<div class="evb-review-head"><p class="evb-review-label">Payment</p>' +
             '<button type="button" class="evb-review-edit" data-goto="payment">Edit</button></div>' +
@@ -1304,12 +1597,13 @@
         (t.shipping === 0 ? 'Free' : S.money(t.shipping)) + '</strong></div>' +
       prizeRows(t) +
       (t.welcomeShip ? '<p class="evb-promo-msg is-ok">Welcome offer: ' + (t.shipping ? S.money(t.shippingOff) + ' off shipping' : 'free shipping') + ' on your first order.</p>' : '') +
-      '<div class="evb-sumrow"><span>Sales tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
+      '<div class="evb-sumrow"><span>' + S.esc(taxLabel(t)) + '</span><strong>' + S.money(t.tax) + '</strong></div>' +
       '<div class="evb-sumrow evb-sumrow--total"><span>Total</span><strong>' + S.money(t.total) + '</strong></div>' +
     '</div>';
   }
 
   function render() {
+    syncSteps();
     if (state.step !== 'contact') checkWelcome();
     if (!S.cart.lines.length && !state.submitting) {
       els.host.innerHTML = '<div class="evb-empty" style="margin-bottom:70px">' +
@@ -1331,6 +1625,7 @@
 
     var body = state.step === 'contact' ? contactStep()
       : state.step === 'delivery' ? deliveryStep()
+      : state.step === 'photos' ? photosStep()
       : state.step === 'payment' ? paymentStep()
       : reviewStep();
 
@@ -1484,6 +1779,13 @@
       });
     });
 
+    host.querySelectorAll('input[data-photo]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        if (file) uploadOrderPhoto(input.getAttribute('data-photo'), file);
+      });
+    });
+
     var place = host.querySelector('#placeOrder');
     if (place) place.addEventListener('click', submit);
 
@@ -1550,6 +1852,7 @@
     var pending = S.isLive() && S.cart.lines.length ? readPendingCashApp() : null;
     if (!pending) return;
     state.step = 'review';
+    syncSteps();
     STEPS.forEach(function (s) { state.reached[s] = true; });
     state.payMethod = 'cashapp';
     state.data.terms = true;
@@ -1579,6 +1882,7 @@
     Promise.all([C.load(), member, savedCheck]).then(function () {
       var changes = S.cart.reconcile();
       restoreDraft();
+      restorePhotos();
       resumeCashApp();
       render();
       ready = true;
