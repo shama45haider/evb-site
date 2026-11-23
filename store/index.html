@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css?v=20261112">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.9.12">
+<link rel="stylesheet" href="/store/store.css?v=1.9.13">
 <!-- Google store widget (Merchant Center 5752752250): Google's badge with
      the store's rating and shipping/returns quality. Bottom left, clear of the
      chat bubble; on phones Google centres it, so it sits above the call/text
@@ -801,6 +801,36 @@
     floorVideo.pause();
   }
 
+  // The store bar's category row: on desktops too narrow to show every
+  // category it scrolls sideways, and the edge with more behind it fades.
+  function syncCatsFade() {
+    var c = els.barCats, max = c.scrollWidth - c.clientWidth;
+    c.classList.toggle('is-cut-left', max > 1 && c.scrollLeft > 1);
+    c.classList.toggle('is-cut-right', max > 1 && c.scrollLeft < max - 1);
+  }
+  els.barCats.addEventListener('scroll', syncCatsFade, { passive: true });
+  window.addEventListener('resize', syncCatsFade);
+
+  // Opening /store/ (the Store button) lands on the shop: the floor's
+  // header just under the sticky bars (its scroll-margin-top in
+  // store.css). It jumps instead of gliding, so nothing loading meanwhile
+  // stops it part way, and it lines up again once the fonts and the rest
+  // of the page are in, unless the visitor has scrolled since. Anyone
+  // already further down (a link to #visit, Back from an item) stays put.
+  var landedAt = null;
+  function landOnShop() {
+    var shop = el('shop'), y = window.pageYOffset;
+    if (landedAt !== null && Math.abs(y - landedAt) > 1) return;
+    var top = Math.max(0, Math.round(shop.getBoundingClientRect().top + y -
+      (parseFloat(getComputedStyle(shop).scrollMarginTop) || 0)));
+    if (landedAt === null && y > top + 4) return;
+    var root = document.documentElement, was = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, top);
+    root.style.scrollBehavior = was;
+    landedAt = window.pageYOffset;
+  }
+
   readUrl();
   renderStatus();
   setInterval(renderStatus, 60000);
@@ -808,7 +838,13 @@
   C.load().then(function () {
     renderStatic();
     apply(false);
-    if (location.hash === '#shop') el('shop').scrollIntoView({ block: 'start' });
+    syncCatsFade();
+    landOnShop();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { syncCatsFade(); landOnShop(); });
+    }
+    if (document.readyState === 'complete') landOnShop();
+    else window.addEventListener('load', landOnShop);
   });
 })();
 </script>

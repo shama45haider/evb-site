@@ -182,6 +182,30 @@ body.evb-store-page {
 @media (max-width: 900px) { .evb-storebar-cats { display: none; } }
 @media (max-width: 520px) { .evb-cartbtn span.evb-cartbtn-label { display: none; } .evb-cartbtn { padding: 11px 14px; } .evb-acctbtn { padding: 0 13px 0 6px; } }
 
+/* Desktops: tighter category pills so the whole row (All to Collectibles)
+   fits from 1280px up instead of cutting the last one mid-word. Narrower
+   than that the row scrolls sideways, and a fade on the cut edge
+   (is-cut-left / is-cut-right, set by the floor's script) shows there's
+   more. */
+@media (min-width: 901px) {
+  .evb-storebar-inner { gap: 12px; }
+  .evb-storebar-cats { gap: 2px; }
+  .evb-storebar-cat { padding: 8px 10px; letter-spacing: 0.03em; }
+}
+.evb-storebar-cats.is-cut-right { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent); }
+.evb-storebar-cats.is-cut-left { -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px); mask-image: linear-gradient(90deg, transparent, #000 56px); }
+.evb-storebar-cats.is-cut-left.is-cut-right {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 56px, #000 calc(100% - 56px), transparent);
+}
+
+/* The site header is 1180px wide on the rest of the site; on the store it
+   matches the store's 1320px column so the logo lines up with the store
+   bar and the products below it, and Call Us Now with the Bag. Between
+   1024 and 1199px the header pads 24px, so the store column does too. */
+@media (min-width: 1024px) { .evb-store-page .site-nav-inner { max-width: var(--evb-max); } }
+@media (min-width: 1024px) and (max-width: 1199px) { .evb-wrap { padding: 0 24px; } }
+
 .evb-section { padding: 52px 0; }
 .evb-section--tight { padding: 36px 0; }
 .evb-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 26px; flex-wrap: wrap; }
@@ -306,6 +330,9 @@ body.evb-store-page {
   /* a jump to #shop lands below the sticky site nav and store bar */
   scroll-margin-top: calc(var(--evb-navh, 0px) + var(--evb-storebar-h, 0px));
 }
+/* The header's "Visit the shop" button jumps to #visit; it lands below the
+   sticky bars too instead of tucking its heading under them. */
+#visit { scroll-margin-top: calc(var(--evb-navh, 0px) + var(--evb-storebar-h, 0px)); }
 .evb-floor .evb-search input, .evb-floor .evb-select, .evb-floor .evb-filters-toggle,
 .evb-floor .evb-filters-clear, .evb-floor .evb-activepill, .evb-floor .evb-btn { font-family: inherit; }
 
@@ -354,6 +381,27 @@ body.evb-store-page {
 .evb-pillbtn--light:hover { background: #e9e9e9; }
 .evb-pillbtn--outline { border: 1px solid rgba(255, 255, 255, 0.4); color: #fff; }
 .evb-pillbtn--outline:hover { border-color: #fff; }
+/* Tablets and desktops: the panel and its title size with the screen's
+   height as well as its width, so landing on #shop (the Store button)
+   shows the title, the search and the first row of products together
+   instead of a panel that fills a laptop screen. */
+@media (min-width: 561px) {
+  .evb-floor { padding-top: clamp(16px, 3vh, 32px); }
+  .evb-floor-head {
+    min-height: clamp(200px, 30vh, 320px);
+    padding: clamp(22px, 3.6vh, 40px) clamp(26px, 3.4vw, 44px);
+    margin-bottom: clamp(16px, 2.6vh, 28px);
+  }
+  .evb-floor-kicker { margin-bottom: 8px; }
+  .evb-floor-title { font-size: clamp(34px, min(5vw, 7.5vh), 64px); }
+  .evb-floor-sub { margin-top: 10px; }
+}
+/* Desktops: the two buttons stay to the right of the title instead of
+   dropping onto a row of their own under it. */
+@media (min-width: 901px) {
+  .evb-floor-copy { flex: 1 1 340px; }
+  .evb-floor-actions { flex-shrink: 0; }
+}
 /* Phones: a short panel so the first products show without scrolling.
    The title sizes itself to fit one line; the kicker, the second sentence
    and the arrow drop; the two buttons share a row. */
@@ -382,7 +430,7 @@ body.evb-store-page {
 .evb-floor .evb-filters-toggle { font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
 .evb-floor .evb-filters-toggle span { background: var(--evb-ink); }
 
-.evb-floor .evb-results-meta { padding-bottom: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--evb-line-soft); }
+.evb-floor .evb-results-meta { padding-bottom: 8px; margin-bottom: 18px; border-bottom: 1px solid var(--evb-line-soft); }
 @media (max-width: 560px) { .evb-floor .evb-results-meta { padding-bottom: 4px; margin-bottom: 16px; } }
 .evb-floor .evb-toolbar-count { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--evb-ink); }
 .evb-floor .evb-activepill { background: #f4f4f4; border-color: transparent; border-radius: 999px; font-weight: 500; }
