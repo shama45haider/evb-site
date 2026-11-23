@@ -1,12 +1,24 @@
 /*
  * "We're always buying" pop-up for blog posts (/blog/<post>/) and the
- * sneaker brand pages (/sell-*-sneakers-nyc/, /sell-birkenstock-nyc/).
+ * sneaker brand pages (/sell-*-sneakers-nyc/, /sell-birkenstock-nyc/), and
+ * its store version, "Sell your streetwear and sneakers".
  *
- * Opens a couple of seconds after someone lands on the page: the storefront
- * photo, a short line on what we buy, and buttons to call or text for a free
- * appraisal. Shown once per visit (browser tab session), never on the blog
- * index, and it waits while another dialog is up (cookie notice, closure
- * notice, a workplace-panel pop-up from evb-popups.js).
+ * Blog and brand pages: it opens a couple of seconds after someone lands on
+ * the page: the storefront photo, a short line on what we buy, and buttons to
+ * call or text for a free appraisal. Shown once per visit (browser tab
+ * session), never on the blog index.
+ *
+ * The online store (the floor /store/, /store/product/ and every
+ * /store/item/<piece>/, which are built from /store/product/): it opens once
+ * someone has spent STORE_AFTER_MS browsing the store (the owner's ask,
+ * 2026-11-23: after 15 minutes), counted across store pages from their first
+ * scroll, only while the tab is in view and they have scrolled, tapped or
+ * typed in the last couple of minutes. The photo is the shop's counter; the
+ * buttons text photos for a quote or open /we-buy-streetwear-nyc/. Once a
+ * month at most (STORE_KEY, localStorage); never in the bag or checkout.
+ *
+ * Either way it waits while another dialog is up (cookie notice, closure
+ * notice, the welcome game, a workplace-panel pop-up from evb-popups.js).
  *
  * Same look as the home page's "What's New" pop-up (#wnWrap in index.html,
  * also copied by evb-popups.js): a white card, the photo on the left with an
@@ -22,9 +34,17 @@
   var IS_POST = /^\/blog\/[^/]+(\/(index\.html)?)?$/.test(PATH);
   // Sneaker brand pages.
   var IS_SNEAKERS = /^\/(sell-[a-z0-9-]+-sneakers-nyc|sell-birkenstock-nyc)(\/(index\.html)?)?$/.test(PATH);
-  if (!IS_POST && !IS_SNEAKERS) return;
+  // The store's floor, product page and item pages.
+  var IS_STORE = /^\/store\/((item\/[^/]+|product)\/)?(index\.html)?$/.test(PATH);
+  if (!IS_POST && !IS_SNEAKERS && !IS_STORE) return;
 
   var KEY = 'evb_blog_pop';
+  var STORE_KEY = 'evb_store_pop';
+  var STORE_TIME_KEY = 'evb_store_time';
+  var STORE_AFTER_MS = 15 * 60 * 1000;
+  var STORE_EVERY_MS = 30 * 24 * 60 * 60 * 1000;
+  // Browsing counts while there's been a scroll, tap or key this recently.
+  var STORE_IDLE_MS = 2 * 60 * 1000;
   var DELAY_MS = 1800;
   // Wait this long for the visitor to answer the cookie notice, then open on
   // top of it anyway (it stays where it is behind the dialog).
@@ -32,20 +52,38 @@
   var PHONE = '917-608-8939';
   var TEL = 'tel:9176088939';
   var SMS = 'sms:9176088939';
-  var PHOTO = '/east-village-buyers-storefront-39-avenue-a.webp';
-  var ID = 'blog-always-buying';
+  var PHOTO = IS_STORE ? '/sneakers-main.webp' : '/east-village-buyers-storefront-39-avenue-a.webp';
+  var PHOTO_ALT = IS_STORE
+    ? 'Nike Air Force 1 sneakers on the sticker-covered counter at East Village Buyers'
+    : 'East Village Buyers storefront at 39 Avenue A, New York';
+  var PHOTO_W = IS_STORE ? 600 : 960;
+  var PHOTO_H = IS_STORE ? 1067 : 675;
+  var ID = IS_STORE ? 'store-sell-streetwear' : 'blog-always-buying';
+  var TITLE = IS_STORE ? 'Sell Your Streetwear and Sneakers' : 'We’re Always Buying';
 
-  var TEXT = IS_SNEAKERS
+  var TEXT = IS_STORE
+    ? 'Supreme, Chrome Hearts, Denim Tears, Sp5der, Jordans, Yeezys and more. Text photos to ' + PHONE + ' for a free quote, or bring them to the shop for same-day cash.'
+    : IS_SNEAKERS
     ? 'Sneakers, plus gold, diamonds, watches, designer bags, streetwear and electronics. Text photos or call ' + PHONE + ' for a free quote, no obligation.'
     : 'Gold, diamonds, watches, sneakers, designer bags, streetwear and electronics. Call ' + PHONE + ' for a free appraisal, no obligation.';
 
-  function seen() { try { return !!w.sessionStorage.getItem(KEY); } catch (e) { return false; } }
-  function markSeen() { try { w.sessionStorage.setItem(KEY, '1'); } catch (e) {} }
+  function seen() {
+    try {
+      if (IS_STORE) return Date.now() - (Number(w.localStorage.getItem(STORE_KEY)) || 0) < STORE_EVERY_MS;
+      return !!w.sessionStorage.getItem(KEY);
+    } catch (e) { return IS_STORE; }
+  }
+  function markSeen() {
+    try {
+      if (IS_STORE) w.localStorage.setItem(STORE_KEY, String(Date.now()));
+      else w.sessionStorage.setItem(KEY, '1');
+    } catch (e) {}
+  }
   if (seen()) return;
 
   function push(name, button) {
     w.dataLayer = w.dataLayer || [];
-    var ev = { event: name, popup_id: ID, popup_title: "We're always buying", page_path: PATH };
+    var ev = { event: name, popup_id: ID, popup_title: IS_STORE ? 'Sell your streetwear and sneakers' : "We're always buying", page_path: PATH };
     if (button) ev.popup_button = button;
     w.dataLayer.push(ev);
   }
@@ -93,6 +131,7 @@
     '.evbbp-x:hover{transform:scale(1.1)}' +
     '.evbbp-media{position:relative;flex:0 0 44%;min-height:260px;margin:0;overflow:hidden;background:#f3efe9}' +
     '.evbbp-img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 45%}' +
+    '.evbbp-store .evbbp-img{object-position:50% 52%}' +
     '.evbbp-badge{position:absolute;top:14px;left:14px;z-index:2;padding:5px 10px;border-radius:6px;background:#f97316;color:#fff;font:800 10px/1.2 "Montserrat",sans-serif;letter-spacing:.1em}' +
     '.evbbp-body{position:relative;flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow-x:hidden;overflow-y:auto;padding:28px 24px}' +
     '.evbbp-mark{position:absolute;bottom:-10px;right:-10px;width:120px;opacity:.06;pointer-events:none}' +
@@ -130,7 +169,7 @@
     document.head.appendChild(style);
 
     root = document.createElement('div');
-    root.className = 'evbbp';
+    root.className = 'evbbp' + (IS_STORE ? ' evbbp-store' : '');
     root.id = 'evbBlogPop';
     root.innerHTML =
       '<div class="evbbp-scrim" data-close></div>' +
@@ -139,15 +178,18 @@
         // The faint logo in the corner, on the card so the card's edge clips it.
         '<img class="evbbp-mark" src="/evblogo.webp" alt="" aria-hidden="true">' +
         '<figure class="evbbp-media">' +
-          '<img class="evbbp-img" src="' + PHOTO + '" width="960" height="675" alt="East Village Buyers storefront at 39 Avenue A, New York" decoding="async">' +
+          '<img class="evbbp-img" src="' + PHOTO + '" width="' + PHOTO_W + '" height="' + PHOTO_H + '" alt="' + PHOTO_ALT + '" decoding="async">' +
           '<span class="evbbp-badge">SAME-DAY CASH</span>' +
         '</figure>' +
         '<div class="evbbp-body">' +
-          '<p class="evbbp-tag">East Village Buyers</p>' +
-          '<h2 class="evbbp-title" id="evbbpTitle">We’re Always Buying</h2>' +
+          '<p class="evbbp-tag">' + (IS_STORE ? 'We buy, too' : 'East Village Buyers') + '</p>' +
+          '<h2 class="evbbp-title" id="evbbpTitle">' + TITLE + '</h2>' +
           '<p class="evbbp-text" id="evbbpText"></p>' +
           '<div class="evbbp-btns">' +
-            (IS_SNEAKERS
+            (IS_STORE
+              ? '<a class="evbbp-btn evbbp-call" href="' + SMS + '" data-btn="text">' + ICON_TEXT + 'Text Photos for a Quote</a>' +
+                '<a class="evbbp-btn evbbp-text-us" href="/we-buy-streetwear-nyc/" data-btn="what-we-buy">What We Buy</a>'
+              : IS_SNEAKERS
               ? '<a class="evbbp-btn evbbp-call" href="' + SMS + '" data-btn="text">' + ICON_TEXT + 'Text Photos for a Quote</a>' +
                 '<a class="evbbp-btn evbbp-text-us" href="' + TEL + '" data-btn="call">' + ICON_PHONE + 'Call Us</a>'
               : '<a class="evbbp-btn evbbp-call" href="' + TEL + '" data-btn="call">' + ICON_PHONE + 'Call for an Appraisal</a>' +
@@ -226,7 +268,34 @@
     img.src = PHOTO;
   }
 
-  function later() { setTimeout(start, DELAY_MS); }
+  // The store: add up browsing time (STORE_TIME_KEY, this visit) and open
+  // once it reaches STORE_AFTER_MS.
+  function storeClock() {
+    var TICK = 5000;
+    var lastActive = 0;
+    var timer = null;
+    function spent() { try { return Number(w.sessionStorage.getItem(STORE_TIME_KEY)) || 0; } catch (e) { return 0; } }
+    function active() { lastActive = Date.now(); }
+    ['scroll', 'pointerdown', 'keydown'].forEach(function (t) {
+      w.addEventListener(t, active, { passive: true });
+    });
+    function tick() {
+      if (document.visibilityState !== 'visible' || !lastActive || Date.now() - lastActive > STORE_IDLE_MS) return;
+      var total = spent() + TICK;
+      try { w.sessionStorage.setItem(STORE_TIME_KEY, String(total)); } catch (e) { clearInterval(timer); return; }
+      if (total >= STORE_AFTER_MS) { clearInterval(timer); start(); }
+    }
+    if (spent() >= STORE_AFTER_MS) return start();
+    // The clock starts with the first scroll, tap or key on a store page, or
+    // carries on from earlier pages of this visit.
+    if (spent() > 0) active();
+    timer = setInterval(tick, TICK);
+  }
+
+  function later() {
+    if (IS_STORE) storeClock();
+    else setTimeout(start, DELAY_MS);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', later);
   else later();
 })();

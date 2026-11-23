@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="/site-nav.css?v=20261112">
 <link rel="stylesheet" href="/site-mobile.css">
 <link rel="stylesheet" href="/site-footer.css">
-<link rel="stylesheet" href="/store/store.css?v=1.9.11">
+<link rel="stylesheet" href="/store/store.css?v=1.9.12">
 <!-- Google store widget (Merchant Center 5752752250): Google's badge with
      the store's rating and shipping/returns quality. Bottom left, clear of the
      chat bubble; on phones Google centres it, so it sits above the call/text
@@ -277,33 +277,22 @@
   </div>
 </section>
 
-<section class="evb-section" id="how" style="background:#fff;border-top:3px solid var(--evb-orange);border-bottom:3px solid var(--evb-orange)">
+<!-- SB Studios / Stain Bandz: the sets in stock right now, filled from the
+     live catalog. It stays hidden when none are left. -->
+<section class="evb-sb" id="sb-studios" aria-labelledby="sbTitle" hidden>
   <div class="evb-wrap">
-    <div class="evb-section-head">
-      <div>
-        <p class="evb-eyebrow">Why you can trust the listing</p>
-        <h2 class="evb-h2">Authentication is the whole business</h2>
-        <p class="evb-sub">We buy for cash across the counter. That only works if we are right about what something is — so the same testing that protects us on the buy protects you on the sale.</p>
+    <div class="evb-sb-head">
+      <span class="evb-sb-bar" aria-hidden="true"></span>
+      <h2 class="evb-sb-title" id="sbTitle">SB Studios <span>Stain Bandz</span></h2>
+      <p class="evb-sb-sub">Full sweatsuit sets, hoodie and sweatpants together. Unisex, new with tags.</p>    </div>
+    <div class="evb-sb-nav">
+      <p class="evb-sb-hint">Swipe<span class="evb-sb-hint-arrows"> or use arrows</span> to explore &rarr;</p>
+      <div class="evb-sb-arrows">
+        <button type="button" class="evb-sb-arrow" data-sb-dir="-1" aria-label="Previous sets">&#8592;</button>
+        <button type="button" class="evb-sb-arrow" data-sb-dir="1" aria-label="More sets">&#8594;</button>
       </div>
     </div>
-    <div class="evb-notes">
-      <div class="evb-note">
-        <p class="evb-note-name">Metals</p>
-        <p class="evb-note-blurb">XRF analyzer and acid testing on every piece. Gold and silver are weighed in front of you and priced against live spot.</p>
-      </div>
-      <div class="evb-note">
-        <p class="evb-note-name">Watches</p>
-        <p class="evb-note-blurb">Movement timed on a machine, caseback opened where appropriate, serials and papers checked against reference data.</p>
-      </div>
-      <div class="evb-note">
-        <p class="evb-note-name">Sneakers &amp; streetwear</p>
-        <p class="evb-note-blurb">Stitch density, tagging, box labels and materials. The tells that fakes get wrong are the ones we look at first.</p>
-      </div>
-      <div class="evb-note">
-        <p class="evb-note-name">Electronics</p>
-        <p class="evb-note-blurb">Wiped to factory, Activation Lock removed, IMEI checked against the carrier blacklist before anything is listed.</p>
-      </div>
-    </div>
+    <div class="evb-sb-row" id="sbGrid"></div>
   </div>
 </section>
 
@@ -404,7 +393,7 @@
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.7"></script>
 <script src="/store/store-catalog.js?v=1.9.4"></script>
-<script src="/store/store-core.js?v=1.9.9"></script>
+<script src="/store/store-core.js?v=1.9.10"></script>
 <script>
 (function () {
   'use strict';
@@ -417,7 +406,8 @@
     q: el('q'), sort: el('sort'), count: el('resultCount'), active: el('activeFilters'),
     fCategory: el('fCategory'), fCondition: el('fCondition'), fPrice: el('fPrice'), fBrand: el('fBrand'),
     rail: el('filterRail'), scrim: el('filterScrim'),
-    clear: el('clearFilters'), badge: el('filterBadge')
+    clear: el('clearFilters'), badge: el('filterBadge'),
+    sb: el('sb-studios'), sbGrid: el('sbGrid')
   };
 
   var CONDITIONS = [
@@ -612,7 +602,67 @@
       els.featuredSection.hidden = false;
       els.featured.innerHTML = feat.map(function (p) { return S.productCard(p, '/'); }).join('');
     }
+    renderSB();
   }
+
+  // SB Studios / Stain Bandz sets in stock. Square has the brand typed as
+  // "SB Studios", "Stain Bandz" and "Stainz Brand", so the brand and the
+  // title are both checked.
+  var SB_RX = /\bsb\s*studios\b|\bstain\s*band[sz]?\b|\bstainz\b/i;
+  var SIZE_NAMES = { 'x-small': 'XS', 'small': 'S', 'medium': 'M', 'large': 'L', 'x-large': 'XL', 'xx-large': 'XXL' };
+
+  function sizeName(label) {
+    var k = String(label || '').trim().toLowerCase();
+    if (!k || /^(regular|default|default title|standard)$/.test(k)) return '';
+    return SIZE_NAMES[k] || k.toUpperCase();
+  }
+  function dollars(c) { return S.money(c).replace(/\.00$/, ''); }
+
+  function sbCard(p) {
+    var sizes = p.variants.filter(function (v) { return v.stock > 0; })
+      .map(function (v) { return sizeName(v.label); }).filter(Boolean);
+    var sale = p.compareAt && p.compareAt > p.price;
+    return '<a class="evb-sb-card" href="' + S.attr(S.productUrl(p.slug, '/')) + '">' +
+      '<span class="evb-sb-card-img"><img src="' + S.attr(p.images[0]) + '" alt="' + S.attr(p.title) + '" loading="lazy" decoding="async"></span>' +
+      '<span class="evb-sb-card-body">' +
+        '<h3 class="evb-sb-card-name">' + S.esc(p.title) + '</h3>' +
+        '<span class="evb-sb-card-rule" aria-hidden="true"></span>' +
+        (sizes.length ? '<span class="evb-sb-card-text">Sizes ' + S.esc(sizes.join(' · ')) + '</span>' : '') +
+        '<span class="evb-sb-card-price">' + dollars(p.minPrice) + (p.minPrice !== p.maxPrice ? '+' : '') +
+          (sale ? ' <s>' + dollars(p.compareAt) + '</s>' : '') + '</span>' +
+        '<span class="evb-sb-card-btn">Shop this set &rarr;</span>' +
+      '</span>' +
+    '</a>';
+  }
+
+  // The last card: the brand's lookbook photo and a text for anyone whose
+  // size isn't listed.
+  var SB_ASK = '<a class="evb-sb-card evb-sb-card--ask" href="sms:9176088939" data-track="SB Studios ask about a size">' +
+    '<span class="evb-sb-card-img"><img src="/sb-studios-stainbandz-sweatsuits-480.webp" alt="SB Studios Stain Bandz sweatsuits in grey, blue and black" loading="lazy" decoding="async"></span>' +
+    '<span class="evb-sb-card-body">' +
+      '<h3 class="evb-sb-card-name">Looking for a size?</h3>' +
+      '<span class="evb-sb-card-rule" aria-hidden="true"></span>' +
+      '<span class="evb-sb-card-text">Text us and we will check what is on the rack today.</span>' +
+      '<span class="evb-sb-card-btn">Text 917-608-8939 &rarr;</span>' +
+    '</span>' +
+  '</a>';
+
+  function renderSB() {
+    var list = C.products.filter(function (p) {
+      return p.stock > 0 && SB_RX.test((p.brand || '') + ' ' + p.title);
+    });
+    els.sb.hidden = !list.length;
+    if (!list.length) return;
+    els.sbGrid.innerHTML = list.map(sbCard).join('') + SB_ASK;
+  }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-sb-dir]');
+    if (!b) return;
+    var card = els.sbGrid.querySelector('.evb-sb-card');
+    var step = card ? card.getBoundingClientRect().width + 16 : 300;
+    els.sbGrid.scrollBy({ left: step * Number(b.getAttribute('data-sb-dir')), behavior: 'smooth' });
+  });
 
   function openRail() {
     els.rail.classList.add('is-open');
@@ -768,6 +818,7 @@
 <script src="/site-analytics.js?v=2" defer></script>
 <script src="/evb-popups.js?v=4" defer></script>
 <script src="/thanksgiving.js" defer></script>
-<script src="/evb-spin.js?v=3" defer></script>
+<script src="/evb-spin.js?v=5" defer></script>
+<script src="/evb-blog-popup.js?v=4" defer></script>
 </body>
 </html>

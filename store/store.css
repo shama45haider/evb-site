@@ -401,6 +401,99 @@ body.evb-store-page {
 
 .evb-floor .evb-empty { background: #f6f6f6; border: none; border-radius: 14px; }
 
+/* ---------------------------------------------------------------- SB Studios / Stain Bandz (/store/#sb-studios)
+   Dressed like the homepage's "What we buy & sell" row: cream with orange
+   dots, a Montserrat headline with the brand's second name in orange, and a
+   row of white cards with an orange button, one per set in stock. The last
+   card is the brand's lookbook photo with a text-us button. */
+.evb-sb {
+  position: relative; padding: 60px 0 64px;
+  background-color: var(--evb-cream);
+  background-image: radial-gradient(circle, rgba(249, 115, 22, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  border-top: 1px solid var(--evb-line-soft);
+  scroll-margin-top: calc(var(--evb-navh, 0px) + var(--evb-storebar-h, 0px));
+}
+.evb-sb-bar { display: block; width: 48px; height: 4px; border-radius: 2px; background: var(--evb-orange); margin-bottom: 12px; }
+.evb-sb-title {
+  font-family: 'Montserrat', sans-serif; font-size: clamp(30px, 4.4vw, 48px); font-weight: 900;
+  line-height: 1.05; letter-spacing: -0.01em; text-transform: uppercase; color: var(--evb-ink); margin: 0;
+}
+.evb-sb-title span { color: var(--evb-orange); white-space: nowrap; }
+.evb-sb-sub { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; color: #444; margin: 12px 0 0; max-width: 66ch; }
+
+.evb-sb-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 26px 0 16px; }
+.evb-sb-hint { font-family: 'Inter', sans-serif; font-size: 13px; color: #999; letter-spacing: 0.03em; margin: 0; }
+.evb-sb-arrows { display: flex; gap: 8px; }
+.evb-sb-arrow {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; padding: 0;
+  border: 2px solid var(--evb-orange); background: transparent; color: var(--evb-orange);
+  font-size: 17px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.evb-sb-arrow:hover { background: var(--evb-orange); color: #fff; }
+.evb-sb-arrow:focus-visible { outline: 2px solid var(--evb-ink); outline-offset: 2px; }
+
+.evb-sb-row {
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  margin: -6px -4px 0; padding: 6px 4px 14px;
+}
+.evb-sb-row::-webkit-scrollbar { display: none; }
+
+.evb-sb-card {
+  flex: 0 0 260px; display: flex; flex-direction: column; min-width: 0; scroll-snap-align: start;
+  background: #fff; border: 1.5px solid rgba(0, 0, 0, 0.07); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.07);
+  color: inherit; text-decoration: none;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+.evb-sb-card:hover { transform: translateY(-4px); border-color: rgba(249, 115, 22, 0.5); box-shadow: 0 10px 32px rgba(249, 115, 22, 0.22); }
+.evb-sb-card:focus-visible { outline: 2px solid var(--evb-orange); outline-offset: 2px; }
+.evb-sb-card-img { display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #f1eee9; }
+.evb-sb-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.evb-sb-card:hover .evb-sb-card-img img { transform: scale(1.05); }
+.evb-sb-card--ask .evb-sb-card-img img { object-position: 36% center; }
+.evb-sb-card-body {
+  display: flex; flex-direction: column; gap: 9px; flex: 1;
+  padding: 16px 16px 18px; font-family: 'Inter', sans-serif;
+}
+.evb-sb-card-name {
+  font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; line-height: 1.25;
+  letter-spacing: -0.01em; color: var(--evb-ink); margin: 0;
+}
+.evb-sb-card-rule { display: block; width: 32px; height: 3px; border-radius: 2px; background: var(--evb-orange); flex-shrink: 0; }
+.evb-sb-card-text { font-size: 13px; line-height: 1.55; color: #555; }
+.evb-sb-card-price { font-size: 18px; font-weight: 800; color: var(--evb-ink); font-variant-numeric: tabular-nums; }
+.evb-sb-card-price s { font-size: 13px; font-weight: 500; color: #999; margin-left: 4px; }
+.evb-sb-card-btn {
+  display: block; margin-top: auto; padding: 10px 14px; border-radius: 8px; text-align: center;
+  background: linear-gradient(135deg, var(--evb-orange), var(--evb-orange-dark)); color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+/* Phones: no arrows; the row runs to the screen edges and the next card
+   peeks in so it reads as a swipe. */
+@media (max-width: 600px) {
+  .evb-sb { padding: 44px 0 48px; }
+  .evb-sb-sub { font-size: 14px; }
+  .evb-sb-nav { margin: 16px 0 10px; }
+  .evb-sb-arrows, .evb-sb-hint-arrows { display: none; }
+  .evb-sb-row { gap: 12px; margin: -6px -20px 0; padding: 6px 20px 14px; scroll-padding-left: 20px; scroll-snap-type: x proximity; }
+  .evb-sb-card { flex-basis: 66%; max-width: 250px; }
+  .evb-sb-card-body { padding: 13px 13px 15px; gap: 7px; }
+  .evb-sb-card-name { font-size: 14.5px; }
+  .evb-sb-card-text { font-size: 12.5px; }
+  .evb-sb-card-price { font-size: 16px; }
+  .evb-sb-card-btn { font-size: 11px; padding: 9px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .evb-sb-card, .evb-sb-card-img img { transition: none; }
+  .evb-sb-card:hover, .evb-sb-card:hover .evb-sb-card-img img { transform: none; }
+}
+
 .evb-shop { display: grid; grid-template-columns: 228px 1fr; gap: 34px; align-items: start; }
 @media (max-width: 900px) { .evb-shop { grid-template-columns: 1fr; gap: 0; } }
 

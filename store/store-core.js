@@ -153,6 +153,17 @@
     }
   };
 
+  // The member's session (supabase-js keeps it under 'evb-account'), for a
+  // code that works only on the account that won it (the mystery box's $5).
+  function memberToken() {
+    try {
+      var s = JSON.parse(localStorage.getItem('evb-account') || 'null');
+      if (!s || !s.access_token) return null;
+      if (s.expires_at && s.expires_at * 1000 < Date.now() + 30000) return null;
+      return s.access_token;
+    } catch (e) { return null; }
+  }
+
   // The codes live on the Worker (its PROMO_CODES secret), so nobody can read
   // them out of the site. check() asks it about one code and remembers the
   // answer for this page; validate() works from what it has been told.
@@ -162,9 +173,12 @@
       var key = String(code || '').trim().toUpperCase();
       var base = (CFG.apiBase || '').replace(/\/$/, '');
       if (!key || promo.rules[key] || !base) return Promise.resolve(promo.validate(key));
+      var headers = { 'Content-Type': 'application/json' };
+      var tok = memberToken();
+      if (tok) headers.Authorization = 'Bearer ' + tok;
       return fetch(base + '/promo', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({ code: key })
       })
         .then(function (r) {

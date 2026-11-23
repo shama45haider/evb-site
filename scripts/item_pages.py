@@ -212,6 +212,23 @@ def acc_item(title, body, is_open=False):
             f'</button><div class="evb-acc-panel">{body}</div></div>')
 
 
+SIZE_WORDS = {"small": "S", "medium": "M", "large": "L", "x-large": "XL", "extra large": "XL", "xx-large": "XXL", "2xl": "XXL"}
+
+
+def size_of(p):
+    """A one-size piece's size, read the way sizeOf() in
+    store/product/index.html reads it: its "Size: ..." detail, else its one
+    variant's name."""
+    d = next((str(x).strip() for x in p["details"] if re.match(r"(?i)size:", str(x).strip())), "")
+    if d:
+        label = d[5:].strip()
+    elif len(p["variants"]) == 1 and not re.fullmatch(r"(?i)(default|regular)?", p["variants"][0]["label"] or ""):
+        label = p["variants"][0]["label"]
+    else:
+        label = ""
+    return SIZE_WORDS.get(label.lower()) or (label.upper() if len(label) <= 4 else label)
+
+
 def pdp_html(p):
     """What render() in store/product/index.html draws for the first in-stock
     option, so the live redraw doesn't shift the page."""
@@ -258,17 +275,19 @@ def pdp_html(p):
         + "<div>"
         + (f'<p class="evb-pdp-brand">{esc(p["brand"])}</p>' if p["brand"] else "")
         + f'<h1 class="evb-pdp-title">{esc(p["title"])}</h1>'
-        + f'<div class="evb-pdp-meta">{pill}' + (f'<span class="evb-pill">{esc(p["condition"])}</span>' if p["condition"] else "") + "</div>"
+        + f'<div class="evb-pdp-meta">{pill}'
+        + (f'<span class="evb-pill">Size {esc(size_of(p))}</span>' if len(p["variants"]) == 1 and size_of(p) else "")
+        + (f'<span class="evb-pill">{esc(p["condition"])}</span>' if p["condition"] else "") + "</div>"
         + f'<div class="evb-pdp-price-row"><span class="evb-pdp-price">{money(price)}</span>'
         + (f'<span class="evb-pdp-compare">{money(p["compare"])}</span>' if p["compare"] and p["compare"] > price else "")
         + (f'<span class="evb-pdp-save">Save {money(p["compare"] - price)}</span>' if save >= 5 else "")
         + f'</div><p class="evb-pdp-tax">{tax}</p>'
         + variant_block
-        + '<div class="evb-field"><div class="evb-field-label"><span>Quantity</span>'
-        + (f'<span class="hint">{n} available</span>' if n <= 5 else "")
-        + '</div><div class="evb-qty"><button type="button" class="evb-qty-btn" id="qtyDown" aria-label="Decrease quantity" disabled>&minus;</button>'
-        + '<span class="evb-qty-val" id="qtyVal">1</span>'
-        + f'<button type="button" class="evb-qty-btn" id="qtyUp" aria-label="Increase quantity"{" disabled" if n <= 1 else ""}>+</button></div></div>'
+        + ('<div class="evb-field"><div class="evb-field-label"><span>Quantity</span>'
+           + (f'<span class="hint">{n} available</span>' if n <= 5 else "")
+           + '</div><div class="evb-qty"><button type="button" class="evb-qty-btn" id="qtyDown" aria-label="Decrease quantity" disabled>&minus;</button>'
+           + '<span class="evb-qty-val" id="qtyVal">1</span>'
+           + '<button type="button" class="evb-qty-btn" id="qtyUp" aria-label="Increase quantity">+</button></div></div>' if n > 1 else "")
         + '<div class="evb-pdp-actions"><button type="button" class="evb-btn evb-btn--primary" id="addBtn">Add to bag</button>'
         + '<button type="button" class="evb-btn evb-btn--ghost" id="buyBtn">Buy it now</button></div>'
         + '<div class="evb-assure">'

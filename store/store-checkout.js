@@ -1570,9 +1570,13 @@
     var member = sb ? loadMember() : Promise.resolve().then(function () { state.member.status = 'error'; });
 
     var ready = false;
-    // A code from the saved draft counts once the Worker has said it's good.
+    // A code from the saved draft counts once the Worker has said it's good,
+    // asked after the session is fresh (a game prize code needs it). If it
+    // can't be used, checkout says why.
     var savedPromo = S.draft.get().promoCode;
-    Promise.all([C.load(), member, savedPromo ? S.promo.check(savedPromo) : null]).then(function () {
+    var savedCheck = member.then(function () { return savedPromo ? S.promo.check(savedPromo) : null; })
+      .then(function (v) { if (v && !v.ok) state.promoMsg = { ok: false, text: v.message }; });
+    Promise.all([C.load(), member, savedCheck]).then(function () {
       var changes = S.cart.reconcile();
       restoreDraft();
       resumeCashApp();

@@ -226,7 +226,7 @@
 <script src="/site-nav.js?v=20261005"></script>
 <script src="/store/store-config.js?v=1.9.7"></script>
 <script src="/store/store-catalog.js?v=1.9.4"></script>
-<script src="/store/store-core.js?v=1.9.9"></script>
+<script src="/store/store-core.js?v=1.9.10"></script>
 <script>
 (function () {
   'use strict';
@@ -344,17 +344,21 @@
         S.draft.set({ promoCode: '' });
         render(); return;
       }
-      var v = S.promo.validate(code);
-      if (v.ok) {
-        promoCode = v.code;
-        promoMsg = { ok: true, text: v.message };
-        S.draft.set({ promoCode: v.code });
-      } else {
-        promoCode = '';
-        promoMsg = { ok: false, text: v.message };
-        S.draft.set({ promoCode: '' });
-      }
-      render();
+      // The Worker knows the codes (S.promo.check); validate() alone only
+      // knows the ones already asked about on this page.
+      btn.disabled = true;
+      S.promo.check(code).then(function (v) {
+        if (v.ok) {
+          promoCode = v.code;
+          promoMsg = { ok: true, text: v.message };
+          S.draft.set({ promoCode: v.code });
+        } else {
+          promoCode = '';
+          promoMsg = { ok: false, text: v.message };
+          S.draft.set({ promoCode: '' });
+        }
+        render();
+      });
     }
     btn.addEventListener('click', applyPromo);
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); applyPromo(); } });
@@ -389,7 +393,12 @@
   window.addEventListener('evb:cart-change', function () { render(); renderRelated(); });
   window.addEventListener('evb:cart-external', function () { render(); renderRelated(); });
 
-  C.load().then(function () {
+  // A saved code (typed earlier, or a game prize) counts once the Worker has
+  // said it's good here; if it can't be used, say why and keep it saved.
+  var savedCheck = promoCode ? S.promo.check(promoCode) : null;
+
+  C.load().then(function () { return savedCheck; }).then(function (v) {
+    if (v && !v.ok) promoMsg = { ok: false, text: v.message };
     renderStoreBar();
     reconcileNotes = S.cart.reconcile();
     render();
@@ -402,6 +411,6 @@
 <script src="/evb-assistant.js?v=20261005" defer data-evb-assistant></script>
 <script src="/site-analytics.js?v=2" defer></script>
 <script src="/thanksgiving.js" defer></script>
-<script src="/evb-spin.js?v=3" defer></script>
+<script src="/evb-spin.js?v=5" defer></script>
 </body>
 </html>

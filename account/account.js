@@ -564,7 +564,7 @@
     bonus:  { label: 'Bonus points', icon: function () { return ICON.gift; } }
   };
   var VISIT_LABEL = { bought: 'You bought', sold: 'You sold us', traded: 'You traded' };
-  var BONUS_LABEL = { birthday: 'Birthday points', referral: 'A friend you invited shopped', referred: 'Joined with a friend’s invite' };
+  var BONUS_LABEL = { birthday: 'Birthday points', referral: 'A friend you invited shopped', referred: 'Joined with a friend’s invite', game: 'Mystery box prize' };
 
   // The ledger's visit rows and bonuses as history entries, so they sit with
   // the rest.

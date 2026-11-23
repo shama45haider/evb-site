@@ -20,9 +20,11 @@ const TAX_PERCENTAGE = '8.875';
 // Codes the site itself hands to every visitor have nothing to hide, so they
 // live here instead: SPIN120 and GIFT5 are the prizes of the welcome game
 // (evb-spin.js). A code of the same name in PROMO_CODES wins over these.
+// member: the code belongs to the account that won it, for GAME_CODE_DAYS
+// from the win, and works once (see memberCodeCheck).
 const PUBLIC_PROMO_CODES = {
   SPIN120: { type: 'shipping', minSubtotal: 12000, label: 'Free shipping on your first order over $120' },
-  GIFT5: { type: 'fixed', value: 500, label: '$5 off your order' }
+  GIFT5: { type: 'fixed', value: 500, label: '$5 off your order', member: true }
 };
 
 function promoCodes(env) {
@@ -33,7 +35,15 @@ function promoCodes(env) {
   } catch (e) {
     console.error('[evb-square] PROMO_CODES is not valid JSON');
   }
-  return Object.assign({}, PUBLIC_PROMO_CODES, secret);
+  const codes = Object.assign({}, PUBLIC_PROMO_CODES, secret);
+  // A member code stays a member code even if PROMO_CODES lists it too: GIFT5
+  // must never work for someone who didn't win it (the owner, 2026-11-23).
+  Object.keys(PUBLIC_PROMO_CODES).forEach(function (c) {
+    if (PUBLIC_PROMO_CODES[c].member && codes[c] && typeof codes[c] === 'object') {
+      codes[c] = Object.assign({}, codes[c], { member: true });
+    }
+  });
+  return codes;
 }
 
 function promoRule(env, code) {
@@ -485,6 +495,13 @@ async function buildSquareOrder(env, payload, auth) {
   let freeShipping = false;
   let promoOff = 0;
 
+  // A game prize code works only for the member who won it (asMember put
+  // their address on the order), within its days, once.
+  if (promo && promo.member) {
+    await memberCodeCheck(env, normEmail(payload.order.customer && payload.order.customer.email), code);
+  }
+
+  let memberCode = '';
   if (promo) {
     if (promo.minSubtotal && subtotal < promo.minSubtotal) {
     } else if (promo.type === 'percent') {
@@ -496,6 +513,7 @@ async function buildSquareOrder(env, payload, auth) {
     } else if (promo.type === 'shipping') {
       freeShipping = true;
     }
+    if (promo.member && (promoOff > 0 || freeShipping)) memberCode = code;
   }
 
   const shippingId = (payload.order.fulfillment && payload.order.fulfillment.shippingId) ||
@@ -610,7 +628,7 @@ async function buildSquareOrder(env, payload, auth) {
         }
       }];
 
-  return { welcomeEmail, prize, prizeApplied, prizeCart, order: {
+  return { welcomeEmail, prize, prizeApplied, prizeCart, memberCode, order: {
     location_id: env.SQUARE_LOCATION_ID,
     reference_id: payload.order.id,
     line_items: lineItems,
@@ -646,6 +664,11 @@ async function handlePromo(request, env, origin) {
   const code = String((body && body.code) || '').trim().toUpperCase().slice(0, 40);
   const rule = promoRule(env, code);
   if (!rule) return json({ error: 'That code is not valid.' }, 404, origin);
+  // A game prize: only for the signed-in member who won it (the bag and
+  // checkout send their session).
+  if (rule.member) {
+    await memberCodeCheck(env, await sessionEmail(env, request.headers.get('Authorization')), code);
+  }
 
   const dollars = c => '$' + (c % 100 ? (c / 100).toFixed(2) : c / 100);
   const label = rule.label ||
@@ -762,6 +785,13 @@ async function handleCreateOrder(request, env, origin, ctx) {
       await undoPayment(env, p, payload.idempotencyKey);
       throw shout('Your points changed while you were checking out, so we couldn’t take your prize off. Nothing was charged — go back and place your order again to see the new total.', 409);
     }
+  }
+
+  // A game prize code is spent with the order that used it (given back if
+  // the shop declines the order: handleOrderStatus).
+  if (placed && built.memberCode) {
+    await markGameCode(env, normEmail(payload.order.customer && payload.order.customer.email), payload.order.id, true)
+      .catch(err => console.error('[evb-square] could not mark the game code used', payload.order.id, err.message));
   }
 
   if (built.welcomeEmail && placed) {
@@ -1128,32 +1158,193 @@ async function markEmailed(env, order, result) {
 }
 
 /* ===========================================================================
-   Welcome game prize email
+   Welcome game prizes
    ---------------------------------------------------------------------------
-   POST /game-email {code}, with the member's Supabase session as a Bearer
-   token. evb-spin.js calls it once a prize is theirs (they won it signed in,
-   or made an account to unlock it). The address comes from Supabase, never
-   from the request, so nobody can use this to mail a stranger; each account
-   gets one prize email (SUBSCRIBERS: game:<email>). Sent through Resend with
-   the same RESEND_API_KEY as order confirmations; GAME_FROM (Text, optional)
+   POST /game-draw: the Worker, not the browser, picks what the box holds
+   (GAME_PRIZES, even odds) and answers { prize, ticket }, the ticket signed
+   (HMAC, gameTicketKey) so nobody can make one up. One visitor network gets
+   the same prize all day (gamedraw:<ip>, a day), so replaying the game in a
+   private window doesn't reroll it.
+
+   POST /game-email {ticket} (or {code} for a prize that needs no ticket),
+   with the member's Supabase session as a Bearer token. evb-spin.js calls it
+   once a prize is theirs (they won it signed in, or made an account to
+   unlock it). The address comes from Supabase, never from the request, so
+   nobody can use this to mail a stranger. GIFT5 (ticket: true) is recorded
+   only from a ticket, and a ticket goes on one account only
+   (gameticket:<nonce>), so typing GIFT5 or sharing a ticket gets nobody $5
+   (the owner, 2026-11-23).
+
+   It records the prize (SUBSCRIBERS: gameprize:<email>, metadata
+   { e, c: prize, t: won at, u: used at, o: order, r: reminders sent }); the
+   first prize an account wins is the one it keeps. Then it emails a code
+   prize, once per account (game:<email>). Points prizes (PTS120, PTS150) go
+   on the member's balance in Supabase (panel 0101) and get no email here.
+
+   GIFT5 lasts GAME_CODE_DAYS from the win and works once, on that account
+   (the owner, 2026-11-23); scheduled() emails a reminder GAME_REMIND_DAYS
+   before it runs out. Mail goes through Resend with the same RESEND_API_KEY
+   as order confirmations; without it nothing is sent and nothing is marked
+   sent, so it all starts once the key is set. GAME_FROM (Text, optional)
    replaces the sender below.
 =========================================================================== */
 
 const GAME_FROM_DEFAULT = 'East Village Buyers <rewards@eastvillagebuyers.com>';
 const GAME_PRIZES = {
-  SPIN120: { headline: 'Free shipping is yours', detail: 'Free standard shipping on your first order over $120.' },
-  GIFT5: { headline: '$5 off is yours', detail: '$5 off your order, any amount.' }
+  SPIN120: { name: 'free shipping', headline: 'Free shipping is yours', detail: 'Free standard shipping on your first order over $120.' },
+  GIFT5: { name: '$5 off', headline: '$5 off is yours', detail: '$5 off your order, any amount.', expires: true, ticket: true },
+  PTS120: { name: '120 points', points: 120 },
+  PTS150: { name: '150 points', points: 150 }
 };
+const GAME_CODE_DAYS = 30;
+const GAME_REMIND_DAYS = [14, 7, 2];
+const GAME_REMIND_PER_RUN = 40;
+const DAY_MS = 24 * 60 * 60 * 1000;
+// A locked prize can wait this long for its winner to make an account.
+const GAME_TICKET_DAYS = 60;
 
-function gameEmailText(code, prize) {
+function gameExpiry(meta) { return (Number(meta.t) || 0) + GAME_CODE_DAYS * DAY_MS; }
+
+function b64url(bytes) {
+  let s = '';
+  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function unb64url(str) {
+  const s = atob(String(str).replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) out[i] = s.charCodeAt(i);
+  return out;
+}
+
+// The ticket signing key: GAME_SECRET if set, else one made from the panel
+// key (already a secret here), so it needs no new setting. null: no draws.
+async function gameTicketKey(env) {
+  const raw = env.GAME_SECRET || (env.PANEL_API_KEY && env.PANEL_API_KEY.length >= 32 ? 'evb-game-ticket:' + env.PANEL_API_KEY : '');
+  if (!raw) return null;
+  return crypto.subtle.importKey('raw', new TextEncoder().encode(raw), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+}
+
+async function signTicket(key, data) {
+  const body = b64url(new TextEncoder().encode(JSON.stringify(data)));
+  const sig = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(body)));
+  return body + '.' + b64url(sig);
+}
+
+// { p: prize, t: drawn at, n: nonce } from a ticket this Worker signed and
+// that is still in date; null for anything else.
+async function readTicket(env, ticket) {
+  const m = /^([A-Za-z0-9_-]{10,400})\.([A-Za-z0-9_-]{20,100})$/.exec(String(ticket || ''));
+  if (!m) return null;
+  const key = await gameTicketKey(env);
+  if (!key) return null;
+  let ok = false;
+  try {
+    ok = await crypto.subtle.verify('HMAC', key, unb64url(m[2]), new TextEncoder().encode(m[1]));
+  } catch (e) { return null; }
+  if (!ok) return null;
+  let data;
+  try { data = JSON.parse(new TextDecoder().decode(unb64url(m[1]))); } catch (e) { return null; }
+  if (!data || !GAME_PRIZES[data.p] || typeof data.n !== 'string') return null;
+  if (!(Date.now() - Number(data.t) < GAME_TICKET_DAYS * DAY_MS)) return null;
+  return data;
+}
+
+async function handleGameDraw(request, env, origin) {
+  if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed.' }, 403, origin);
+  const ip = request.headers.get('CF-Connecting-IP') || 'anon';
+  if (env.PROMO_LIMITER) {
+    try {
+      const { success } = await env.PROMO_LIMITER.limit({ key: 'draw:' + ip });
+      if (!success) return json({ error: 'Too many tries. Wait a minute and try again.' }, 429, origin);
+    } catch (e) { }
+  }
+  const key = await gameTicketKey(env);
+  if (!key) return json({ error: 'The game isn’t set up.' }, 503, origin);
+
+  const ids = Object.keys(GAME_PRIZES);
+  let prize = null;
+  const dayKey = 'gamedraw:' + ip;
+  if (env.SUBSCRIBERS) prize = await env.SUBSCRIBERS.get(dayKey).catch(() => null);
+  if (!GAME_PRIZES[prize]) {
+    // Four prizes divide 2^32 evenly, so the odds are exactly even.
+    prize = ids[crypto.getRandomValues(new Uint32Array(1))[0] % ids.length];
+    if (env.SUBSCRIBERS) await env.SUBSCRIBERS.put(dayKey, prize, { expirationTtl: 86400 }).catch(() => {});
+  }
+  const nonce = b64url(crypto.getRandomValues(new Uint8Array(12)));
+  const ticket = await signTicket(key, { p: prize, t: Date.now(), n: nonce });
+  return json({ prize, ticket }, 200, origin);
+}
+function nyDay(ms) {
+  return new Date(ms).toLocaleDateString('en-US', { timeZone: 'America/New_York', month: 'long', day: 'numeric' });
+}
+
+async function readGamePrize(env, email) {
+  if (!env.SUBSCRIBERS || !email) return null;
+  const got = await env.SUBSCRIBERS.getWithMetadata('gameprize:' + email);
+  return got && got.value !== null ? (got.metadata || {}) : null;
+}
+
+function writeGamePrize(env, email, meta) {
+  return env.SUBSCRIBERS.put('gameprize:' + email, '1', { metadata: meta });
+}
+
+// The email address of the session in a Bearer header, from Supabase itself;
+// null when there is no session.
+async function sessionEmail(env, auth) {
+  if (!/^Bearer\s+\S{20,}$/.test(auth || '')) return null;
+  const base = (env.SUPABASE_URL || SUPABASE_URL_DEFAULT).replace(/\/+$/, '');
+  const res = await fetch(base + '/auth/v1/user', {
+    headers: { apikey: env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT, Authorization: auth }
+  });
+  if (res.status === 401 || res.status === 403) throw shout('Your sign-in expired. Sign in again to use this code.', 401);
+  if (!res.ok) {
+    console.error('[evb-square] session lookup failed', res.status);
+    throw shout('We couldn’t check your account just now. Try again in a minute.', 503);
+  }
+  const user = await res.json().catch(() => null);
+  const email = normEmail(user && user.email);
+  return RE_EMAIL.test(email) ? email : null;
+}
+
+// Whether this member may use a game prize code now; throws what checkout
+// shows when not. Only an account the game recorded as winning it may.
+async function memberCodeCheck(env, email, code) {
+  const prize = GAME_PRIZES[code] || { name: code };
+  if (!email) throw shout('Sign in to use ' + code + '. It works only on the account that won it.', 401);
+  if (!env.SUBSCRIBERS) throw shout('We couldn’t check this code just now. Try again in a minute.', 503);
+  const meta = await readGamePrize(env, email);
+  if (!meta) throw shout(code + ' is a mystery box prize, and it works only on the account that won it.', 409);
+  if (meta.c !== code) throw shout(code + ' isn’t the mystery box prize on your account.', 409);
+  if (meta.u) throw shout('You already used your ' + prize.name + ' code on an earlier order.', 409);
+  if (Date.now() > gameExpiry(meta)) {
+    throw shout('Your ' + prize.name + ' code ran out on ' + nyDay(gameExpiry(meta)) + '. Remove it to keep checking out.', 409);
+  }
+  return meta;
+}
+
+// Spends (used true) or gives back the member's game code for an order.
+async function markGameCode(env, email, orderId, used) {
+  const meta = await readGamePrize(env, email);
+  if (!meta) return;
+  if (used) await writeGamePrize(env, email, Object.assign({}, meta, { u: Date.now(), o: String(orderId || '').slice(0, 40) }));
+  else if (meta.u && meta.o === String(orderId || '').slice(0, 40)) {
+    const back = Object.assign({}, meta);
+    delete back.u;
+    delete back.o;
+    await writeGamePrize(env, email, back);
+  }
+}
+
+function gameEmailText(code, m) {
   return [
-    prize.headline + '.',
+    m.headline + '.',
     '',
-    prize.detail,
+    m.detail,
     '',
     'Your code: ' + code,
     '',
-    'It is already in your bag on the device you played on. On any other device, enter it at checkout.',
+    m.note,
     'Shop the store: ' + SITE_URL + '/store/',
     '',
     'Questions? Call or text 917-608-8939.',
@@ -1161,24 +1352,22 @@ function gameEmailText(code, prize) {
   ].join('\n');
 }
 
-function gameEmailHtml(code, prize) {
+function gameEmailHtml(code, m) {
   const font = '-apple-system,Segoe UI,Roboto,Arial,sans-serif';
   return `<!doctype html><html><body style="margin:0;background:#f8f5f0;padding:24px 12px">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e7e1d8;border-radius:12px;overflow:hidden">
     <tr><td style="height:5px;background:#f97316"></td></tr>
     <tr><td style="padding:26px 26px 8px">
-      <p style="margin:0 0 6px;font:800 10px ${font};letter-spacing:.18em;text-transform:uppercase;color:#f97316">Your welcome gift</p>
-      <h1 style="margin:0 0 10px;font:900 24px ${font};color:#111;letter-spacing:-.02em">${esc(prize.headline)}</h1>
-      <p style="margin:0 0 20px;font:15px/1.6 ${font};color:#555">${esc(prize.detail)}</p>
+      <p style="margin:0 0 6px;font:800 10px ${font};letter-spacing:.18em;text-transform:uppercase;color:#f97316">${esc(m.kicker)}</p>
+      <h1 style="margin:0 0 10px;font:900 24px ${font};color:#111;letter-spacing:-.02em">${esc(m.headline)}</h1>
+      <p style="margin:0 0 20px;font:15px/1.6 ${font};color:#555">${esc(m.detail)}</p>
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff1e6;border-radius:12px">
         <tr><td style="padding:16px 20px">
           <p style="margin:0 0 4px;font:600 12px ${font};color:#7a5a45">Your code</p>
           <p style="margin:0;font:900 26px ${font};letter-spacing:.1em;color:#1f1b16">${esc(code)}</p>
         </td></tr>
       </table>
-      <p style="margin:16px 0 22px;font:14px/1.6 ${font};color:#555">
-        It’s already in your bag on the device you played on. On any other device, enter it at checkout.
-      </p>
+      <p style="margin:16px 0 22px;font:14px/1.6 ${font};color:#555">${esc(m.note)}</p>
       <p style="margin:0 0 24px">
         <a href="${SITE_URL}/store/" style="display:inline-block;background:#f97316;color:#fff;text-decoration:none;font:800 12px ${font};letter-spacing:.06em;text-transform:uppercase;padding:14px 24px;border-radius:999px">Shop the store</a>
       </p>
@@ -1193,6 +1382,30 @@ function gameEmailHtml(code, prize) {
 </body></html>`;
 }
 
+// Resolves true once Resend has taken it.
+async function sendGameMail(env, email, subject, code, m) {
+  if (!env.RESEND_API_KEY) return false;
+  try {
+    const sent = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: env.GAME_FROM || GAME_FROM_DEFAULT,
+        to: [email],
+        subject,
+        html: gameEmailHtml(code, m),
+        text: gameEmailText(code, m),
+        reply_to: 'help@eastvillagebuyers.com'
+      })
+    });
+    if (sent.ok) return true;
+    console.error('[evb-square] game email failed', sent.status, (await sent.text().catch(() => '')).slice(0, 300));
+  } catch (err) {
+    console.error('[evb-square] game email error', err.message);
+  }
+  return false;
+}
+
 async function handleGameEmail(request, env, origin) {
   if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed.' }, 403, origin);
   if (env.PROMO_LIMITER) {
@@ -1205,58 +1418,106 @@ async function handleGameEmail(request, env, origin) {
   const auth = request.headers.get('Authorization') || '';
   if (!/^Bearer\s+\S{20,}$/.test(auth)) return json({ error: 'Sign in first.' }, 401, origin);
 
-  const body = await request.json().catch(() => ({}));
-  const code = String((body && body.code) || '').trim().toUpperCase().slice(0, 40);
+  const body = await request.json().catch(() => ({})) || {};
+  let code = String(body.code || '').trim().toUpperCase().slice(0, 40);
+  let ticket = null;
+  if (body.ticket) {
+    ticket = await readTicket(env, body.ticket);
+    if (!ticket) return json({ error: 'That prize ticket isn’t valid.' }, 400, origin);
+    code = ticket.p;
+  }
   const prize = GAME_PRIZES[code];
   if (!prize) return json({ error: 'That is not a game prize.' }, 400, origin);
-  if (!env.RESEND_API_KEY) return json({ error: 'Email is not set up.', status: 'not-configured' }, 503, origin);
+  if (prize.ticket && !ticket) return json({ error: code + ' can only be won in the game.' }, 400, origin);
 
-  // Whose session this is, from Supabase itself.
-  const base = (env.SUPABASE_URL || SUPABASE_URL_DEFAULT).replace(/\/+$/, '');
-  const res = await fetch(base + '/auth/v1/user', {
-    headers: { apikey: env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY_DEFAULT, Authorization: auth }
-  });
-  if (res.status === 401 || res.status === 403) return json({ error: 'Your sign-in expired.' }, 401, origin);
-  const user = res.ok ? await res.json().catch(() => null) : null;
-  if (!res.ok) {
-    console.error('[evb-square] game email: user lookup failed', res.status);
-    return json({ error: 'Could not check your account.' }, 502, origin);
+  let email;
+  try {
+    email = await sessionEmail(env, auth);
+  } catch (err) {
+    return json({ error: err.message }, err.status || 502, origin);
   }
-  const email = normEmail(user && user.email);
-  if (!RE_EMAIL.test(email)) return json({ error: 'This account has no email address.' }, 400, origin);
+  if (!email) return json({ error: 'This account has no email address.' }, 400, origin);
+
+  // A ticket goes on the first account that brings it, and no other.
+  if (ticket && env.SUBSCRIBERS) {
+    const tkey = 'gameticket:' + ticket.n;
+    const owner = await env.SUBSCRIBERS.get(tkey);
+    if (owner && owner !== email) return json({ error: 'This prize was already collected on another account.' }, 409, origin);
+    if (!owner) await env.SUBSCRIBERS.put(tkey, email, { expirationTtl: (GAME_TICKET_DAYS + 1) * 86400 });
+  }
+
+  // The first prize an account wins is the one it keeps.
+  let meta = await readGamePrize(env, email).catch(() => null);
+  if (!meta && env.SUBSCRIBERS) {
+    meta = { e: email, c: code, t: Date.now() };
+    await writeGamePrize(env, email, meta).catch(() => {});
+  }
+  const kept = meta && GAME_PRIZES[meta.c] ? meta.c : code;
+  const expiresAt = GAME_PRIZES[kept].expires && meta ? gameExpiry(meta) : null;
+  const out = { ok: true, recorded: !!meta, code: kept, expiresAt };
+  if (GAME_PRIZES[kept].points) return json(out, 200, origin);
 
   // One prize email per account.
   const key = 'game:' + email;
   if (env.SUBSCRIBERS) {
     const had = await env.SUBSCRIBERS.getWithMetadata(key).catch(() => null);
-    if (had && had.metadata && had.metadata.s === 'sent') return json({ ok: true, already: true }, 200, origin);
+    if (had && had.metadata && had.metadata.s === 'sent') return json(Object.assign(out, { already: true }), 200, origin);
   }
+  if (!env.RESEND_API_KEY) return json(Object.assign(out, { sent: false, status: 'not-configured' }), 200, origin);
 
-  let result = 'failed';
-  try {
-    const sent = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: env.GAME_FROM || GAME_FROM_DEFAULT,
-        to: [email],
-        subject: 'Your East Village Buyers code: ' + code,
-        html: gameEmailHtml(code, prize),
-        text: gameEmailText(code, prize),
-        reply_to: 'help@eastvillagebuyers.com'
-      })
-    });
-    if (sent.ok) result = 'sent';
-    else console.error('[evb-square] game email failed', sent.status, (await sent.text().catch(() => '')).slice(0, 300));
-  } catch (err) {
-    console.error('[evb-square] game email error', err.message);
-  }
-
+  const p = GAME_PRIZES[kept];
+  const sent = await sendGameMail(env, email, 'Your East Village Buyers code: ' + kept, kept, {
+    kicker: 'Your welcome gift',
+    headline: p.headline,
+    detail: p.detail + (expiresAt ? ' Use it by ' + nyDay(expiresAt) + '.' : ''),
+    note: 'It’s already in your bag on the device you played on. On any other device, enter it at checkout while signed in.'
+  });
   if (env.SUBSCRIBERS) {
-    await env.SUBSCRIBERS.put(key, '1', { metadata: { e: email, c: code, t: Date.now(), s: result } }).catch(() => {});
+    await env.SUBSCRIBERS.put(key, '1', { metadata: { e: email, c: kept, t: Date.now(), s: sent ? 'sent' : 'failed' } }).catch(() => {});
   }
-  if (result !== 'sent') return json({ error: 'We could not send the email just now.', status: result }, 502, origin);
-  return json({ ok: true, sent: true }, 200, origin);
+  if (!sent) return json({ error: 'We could not send the email just now.', status: 'failed' }, 502, origin);
+  return json(Object.assign(out, { sent: true }), 200, origin);
+}
+
+// Daily (the cron trigger): a reminder to each member whose GIFT5 is still
+// unused, when GAME_REMIND_DAYS or fewer days are left. Each step is sent
+// once; one that was missed is folded into the next.
+async function sendGameReminders(env) {
+  if (!env.RESEND_API_KEY || !env.SUBSCRIBERS) return 0;
+  let cursor;
+  let sent = 0;
+  do {
+    const page = await env.SUBSCRIBERS.list({ prefix: 'gameprize:', cursor });
+    for (const k of page.keys) {
+      const m = k.metadata || {};
+      const prize = GAME_PRIZES[m.c];
+      if (!prize || !prize.expires || m.u || !m.t) continue;
+      const end = gameExpiry(m);
+      const left = Math.ceil((end - Date.now()) / DAY_MS);
+      if (left <= 0) continue;
+      const done = String(m.r || '').split(',').filter(Boolean);
+      const due = GAME_REMIND_DAYS.filter(d => left <= d && done.indexOf(String(d)) === -1);
+      if (!due.length) continue;
+      if (sent >= GAME_REMIND_PER_RUN) return sent;
+
+      const email = m.e || k.name.slice('gameprize:'.length);
+      const last = left <= 2;
+      const ok = await sendGameMail(env, email,
+        last ? 'Last chance: your $5 off ends ' + nyDay(end) : 'Your $5 off ends in ' + left + ' days', m.c, {
+          kicker: 'Your mystery box prize',
+          headline: last ? 'Last chance for your $5 off' : 'Your $5 off ends in ' + left + ' days',
+          detail: 'Use code ' + m.c + ' by ' + nyDay(end) + ' for $5 off any order in the store.',
+          note: 'It works on your account only, once. Enter it at checkout while signed in.'
+        });
+      sent++;
+      if (ok) {
+        await writeGamePrize(env, email, Object.assign({}, m, { r: done.concat(due.map(String)).join(',') }))
+          .catch(err => console.error('[evb-square] reminder mark failed', err.message));
+      }
+    }
+    cursor = page.list_complete ? null : page.cursor;
+  } while (cursor);
+  return sent;
 }
 
 /**
@@ -1304,10 +1565,23 @@ async function handleOrderStatus(request, env, id, origin) {
   order.holdUntil = null;
   if (order.payment) order.payment.status = body.status === 'PAID' ? 'COMPLETED' : 'CANCELED';
   await env.ORDERS.put('order:' + id, JSON.stringify(order), { expirationTtl: 60 * 60 * 24 * 365 });
+  // A declined order gives its game prize code back.
+  const used = promoRule(env, String((order.totals && order.totals.promoCode) || '').toUpperCase());
+  if (body.status === 'CANCELLED' && used && used.member) {
+    await markGameCode(env, normEmail(order.customer && order.customer.email), order.id, false)
+      .catch(err => console.error('[evb-square] could not give the game code back', order.id, err.message));
+  }
   return json({ id: order.id, status: order.status }, 200, origin);
 }
 
 export default {
+  // The daily cron trigger: mystery box reminders.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(sendGameReminders(env)
+      .then(n => { if (n) console.log('[evb-square] game reminders sent', n); })
+      .catch(err => console.error('[evb-square] game reminders', err.message)));
+  },
+
   async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
     const url = new URL(request.url);
@@ -1355,6 +1629,16 @@ export default {
         return json({ error: 'Not found.' }, 404, origin);
       } catch (err) {
         console.error('[evb-square] signup', err.message);
+        return json({ error: 'Something went wrong. Please try again.' }, 500, origin);
+      }
+    }
+
+    if (path === '/game-draw') {
+      if (request.method !== 'POST') return json({ error: 'Not found.' }, 404, origin);
+      try {
+        return await handleGameDraw(request, env, origin);
+      } catch (err) {
+        console.error('[evb-square] game draw', err.message);
         return json({ error: 'Something went wrong. Please try again.' }, 500, origin);
       }
     }
