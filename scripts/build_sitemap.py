@@ -34,7 +34,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://eastvillagebuyers.com"
 SITEMAP = os.path.join(REPO_ROOT, "sitemap.xml")
 
-SKIP_DIRS = {".git", ".claude", ".github", ".well-known", "node_modules", "scripts", "shopify-theme"}
+# Folders that hold no pages. Hidden folders (.git, .github, .well-known and
+# any local tooling) are skipped as well.
+SKIP_DIRS = {"node_modules", "scripts"}
 
 # Indexable on paper but not real pages: the product page is an empty shell
 # until ?id= picks a product, and turns itself noindex when there isn't one.
@@ -194,7 +196,7 @@ def main():
 
     pages = {}
     for dirpath, dirnames, filenames in os.walk(REPO_ROOT):
-        dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
+        dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS and not d.startswith("."))
         if "index.html" not in filenames:
             continue
         rel = os.path.relpath(os.path.join(dirpath, "index.html"), REPO_ROOT).replace(os.sep, "/")

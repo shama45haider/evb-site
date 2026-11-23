@@ -618,7 +618,7 @@
       id: 'evb-el-002', slug: 'apple-iphone-17-pro',
       title: 'Apple iPhone 17 Pro', brand: 'Apple', category: 'electronics',
       condition: 'Pre-owned — Excellent', price: 89500, compareAt: 109900,
-      images: ['/Apple-iPhone-17-Pro-4x3-1_4x3.webp'],
+      images: ['/apple-iphone-17-pro.webp'],
       blurb: 'Unlocked, clean IMEI, Activation Lock cleared.',
       description: 'An unlocked iPhone 17 Pro with a clean IMEI checked against the carrier blacklist. Erased, Activation Lock removed, battery health verified.',
       details: ['Carrier unlocked, clean IMEI', 'Blacklist checked', 'Activation Lock removed', 'Battery health verified'],

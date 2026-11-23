@@ -5,7 +5,6 @@ desktop.ini
 node_modules/
 .env
 *.zip
-.claude/
 
 # Never publish internal docs
 *.pdf
