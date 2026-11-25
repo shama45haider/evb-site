@@ -1067,9 +1067,10 @@
     return signedIn() && d.querySelector('.acct-points') && !d.querySelector('.acct-ob');
   }
 
-  // Another pop-up that's up: the shop's closure notice (site-nav.js), the
-  // home page's What's New card (#wnWrap), a panel pop-up (evb-popups.js) or
-  // the blog's "always buying" one (evb-blog-popup.js).
+  // Another pop-up that's up: the shop's closure notice (site-nav.js) or a
+  // panel pop-up (evb-popups.js, which since 2026-11-23 also draws What's
+  // New and the "always buying" ones; #wnWrap and .evbbp are their old,
+  // built-in forms, still on a page cached from before).
   function otherDialogUp() {
     var wn = d.getElementById('wnWrap');
     return !!d.getElementById('evbClosure') ||
@@ -1090,21 +1091,27 @@
   // across the pages of one visit (sessionStorage), once nothing else is up.
   var GAME_AFTER_MS = 13000;
   var SCROLL_KEY = 'evb_game_scroll';
-  // On the home page the gold What's New card (#wnWrap) comes first; it shows
-  // once per visit and its close button sets evb_wn_v1 (index.html). The game
-  // then follows GAME_AFTER_MS after the visitor closes that card.
+  // On the home page the gold What's New card comes first: a panel pop-up
+  // since 2026-11-23, drawn by evb-popups.js, which keeps <html
+  // data-evb-popup-wait> on until it has been closed (data-evb-popup-closed)
+  // or there is none to show this visit. The game then follows GAME_AFTER_MS
+  // after the visitor closes that card; with no card, it goes by the scroll.
+  var HOME = PATH === '/' || PATH === '/index.html';
   function goldCardPending() {
-    if (!d.getElementById('wnWrap')) return false;
-    try { return !w.sessionStorage.getItem('evb_wn_v1'); } catch (e) { return false; }
+    return HOME && d.documentElement.hasAttribute('data-evb-popup-wait');
   }
   function startGame() {
     if (goldCardPending()) {
       (function waitForGold() {
         if (goldCardPending()) return setTimeout(waitForGold, 500);
-        setTimeout(start, GAME_AFTER_MS);
+        if (d.documentElement.hasAttribute('data-evb-popup-closed')) setTimeout(start, GAME_AFTER_MS);
+        else afterScroll();
       })();
       return;
     }
+    afterScroll();
+  }
+  function afterScroll() {
     var began = 0;
     try { began = Number(w.sessionStorage.getItem(SCROLL_KEY)) || 0; } catch (e) {}
     function arm(since) {
