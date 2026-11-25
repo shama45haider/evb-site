@@ -1590,7 +1590,6 @@
       '</div>' +
       (state.promoMsg ? '<p class="evb-promo-msg ' + (state.promoMsg.ok ? 'is-ok' : 'is-err') + '">' + S.esc(state.promoMsg.text) + '</p>' : '') +
 
-      '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
       (t.promoDiscount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount (' + S.esc(t.promoCode) + ')</span><strong>&minus;' + S.money(t.promoDiscount) + '</strong></div>' : '') +
       '<div class="evb-sumrow"><span>' + S.esc(t.shippingRate.label) + '</span><strong>' +
         (t.prize && t.prize.kind === 'shipping' ? '<s class="evb-sumrow-was">' + S.money(t.shipping + t.prize.creditCents) + '</s> ' : '') +

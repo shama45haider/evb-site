@@ -308,7 +308,6 @@
             '</div>' +
             (promoMsg ? '<p class="evb-promo-msg ' + (promoMsg.ok ? 'is-ok' : 'is-err') + '">' + S.esc(promoMsg.text) + '</p>' : '') +
 
-            '<div class="evb-sumrow"><span>Subtotal</span><strong>' + S.money(t.subtotal) + '</strong></div>' +
             (t.discount ? '<div class="evb-sumrow evb-sumrow--discount"><span>Discount' + (t.promoCode ? ' (' + S.esc(t.promoCode) + ')' : '') + '</span><strong>&minus;' + S.money(t.discount) + '</strong></div>' : '') +
             '<div class="evb-sumrow"><span>Pickup at 39 Avenue A</span><strong>Free</strong></div>' +
             '<div class="evb-sumrow"><span>Estimated tax</span><strong>' + S.money(t.tax) + '</strong></div>' +
