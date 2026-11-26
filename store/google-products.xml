@@ -817,5 +817,24 @@ Tags attached. Unisex. Color: Grey. Checked in-house at East Village Buyers, 39 
 <g:pickup_method>buy</g:pickup_method>
 <g:pickup_sla>same day</g:pickup_sla>
 </item>
+<item>
+<g:id>EVB-L1026</g:id>
+<g:title>Chains Test item Dont Buy</g:title>
+<g:description>Flaws: none. Unisex. Color: Grey. Checked in-house at East Village Buyers, 39 Avenue A, New York. Pick up the same day or have it shipped insured.</g:description>
+<g:link>https://eastvillagebuyers.com/store/item/chains-test-item-dont-buy-l1026/</g:link>
+<g:image_link>https://items-images-production.s3.us-west-2.amazonaws.com/files/694c0a54555b683be74838562ee47375733572ba/original.jpeg</g:image_link>
+<g:availability>in_stock</g:availability>
+<g:price>9.99 USD</g:price>
+<g:condition>used</g:condition>
+<g:identifier_exists>no</g:identifier_exists>
+<g:product_type>Jewelry</g:product_type>
+<g:google_product_category>Apparel &amp; Accessories &gt; Jewelry</g:google_product_category>
+<g:color>Grey</g:color>
+<g:gender>unisex</g:gender>
+<g:age_group>adult</g:age_group>
+<g:shipping><g:country>US</g:country><g:service>Standard</g:service><g:price>5.00 USD</g:price></g:shipping>
+<g:pickup_method>buy</g:pickup_method>
+<g:pickup_sla>same day</g:pickup_sla>
+</item>
 </channel>
 </rss>

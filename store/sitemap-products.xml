@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
+    <loc>https://eastvillagebuyers.com/store/item/chains-test-item-dont-buy-l1026/</loc>
+    <changefreq>daily</changefreq>
+    <image:image><image:loc>https://items-images-production.s3.us-west-2.amazonaws.com/files/694c0a54555b683be74838562ee47375733572ba/original.jpeg</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://eastvillagebuyers.com/store/item/denim-tear-cotton-wreath-sweatpants-in-grey-l1013/</loc>
     <changefreq>daily</changefreq>
     <image:image><image:loc>https://items-images-production.s3.us-west-2.amazonaws.com/files/7ed1c1ff1759383c6ca9dcdb923668441afbadaf/original.jpeg</image:loc></image:image>
